@@ -3,393 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>志木市AIコンシェルジュDX</title>
+  <title>志木市デジタル回覧板・志木市役所AIコンシェルジュ</title>
   <style>
     :root{
-      --bg:#f3f6fb;
+      --bg:#f6f7fb;
       --card:#ffffff;
       --text:#1f2937;
       --sub:#5f6b7a;
-      --line:#d9e3ee;
-      --brand:#134f86;
-      --brand2:#2377cb;
+      --line:#d7dde7;
+      --shadow:0 8px 22px rgba(0,0,0,.08);
+      --blue:#16528a;
+      --blue2:#2276c8;
       --green:#149654;
       --greenBg:#ebfff3;
-      --blueBg:#f5f9ff;
-      --tabOff:#e7edf5;
-      --shadow:0 10px 26px rgba(0,0,0,.08);
-      --radius:18px;
-      --tap:62px;
+      --linkBg:#eef6ff;
     }
     *{box-sizing:border-box}
     html,body{
-      margin:0;
-      padding:0;
-      background:var(--bg);
-      color:var(--text);
+      margin:0;padding:0;background:var(--bg);color:var(--text);
       font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
     }
-    body{
-      max-width:760px;
-      margin:0 auto;
-      padding:0 0 36px;
+    body{max-width:760px;margin:0 auto;padding:0 12px 32px}
+    .hero-img{
+      width:100%;display:block;margin:12px 0 14px;border-radius:18px;box-shadow:var(--shadow)
     }
-    .hero{
-      position:sticky;
-      top:0;
-      z-index:100;
-      background:linear-gradient(135deg,#123c66,#2070be);
-      color:#fff;
-      box-shadow:0 4px 20px rgba(0,0,0,.18);
-      padding:18px 16px 16px;
-    }
-    .hero-title{
-      font-size:28px;
-      line-height:1.25;
-      font-weight:800;
-      margin:0;
-      letter-spacing:.02em;
-    }
-    .hero-sub{
-      margin:10px 0 0;
-      font-size:16px;
-      line-height:1.7;
-      opacity:.96;
-    }
-    .wrap{
-      padding:14px;
-    }
-    .tabs{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin:14px 0 16px;
-    }
-    .tab-btn{
-      appearance:none;
-      border:none;
-      min-height:var(--tap);
-      border-radius:16px;
-      background:var(--tabOff);
-      color:#23425d;
-      font-size:21px;
-      font-weight:800;
-      box-shadow:var(--shadow);
-      cursor:pointer;
-    }
-    .tab-btn.active{
-      background:linear-gradient(135deg,#16528a,#2579cb);
-      color:#fff;
-    }
-    .panel{display:none}
-    .panel.active{display:block}
     .card{
-      background:var(--card);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:16px;
-      margin-bottom:14px;
-      border:1px solid #ecf1f7;
+      background:var(--card);border:1px solid #ecf1f7;border-radius:18px;
+      box-shadow:var(--shadow);padding:16px;margin-bottom:14px;
     }
-    .title{
-      font-size:24px;
-      line-height:1.35;
-      font-weight:800;
-      margin:0 0 10px;
-    }
-    .sub{
-      margin:0;
-      font-size:17px;
-      line-height:1.8;
-      color:var(--sub);
-    }
-    .textarea{
-      width:100%;
-      min-height:180px;
-      resize:vertical;
-      border:2px solid var(--line);
-      border-radius:16px;
-      padding:16px;
-      font-size:22px;
-      line-height:1.8;
-      outline:none;
-      background:#fff;
-      margin-top:12px;
-    }
-    .textarea:focus{
-      border-color:#6ea6ec;
-      box-shadow:0 0 0 4px rgba(110,166,236,.18);
-    }
-    .btn{
-      width:100%;
-      min-height:68px;
-      border:none;
-      border-radius:16px;
-      font-size:24px;
-      font-weight:800;
-      margin-top:12px;
-      box-shadow:var(--shadow);
-      cursor:pointer;
-    }
-    .btn-primary{
-      background:linear-gradient(135deg,#1a62a6,#2681db);
-      color:#fff;
-    }
-    .btn-sub{
-      background:#edf2f7;
-      color:#28435a;
-    }
-    .status{
-      margin-top:12px;
-      font-size:18px;
-      line-height:1.7;
-      color:#35526b;
-      font-weight:700;
-    }
-    .result-block{
-      margin-top:12px;
-      padding:14px;
-      border-radius:16px;
-      background:var(--blueBg);
-      border:1px solid #d9e7f6;
-    }
-    .label{
-      font-size:16px;
-      line-height:1.5;
-      font-weight:800;
-      color:#35526d;
-      margin-bottom:6px;
-    }
-    .value{
-      font-size:22px;
-      line-height:1.8;
-      word-break:break-word;
-      white-space:pre-wrap;
-    }
-    .link-btn{
-      display:block;
-      text-decoration:none;
-      text-align:center;
-      min-height:60px;
-      line-height:60px;
-      border-radius:14px;
-      margin-top:12px;
-      font-size:22px;
-      font-weight:800;
-      background:#edf6ff;
-      color:#114c81;
-      border:2px solid #cde0f5;
-    }
-    .tel-btn{
-      background:var(--greenBg);
-      color:#117344;
-      border:2px solid #bee7cd;
-    }
-    .candidates{
-      display:grid;
-      gap:10px;
-      margin-top:10px;
-    }
-    .candidate{
-      background:#fafbfd;
-      border:1px solid #e2e8f0;
-      border-radius:14px;
-      padding:12px;
-    }
-    .candidate-title{
-      font-size:20px;
-      line-height:1.5;
-      font-weight:800;
-      margin:0 0 6px;
-    }
-    .score{
-      display:inline-block;
-      margin-top:8px;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:15px;
-      font-weight:800;
-      background:#e8f0fb;
-      color:#295684;
-    }
-    .kairan-window{
-      max-height:78vh;
-      overflow:auto;
-    }
+    h1,h2,h3{margin:0 0 10px}
+    h1{font-size:30px;line-height:1.28}
+    h2{font-size:24px;line-height:1.35}
+    p,.sub{font-size:17px;line-height:1.8;color:var(--sub);margin:0}
+    .status{font-size:18px;line-height:1.7;font-weight:700;color:#35526b}
     .kairan-item{
-      background:#fff;
-      border-radius:18px;
-      box-shadow:var(--shadow);
-      border:1px solid #eef2f7;
-      overflow:hidden;
-      margin-bottom:16px;
+      background:#fff;border:1px solid #edf2f7;border-radius:18px;overflow:hidden;
+      box-shadow:var(--shadow);margin-bottom:16px;
     }
-    .main-image{
-      width:100%;
-      display:block;
-      background:#eef2f7;
-      object-fit:cover;
+    .main-image{width:100%;display:block;background:#eef2f7}
+    .body{padding:14px}
+    .date{font-size:16px;line-height:1.5;color:#5b6f87;font-weight:800;margin-bottom:6px}
+    .item-title{font-size:24px;line-height:1.45;font-weight:800;margin:0 0 10px}
+    .detail{font-size:20px;line-height:1.8;white-space:pre-wrap}
+    .thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+    .thumb{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;background:#eef2f7}
+    .links{display:grid;gap:10px;margin-top:14px}
+    .link-btn{
+      display:block;text-decoration:none;text-align:center;min-height:60px;line-height:60px;
+      border-radius:14px;font-size:22px;font-weight:800;background:var(--linkBg);
+      color:#114c81;border:2px solid #cde0f5;
     }
-    .body{
-      padding:14px;
+    .tel-btn{background:var(--greenBg);color:#117344;border-color:#bee7cd}
+    .textarea{
+      width:100%;min-height:180px;resize:vertical;border:2px solid var(--line);border-radius:16px;
+      padding:16px;font-size:22px;line-height:1.8;outline:none;background:#fff;margin-top:12px;
     }
-    .date{
-      font-size:16px;
-      line-height:1.5;
-      color:#5b6f87;
-      font-weight:800;
-      margin-bottom:6px;
+    .textarea:focus{border-color:#6ea6ec;box-shadow:0 0 0 4px rgba(110,166,236,.18)}
+    .btn{
+      width:100%;min-height:68px;border:none;border-radius:16px;font-size:24px;font-weight:800;
+      margin-top:12px;box-shadow:var(--shadow);cursor:pointer
     }
-    .item-title{
-      font-size:24px;
-      line-height:1.45;
-      font-weight:800;
-      margin:0 0 10px;
+    .btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff}
+    .btn-sub{background:#edf2f7;color:#28435a}
+    .result-block{
+      margin-top:12px;padding:14px;border-radius:16px;background:#f5f9ff;border:1px solid #d9e7f6
     }
-    .detail{
-      font-size:20px;
-      line-height:1.8;
-      color:#2b3948;
-      white-space:pre-wrap;
-    }
-    .thumbs{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:8px;
-      margin-top:12px;
-    }
-    .thumb{
-      width:100%;
-      aspect-ratio:1/1;
-      object-fit:cover;
-      border-radius:10px;
-      background:#eef2f7;
-      display:block;
-    }
-    .links{
-      display:grid;
-      gap:10px;
-      margin-top:14px;
-    }
-    .empty{
-      font-size:20px;
-      line-height:1.8;
-      color:#657487;
-    }
-    .footer{
-      text-align:center;
-      padding:8px 4px 24px;
-      color:#66778b;
-      font-size:14px;
-      line-height:1.8;
-    }
-    .admin-link{
-      color:#66778b;
-      text-decoration:none;
-      border-bottom:1px solid #9eb0c6;
-    }
+    .label{font-size:16px;line-height:1.5;font-weight:800;color:#35526d;margin-bottom:6px}
+    .value{font-size:22px;line-height:1.8;word-break:break-word;white-space:pre-wrap}
+    .candidates{display:grid;gap:10px;margin-top:10px}
+    .candidate{background:#fafbfd;border:1px solid #e2e8f0;border-radius:14px;padding:12px}
+    .candidate-title{font-size:20px;line-height:1.5;font-weight:800;margin:0 0 6px}
+    .score{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:999px;font-size:15px;font-weight:800;background:#e8f0fb;color:#295684}
+    .footer{text-align:center;padding:8px 4px 20px;color:#66778b;font-size:14px;line-height:1.8}
+    .admin-link{color:#66778b;text-decoration:none;border-bottom:1px solid #9eb0c6}
   </style>
 </head>
 <body>
-  <div class="hero">
-    <h1 class="hero-title">志木市AIコンシェルジュDX</h1>
-    <p class="hero-sub">困っていることを、そのまま書いてください。近い案内を探して、担当課・電話番号・公式ページを分かりやすく表示します。</p>
+  <img class="hero-img" src="./IMG_4059.png" alt="志木市デジタル回覧板">
+
+  <div class="card">
+    <h2>回覧板</h2>
+    <p class="sub">画像がある記事だけを最新順で表示します。画像のあとに、見やすい詳細とリンクを出します。</p>
   </div>
 
-  <div class="wrap">
-    <div class="tabs">
-      <button id="tabKairan" class="tab-btn active" onclick="showTab('kairan')">回覧板</button>
-      <button id="tabConcierge" class="tab-btn" onclick="showTab('concierge')">相談する</button>
+  <div id="kairanStatus" class="card">
+    <div class="status">読み込み中です...</div>
+  </div>
+
+  <div id="kairanList"></div>
+
+  <img class="hero-img" src="./IMG_4060.png" alt="志木市役所AIコンシェルジュ">
+
+  <div class="card">
+    <h1>志木市役所AIコンシェルジュ</h1>
+    <p class="sub">困っていることを書くと、何の案内か、どこの担当か、まず何をすればよいかを分かりやすく案内します。</p>
+  </div>
+
+  <div class="card">
+    <h2>調べたいことを書く</h2>
+    <p class="sub">困っていることをそのまま書いてください</p>
+    <textarea id="consultText" class="textarea" placeholder="例：住民票が欲しいです / 水道料金の支払い方法を知りたい / 粗大ごみの出し方を知りたい"></textarea>
+    <p class="sub" style="margin-top:10px;">AIが整理して、この画面の中でまず分かるように案内します。まだ不安な時だけ電話し、もっと詳しいことは公式ページを見ます。</p>
+    <button class="btn btn-primary" onclick="searchConcierge()">相談する</button>
+    <button class="btn btn-sub" onclick="clearConsult()">消す</button>
+    <div id="consultStatus" class="status" style="margin-top:12px;"></div>
+  </div>
+
+  <div id="resultCard" class="card" style="display:none;">
+    <h2>案内結果</h2>
+
+    <div class="result-block">
+      <div class="label">相談の要約</div>
+      <div id="rTheme" class="value"></div>
     </div>
 
-    <section id="panelKairan" class="panel active">
-      <div class="card">
-        <h2 class="title">回覧板</h2>
-        <p class="sub">画像がある記事だけを最新順で表示します。画像のあとに、見やすい詳細とリンクを出します。</p>
-      </div>
-      <div id="kairanStatus" class="card">
-        <div class="sub">回覧板を読み込んでいます…</div>
-      </div>
-      <div id="kairanList" class="kairan-window"></div>
-    </section>
-
-    <section id="panelConcierge" class="panel">
-      <div class="card">
-        <h2 class="title">相談内容を入力</h2>
-        <p class="sub">生活、お金、子育て、高齢者、医療、住まいなど、ふつうの言い方で大丈夫です。</p>
-        <textarea id="consultText" class="textarea" placeholder="例：生活保護を受けたいのですが、どうしたらいいですか？"></textarea>
-        <button class="btn btn-primary" onclick="searchConcierge()">相談先を調べる</button>
-        <button class="btn btn-sub" onclick="clearConsult()">入力を消す</button>
-        <div id="consultStatus" class="status"></div>
-      </div>
-
-      <div id="resultCard" class="card" style="display:none;">
-        <h2 class="title">案内結果</h2>
-
-        <div class="result-block">
-          <div class="label">近いテーマ</div>
-          <div id="rTheme" class="value"></div>
-        </div>
-
-        <div class="result-block">
-          <div class="label">担当課</div>
-          <div id="rDept" class="value"></div>
-        </div>
-
-        <div class="result-block">
-          <div class="label">まずの案内</div>
-          <div id="rGuide" class="value"></div>
-        </div>
-
-        <div class="result-block">
-          <div class="label">やさしい説明</div>
-          <div id="rEasy" class="value"></div>
-        </div>
-
-        <div class="result-block">
-          <div class="label">どういうときに確認するか</div>
-          <div id="rWhen" class="value"></div>
-        </div>
-
-        <div class="result-block">
-          <div class="label">どう役立つか</div>
-          <div id="rBenefit" class="value"></div>
-        </div>
-
-        <a id="rTel" class="link-btn tel-btn" href="#" style="display:none;">電話する</a>
-        <a id="rUrl" class="link-btn" href="#" target="_blank" rel="noopener" style="display:none;">公式ページを見る</a>
-
-        <div class="result-block">
-          <div class="label">検索の自信度</div>
-          <div id="rConfidence" class="value"></div>
-        </div>
-
-        <div class="result-block">
-          <div class="label">近い候補</div>
-          <div id="candidateList" class="candidates"></div>
-        </div>
-      </div>
-    </section>
-
-    <div class="footer">
-      <a class="admin-link" href="https://github.com/ichirohns-jpg/ShikiConcierge-18/edit/main/index.html" target="_blank" rel="noopener">管理者用</a>
+    <div class="result-block">
+      <div class="label">担当</div>
+      <div id="rDept" class="value"></div>
     </div>
+
+    <div class="result-block">
+      <div class="label">最初の一歩</div>
+      <div id="rGuide" class="value"></div>
+    </div>
+
+    <div class="result-block">
+      <div class="label">くわしい案内</div>
+      <div id="rEasy" class="value"></div>
+    </div>
+
+    <div class="result-block">
+      <div class="label">どういうときに確認するか</div>
+      <div id="rWhen" class="value"></div>
+    </div>
+
+    <div class="result-block">
+      <div class="label">急ぎ度</div>
+      <div id="rConfidence" class="value"></div>
+    </div>
+
+    <a id="rTel" class="link-btn tel-btn" href="#" style="display:none;">電話する</a>
+    <a id="rUrl" class="link-btn" href="#" target="_blank" rel="noopener" style="display:none;">公式ページを見る</a>
+
+    <div class="result-block">
+      <div class="label">近い候補</div>
+      <div id="candidateList" class="candidates"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a class="admin-link" href="https://github.com/ichirohns-jpg/ShikiConcierge-18/edit/main/index.html" target="_blank" rel="noopener">管理者用</a>
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwAuMMZyWQ6BHJbi39j34klK0E2Zul0QueOzmL70XNWzhXxd2mc6ljlOX-UsPMQ7cp0/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxOLOYf5tBWost_ILUlT43KiNu-NJZF5JrB9QxPqxHf-1R9A5EUmHdPJiSOyKeJWduW/exec';
 
     document.addEventListener('DOMContentLoaded', () => {
       loadKairan();
     });
-
-    function showTab(tab) {
-      const isKairan = tab === 'kairan';
-      document.getElementById('tabKairan').classList.toggle('active', isKairan);
-      document.getElementById('tabConcierge').classList.toggle('active', !isKairan);
-      document.getElementById('panelKairan').classList.toggle('active', isKairan);
-      document.getElementById('panelConcierge').classList.toggle('active', !isKairan);
-    }
 
     async function postJson(payload) {
       const res = await fetch(API_URL, {
@@ -404,14 +175,14 @@
       const status = document.getElementById('kairanStatus');
       const list = document.getElementById('kairanList');
 
-      status.innerHTML = '<div class="sub">回覧板を読み込んでいます…</div>';
+      status.innerHTML = '<div class="status">読み込み中です...</div>';
       list.innerHTML = '';
 
       try {
         const data = await postJson({ action: 'getKairan' });
 
         if (!data.ok) {
-          status.innerHTML = '<div class="empty">回覧板を読み込めませんでした。</div>';
+          status.innerHTML = '<div class="status">回覧板を読み込めませんでした。</div>';
           return;
         }
 
@@ -419,13 +190,13 @@
         status.style.display = 'none';
 
         if (!items.length) {
-          list.innerHTML = '<div class="card"><div class="empty">表示できる回覧板がありません。</div></div>';
+          list.innerHTML = '<div class="card"><div class="status">表示できる回覧板がありません。</div></div>';
           return;
         }
 
         list.innerHTML = items.map(item => renderKairanItem(item)).join('');
       } catch (err) {
-        status.innerHTML = '<div class="empty">回覧板の読み込みでエラーが出ました。</div>';
+        status.innerHTML = '<div class="status">回覧板を読み込めませんでした。</div>';
       }
     }
 
@@ -486,7 +257,6 @@
         document.getElementById('rGuide').textContent = best.guide1 || best.guide2 || '';
         document.getElementById('rEasy').textContent = best.easyText || best.description || '';
         document.getElementById('rWhen').textContent = best.whenToCheck || '';
-        document.getElementById('rBenefit').textContent = best.benefit || '';
         document.getElementById('rConfidence').textContent = convertConfidence(data.confidence);
 
         const telBtn = document.getElementById('rTel');
