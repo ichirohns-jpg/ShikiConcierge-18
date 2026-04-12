@@ -565,7 +565,7 @@
 
       const driveId = extractDriveId(mediaUrl);
       if (driveId) {
-        const previewUrl = \`https://drive.google.com/file/d/\${driveId}/preview\`;
+        const previewUrl = `https://drive.google.com/file/d/${driveId}/preview`;
         return `
           <div class="media-wrap">
             <div class="video-box">
@@ -610,35 +610,35 @@
     function buildButtonsHtml(item) {
       let html = '';
       if (item.applyUrl) {
-        html += \`<a href="\${escapeHtml(item.applyUrl)}" class="btn btn-main" target="_blank" rel="noopener noreferrer">タップして申込みフォームへ</a>\`;
+        html += `<a href="${escapeHtml(item.applyUrl)}" class="btn btn-main" target="_blank" rel="noopener noreferrer">タップして申込みフォームへ</a>`;
       }
       if (item.homeUrl) {
-        html += \`<a href="\${escapeHtml(item.homeUrl)}" class="btn btn-sub" target="_blank" rel="noopener noreferrer">タップして詳細を見る（公式ページへ）</a>\`;
+        html += `<a href="${escapeHtml(item.homeUrl)}" class="btn btn-sub" target="_blank" rel="noopener noreferrer">タップして詳細を見る（公式ページへ）</a>`;
       }
-      return html ? \`<div class="btnrow">\${html}</div>\` : '';
+      return html ? `<div class="btnrow">${html}</div>` : '';
     }
 
     function buildCard(item, isLatest) {
-      return \`
-        <div class="card \${isLatest ? 'latest' : ''}">
-          \${isLatest ? '<div class="badge">最新のお知らせ</div>' : ''}
+      return `
+        <div class="card ${isLatest ? 'latest' : ''}">
+          ${isLatest ? '<div class="badge">最新のお知らせ</div>' : ''}
           <div class="meta">
-            \${item.date ? \`<span class="date">\${escapeHtml(item.date)}</span>\` : ''}
+            ${item.date ? `<span class="date">${escapeHtml(item.date)}</span>` : ''}
           </div>
-          \${item.title ? \`<div class="title">\${nl2br(item.title)}</div>\` : ''}
-          \${buildMediaHtml(item) || buildImageHtml(item)}
-          \${item.detail ? \`<div class="detail">\${nl2br(item.detail)}</div>\` : ''}
-          \${buildButtonsHtml(item)}
+          ${item.title ? `<div class="title">${nl2br(item.title)}</div>` : ''}
+          ${buildMediaHtml(item) || buildImageHtml(item)}
+          ${item.detail ? `<div class="detail">${nl2br(item.detail)}</div>` : ''}
+          ${buildButtonsHtml(item)}
         </div>
-      \`;
+      `;
     }
 
     async function loadBoard() {
       const boardWindow = document.getElementById('boardWindow');
 
       try {
-        const res = await fetch(\`\${GAS_URL}?mode=board\`, { cache: 'no-store' });
-        if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+        const res = await fetch(`${GAS_URL}?mode=board`, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const data = await res.json();
         if (!data.ok) throw new Error(data.error || 'データ取得に失敗しました。');
@@ -652,7 +652,7 @@
 
         boardWindow.innerHTML = items.map((item, idx) => buildCard(item, idx === 0)).join('');
       } catch (err) {
-        boardWindow.innerHTML = \`<div class="error-box">読み込みに失敗しました。\\n\${escapeHtml(err.message || String(err))}</div>\`;
+        boardWindow.innerHTML = `<div class="error-box">読み込みに失敗しました。\n${escapeHtml(err.message || String(err))}</div>`;
       }
     }
 
@@ -685,7 +685,7 @@
           })
         });
 
-        if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const data = await res.json();
         if (!data.ok) throw new Error(data.error || '案内に失敗しました。');
@@ -698,10 +698,10 @@
 
         const phone = data.phone || FALLBACK_PHONE;
         const digits = phone.replace(/[^0-9]/g, '');
-        let buttons = \`<a class="btn btn-main" href="tel:\${digits}">タップして電話する</a>\`;
+        let buttons = `<a class="btn btn-main" href="tel:${digits}">タップして電話する</a>`;
 
         if (data.url) {
-          buttons += \`<a class="btn btn-sub" href="\${escapeHtml(data.url)}" target="_blank" rel="noopener noreferrer">タップして詳細を見る（公式ページへ）</a>\`;
+          buttons += `<a class="btn btn-sub" href="${escapeHtml(data.url)}" target="_blank" rel="noopener noreferrer">タップして詳細を見る（公式ページへ）</a>`;
         }
 
         document.getElementById('actionButtons').innerHTML = buttons;
