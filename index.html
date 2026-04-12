@@ -497,7 +497,7 @@
   </div>
 
   <script>
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwoiNPHwAm4sxcbxnUBT6C_FVSXdWQv5QNiHk8xGHZGrUITmDTu-AE2J86H_e_bG-Qo/exec';
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyjklzOK7sqBwbzNJjhUJi4C3gZ1Ju2TvvagxBHjWNZSkPK40qgtPmITl6VFl4F-9vS/exec';
     const FALLBACK_PHONE = '048-473-1111';
 
     function escapeHtml(str) {
@@ -676,15 +676,8 @@
       askBtn.textContent = '確認中...';
 
       try {
-        const res = await fetch(GAS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            mode: 'concierge',
-            query: query
-          })
-        });
-
+        const url = `${GAS_URL}?mode=concierge&query=${encodeURIComponent(query)}`;
+        const res = await fetch(url, { cache: 'no-store' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const data = await res.json();
