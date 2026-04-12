@@ -103,6 +103,7 @@
       padding: 8px 14px;
       border-radius: 999px;
       margin: 0 10px 10px 0;
+      line-height: 1.5;
     }
 
     .title {
@@ -255,6 +256,7 @@
       font-weight: 900;
       color: #0f2e52;
       margin: 0 0 8px 0;
+      word-break: keep-all;
     }
 
     .lead-text {
@@ -385,6 +387,7 @@
       font-weight: 900;
       color: #1f2f40;
       white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .soft-box {
@@ -513,6 +516,16 @@
       return escapeHtml(str).replace(/\n/g, '<br>');
     }
 
+    function formatDateJP(value) {
+      if (!value) return '';
+      const d = new Date(value);
+      if (isNaN(d.getTime())) return String(value);
+      const y = d.getFullYear();
+      const m = d.getMonth() + 1;
+      const day = d.getDate();
+      return `${y}年${m}月${day}日`;
+    }
+
     function extractYouTubeId(url) {
       const s = String(url || '').trim();
       if (!s) return '';
@@ -623,7 +636,7 @@
         <div class="card ${isLatest ? 'latest' : ''}">
           ${isLatest ? '<div class="badge">最新のお知らせ</div>' : ''}
           <div class="meta">
-            ${item.date ? `<span class="date">${escapeHtml(item.date)}</span>` : ''}
+            ${item.date ? `<span class="date">${escapeHtml(formatDateJP(item.date))}</span>` : ''}
           </div>
           ${item.title ? `<div class="title">${nl2br(item.title)}</div>` : ''}
           ${buildMediaHtml(item) || buildImageHtml(item)}
