@@ -2,733 +2,550 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>志木市デジタル回覧板・志木市役所AIコンシェルジュ</title>
-
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#2757a5">
-  <link rel="apple-touch-icon" href="IMG_4059.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="志木お助け隊">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>志木市AIコンシェルジュDX</title>
   <style>
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #eef3f8;
-      color: #1b2d3f;
-      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+    :root{
+      --bg:#f3f6fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --sub:#5f6b7a;
+      --line:#d9e3ee;
+      --brand:#134f86;
+      --brand2:#2377cb;
+      --green:#149654;
+      --greenBg:#ebfff3;
+      --blueBg:#f5f9ff;
+      --tabOff:#e7edf5;
+      --shadow:0 10px 26px rgba(0,0,0,.08);
+      --radius:18px;
+      --tap:62px;
     }
-
-    body {
-      min-height: 100vh;
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif;
     }
-
-    .wrap {
-      width: 100%;
-      max-width: 920px;
-      margin: 0 auto;
-      min-height: 100vh;
-      background: #eef3f8;
-      padding-bottom: 24px;
+    body{
+      max-width:760px;
+      margin:0 auto;
+      padding:0 0 36px;
     }
-
-    .hero-wrap {
-      padding: 10px 8px 10px;
+    .hero{
+      position:sticky;
+      top:0;
+      z-index:100;
+      background:linear-gradient(135deg,#123c66,#2070be);
+      color:#fff;
+      box-shadow:0 4px 20px rgba(0,0,0,.18);
+      padding:18px 16px 16px;
     }
-
-    .hero-card {
-      background: #fff;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 4px 14px rgba(0,0,0,.10);
-      border: 2px solid #d9e2ec;
+    .hero-title{
+      font-size:28px;
+      line-height:1.25;
+      font-weight:800;
+      margin:0;
+      letter-spacing:.02em;
     }
-
-    .hero-img {
-      display: block;
-      width: 100%;
-      height: auto;
+    .hero-sub{
+      margin:10px 0 0;
+      font-size:16px;
+      line-height:1.7;
+      opacity:.96;
     }
-
-    .board-wrap {
-      padding: 0 8px 18px;
+    .wrap{
+      padding:14px;
     }
-
-    .board-window {
-      background: #dfe8f2;
-      border: 3px solid #bfd0e2;
-      border-radius: 22px;
-      padding: 10px;
-      min-height: 60vh;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,.08);
+    .tabs{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin:14px 0 16px;
     }
-
-    .card {
-      background: #fff;
-      margin: 0 0 18px 0;
-      border-radius: 20px;
-      box-shadow: 0 4px 14px rgba(0,0,0,.08);
-      overflow: hidden;
-      border: 2px solid #d9e2ec;
+    .tab-btn{
+      appearance:none;
+      border:none;
+      min-height:var(--tap);
+      border-radius:16px;
+      background:var(--tabOff);
+      color:#23425d;
+      font-size:21px;
+      font-weight:800;
+      box-shadow:var(--shadow);
+      cursor:pointer;
     }
-
-    .latest {
-      outline: 6px solid #ffd84d;
+    .tab-btn.active{
+      background:linear-gradient(135deg,#16528a,#2579cb);
+      color:#fff;
     }
-
-    .badge {
-      display: inline-block;
-      margin: 16px 16px 0;
-      background: #e8f1ff;
-      color: #1c4c94;
-      font-size: 18px;
-      font-weight: 900;
-      padding: 10px 16px;
-      border-radius: 999px;
+    .panel{display:none}
+    .panel.active{display:block}
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      margin-bottom:14px;
+      border:1px solid #ecf1f7;
     }
-
-    .meta {
-      padding: 16px 16px 0;
+    .title{
+      font-size:24px;
+      line-height:1.35;
+      font-weight:800;
+      margin:0 0 10px;
     }
-
-    .date {
-      display: inline-block;
-      background: #eef4ff;
-      color: #1f4d95;
-      font-size: 18px;
-      font-weight: 900;
-      padding: 8px 14px;
-      border-radius: 999px;
-      margin: 0 10px 10px 0;
+    .sub{
+      margin:0;
+      font-size:17px;
+      line-height:1.8;
+      color:var(--sub);
     }
-
-    .title {
-      padding: 8px 16px 0;
-      font-size: 30px;
-      line-height: 1.5;
-      font-weight: 900;
-      color: #163556;
-      white-space: pre-wrap;
+    .textarea{
+      width:100%;
+      min-height:180px;
+      resize:vertical;
+      border:2px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      font-size:22px;
+      line-height:1.8;
+      outline:none;
+      background:#fff;
+      margin-top:12px;
     }
-
-    .media-wrap {
-      padding: 10px 8px 0;
-      display: flex;
-      justify-content: center;
+    .textarea:focus{
+      border-color:#6ea6ec;
+      box-shadow:0 0 0 4px rgba(110,166,236,.18);
     }
-
-    .imgbox {
-      background: #e8eef5;
-      line-height: 0;
-      width: 100%;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 2px solid #d9e2ec;
+    .btn{
+      width:100%;
+      min-height:68px;
+      border:none;
+      border-radius:16px;
+      font-size:24px;
+      font-weight:800;
+      margin-top:12px;
+      box-shadow:var(--shadow);
+      cursor:pointer;
     }
-
-    .mainimg {
-      display: block;
-      width: 100%;
-      height: auto;
+    .btn-primary{
+      background:linear-gradient(135deg,#1a62a6,#2681db);
+      color:#fff;
     }
-
-    .video-box {
-      background: #000;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 2px solid #d9e2ec;
-      width: 100%;
-      max-width: 560px;
+    .btn-sub{
+      background:#edf2f7;
+      color:#28435a;
     }
-
-    .ratio916 {
-      position: relative;
-      width: 100%;
-      padding-top: 177.78%;
-      background: #000;
+    .status{
+      margin-top:12px;
+      font-size:18px;
+      line-height:1.7;
+      color:#35526b;
+      font-weight:700;
     }
-
-    .ratio916 iframe,
-    .ratio916 video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-      background: #000;
+    .result-block{
+      margin-top:12px;
+      padding:14px;
+      border-radius:16px;
+      background:var(--blueBg);
+      border:1px solid #d9e7f6;
     }
-
-    .detail {
-      padding: 22px 16px 20px;
-      font-size: 32px;
-      line-height: 1.8;
-      font-weight: 900;
-      color: #1f2f40;
-      white-space: pre-wrap;
+    .label{
+      font-size:16px;
+      line-height:1.5;
+      font-weight:800;
+      color:#35526d;
+      margin-bottom:6px;
     }
-
-    .btnrow {
-      padding: 0 16px 22px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
+    .value{
+      font-size:22px;
+      line-height:1.8;
+      word-break:break-word;
+      white-space:pre-wrap;
     }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 84px;
-      padding: 14px 24px;
-      border-radius: 16px;
-      font-size: 28px;
-      font-weight: 900;
-      text-decoration: none;
-      border: none;
-      box-sizing: border-box;
-      text-align: center;
-      line-height: 1.5;
-      cursor: pointer;
-      font-family: inherit;
+    .link-btn{
+      display:block;
+      text-decoration:none;
+      text-align:center;
+      min-height:60px;
+      line-height:60px;
+      border-radius:14px;
+      margin-top:12px;
+      font-size:22px;
+      font-weight:800;
+      background:#edf6ff;
+      color:#114c81;
+      border:2px solid #cde0f5;
     }
-
-    .btn-main {
-      background: #2757a5;
-      color: #fff;
-      flex: 1 1 240px;
+    .tel-btn{
+      background:var(--greenBg);
+      color:#117344;
+      border:2px solid #bee7cd;
     }
-
-    .btn-sub {
-      background: #eef3f8;
-      color: #1a3658;
-      border: 2px solid #d3dce7;
-      flex: 1 1 180px;
+    .candidates{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
     }
-
-    .empty {
-      background: #fff;
-      border-radius: 20px;
-      border: 2px dashed #d6e1ed;
-      padding: 30px 20px;
-      font-size: 30px;
-      line-height: 1.8;
-      font-weight: 900;
-      color: #607487;
+    .candidate{
+      background:#fafbfd;
+      border:1px solid #e2e8f0;
+      border-radius:14px;
+      padding:12px;
     }
-
-    .error-box {
-      background: #fff3f3;
-      color: #9b1c1c;
-      border: 2px solid #f3c2c2;
-      border-radius: 18px;
-      padding: 20px;
-      font-size: 24px;
-      font-weight: 900;
-      line-height: 1.7;
-      margin: 8px;
-      white-space: pre-wrap;
+    .candidate-title{
+      font-size:20px;
+      line-height:1.5;
+      font-weight:800;
+      margin:0 0 6px;
     }
-
-    .loading {
-      background: #fff;
-      border-radius: 20px;
-      border: 2px solid #d9e2ec;
-      padding: 30px 20px;
-      font-size: 28px;
-      font-weight: 900;
-      color: #35506b;
-      line-height: 1.8;
-      text-align: center;
+    .score{
+      display:inline-block;
+      margin-top:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:15px;
+      font-weight:800;
+      background:#e8f0fb;
+      color:#295684;
     }
-
-    .lead-wrap {
-      padding: 8px 10px 6px;
+    .kairan-window{
+      max-height:78vh;
+      overflow:auto;
     }
-
-    .lead-title {
-      font-size: 40px;
-      line-height: 1.45;
-      font-weight: 900;
-      color: #0f2e52;
-      margin: 0 0 8px 0;
+    .kairan-item{
+      background:#fff;
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      border:1px solid #eef2f7;
+      overflow:hidden;
+      margin-bottom:16px;
     }
-
-    .lead-text {
-      font-size: 30px;
-      line-height: 1.95;
-      font-weight: 900;
-      color: #35506b;
-      margin: 0;
+    .main-image{
+      width:100%;
+      display:block;
+      background:#eef2f7;
+      object-fit:cover;
     }
-
-    .c-card {
-      background: #fff;
-      margin: 10px 8px 18px;
-      border-radius: 22px;
-      box-shadow: 0 4px 14px rgba(0,0,0,.08);
-      border: 2px solid #d9e2ec;
-      overflow: hidden;
+    .body{
+      padding:14px;
     }
-
-    .c-head {
-      background: #2757a5;
-      color: #fff;
-      padding: 20px 16px;
-      text-align: center;
-      font-size: 40px;
-      font-weight: 900;
-      line-height: 1.45;
+    .date{
+      font-size:16px;
+      line-height:1.5;
+      color:#5b6f87;
+      font-weight:800;
+      margin-bottom:6px;
     }
-
-    .c-sub {
-      font-size: 26px;
-      font-weight: 800;
-      line-height: 1.8;
-      margin-top: 8px;
-      opacity: .98;
+    .item-title{
+      font-size:24px;
+      line-height:1.45;
+      font-weight:800;
+      margin:0 0 10px;
     }
-
-    .c-body {
-      padding: 18px 16px 22px;
+    .detail{
+      font-size:20px;
+      line-height:1.8;
+      color:#2b3948;
+      white-space:pre-wrap;
     }
-
-    .label {
-      font-size: 26px;
-      line-height: 1.8;
-      font-weight: 900;
-      color: #35506b;
-      margin: 0 0 10px 0;
+    .thumbs{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin-top:12px;
     }
-
-    .textarea {
-      width: 100%;
-      min-height: 190px;
-      border: 4px solid #cfd9e6;
-      border-radius: 18px;
-      padding: 18px;
-      font-size: 34px;
-      color: #000;
-      box-sizing: border-box;
-      resize: vertical;
-      outline: none;
-      background: #fff;
-      line-height: 1.8;
-      font-family: inherit;
+    .thumb{
+      width:100%;
+      aspect-ratio:1/1;
+      object-fit:cover;
+      border-radius:10px;
+      background:#eef2f7;
+      display:block;
     }
-
-    .textarea::placeholder {
-      color: #9aa7b4;
-      font-size: 30px;
+    .links{
+      display:grid;
+      gap:10px;
+      margin-top:14px;
     }
-
-    .textarea:focus {
-      border-color: #2f5ca8;
-      box-shadow: 0 0 10px rgba(47,92,168,.22);
+    .empty{
+      font-size:20px;
+      line-height:1.8;
+      color:#657487;
     }
-
-    .hint {
-      margin-top: 12px;
-      font-size: 28px;
-      line-height: 1.9;
-      font-weight: 900;
-      color: #5b6f84;
+    .footer{
+      text-align:center;
+      padding:8px 4px 24px;
+      color:#66778b;
+      font-size:14px;
+      line-height:1.8;
     }
-
-    .result {
-      display: none;
-      background: #fff;
-      margin: 0 8px 18px;
-      border-radius: 22px;
-      box-shadow: 0 4px 14px rgba(0,0,0,.08);
-      border: 2px solid #d9e2ec;
-      overflow: hidden;
-    }
-
-    .result.show {
-      display: block;
-    }
-
-    .result-head {
-      background: #eef4ff;
-      color: #1f4d95;
-      padding: 18px 16px;
-      font-size: 34px;
-      font-weight: 900;
-      line-height: 1.45;
-      border-bottom: 2px solid #d7e3f7;
-    }
-
-    .section {
-      padding: 18px 16px;
-      border-bottom: 2px solid #eef3f8;
-    }
-
-    .section:last-child {
-      border-bottom: none;
-    }
-
-    .section-title {
-      font-size: 28px;
-      font-weight: 900;
-      color: #4f6276;
-      line-height: 1.6;
-      margin-bottom: 8px;
-    }
-
-    .section-text {
-      font-size: 34px;
-      line-height: 2.0;
-      font-weight: 900;
-      color: #1f2f40;
-      white-space: pre-wrap;
-    }
-
-    .soft-box {
-      background: #f1f6ff;
-      border: 2px solid #d5e4ff;
-      border-radius: 18px;
-      padding: 18px 16px;
-    }
-
-    .action-area {
-      padding: 18px 16px 22px;
-      background: #fff;
-    }
-
-    @media (max-width: 640px) {
-      .title { font-size: 26px; }
-      .detail { font-size: 24px; }
-      .btn { font-size: 24px; min-height: 78px; }
-      .date, .badge { font-size: 16px; }
-      .video-box { max-width: 520px; }
-      .lead-title { font-size: 34px; }
-      .lead-text { font-size: 24px; }
-      .c-head { font-size: 34px; }
-      .c-sub { font-size: 22px; }
-      .label { font-size: 22px; }
-      .textarea { font-size: 28px; min-height: 170px; }
-      .textarea::placeholder { font-size: 24px; }
-      .hint { font-size: 24px; }
-      .result-head { font-size: 30px; }
-      .section-title { font-size: 24px; }
-      .section-text { font-size: 28px; }
+    .admin-link{
+      color:#66778b;
+      text-decoration:none;
+      border-bottom:1px solid #9eb0c6;
     }
   </style>
 </head>
 <body>
+  <div class="hero">
+    <h1 class="hero-title">志木市AIコンシェルジュDX</h1>
+    <p class="hero-sub">困っていることを、そのまま書いてください。近い案内を探して、担当課・電話番号・公式ページを分かりやすく表示します。</p>
+  </div>
+
   <div class="wrap">
-    <div class="hero-wrap">
-      <div class="hero-card">
-        <img class="hero-img" src="https://drive.google.com/thumbnail?id=1TBBGsm6XypE701Q6guwWm5RcuCUx5_s_&sz=w1600" alt="志木市デジタル回覧板">
-      </div>
+    <div class="tabs">
+      <button id="tabKairan" class="tab-btn active" onclick="showTab('kairan')">回覧板</button>
+      <button id="tabConcierge" class="tab-btn" onclick="showTab('concierge')">相談する</button>
     </div>
 
-    <div class="board-wrap">
-      <div id="boardWindow" class="board-window">
-        <div class="loading">読み込み中です...</div>
+    <section id="panelKairan" class="panel active">
+      <div class="card">
+        <h2 class="title">回覧板</h2>
+        <p class="sub">画像がある記事だけを最新順で表示します。画像のあとに、見やすい詳細とリンクを出します。</p>
       </div>
-    </div>
-
-    <div class="hero-wrap">
-      <div class="hero-card">
-        <img class="hero-img" src="https://drive.google.com/thumbnail?id=15TLn-8XevnHqPIvSIt5hu2yuuRgwviYz&sz=w1600" alt="志木市役所AIコンシェルジュ">
+      <div id="kairanStatus" class="card">
+        <div class="sub">回覧板を読み込んでいます…</div>
       </div>
-    </div>
+      <div id="kairanList" class="kairan-window"></div>
+    </section>
 
-    <div class="lead-wrap">
-      <h1 class="lead-title">志木市役所AIコンシェルジュ</h1>
-      <p class="lead-text">困っていることを書くと、何の案内か、どこの担当か、まず何をすればよいかを分かりやすく案内します。</p>
-    </div>
-
-    <div class="c-card">
-      <div class="c-head">
-        調べたいことを書く
-        <div class="c-sub">困っていることをそのまま書いてください</div>
+    <section id="panelConcierge" class="panel">
+      <div class="card">
+        <h2 class="title">相談内容を入力</h2>
+        <p class="sub">生活、お金、子育て、高齢者、医療、住まいなど、ふつうの言い方で大丈夫です。</p>
+        <textarea id="consultText" class="textarea" placeholder="例：生活保護を受けたいのですが、どうしたらいいですか？"></textarea>
+        <button class="btn btn-primary" onclick="searchConcierge()">相談先を調べる</button>
+        <button class="btn btn-sub" onclick="clearConsult()">入力を消す</button>
+        <div id="consultStatus" class="status"></div>
       </div>
-      <div class="c-body">
-        <p class="label">例：住民票が欲しいです / 水道料金の支払い方法を知りたい / 粗大ごみの出し方を知りたい</p>
-        <textarea id="query" class="textarea" placeholder="ここに困っていることを書いてください"></textarea>
-        <div class="hint">AIが整理して、この画面の中でまず分かるように案内します。まだ不安な時だけ電話し、もっと詳しいことは公式ページを見ます。</div>
-        <div class="btnrow">
-          <button id="askBtn" class="btn btn-main" type="button">相談する</button>
-          <button id="resetBtn" class="btn btn-sub" type="button">消す</button>
+
+      <div id="resultCard" class="card" style="display:none;">
+        <h2 class="title">案内結果</h2>
+
+        <div class="result-block">
+          <div class="label">近いテーマ</div>
+          <div id="rTheme" class="value"></div>
+        </div>
+
+        <div class="result-block">
+          <div class="label">担当課</div>
+          <div id="rDept" class="value"></div>
+        </div>
+
+        <div class="result-block">
+          <div class="label">まずの案内</div>
+          <div id="rGuide" class="value"></div>
+        </div>
+
+        <div class="result-block">
+          <div class="label">やさしい説明</div>
+          <div id="rEasy" class="value"></div>
+        </div>
+
+        <div class="result-block">
+          <div class="label">どういうときに確認するか</div>
+          <div id="rWhen" class="value"></div>
+        </div>
+
+        <div class="result-block">
+          <div class="label">どう役立つか</div>
+          <div id="rBenefit" class="value"></div>
+        </div>
+
+        <a id="rTel" class="link-btn tel-btn" href="#" style="display:none;">電話する</a>
+        <a id="rUrl" class="link-btn" href="#" target="_blank" rel="noopener" style="display:none;">公式ページを見る</a>
+
+        <div class="result-block">
+          <div class="label">検索の自信度</div>
+          <div id="rConfidence" class="value"></div>
+        </div>
+
+        <div class="result-block">
+          <div class="label">近い候補</div>
+          <div id="candidateList" class="candidates"></div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div id="resultBox" class="result">
-      <div class="result-head">案内結果</div>
-
-      <div class="section">
-        <div class="section-title">相談の要約</div>
-        <div id="summaryText" class="section-text"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">担当</div>
-        <div id="departmentText" class="section-text"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">最初の一歩</div>
-        <div class="soft-box">
-          <div id="firstStepText" class="section-text"></div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">くわしい案内</div>
-        <div id="guideText" class="section-text"></div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">急ぎ度</div>
-        <div id="urgencyText" class="section-text"></div>
-      </div>
-
-      <div class="action-area">
-        <div id="actionButtons" class="btnrow"></div>
-      </div>
+    <div class="footer">
+      <a class="admin-link" href="https://github.com/ichirohns-jpg/ShikiConcierge-18/edit/main/index.html" target="_blank" rel="noopener">管理者用</a>
     </div>
   </div>
 
   <script>
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwQ1HwtSQvJsWW8d2Pyf95E6o9MWo2Di84_01vMPqUS6CPebEd-qJwMYyRjCMTDwdcS/exec';
-    const FALLBACK_PHONE = '048-473-1111';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwAuMMZyWQ6BHJbi39j34klK0E2Zul0QueOzmL70XNWzhXxd2mc6ljlOX-UsPMQ7cp0/exec';
 
-    function escapeHtml(str) {
-      return String(str || '')
+    document.addEventListener('DOMContentLoaded', () => {
+      loadKairan();
+    });
+
+    function showTab(tab) {
+      const isKairan = tab === 'kairan';
+      document.getElementById('tabKairan').classList.toggle('active', isKairan);
+      document.getElementById('tabConcierge').classList.toggle('active', !isKairan);
+      document.getElementById('panelKairan').classList.toggle('active', isKairan);
+      document.getElementById('panelConcierge').classList.toggle('active', !isKairan);
+    }
+
+    async function postJson(payload) {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      return await res.json();
+    }
+
+    async function loadKairan() {
+      const status = document.getElementById('kairanStatus');
+      const list = document.getElementById('kairanList');
+
+      status.innerHTML = '<div class="sub">回覧板を読み込んでいます…</div>';
+      list.innerHTML = '';
+
+      try {
+        const data = await postJson({ action: 'getKairan' });
+
+        if (!data.ok) {
+          status.innerHTML = '<div class="empty">回覧板を読み込めませんでした。</div>';
+          return;
+        }
+
+        const items = Array.isArray(data.items) ? data.items : [];
+        status.style.display = 'none';
+
+        if (!items.length) {
+          list.innerHTML = '<div class="card"><div class="empty">表示できる回覧板がありません。</div></div>';
+          return;
+        }
+
+        list.innerHTML = items.map(item => renderKairanItem(item)).join('');
+      } catch (err) {
+        status.innerHTML = '<div class="empty">回覧板の読み込みでエラーが出ました。</div>';
+      }
+    }
+
+    function renderKairanItem(item) {
+      const images = Array.isArray(item.images) ? item.images.filter(Boolean) : [];
+      const mainImage = images[0] ? `<img class="main-image" src="${escapeHtml(images[0])}" alt="">` : '';
+      const thumbs = images.slice(1).map(url => `<img class="thumb" src="${escapeHtml(url)}" alt="">`).join('');
+      const thumbWrap = thumbs ? `<div class="thumbs">${thumbs}</div>` : '';
+      const applyBtn = item.applyUrl ? `<a class="link-btn" href="${escapeHtml(item.applyUrl)}" target="_blank" rel="noopener">申込みを見る</a>` : '';
+      const pageBtn = item.pageUrl ? `<a class="link-btn" href="${escapeHtml(item.pageUrl)}" target="_blank" rel="noopener">詳しく見る</a>` : '';
+
+      return `
+        <article class="kairan-item">
+          ${mainImage}
+          <div class="body">
+            <div class="date">${escapeHtml(item.date || '')}</div>
+            <h3 class="item-title">${escapeHtml(item.title || '')}</h3>
+            <div class="detail">${escapeHtml(item.detail || '')}</div>
+            ${thumbWrap}
+            <div class="links">
+              ${applyBtn}
+              ${pageBtn}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    async function searchConcierge() {
+      const text = document.getElementById('consultText').value.trim();
+      const status = document.getElementById('consultStatus');
+      const resultCard = document.getElementById('resultCard');
+
+      if (!text) {
+        status.textContent = '相談内容を書いてください。';
+        return;
+      }
+
+      status.textContent = '相談先を確認しています…';
+      resultCard.style.display = 'none';
+
+      try {
+        const data = await postJson({
+          action: 'conciergeSearch',
+          text: text
+        });
+
+        if (!data.ok || !data.best) {
+          status.textContent = '近い案内を見つけられませんでした。言い方を少し変えてもう一度お試しください。';
+          return;
+        }
+
+        status.textContent = '';
+        const best = data.best;
+
+        document.getElementById('rTheme').textContent = best.citizenTheme || best.theme || '';
+        document.getElementById('rDept').textContent = best.department || '';
+        document.getElementById('rGuide').textContent = best.guide1 || best.guide2 || '';
+        document.getElementById('rEasy').textContent = best.easyText || best.description || '';
+        document.getElementById('rWhen').textContent = best.whenToCheck || '';
+        document.getElementById('rBenefit').textContent = best.benefit || '';
+        document.getElementById('rConfidence').textContent = convertConfidence(data.confidence);
+
+        const telBtn = document.getElementById('rTel');
+        const rawPhone = (best.phone || '').trim();
+        if (rawPhone) {
+          const telOnly = rawPhone.replace(/[^\d]/g, '');
+          telBtn.style.display = 'block';
+          telBtn.href = 'tel:' + telOnly;
+          telBtn.textContent = '電話する：' + rawPhone;
+        } else {
+          telBtn.style.display = 'none';
+          telBtn.removeAttribute('href');
+        }
+
+        const urlBtn = document.getElementById('rUrl');
+        if (best.url) {
+          urlBtn.style.display = 'block';
+          urlBtn.href = best.url;
+        } else {
+          urlBtn.style.display = 'none';
+          urlBtn.removeAttribute('href');
+        }
+
+        const candidates = Array.isArray(data.candidates) ? data.candidates : [];
+        document.getElementById('candidateList').innerHTML = candidates.map(c => `
+          <div class="candidate">
+            <div class="candidate-title">${escapeHtml(c.citizenTheme || c.theme || '')}</div>
+            <div>${escapeHtml(c.department || '')}</div>
+            <div class="score">一致点 ${escapeHtml(String(c.score || ''))}</div>
+          </div>
+        `).join('');
+
+        resultCard.style.display = 'block';
+        resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (err) {
+        status.textContent = '検索中にエラーが出ました。';
+      }
+    }
+
+    function clearConsult() {
+      document.getElementById('consultText').value = '';
+      document.getElementById('consultStatus').textContent = '';
+      document.getElementById('resultCard').style.display = 'none';
+    }
+
+    function convertConfidence(confidence) {
+      if (confidence === 'high') return '高め';
+      if (confidence === 'medium') return '中くらい';
+      return '低め';
+    }
+
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
     }
-
-    function nl2br(str) {
-      return escapeHtml(str).replace(/\n/g, '<br>');
-    }
-
-    function extractYouTubeId(url) {
-      const s = String(url || '').trim();
-      if (!s) return '';
-      let m = s.match(/[?&]v=([a-zA-Z0-9_-]{6,})/);
-      if (m && m[1]) return m[1];
-      m = s.match(/youtu\.be\/([a-zA-Z0-9_-]{6,})/);
-      if (m && m[1]) return m[1];
-      m = s.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{6,})/);
-      if (m && m[1]) return m[1];
-      m = s.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,})/);
-      if (m && m[1]) return m[1];
-      return '';
-    }
-
-    function extractDriveId(url) {
-      const s = String(url || '').trim();
-      if (!s) return '';
-      let m = s.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-      if (m && m[1]) return m[1];
-      m = s.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-      if (m && m[1]) return m[1];
-      return '';
-    }
-
-    function isDirectVideoUrl(url) {
-      const s = String(url || '').trim().toLowerCase();
-      return s.includes('.mp4') || s.includes('.mov') || s.includes('.m4v') || s.includes('.webm') || s.includes('.ogg');
-    }
-
-    function buildMediaHtml(item) {
-      const mediaUrl = item.mediaUrl || '';
-      if (!mediaUrl) return '';
-
-      const yt = extractYouTubeId(mediaUrl);
-      if (yt) {
-        return `
-          <div class="media-wrap">
-            <div class="video-box">
-              <div class="ratio916">
-                <iframe
-                  src="https://www.youtube.com/embed/${escapeHtml(yt)}?playsinline=1&rel=0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen>
-                </iframe>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      const driveId = extractDriveId(mediaUrl);
-      if (driveId) {
-        const previewUrl = `https://drive.google.com/file/d/${driveId}/preview`;
-        return `
-          <div class="media-wrap">
-            <div class="video-box">
-              <div class="ratio916">
-                <iframe
-                  src="${escapeHtml(previewUrl)}"
-                  allow="autoplay"
-                  allowfullscreen>
-                </iframe>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      if (isDirectVideoUrl(mediaUrl)) {
-        return `
-          <div class="media-wrap">
-            <div class="video-box">
-              <div class="ratio916">
-                <video controls playsinline preload="metadata" src="${escapeHtml(mediaUrl)}"></video>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      return '';
-    }
-
-    function buildImageHtml(item) {
-      if (!item.imageUrl) return '';
-      return `
-        <div class="media-wrap">
-          <div class="imgbox">
-            <img class="mainimg" src="${escapeHtml(item.imageUrl)}" alt="掲示板画像">
-          </div>
-        </div>
-      `;
-    }
-
-    function buildButtonsHtml(item) {
-      let html = '';
-      if (item.applyUrl) {
-        html += `<a href="${escapeHtml(item.applyUrl)}" class="btn btn-main" target="_blank" rel="noopener noreferrer">タップして申込みフォームへ</a>`;
-      }
-      if (item.homeUrl) {
-        html += `<a href="${escapeHtml(item.homeUrl)}" class="btn btn-sub" target="_blank" rel="noopener noreferrer">タップして詳細を見る（公式ページへ）</a>`;
-      }
-      return html ? `<div class="btnrow">${html}</div>` : '';
-    }
-
-    function buildCard(item, isLatest) {
-      return `
-        <div class="card ${isLatest ? 'latest' : ''}">
-          ${isLatest ? '<div class="badge">最新のお知らせ</div>' : ''}
-          <div class="meta">
-            ${item.date ? `<span class="date">${escapeHtml(item.date)}</span>` : ''}
-          </div>
-          ${item.title ? `<div class="title">${nl2br(item.title)}</div>` : ''}
-          ${buildMediaHtml(item) || buildImageHtml(item)}
-          ${item.detail ? `<div class="detail">${nl2br(item.detail)}</div>` : ''}
-          ${buildButtonsHtml(item)}
-        </div>
-      `;
-    }
-
-    async function loadBoard() {
-      const boardWindow = document.getElementById('boardWindow');
-
-      try {
-        const res = await fetch(`${GAS_URL}?mode=board`, { cache: 'no-store' });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-        const data = await res.json();
-        if (!data.ok) throw new Error(data.error || 'データ取得に失敗しました。');
-
-        const items = Array.isArray(data.items) ? data.items : [];
-
-        if (items.length === 0) {
-          boardWindow.innerHTML = '<div class="empty">表示できるお知らせがまだありません。</div>';
-          return;
-        }
-
-        boardWindow.innerHTML = items.map((item, idx) => buildCard(item, idx === 0)).join('');
-      } catch (err) {
-        boardWindow.innerHTML = `<div class="error-box">読み込みに失敗しました。\n${escapeHtml(err.message || String(err))}</div>`;
-      }
-    }
-
-    async function askConcierge() {
-      const queryEl = document.getElementById('query');
-      const askBtn = document.getElementById('askBtn');
-      const resultBox = document.getElementById('resultBox');
-      const query = queryEl.value.trim();
-
-      if (!query) return;
-
-      resultBox.classList.add('show');
-      document.getElementById('summaryText').textContent = '確認しています...';
-      document.getElementById('departmentText').textContent = '';
-      document.getElementById('firstStepText').textContent = '';
-      document.getElementById('guideText').textContent = '';
-      document.getElementById('urgencyText').textContent = '';
-      document.getElementById('actionButtons').innerHTML = '';
-
-      askBtn.disabled = true;
-      askBtn.textContent = '確認中...';
-
-      try {
-        const res = await fetch(GAS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            mode: 'concierge',
-            query: query
-          })
-        });
-
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-        const data = await res.json();
-        if (!data.ok) throw new Error(data.error || '案内に失敗しました。');
-
-        document.getElementById('summaryText').textContent = data.summary || '';
-        document.getElementById('departmentText').textContent = data.department || '';
-        document.getElementById('firstStepText').textContent = data.first_step || '';
-        document.getElementById('guideText').textContent = data.guide || '';
-        document.getElementById('urgencyText').textContent = data.urgency || '通常';
-
-        const phone = data.phone || FALLBACK_PHONE;
-        const digits = phone.replace(/[^0-9]/g, '');
-        let buttons = `<a class="btn btn-main" href="tel:${digits}">タップして電話する</a>`;
-
-        if (data.url) {
-          buttons += `<a class="btn btn-sub" href="${escapeHtml(data.url)}" target="_blank" rel="noopener noreferrer">タップして詳細を見る（公式ページへ）</a>`;
-        }
-
-        document.getElementById('actionButtons').innerHTML = buttons;
-      } catch (err) {
-        document.getElementById('summaryText').textContent = err.message || String(err);
-      } finally {
-        askBtn.disabled = false;
-        askBtn.textContent = '相談する';
-      }
-    }
-
-    function resetConcierge() {
-      document.getElementById('query').value = '';
-      document.getElementById('resultBox').classList.remove('show');
-      document.getElementById('summaryText').textContent = '';
-      document.getElementById('departmentText').textContent = '';
-      document.getElementById('firstStepText').textContent = '';
-      document.getElementById('guideText').textContent = '';
-      document.getElementById('urgencyText').textContent = '';
-      document.getElementById('actionButtons').innerHTML = '';
-    }
-
-    document.getElementById('askBtn').addEventListener('click', askConcierge);
-    document.getElementById('resetBtn').addEventListener('click', resetConcierge);
-
-    loadBoard();
   </script>
 </body>
 </html>
