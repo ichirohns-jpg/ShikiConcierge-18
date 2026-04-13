@@ -14,10 +14,8 @@
       --panel:#dfe8f2;
       --panelLine:#bfd0e2;
       --brand:#2757a5;
-      --brand2:#1d4f93;
       --subBtn:#eef3f8;
       --shadow:0 4px 14px rgba(0,0,0,.10);
-      --radius:20px;
     }
 
     *{box-sizing:border-box}
@@ -98,6 +96,28 @@
       width:100%;
       height:auto;
       background:#e8eef5;
+    }
+
+    .media-wrap{
+      padding:14px 16px 0;
+    }
+
+    .video-box{
+      position:relative;
+      width:100%;
+      padding-top:56.25%;
+      background:#000;
+      border-radius:16px;
+      overflow:hidden;
+      border:2px solid #d9e2ec;
+    }
+
+    .video-box iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
     }
 
     .post-body{
@@ -471,9 +491,7 @@
   <div class="board-wrap">
     <div class="board-window">
       <div id="boardStatus" class="card">
-        <div class="post-body">
-          <p class="sub">回覧板を読み込んでいます…</p>
-        </div>
+        <div class="post-body"><p class="sub">回覧板を読み込んでいます…</p></div>
       </div>
       <div id="boardList"></div>
     </div>
@@ -554,13 +572,13 @@
   </div>
 
   <div class="footer">
-    <a class="admin-link" href="https://github.com/ichirohns-jpg/ShikiConcierge-18/edit/main/index.html" target="_blank" rel="noopener">管理者用</a>
+      <a class="admin-link" href="https://github.com/ichirohns-jpg/ShikiConcierge-18/edit/main/index.html" target="_blank" rel="noopener">管理者用</a>
   </div>
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycby67tgza6CXtpmcV-CfVaaOF_iq_D-_w6KTSeaC71fmnHlEJYHUY-IOeqK28hib0cR0/exec';
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', function() {
       loadBoard();
       document.getElementById('askBtn').addEventListener('click', searchConcierge);
       document.getElementById('resetBtn').addEventListener('click', clearConsult);
@@ -589,14 +607,15 @@
         }
 
         const items = Array.isArray(data.items) ? data.items : [];
-
         if (!items.length) {
           status.innerHTML = '<div class="empty-card">表示できる回覧板がありません。</div>';
           return;
         }
 
         status.style.display = 'none';
-        list.innerHTML = items.map((item, idx) => renderBoardItem(item, idx === 0)).join('');
+        list.innerHTML = items.map(function(item, idx) {
+          return renderBoardItem(item, idx === 0);
+        }).join('');
       } catch (err) {
         status.innerHTML = '<div class="error-card">通信エラーが発生しました。</div>';
       }
@@ -604,28 +623,35 @@
 
     function renderBoardItem(item, isLatest) {
       const images = Array.isArray(item.images) ? item.images.filter(Boolean) : [];
-      const mainImage = images[0] ? `<img class="post-main-image" src="${escapeHtml(images[0])}" loading="lazy" alt="">` : '';
-      const thumbs = images.slice(1).map(url => `<img class="thumb" src="${escapeHtml(url)}" loading="lazy" alt="">`).join('');
-      const thumbWrap = thumbs ? `<div class="thumb-strip">${thumbs}</div>` : '';
-      const applyBtn = item.applyUrl ? `<a class="link-btn" href="${escapeHtml(item.applyUrl)}" target="_blank" rel="noopener">申込みを見る</a>` : '';
-      const pageBtn = item.pageUrl ? `<a class="link-btn" href="${escapeHtml(item.pageUrl)}" target="_blank" rel="noopener">詳しく見る</a>` : '';
+      const mainImage = images[0] ? '<img class="post-main-image" src="' + escapeHtml(images[0]) + '" loading="lazy" alt="">' : '';
 
-      return `
-        <article class="card ${isLatest ? 'latest' : ''}">
-          ${isLatest ? '<div class="latest-badge">最新のお知らせ</div>' : ''}
-          ${mainImage}
-          <div class="post-body">
-            <div class="post-date">${escapeHtml(item.date || '')}</div>
-            <h3 class="post-title">${escapeHtml(item.title || '')}</h3>
-            <div class="post-detail">${escapeHtml(item.detail || '')}</div>
-            ${thumbWrap}
-            <div class="link-row">
-              ${applyBtn}
-              ${pageBtn}
-            </div>
-          </div>
-        </article>
-      `;
+      let mediaHtml = '';
+      if (item.mediaUrl) {
+        const yt = extractYouTubeId(item.mediaUrl);
+        if (yt) {
+          mediaHtml = '<div class="media-wrap"><div class="video-box"><iframe src="https://www.youtube.com/embed/' + yt + '?playsinline=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>';
+        }
+      }
+
+      const thumbs = images.slice(1).map(function(url) {
+        return '<img class="thumb" src="' + escapeHtml(url) + '" loading="lazy" alt="">';
+      }).join('');
+      const thumbWrap = thumbs ? '<div class="thumb-strip">' + thumbs + '</div>' : '';
+      const applyBtn = item.applyUrl ? '<a class="link-btn" href="' + escapeHtml(item.applyUrl) + '" target="_blank" rel="noopener">申込みを見る</a>' : '';
+      const pageBtn = item.pageUrl ? '<a class="link-btn" href="' + escapeHtml(item.pageUrl) + '" target="_blank" rel="noopener">詳しく見る</a>' : '';
+
+      return '<article class="card ' + (isLatest ? 'latest' : '') + '">' +
+        (isLatest ? '<div class="latest-badge">最新のお知らせ</div>' : '') +
+        mainImage +
+        mediaHtml +
+        '<div class="post-body">' +
+          '<div class="post-date">' + escapeHtml(item.date || '') + '</div>' +
+          '<h3 class="post-title">' + escapeHtml(item.title || '') + '</h3>' +
+          '<div class="post-detail">' + escapeHtml(item.detail || '') + '</div>' +
+          thumbWrap +
+          '<div class="link-row">' + applyBtn + pageBtn + '</div>' +
+        '</div>' +
+      '</article>';
     }
 
     async function searchConcierge() {
@@ -649,9 +675,8 @@
           return;
         }
 
-        status.textContent = '';
         const b = data.best;
-
+        status.textContent = '';
         document.getElementById('rTheme').textContent = b.citizenTheme || b.theme || '';
         document.getElementById('rDept').textContent = b.department || '';
         document.getElementById('rGuide').textContent = b.guide1 || b.guide2 || '';
@@ -661,22 +686,22 @@
         document.getElementById('rConfidence').textContent = convertConfidence(data.confidence);
 
         const candidates = Array.isArray(data.candidates) ? data.candidates : [];
-        document.getElementById('candidateList').innerHTML = candidates.map(c => `
-          <div class="candidate">
-            <div class="candidate-title">${escapeHtml(c.citizenTheme || c.theme || '')}</div>
-            <div class="candidate-sub">${escapeHtml(c.department || '')}</div>
-            <div class="score">一致点 ${escapeHtml(String(c.score || ''))}</div>
-          </div>
-        `).join('');
+        document.getElementById('candidateList').innerHTML = candidates.map(function(c) {
+          return '<div class="candidate">' +
+            '<div class="candidate-title">' + escapeHtml(c.citizenTheme || c.theme || '') + '</div>' +
+            '<div class="candidate-sub">' + escapeHtml(c.department || '') + '</div>' +
+            '<div class="score">一致点 ' + escapeHtml(String(c.score || '')) + '</div>' +
+          '</div>';
+        }).join('');
 
         const buttons = [];
         const rawPhone = (b.phone || '').trim();
         if (rawPhone) {
           const telOnly = rawPhone.replace(/[^\d]/g, '');
-          buttons.push(`<a class="btn btn-main" href="tel:${telOnly}">電話する：${escapeHtml(rawPhone)}</a>`);
+          buttons.push('<a class="btn btn-main" href="tel:' + telOnly + '">電話する：' + escapeHtml(rawPhone) + '</a>');
         }
         if (b.url) {
-          buttons.push(`<a class="btn btn-sub" href="${escapeHtml(b.url)}" target="_blank" rel="noopener">公式ページを見る</a>`);
+          buttons.push('<a class="btn btn-sub" href="' + escapeHtml(b.url) + '" target="_blank" rel="noopener">公式ページを見る</a>');
         }
         document.getElementById('actionButtons').innerHTML = buttons.join('');
 
@@ -706,6 +731,20 @@
       if (confidence === 'high') return '高め';
       if (confidence === 'medium') return '中くらい';
       return '低め';
+    }
+
+    function extractYouTubeId(url) {
+      const s = String(url || '').trim();
+      if (!s) return '';
+      let m = s.match(/[?&]v=([a-zA-Z0-9_-]{6,})/);
+      if (m && m[1]) return m[1];
+      m = s.match(/youtu\.be\/([a-zA-Z0-9_-]{6,})/);
+      if (m && m[1]) return m[1];
+      m = s.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{6,})/);
+      if (m && m[1]) return m[1];
+      m = s.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,})/);
+      if (m && m[1]) return m[1];
+      return '';
     }
 
     function escapeHtml(v) {
