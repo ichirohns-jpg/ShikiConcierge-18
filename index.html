@@ -500,7 +500,7 @@
   </div>
 
   <script>
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxMaAICcA3LsjATKNzFPy6azLzVigMpvZN2P-oOsfKCHFiPUpvCNq_fx3p5wcDI_GmI/exec';
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxI0baFN17p2rSyjUELidzMc_j2X_gFmoOvOo6aVbGhTBy9iO5imM77wiW7jib3DOuE/exec';
     const FALLBACK_PHONE = '048-473-1111';
 
     function escapeHtml(str) {
@@ -691,6 +691,7 @@
       try {
         const url = `${GAS_URL}?mode=concierge&query=${encodeURIComponent(query)}`;
         const res = await fetch(url, { cache: 'no-store' });
+
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const data = await res.json();
