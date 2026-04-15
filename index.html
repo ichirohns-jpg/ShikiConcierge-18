@@ -4,37 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>志木お助け隊</title>
+  <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycbwqGFVPDK8P9mV3YRLXOV2VbBlOczKcvVrxpXnEiwpA4UMrvlDlbgB0j6okCBxHLEtfPA/exec?t=99999">
   <style>
-    *{box-sizing:border-box}
     html,body{
       margin:0;
       padding:0;
-      width:100%;
-      height:100%;
       background:#f3f5f9;
-      overflow:hidden;
+      font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,"Hiragino Sans",Meiryo,sans-serif;
     }
-    iframe{
-      display:block;
-      width:100vw;
-      height:100vh;
-      border:0;
-      background:#f3f5f9;
+    .wrap{
+      max-width:560px;
+      margin:0 auto;
+      padding:24px 16px;
+    }
+    .card{
+      background:#fff;
+      border-radius:20px;
+      padding:20px 18px;
+      box-shadow:0 6px 20px rgba(0,0,0,.10);
+    }
+    .text{
+      font-size:18px;
+      line-height:1.8;
+      color:#334155;
+    }
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:56px;
+      margin-top:16px;
+      border-radius:999px;
+      background:#1a73e8;
+      color:#fff;
+      text-decoration:none;
+      font-size:20px;
+      font-weight:800;
     }
   </style>
+  <script>
+    location.replace('https://script.google.com/macros/s/AKfycbwqGFVPDK8P9mV3YRLXOV2VbBlOczKcvVrxpXnEiwpA4UMrvlDlbgB0j6okCBxHLEtfPA/exec?t=' + Date.now());
+  </script>
 </head>
 <body>
-  <iframe
-    id="appFrame"
-    title="志木お助け隊"
-    loading="eager"
-    referrerpolicy="no-referrer"
-    allowfullscreen>
-  </iframe>
-
-  <script>
-    const GS_URL = 'https://script.google.com/macros/s/AKfycbwqGFVPDK8P9mV3YRLXOV2VbBlOczKcvVrxpXnEiwpA4UMrvlDlbgB0j6okCBxHLEtfPA/exec';
-    document.getElementById('appFrame').src = GS_URL + '?t=' + Date.now();
-  </script>
+  <div class="wrap">
+    <div class="card">
+      <div class="text">志木お助け隊を開いています。</div>
+      <a class="btn" href="https://script.google.com/macros/s/AKfycbwqGFVPDK8P9mV3YRLXOV2VbBlOczKcvVrxpXnEiwpA4UMrvlDlbgB0j6okCBxHLEtfPA/exec?t=99999">開かない時はこちら</a>
+    </div>
+  </div>
 </body>
 </html>
