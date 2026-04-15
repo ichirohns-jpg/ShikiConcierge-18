@@ -12,193 +12,31 @@
       width:100%;
       min-height:100%;
       background:#f3f5f9;
-      font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,"Hiragino Sans",Meiryo,sans-serif;
-      color:#182433;
     }
     body{-webkit-text-size-adjust:100%}
-    .page{
-      width:100%;
-      min-height:100vh;
-      background:#f3f5f9;
-    }
-    .topbar{
-      position:sticky;
-      top:0;
-      z-index:10;
-      background:rgba(243,245,249,.96);
-      backdrop-filter:blur(8px);
-      border-bottom:1px solid #e3e8ef;
-    }
-    .topbar-inner{
-      max-width:760px;
-      margin:0 auto;
-      padding:10px 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .title{
-      font-size:18px;
-      line-height:1.4;
-      font-weight:800;
-      color:#1a73e8;
-      margin:0;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .open-btn{
-      flex:0 0 auto;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:44px;
-      padding:0 16px;
-      border-radius:999px;
-      background:#1a73e8;
-      color:#fff;
-      text-decoration:none;
-      font-size:16px;
-      font-weight:800;
-      box-shadow:0 4px 10px rgba(26,115,232,.22);
-    }
     .frame-wrap{
       width:100%;
-      max-width:760px;
-      margin:0 auto;
-      padding:10px 0 0;
+      margin:0;
+      padding:0;
     }
     iframe{
       display:block;
       width:100%;
-      min-height:calc(100vh - 66px);
+      min-height:100vh;
       border:0;
       background:#f3f5f9;
-    }
-    .fallback{
-      display:none;
-      max-width:760px;
-      margin:0 auto;
-      padding:18px 12px 36px;
-    }
-    .card{
-      background:#fff;
-      border-radius:22px;
-      box-shadow:0 6px 20px rgba(0,0,0,.10);
-      border:1px solid #e3e8ef;
-      padding:22px 18px;
-    }
-    .card-title{
-      font-size:28px;
-      line-height:1.5;
-      font-weight:800;
-      color:#1a73e8;
-      margin:0 0 12px;
-    }
-    .text{
-      font-size:18px;
-      line-height:1.9;
-      color:#334155;
-      margin:0 0 18px;
-      word-break:break-word;
-    }
-    .btn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height:60px;
-      padding:14px 16px;
-      border-radius:999px;
-      text-decoration:none;
-      font-size:20px;
-      font-weight:800;
-      background:#1a73e8;
-      color:#fff;
-    }
-    .note{
-      margin-top:14px;
-      font-size:15px;
-      line-height:1.8;
-      color:#66758c;
-    }
-    @media (max-width:430px){
-      .topbar-inner{padding:8px 10px}
-      .title{font-size:16px}
-      .open-btn{min-height:40px;font-size:14px;padding:0 13px}
-      iframe{min-height:calc(100vh - 58px)}
-      .card-title{font-size:25px}
-      .text{font-size:17px}
-      .btn{font-size:19px}
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="topbar">
-      <div class="topbar-inner">
-        <h1 class="title">志木お助け隊</h1>
-        <a
-          class="open-btn"
-          href="https://script.google.com/macros/s/AKfycbwJ1Fcq9rqOABDyWD9j9uCK5rV7274ogezzaMwIW-W2YzSYIH2tGIp77JXvO2E2m-yp/exec"
-          target="_blank"
-          rel="noopener noreferrer">
-          直接開く
-        </a>
-      </div>
-    </div>
-
-    <div class="frame-wrap">
-      <iframe
-        id="appFrame"
-        src="https://script.google.com/macros/s/AKfycbwJ1Fcq9rqOABDyWD9j9uCK5rV7274ogezzaMwIW-W2YzSYIH2tGIp77JXvO2E2m-yp/exec"
-        title="志木お助け隊"
-        loading="eager"
-        referrerpolicy="no-referrer"
-        allowfullscreen>
-      </iframe>
-    </div>
-
-    <div id="fallback" class="fallback">
-      <div class="card">
-        <h2 class="card-title">志木お助け隊</h2>
-        <p class="text">
-          読み込みがうまくいかない場合は、下のボタンから直接開いてください。
-        </p>
-        <a
-          class="btn"
-          href="https://script.google.com/macros/s/AKfycbwJ1Fcq9rqOABDyWD9j9uCK5rV7274ogezzaMwIW-W2YzSYIH2tGIp77JXvO2E2m-yp/exec"
-          target="_blank"
-          rel="noopener noreferrer">
-          直接開く
-        </a>
-        <div class="note">
-          表示の本体は Apps Script 側です。スプレッドシート変更が反映されない時は、Apps Script 側の SPREADSHEET_ID を確認してください。
-        </div>
-      </div>
-    </div>
+  <div class="frame-wrap">
+    <iframe
+      src="https://script.google.com/macros/s/AKfycbwJ1Fcq9rqOABDyWD9j9uCK5rV7274ogezzaMwIW-W2YzSYIH2tGIp77JXvO2E2m-yp/exec"
+      title="志木お助け隊"
+      loading="eager"
+      referrerpolicy="no-referrer"
+      allowfullscreen>
+    </iframe>
   </div>
-
-  <script>
-    (function () {
-      var iframe = document.getElementById('appFrame');
-      var fallback = document.getElementById('fallback');
-      var shown = false;
-
-      function showFallback() {
-        if (shown) return;
-        shown = true;
-        fallback.style.display = 'block';
-      }
-
-      iframe.addEventListener('error', function () {
-        showFallback();
-      });
-
-      setTimeout(function () {
-        showFallback();
-      }, 8000);
-    })();
-  </script>
 </body>
 </html>
