@@ -2,678 +2,152 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>志木市AIコンシェルジュDX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>志木お助け隊</title>
   <style>
-    :root{
-      --bg:#eef3f8;
-      --card:#ffffff;
-      --text:#1b2d3f;
-      --muted:#5f7285;
-      --line:#d9e2ec;
-      --panel:#dfe8f2;
-      --panelLine:#bfd0e2;
-      --brand:#2757a5;
-      --subBtn:#eef3f8;
-      --shadow:0 4px 14px rgba(0,0,0,.10);
+    * {
+      box-sizing: border-box;
     }
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;
-      padding:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic","Meiryo","Noto Sans JP",sans-serif;
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #f3f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Hiragino Sans", Meiryo, sans-serif;
     }
-    body{
-      max-width:920px;
-      margin:0 auto;
-      min-height:100vh;
-      padding-bottom:30px;
-      background:var(--bg);
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      background: #f3f5f9;
     }
-    .hero-wrap{padding:10px 8px 10px;}
-    .hero-card{
-      background:#fff;
-      border-radius:22px;
-      overflow:hidden;
-      box-shadow:var(--shadow);
-      border:2px solid var(--line);
+
+    .frame-wrap {
+      width: 100%;
+      min-height: 100vh;
+      background: #f3f5f9;
     }
-    .hero-img{
-      display:block;
-      width:100%;
-      height:auto;
+
+    iframe {
+      display: block;
+      width: 100%;
+      min-height: 100vh;
+      border: 0;
+      background: #f3f5f9;
     }
-    .board-wrap{padding:0 8px 18px;}
-    .board-window{
-      background:var(--panel);
-      border:3px solid var(--panelLine);
-      border-radius:24px;
-      padding:10px;
-      min-height:420px;
-      box-shadow:inset 0 2px 8px rgba(0,0,0,.08);
+
+    .fallback {
+      display: none;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
     }
-    .card{
-      background:#fff;
-      border-radius:20px;
-      box-shadow:0 4px 14px rgba(0,0,0,.08);
-      border:2px solid var(--line);
-      overflow:hidden;
-      margin:0 0 18px;
+
+    .card {
+      background: #ffffff;
+      border-radius: 22px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.10);
+      padding: 22px 18px;
     }
-    .latest{outline:6px solid #ffd84d;}
-    .latest-badge{
-      display:inline-block;
-      margin:16px 16px 0;
-      background:#e8f1ff;
-      color:#1c4c94;
-      font-size:18px;
-      font-weight:900;
-      padding:10px 16px;
-      border-radius:999px;
+
+    .title {
+      font-size: 28px;
+      line-height: 1.5;
+      font-weight: 800;
+      color: #1a73e8;
+      margin: 0 0 12px;
     }
-    .post-main-image{
-      display:block;
-      width:100%;
-      height:auto;
-      background:#e8eef5;
+
+    .text {
+      font-size: 18px;
+      line-height: 1.9;
+      color: #334155;
+      margin: 0 0 18px;
+      word-break: break-word;
     }
-    .media-wrap{padding:14px 16px 0;}
-    .video-box{
-      position:relative;
-      width:100%;
-      padding-top:56.25%;
-      background:#000;
-      border-radius:16px;
-      overflow:hidden;
-      border:2px solid #d9e2ec;
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 60px;
+      padding: 14px 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 800;
+      background: #1a73e8;
+      color: #ffffff;
     }
-    .video-box iframe{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      border:0;
-    }
-    .post-body{padding:14px 16px 18px;}
-    .post-date{
-      font-size:16px;
-      line-height:1.5;
-      color:#5b6f87;
-      font-weight:900;
-      margin-bottom:8px;
-    }
-    .post-title{
-      font-size:28px;
-      line-height:1.5;
-      font-weight:900;
-      color:#163556;
-      margin:0 0 10px;
-      white-space:pre-wrap;
-      word-break:break-word;
-    }
-    .post-detail{
-      font-size:24px;
-      line-height:1.9;
-      color:#223646;
-      white-space:pre-wrap;
-      word-break:break-word;
-    }
-    .thumb-strip{
-      display:flex;
-      gap:10px;
-      overflow-x:auto;
-      -webkit-overflow-scrolling:touch;
-      scroll-snap-type:x proximity;
-      margin-top:14px;
-      padding-bottom:6px;
-    }
-    .thumb-strip::-webkit-scrollbar{height:8px;}
-    .thumb-strip::-webkit-scrollbar-thumb{
-      background:#c7d6e6;
-      border-radius:999px;
-    }
-    .thumb{
-      flex:0 0 42%;
-      max-width:260px;
-      aspect-ratio:1/1;
-      object-fit:cover;
-      border-radius:12px;
-      background:#eef2f7;
-      border:1px solid #dde7f0;
-      scroll-snap-align:start;
-      display:block;
-    }
-    .link-row{
-      display:grid;
-      gap:10px;
-      margin-top:14px;
-    }
-    .link-btn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height:64px;
-      padding:12px 18px;
-      border-radius:16px;
-      text-decoration:none;
-      font-size:23px;
-      font-weight:900;
-      line-height:1.5;
-      text-align:center;
-      border:2px solid #cfe0f1;
-      background:#edf6ff;
-      color:#114c81;
-    }
-    .empty-card{
-      background:#fff;
-      border-radius:20px;
-      border:2px dashed #d6e1ed;
-      padding:28px 20px;
-      font-size:24px;
-      line-height:1.8;
-      font-weight:900;
-      color:#607487;
-      text-align:center;
-    }
-    .error-card{
-      background:#fff3f3;
-      color:#9b1c1c;
-      border:2px solid #f3c2c2;
-      border-radius:18px;
-      padding:20px;
-      font-size:24px;
-      font-weight:900;
-      line-height:1.7;
-      white-space:pre-wrap;
-    }
-    .lead-wrap{padding:8px 10px 8px;}
-    .lead-title{
-      margin:0 0 8px;
-      font-size:40px;
-      line-height:1.45;
-      font-weight:900;
-      color:#0f2e52;
-      word-break:keep-all;
-    }
-    .lead-text{
-      margin:0;
-      font-size:30px;
-      line-height:1.95;
-      font-weight:900;
-      color:#35506b;
-    }
-    .consult-card{
-      background:#fff;
-      margin:10px 8px 18px;
-      border-radius:22px;
-      box-shadow:0 4px 14px rgba(0,0,0,.08);
-      border:2px solid var(--line);
-      overflow:hidden;
-    }
-    .consult-body{padding:18px 16px 22px;}
-    .consult-label{
-      font-size:26px;
-      line-height:1.8;
-      font-weight:900;
-      color:#35506b;
-      margin:0 0 10px;
-    }
-    .textarea{
-      width:100%;
-      min-height:190px;
-      border:4px solid #cfd9e6;
-      border-radius:18px;
-      padding:18px;
-      font-size:34px;
-      color:#000;
-      resize:vertical;
-      outline:none;
-      background:#fff;
-      line-height:1.8;
-      font-family:inherit;
-    }
-    .textarea::placeholder{
-      color:#9aa7b4;
-      font-size:30px;
-    }
-    .textarea:focus{
-      border-color:#2f5ca8;
-      box-shadow:0 0 10px rgba(47,92,168,.22);
-    }
-    .hint{
-      margin-top:12px;
-      font-size:28px;
-      line-height:1.9;
-      font-weight:900;
-      color:#5b6f84;
-    }
-    .btnrow{
-      padding-top:2px;
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .btn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      min-height:84px;
-      padding:14px 24px;
-      border-radius:16px;
-      font-size:28px;
-      font-weight:900;
-      text-decoration:none;
-      border:none;
-      text-align:center;
-      line-height:1.5;
-      cursor:pointer;
-      font-family:inherit;
-    }
-    .btn-main{
-      background:var(--brand);
-      color:#fff;
-      flex:1 1 240px;
-      box-shadow:var(--shadow);
-    }
-    .btn-sub{
-      background:var(--subBtn);
-      color:#1a3658;
-      border:2px solid #d3dce7;
-      flex:1 1 180px;
-      box-shadow:var(--shadow);
-    }
-    .status{
-      margin-top:14px;
-      font-size:24px;
-      line-height:1.8;
-      font-weight:900;
-      color:#35526b;
-      white-space:pre-wrap;
-    }
-    .result{
-      display:none;
-      background:#fff;
-      margin:0 8px 18px;
-      border-radius:22px;
-      box-shadow:0 4px 14px rgba(0,0,0,.08);
-      border:2px solid var(--line);
-      overflow:hidden;
-    }
-    .result.show{display:block;}
-    .result-head{
-      background:#eef4ff;
-      color:#1f4d95;
-      padding:18px 16px;
-      font-size:34px;
-      font-weight:900;
-      line-height:1.45;
-      border-bottom:2px solid #d7e3f7;
-    }
-    .section{
-      padding:18px 16px;
-      border-bottom:2px solid #eef3f8;
-    }
-    .section:last-child{border-bottom:none;}
-    .section-title{
-      font-size:28px;
-      font-weight:900;
-      color:#4f6276;
-      line-height:1.6;
-      margin-bottom:8px;
-    }
-    .section-text{
-      font-size:34px;
-      line-height:2.0;
-      font-weight:900;
-      color:#1f2f40;
-      white-space:pre-wrap;
-      word-break:break-word;
-    }
-    .soft-box{
-      background:#f1f6ff;
-      border:2px solid #d5e4ff;
-      border-radius:18px;
-      padding:18px 16px;
-    }
-    .action-area{
-      padding:18px 16px 22px;
-      background:#fff;
-    }
-    .candidate-list{
-      display:grid;
-      gap:10px;
-    }
-    .candidate{
-      background:#fafbfd;
-      border:1px solid #e2e8f0;
-      border-radius:14px;
-      padding:12px;
-    }
-    .candidate-title{
-      font-size:24px;
-      line-height:1.6;
-      font-weight:900;
-      margin:0 0 6px;
-    }
-    .candidate-sub{
-      font-size:20px;
-      line-height:1.7;
-      color:#35506b;
-      font-weight:800;
-    }
-    .score{
-      display:inline-block;
-      margin-top:8px;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:16px;
-      font-weight:900;
-      background:#e8f0fb;
-      color:#295684;
-    }
-    .footer{
-      text-align:center;
-      padding:8px 4px 24px;
-      color:#66778b;
-      font-size:14px;
-      line-height:1.8;
-    }
-    .admin-link{
-      color:#66778b;
-      text-decoration:none;
-      border-bottom:1px solid #9eb0c6;
-    }
-    @media (max-width:640px){
-      .post-title{font-size:26px}
-      .post-detail{font-size:22px}
-      .lead-title{font-size:34px}
-      .lead-text{font-size:24px}
-      .consult-label{font-size:22px}
-      .textarea{font-size:28px;min-height:170px}
-      .textarea::placeholder{font-size:24px}
-      .hint{font-size:24px}
-      .btn{font-size:24px;min-height:78px}
-      .result-head{font-size:30px}
-      .section-title{font-size:24px}
-      .section-text{font-size:28px}
-      .thumb{flex:0 0 58%}
+
+    @media (max-width: 430px) {
+      .title {
+        font-size: 25px;
+      }
+
+      .text {
+        font-size: 17px;
+      }
+
+      .btn {
+        font-size: 19px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="hero-wrap">
-    <div class="hero-card">
-      <img class="hero-img" src="https://drive.google.com/thumbnail?id=1TBBGsm6XypE701Q6guwWm5RcuCUx5_s_&sz=w1600" alt="志木市デジタル回覧板">
-    </div>
-  </div>
-
-  <div class="board-wrap">
-    <div class="board-window">
-      <div id="boardStatus" class="card">
-        <div class="post-body"><p class="sub">回覧板を読み込んでいます…</p></div>
-      </div>
-      <div id="boardList"></div>
-    </div>
-  </div>
-
-  <div class="hero-wrap">
-    <div class="hero-card">
-      <img class="hero-img" src="https://drive.google.com/thumbnail?id=15TLn-8XevnHqPIvSIt5hu2yuuRgwviYz&sz=w1600" alt="志木市役所AIコンシェルジュ">
-    </div>
-  </div>
-
-  <div class="lead-wrap">
-    <h1 class="lead-title">志木市役所AIコンシェルジュ</h1>
-    <p class="lead-text">困っていることを書くと、何の案内か、どこの担当か、まず何をすればよいかを分かりやすく案内します。</p>
-  </div>
-
-  <div class="consult-card">
-    <div class="consult-body">
-      <p class="consult-label">例：住民票が欲しいです / 水道料金の支払い方法を知りたい / 粗大ごみの出し方を知りたい</p>
-      <textarea id="consultText" class="textarea" placeholder="ここに困っていることを書いてください"></textarea>
-      <div class="hint">AIが整理して、この画面の中でまず分かるように案内します。まだ不安な時だけ電話し、もっと詳しいことは公式ページを見ます。</div>
-      <div class="btnrow">
-        <button id="askBtn" class="btn btn-main" type="button">相談する</button>
-        <button id="resetBtn" class="btn btn-sub" type="button">消す</button>
-      </div>
-      <div id="consultStatus" class="status"></div>
-    </div>
-  </div>
-
-  <div id="resultBox" class="result">
-    <div class="result-head">案内結果</div>
-
-    <div class="section">
-      <div class="section-title">近いテーマ</div>
-      <div id="rTheme" class="section-text"></div>
+  <div class="page">
+    <div class="frame-wrap">
+      <iframe
+        id="appFrame"
+        src="https://script.google.com/macros/s/AKfycbwJ1Fcq9rqOABDyWD9j9uCK5rV7274ogezzaMwIW-W2YzSYIH2tGIp77JXvO2E2m-yp/exec"
+        title="志木お助け隊"
+        loading="eager"
+        referrerpolicy="no-referrer"
+        allowfullscreen>
+      </iframe>
     </div>
 
-    <div class="section">
-      <div class="section-title">担当課</div>
-      <div id="rDept" class="section-text"></div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">まずの案内</div>
-      <div class="soft-box">
-        <div id="rGuide" class="section-text"></div>
+    <div id="fallback" class="fallback">
+      <div class="card">
+        <h1 class="title">志木お助け隊</h1>
+        <p class="text">
+          読み込みがうまくいかない場合は、下のボタンから直接開いてください。
+        </p>
+        <a
+          class="btn"
+          href="https://script.google.com/macros/s/AKfycbwJ1Fcq9rqOABDyWD9j9uCK5rV7274ogezzaMwIW-W2YzSYIH2tGIp77JXvO2E2m-yp/exec"
+          target="_blank"
+          rel="noopener noreferrer">
+          直接開く
+        </a>
       </div>
     </div>
-
-    <div class="section">
-      <div class="section-title">やさしい説明</div>
-      <div id="rEasy" class="section-text"></div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">どういうときに確認するか</div>
-      <div id="rWhen" class="section-text"></div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">どう役立つか</div>
-      <div id="rBenefit" class="section-text"></div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">検索の自信度</div>
-      <div id="rConfidence" class="section-text"></div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">近い候補</div>
-      <div id="candidateList" class="candidate-list"></div>
-    </div>
-
-    <div class="action-area">
-      <div id="actionButtons" class="btnrow"></div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <a class="admin-link" href="https://github.com/ichirohns-jpg/ShikiConcierge-18/edit/main/index.html" target="_blank" rel="noopener">管理者用</a>
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycby67tgza6CXtpmcV-CfVaaOF_iq_D-_w6KTSeaC71fmnHlEJYHUY-IOeqK28hib0cR0/exec';
+    (function () {
+      var iframe = document.getElementById('appFrame');
+      var fallback = document.getElementById('fallback');
 
-    document.addEventListener('DOMContentLoaded', function() {
-      loadBoard();
-      document.getElementById('askBtn').addEventListener('click', searchConcierge);
-      document.getElementById('resetBtn').addEventListener('click', clearConsult);
-    });
+      var shown = false;
 
-    async function postJson(payload) {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
+      function showFallback() {
+        if (shown) return;
+        shown = true;
+        fallback.style.display = 'block';
+      }
+
+      iframe.addEventListener('error', function () {
+        showFallback();
       });
-      if (!res.ok) throw new Error('Network response was not ok');
-      return await res.json();
-    }
 
-    async function loadBoard() {
-      const status = document.getElementById('boardStatus');
-      const list = document.getElementById('boardList');
-
-      try {
-        const data = await postJson({ action: 'getKairan' });
-
-        if (!data.ok) {
-          status.innerHTML = '<div class="error-card">回覧板を読み込めませんでした。</div>';
-          return;
-        }
-
-        const items = Array.isArray(data.items) ? data.items : [];
-        if (!items.length) {
-          status.innerHTML = '<div class="empty-card">表示できる回覧板がありません。</div>';
-          return;
-        }
-
-        status.style.display = 'none';
-        list.innerHTML = items.map(function(item, idx) {
-          return renderBoardItem(item, idx === 0);
-        }).join('');
-      } catch (err) {
-        status.innerHTML = '<div class="error-card">通信エラーが発生しました。</div>';
-      }
-    }
-
-    function renderBoardItem(item, isLatest) {
-      const images = Array.isArray(item.images) ? item.images.filter(Boolean) : [];
-      const mainImage = images[0] ? '<img class="post-main-image" src="' + escapeHtml(images[0]) + '" loading="lazy" alt="">' : '';
-
-      let mediaHtml = '';
-      if (item.mediaUrl) {
-        const yt = extractYouTubeId(item.mediaUrl);
-        if (yt) {
-          mediaHtml = '<div class="media-wrap"><div class="video-box"><iframe src="https://www.youtube.com/embed/' + yt + '?playsinline=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>';
-        }
-      }
-
-      const thumbs = images.slice(1).map(function(url) {
-        return '<img class="thumb" src="' + escapeHtml(url) + '" loading="lazy" alt="">';
-      }).join('');
-      const thumbWrap = thumbs ? '<div class="thumb-strip">' + thumbs + '</div>' : '';
-      const applyBtn = item.applyUrl ? '<a class="link-btn" href="' + escapeHtml(item.applyUrl) + '" target="_blank" rel="noopener">申込みを見る</a>' : '';
-      const pageBtn = item.pageUrl ? '<a class="link-btn" href="' + escapeHtml(item.pageUrl) + '" target="_blank" rel="noopener">詳しく見る</a>' : '';
-
-      return '<article class="card ' + (isLatest ? 'latest' : '') + '">' +
-        (isLatest ? '<div class="latest-badge">最新のお知らせ</div>' : '') +
-        mainImage +
-        mediaHtml +
-        '<div class="post-body">' +
-          '<div class="post-date">' + escapeHtml(item.date || '') + '</div>' +
-          '<h3 class="post-title">' + escapeHtml(item.title || '') + '</h3>' +
-          '<div class="post-detail">' + escapeHtml(item.detail || '') + '</div>' +
-          thumbWrap +
-          '<div class="link-row">' + applyBtn + pageBtn + '</div>' +
-        '</div>' +
-      '</article>';
-    }
-
-    async function searchConcierge() {
-      const text = document.getElementById('consultText').value.trim();
-      const status = document.getElementById('consultStatus');
-      const resultBox = document.getElementById('resultBox');
-
-      if (!text) {
-        status.textContent = '相談内容を書いてください。';
-        return;
-      }
-
-      status.textContent = '相談先を確認しています…';
-      resultBox.classList.remove('show');
-
-      try {
-        const data = await postJson({ action: 'conciergeSearch', text: text });
-
-        if (!data.ok || !data.best) {
-          status.textContent = '近い案内を見つけられませんでした。言い方を少し変えてもう一度お試しください。';
-          return;
-        }
-
-        const b = data.best;
-        status.textContent = '';
-        document.getElementById('rTheme').textContent = b.citizenTheme || b.theme || '';
-        document.getElementById('rDept').textContent = b.department || '';
-        document.getElementById('rGuide').textContent = b.guide1 || b.guide2 || '';
-        document.getElementById('rEasy').textContent = b.easyText || b.description || '';
-        document.getElementById('rWhen').textContent = b.whenToCheck || '';
-        document.getElementById('rBenefit').textContent = b.benefit || '';
-        document.getElementById('rConfidence').textContent = convertConfidence(data.confidence);
-
-        const candidates = Array.isArray(data.candidates) ? data.candidates : [];
-        document.getElementById('candidateList').innerHTML = candidates.map(function(c) {
-          return '<div class="candidate">' +
-            '<div class="candidate-title">' + escapeHtml(c.citizenTheme || c.theme || '') + '</div>' +
-            '<div class="candidate-sub">' + escapeHtml(c.department || '') + '</div>' +
-            '<div class="score">一致点 ' + escapeHtml(String(c.score || '')) + '</div>' +
-          '</div>';
-        }).join('');
-
-        const buttons = [];
-        const rawPhone = (b.phone || '').trim();
-        if (rawPhone) {
-          const telOnly = rawPhone.replace(/[^\d]/g, '');
-          buttons.push('<a class="btn btn-main" href="tel:' + telOnly + '">電話する：' + escapeHtml(rawPhone) + '</a>');
-        }
-        if (b.url) {
-          buttons.push('<a class="btn btn-sub" href="' + escapeHtml(b.url) + '" target="_blank" rel="noopener">公式ページを見る</a>');
-        }
-        document.getElementById('actionButtons').innerHTML = buttons.join('');
-
-        resultBox.classList.add('show');
-        resultBox.scrollIntoView({ behavior:'smooth', block:'start' });
-      } catch (err) {
-        status.textContent = '検索中にエラーが出ました。';
-      }
-    }
-
-    function clearConsult() {
-      document.getElementById('consultText').value = '';
-      document.getElementById('consultStatus').textContent = '';
-      document.getElementById('resultBox').classList.remove('show');
-      document.getElementById('rTheme').textContent = '';
-      document.getElementById('rDept').textContent = '';
-      document.getElementById('rGuide').textContent = '';
-      document.getElementById('rEasy').textContent = '';
-      document.getElementById('rWhen').textContent = '';
-      document.getElementById('rBenefit').textContent = '';
-      document.getElementById('rConfidence').textContent = '';
-      document.getElementById('candidateList').innerHTML = '';
-      document.getElementById('actionButtons').innerHTML = '';
-    }
-
-    function convertConfidence(confidence) {
-      if (confidence === 'high') return '高め';
-      if (confidence === 'medium') return '中くらい';
-      return '低め';
-    }
-
-    function extractYouTubeId(url) {
-      const s = String(url || '').trim();
-      if (!s) return '';
-      let m = s.match(/[?&]v=([a-zA-Z0-9_-]{6,})/);
-      if (m && m[1]) return m[1];
-      m = s.match(/youtu\\.be\\/([a-zA-Z0-9_-]{6,})/);
-      if (m && m[1]) return m[1];
-      m = s.match(/youtube\\.com\\/embed\\/([a-zA-Z0-9_-]{6,})/);
-      if (m && m[1]) return m[1];
-      m = s.match(/youtube\\.com\\/shorts\\/([a-zA-Z0-9_-]{6,})/);
-      if (m && m[1]) return m[1];
-      return '';
-    }
-
-    function escapeHtml(v) {
-      if (!v) return '';
-      return String(v).replace(/[&<>"']/g, function(m){
-        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
-      });
-    }
+      setTimeout(function () {
+        showFallback();
+      }, 8000);
+    })();
   </script>
 </body>
 </html>
