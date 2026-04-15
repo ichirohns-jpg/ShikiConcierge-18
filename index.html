@@ -2,20 +2,50 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>NEW TEST 777</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>志木お助け隊</title>
   <style>
+    *{box-sizing:border-box}
     html,body{
       margin:0;
       padding:0;
-      background:#ff0000;
-      color:#ffffff;
-      font-size:40px;
-      font-weight:bold;
+      width:100%;
+      height:100%;
+      background:#f3f5f9;
+      overflow:hidden;
+    }
+    body{-webkit-text-size-adjust:100%}
+    .frame-wrap{
+      width:100vw;
+      height:100vh;
+      margin:0;
+      padding:0;
+    }
+    iframe{
+      display:block;
+      width:100vw;
+      height:100vh;
+      border:0;
+      background:#f3f5f9;
     }
   </style>
 </head>
 <body>
-NEW TEST 777
+  <div class="frame-wrap">
+    <iframe
+      id="appFrame"
+      title="志木お助け隊"
+      loading="eager"
+      referrerpolicy="no-referrer"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <script>
+    (function () {
+      var base = 'https://script.google.com/macros/s/AKfycbwJ1Fcq9rqOABDyWD9j9uCK5rV7274ogezzaMwIW-W2YzSYIH2tGIp77JXvO2E2m-yp/exec';
+      document.getElementById('appFrame').src = base + '?t=' + Date.now();
+    })();
+  </script>
 </body>
 </html>
