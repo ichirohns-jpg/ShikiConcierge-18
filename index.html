@@ -3,49 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <title>志木お助け隊</title>
+  <title>ShikiConcierge-18</title>
   <style>
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: #f3f5f9;
-      overflow: hidden;
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      width:100%;
+      height:100%;
+      background:#f3f5f9;
+      overflow:hidden;
     }
-    body { -webkit-text-size-adjust: 100%; }
-    .frame-wrap {
-      width: 100vw;
-      height: 100vh;
-      margin: 0;
-      padding: 0;
-    }
-    iframe {
-      display: block;
-      width: 100vw;
-      height: 100vh;
-      border: 0;
-      background: #f3f5f9;
+    iframe{
+      display:block;
+      width:100vw;
+      height:100vh;
+      border:0;
+      background:#f3f5f9;
     }
   </style>
 </head>
 <body>
-  <div class="frame-wrap">
-    <iframe
-      id="appFrame"
-      title="志木お助け隊"
-      loading="eager"
-      referrerpolicy="no-referrer"
-      allowfullscreen>
-    </iframe>
-  </div>
+  <iframe
+    id="appFrame"
+    title="ShikiConcierge-18"
+    loading="eager"
+    referrerpolicy="no-referrer"
+    allowfullscreen>
+  </iframe>
 
   <script>
-    (function () {
-      var gsUrl = 'https://script.google.com/macros/s/AKfycbwJ1Fcq9rqOABDyWD9j9uCK5rV7274ogezzaMwIW-W2YzSYIH2tGIp77JXvO2E2m-yp/exec';
-      document.getElementById('appFrame').src = gsUrl + '?t=' + Date.now();
-    })();
+    const GS_URL = 'https://script.google.com/macros/s/AKfycbwJ1Fcq9rqOABDyWD9j9uCK5rV7274ogezzaMwIW-W2YzSYIH2tGIp77JXvO2E2m-yp/exec';
+    document.getElementById('appFrame').src = GS_URL + '?t=' + Date.now();
   </script>
 </body>
 </html>
