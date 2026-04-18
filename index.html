@@ -106,10 +106,7 @@
       border-radius:16px;
       box-shadow:0 4px 12px rgba(0,0,0,.08);
     }
-    .gallery-wrap{
-      width:100%;
-      overflow:hidden;
-    }
+    .gallery-wrap{width:100%;overflow:hidden}
     .gallery-scroll{
       display:flex;
       gap:12px;
@@ -272,13 +269,7 @@
 <body>
   <div class="page">
     <div class="top-banner-wrap">
-      <img
-        id="topBanner"
-        src="https://drive.google.com/thumbnail?id=15nlhYqdMGrQM8aF87c4H0gQ9RaBTOf6g&sz=w3000"
-        alt="お助け隊バナー"
-        class="top-banner-img"
-        referrerpolicy="no-referrer"
-      />
+      <img id="topBanner" alt="お助け隊バナー" class="top-banner-img" referrerpolicy="no-referrer" />
     </div>
     <div class="list-window" id="boardList"></div>
   </div>
@@ -287,30 +278,18 @@
     const TOP_BANNER_URL = 'https://drive.google.com/thumbnail?id=15nlhYqdMGrQM8aF87c4H0gQ9RaBTOf6g&sz=w3000';
 
     const BOARD_DATA = [
+      /*
+      ここにデータを入れる
       {
         date: '2026/04/18',
-        title: '景観にちなんだ短歌・俳句づくり体験会',
-        images: [
-          'https://drive.google.com/thumbnail?id=15nlhYqdMGrQM8aF87c4H0gQ9RaBTOf6g&sz=w3000'
-        ],
-        detail: '景観市民活動クラブとの共催で、季節を感じられる展示を行います。展示期間中には、景観にちなんだ短歌・俳句づくり体験会も開催します。お気軽にご参加ください。',
-        apply: '',
-        page: 'https://www.city.shiki.lg.jp/',
-        mediaRaw: '',
-        mediaType: '',
-        mediaUrl: ''
-      },
-      {
-        date: '2026/04/20',
-        title: '市庁舎で受付できる子育て関連手続きを拡大しました',
-        images: [],
-        detail: 'これまで健康増進センターで受付していた一部の申請や申込みを、市役所1階の子ども支援課窓口でも受付できるようになりました。詳しくは市ホームページをご確認ください。',
-        apply: '',
-        page: 'https://www.city.shiki.lg.jp/',
-        mediaRaw: '',
-        mediaType: '',
-        mediaUrl: ''
+        title: 'タイトル',
+        images: ['画像URL1','画像URL2','画像URL3','画像URL4','画像URL5'],
+        detail: '詳細内容',
+        apply: '申込フォームURL',
+        page: '市ホームURL',
+        mediaRaw: '埋め込みメディアURL'
       }
+      */
     ];
 
     function escapeHtml(text) {
@@ -323,7 +302,6 @@
     }
 
     function normalizeImageUrl(url) {
-      url = String(url || '').trim();
       if (!url) return '';
 
       if (/drive\.google\.com\/file\/d\//i.test(url)) {
@@ -358,7 +336,7 @@
       url = String(url || '').trim();
       if (!url) return { type: '', url: '' };
 
-      let ytMatch = url.match(/(?:v=|\/embed\/|youtu\.be\/|shorts\/|live\/)([^?&/]+)/);
+      var ytMatch = url.match(/(?:v=|\/embed\/|youtu\.be\/|shorts\/|live\/)([^?&/]+)/);
       if (ytMatch && ytMatch[1]) {
         return {
           type: 'youtube',
@@ -366,7 +344,7 @@
         };
       }
 
-      let gdFileMatch = url.match(/\/file\/d\/([^/]+)/);
+      var gdFileMatch = url.match(/\/file\/d\/([^/]+)/);
       if (gdFileMatch && gdFileMatch[1]) {
         return {
           type: 'drive',
@@ -374,7 +352,7 @@
         };
       }
 
-      let gdOpenMatch = url.match(/[?&]id=([^&]+)/);
+      var gdOpenMatch = url.match(/[?&]id=([^&]+)/);
       if (url.indexOf('drive.google.com') !== -1 && gdOpenMatch && gdOpenMatch[1]) {
         return {
           type: 'drive',
@@ -407,7 +385,7 @@
           '</div>';
       }
 
-      const slides = images.map((url, index) => {
+      var slides = images.map(function(url, index) {
         return '' +
           '<div class="gallery-item">' +
             '<img src="' + escapeHtml(url) + '" class="gallery-img" alt="お知らせ画像' + (index + 1) + '" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';">' +
@@ -455,11 +433,11 @@
     }
 
     function buildCardHtml(item) {
-      const title = item.title || '志木お助け隊';
-      const detail = item.detail || '詳細情報を確認中です。';
-      const mediaHtml = buildMediaHtml(item);
+      var title = item.title || '志木お助け隊';
+      var detail = item.detail || '詳細情報を確認中です。';
+      var mediaHtml = buildMediaHtml(item);
 
-      let buttons = '';
+      var buttons = '';
       if (item.apply) {
         buttons += '<a href="' + escapeHtml(item.apply) + '" class="btn primary" target="_blank" rel="noopener noreferrer">今すぐ申し込む</a>';
       }
@@ -472,7 +450,7 @@
 
       return (
         '<article class="card">' +
-          '<div class="meta">' + escapeHtml(item.date) + '</div>' +
+          '<div class="meta">' + escapeHtml(item.date || '') + '</div>' +
           '<h2>' + escapeHtml(title) + '</h2>' +
           '<div class="media-wrap">' + mediaHtml + '</div>' +
           '<div class="detail">' + escapeHtml(detail).replace(/\n/g, '<br>') + '</div>' +
@@ -482,31 +460,40 @@
     }
 
     function prepareItems(data) {
-      return (data || [])
-        .map(item => {
-          const images = (item.images || []).map(normalizeImageUrl).filter(Boolean);
-          const media = parseMedia(item.mediaRaw || item.mediaUrl || '');
-          return {
-            date: item.date || '',
-            title: item.title || '',
-            images: images,
-            detail: item.detail || '',
-            apply: item.apply || '',
-            page: item.page || '',
-            mediaRaw: item.mediaRaw || '',
-            mediaType: item.mediaType || media.type,
-            mediaUrl: item.mediaUrl || media.url
-          };
+      return (data || []).map(function(item) {
+        var images = (item.images || []).map(function(url) {
+          return normalizeImageUrl(String(url || '').trim());
+        }).filter(function(url) {
+          return !!url;
         });
+
+        var media = parseMedia(String(item.mediaRaw || '').trim());
+
+        return {
+          date: String(item.date || '').trim(),
+          title: String(item.title || '').trim(),
+          images: images,
+          detail: String(item.detail || '').trim(),
+          apply: String(item.apply || '').trim(),
+          page: String(item.page || '').trim(),
+          mediaRaw: String(item.mediaRaw || '').trim(),
+          mediaType: media.type,
+          mediaUrl: media.url
+        };
+      });
     }
 
     function renderBoard() {
       document.getElementById('topBanner').src = TOP_BANNER_URL;
 
-      const items = prepareItems(BOARD_DATA);
-      const cards = items.map(buildCardHtml).join('');
-      document.getElementById('boardList').innerHTML =
-        cards || '<div class="empty-card">現在、お知らせはありません。</div>';
+      var items = prepareItems(BOARD_DATA);
+      var cards = items.map(buildCardHtml).join('');
+
+      if (!cards) {
+        cards = '<div class="empty-card">現在、お知らせはありません。</div>';
+      }
+
+      document.getElementById('boardList').innerHTML = cards;
     }
 
     renderBoard();
