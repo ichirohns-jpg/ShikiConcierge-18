@@ -5,30 +5,385 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>志木お助け隊</title>
   <style>
+    :root{
+      --bg:#f3f5f9;
+      --card:#ffffff;
+      --text:#182433;
+      --line:#e3e8ef;
+      --blue:#1a73e8;
+      --red:#d93025;
+      --shadow:0 6px 20px rgba(0,0,0,.10);
+      --maxw:560px;
+      --tap:64px;
+    }
+    *{box-sizing:border-box;}
     html,body{
       margin:0;
       padding:0;
-      width:100%;
       height:100%;
-      background:#f3f5f9;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,sans-serif;
+    }
+    body{
+      -webkit-text-size-adjust:100%;
+      line-height:1.75;
       overflow:hidden;
     }
-    .frame{
-      width:100%;
+    .page{
+      max-width:var(--maxw);
       height:100dvh;
+      margin:0 auto;
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .top-banner-wrap{
+      flex:0 0 auto;
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow:0 6px 20px rgba(0,0,0,.10);
+      background:transparent;
+    }
+    .top-banner-img{
+      display:block;
+      width:100%;
+      height:auto;
+    }
+    .list-window{
+      flex:1 1 auto;
+      min-height:0;
+      overflow-y:auto;
+      overflow-x:hidden;
+      padding-right:2px;
+      -webkit-overflow-scrolling:touch;
+    }
+    .list-window::-webkit-scrollbar{width:10px;}
+    .list-window::-webkit-scrollbar-track{background:#e7edf5;border-radius:999px;}
+    .list-window::-webkit-scrollbar-thumb{background:#a8b8cc;border-radius:999px;}
+    .card{
+      background:var(--card);
+      margin:0 0 18px;
+      padding:18px;
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      border:1px solid var(--line);
+    }
+    .card:last-child{margin-bottom:0;}
+    .meta{
+      display:inline-block;
+      margin-bottom:12px;
+      padding:6px 12px;
+      border-radius:999px;
+      background:#edf4ff;
+      color:#20508f;
+      font-size:18px;
+      font-weight:800;
+      line-height:1.4;
+    }
+    h2{
+      margin:0 0 14px 0;
+      font-size:30px;
+      line-height:1.4;
+      font-weight:800;
+      color:var(--blue);
+      border-left:6px solid var(--blue);
+      padding-left:12px;
+      word-break:break-word;
+    }
+    .media-wrap{margin:0 0 16px;}
+    .single-image-wrap{width:100%;}
+    .main-img{
+      width:100%;
+      display:block;
+      border-radius:16px;
+      box-shadow:0 4px 12px rgba(0,0,0,.08);
+    }
+    .gallery-wrap{width:100%;overflow:hidden;}
+    .gallery-scroll{
+      display:flex;
+      gap:12px;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+      scroll-snap-type:x mandatory;
+      touch-action:pan-x;
+      padding:2px 2px 12px;
+    }
+    .gallery-scroll::-webkit-scrollbar{height:10px;}
+    .gallery-scroll::-webkit-scrollbar-track{background:#e7edf5;border-radius:999px;}
+    .gallery-scroll::-webkit-scrollbar-thumb{background:#a8b8cc;border-radius:999px;}
+    .gallery-item{
+      flex:0 0 100%;
+      min-width:100%;
+      scroll-snap-align:start;
+    }
+    .gallery-img{
+      width:100%;
+      aspect-ratio:9 / 16;
+      object-fit:cover;
+      display:block;
+      border-radius:16px;
+      box-shadow:0 4px 12px rgba(0,0,0,.08);
+      background:#dde5ef;
+      pointer-events:none;
+    }
+    .gallery-note{
+      margin-top:4px;
+      font-size:16px;
+      line-height:1.6;
+      color:#66758c;
+      font-weight:700;
+    }
+    .video-box{
+      width:100%;
+      aspect-ratio:9 / 16;
+      overflow:hidden;
+      border-radius:16px;
+      background:#000;
+      box-shadow:0 4px 12px rgba(0,0,0,.08);
+    }
+    .video-box iframe{
+      width:100%;
+      height:100%;
       border:0;
       display:block;
-      background:#f3f5f9;
+    }
+    .native-video{
+      width:100%;
+      height:100%;
+      display:block;
+      background:#000;
+      border:0;
+      object-fit:contain;
+    }
+    .placeholder{
+      width:100%;
+      aspect-ratio:9 / 16;
+      border-radius:16px;
+      background:linear-gradient(180deg,#dbe4f0 0%,#eef3f8 100%);
+      color:#72839a;
+      font-size:28px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      line-height:1.6;
+      padding:20px;
+      box-shadow:0 4px 12px rgba(0,0,0,.05);
+    }
+    .link-box{
+      flex-direction:column;
+      gap:14px;
+    }
+    .media-link-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:56px;
+      padding:12px 18px;
+      border-radius:999px;
+      background:#1a73e8;
+      color:#fff;
+      text-decoration:none;
+      font-size:20px;
+      font-weight:800;
+    }
+    .detail{
+      font-size:24px;
+      line-height:1.9;
+      color:#2a3443;
+      word-break:break-word;
+    }
+    .btn-group{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-top:20px;
+    }
+    .btn{
+      min-height:var(--tap);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      text-decoration:none;
+      border-radius:999px;
+      padding:14px 16px;
+      font-size:22px;
+      font-weight:800;
+      line-height:1.4;
+    }
+    .primary{
+      background:var(--red);
+      color:#fff;
+      box-shadow:0 4px 10px rgba(217,48,37,.28);
+    }
+    .secondary{
+      border:2px solid var(--blue);
+      color:var(--blue);
+      background:#fff;
+    }
+    .note{
+      font-size:18px;
+      color:#66758c;
+      line-height:1.7;
+      padding:2px 2px 0;
+    }
+    .empty-card,.loading-card,.error-card{
+      background:#fff;
+      padding:22px 18px;
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      border:1px solid var(--line);
+      font-size:22px;
+      line-height:1.8;
+      font-weight:700;
+      text-align:center;
+    }
+    .empty-card,.loading-card{color:#556579;}
+    .error-card{color:#d32f2f;}
+    @media (max-width:430px){
+      .page{padding:10px;}
+      h2{font-size:27px;}
+      .meta{font-size:17px;}
+      .detail{font-size:22px;}
+      .btn{font-size:21px;}
+      .placeholder{font-size:25px;}
     }
   </style>
 </head>
 <body>
-  <iframe
-    class="frame"
-    src="https://script.google.com/macros/s/AKfycbzVIu1zpcvONh0LnnGKl1yDW7eVu5R4Dz8ZVXBIQQ9mQ2XsnUbw_eNAWR9_sr1wdfxqgg/exec"
-    allowfullscreen
-    loading="eager"
-    referrerpolicy="no-referrer">
-  </iframe>
+  <div class="page">
+    <div class="top-banner-wrap">
+      <img id="topBanner" src="" alt="お助け隊バナー" class="top-banner-img" referrerpolicy="no-referrer">
+    </div>
+    <div class="list-window" id="boardList">
+      <div class="loading-card">読み込み中です…</div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzVIu1zpcvONh0LnnGKl1yDW7eVu5R4Dz8ZVXBIQQ9mQ2XsnUbw_eNAWR9_sr1wdfxqgg/exec';
+
+    function escapeHtml_(text) {
+      return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function buildImagesHtml_(images) {
+      if (!images || !images.length) {
+        return '<div class="placeholder">志木お助け隊<br>回覧板</div>';
+      }
+
+      if (images.length === 1) {
+        return '' +
+          '<div class="single-image-wrap">' +
+            '<img src="' + escapeHtml_(images[0]) + '" class="main-img" alt="お知らせ画像" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'<div class=&quot;placeholder&quot;>志木お助け隊<br>回覧板</div>\';">' +
+          '</div>';
+      }
+
+      const slides = images.map(function(url, index) {
+        return '' +
+          '<div class="gallery-item">' +
+            '<img src="' + escapeHtml_(url) + '" class="gallery-img" alt="お知らせ画像' + (index + 1) + '" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';">' +
+          '</div>';
+      }).join('');
+
+      return '' +
+        '<div class="gallery-wrap">' +
+          '<div class="gallery-scroll">' + slides + '</div>' +
+          '<div class="gallery-note">画像を横にスライドできます</div>' +
+        '</div>';
+    }
+
+    function buildMediaHtml_(item) {
+      if (item.images && item.images.length) {
+        return buildImagesHtml_(item.images);
+      }
+
+      if (item.mediaType === 'youtube' || item.mediaType === 'drive') {
+        return '' +
+          '<div class="video-box">' +
+            '<iframe src="' + escapeHtml_(item.mediaUrl) + '" allowfullscreen></iframe>' +
+          '</div>';
+      }
+
+      if (item.mediaType === 'video') {
+        return '' +
+          '<div class="video-box">' +
+            '<video class="native-video" controls playsinline preload="metadata">' +
+              '<source src="' + escapeHtml_(item.mediaUrl) + '">' +
+              '動画を再生できません。' +
+            '</video>' +
+          '</div>';
+      }
+
+      if (item.mediaType === 'link') {
+        return '' +
+          '<div class="placeholder link-box">' +
+            '<div>このメディアは埋め込み非対応です</div>' +
+            '<a href="' + escapeHtml_(item.mediaUrl) + '" target="_blank" rel="noopener noreferrer" class="media-link-btn">メディアを開く</a>' +
+          '</div>';
+      }
+
+      return '<div class="placeholder">志木お助け隊<br>回覧板</div>';
+    }
+
+    function buildCardHtml_(item) {
+      const title = item.title || '志木お助け隊';
+      const detail = item.detail || '詳細情報を確認中です。';
+      const mediaHtml = buildMediaHtml_(item);
+
+      let buttons = '';
+      if (item.apply) {
+        buttons += '<a href="' + escapeHtml_(item.apply) + '" class="btn primary" target="_blank" rel="noopener noreferrer">今すぐ申し込む</a>';
+      }
+      if (item.page) {
+        buttons += '<a href="' + escapeHtml_(item.page) + '" class="btn secondary" target="_blank" rel="noopener noreferrer">詳細を見る</a>';
+      }
+      if (!buttons) {
+        buttons = '<div class="note">※詳細は上記の内容をご確認ください</div>';
+      }
+
+      return (
+        '<article class="card">' +
+          '<div class="meta">' + escapeHtml_(item.date) + '</div>' +
+          '<h2>' + escapeHtml_(title) + '</h2>' +
+          '<div class="media-wrap">' + mediaHtml + '</div>' +
+          '<div class="detail">' + escapeHtml_(detail).replace(/\n/g, '<br>') + '</div>' +
+          '<div class="btn-group">' + buttons + '</div>' +
+        '</article>'
+      );
+    }
+
+    async function render_() {
+      const board = document.getElementById('boardList');
+
+      try {
+        const res = await fetch(API_URL, { cache: 'no-store' });
+        if (!res.ok) throw new Error('データの取得に失敗しました');
+
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || 'データの取得に失敗しました');
+
+        document.getElementById('topBanner').src = data.bannerUrl || '';
+
+        const items = (data.items || []).sort((a, b) => (b.sortDate || 0) - (a.sortDate || 0));
+        const cards = items.map(buildCardHtml_).join('');
+        board.innerHTML = cards || '<div class="empty-card">現在、お知らせはありません。</div>';
+      } catch (e) {
+        board.innerHTML = '<div class="error-card">読み込みに失敗しました。<br>' + escapeHtml_(e && e.message ? e.message : e) + '</div>';
+      }
+    }
+
+    render_();
+  </script>
 </body>
 </html>
