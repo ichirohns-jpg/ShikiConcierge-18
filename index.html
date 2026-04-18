@@ -1,292 +1,238 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>志木お助け隊</title>
-  <style>
-    :root{
-      --bg:#f3f5f9;
-      --card:#ffffff;
-      --text:#182433;
-      --line:#e3e8ef;
-      --blue:#1a73e8;
-      --red:#d93025;
-      --shadow:0 6px 20px rgba(0,0,0,.10);
-      --maxw:560px;
-      --tap:64px;
-    }
-    *{box-sizing:border-box;}
-    html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,sans-serif;}
-    body{-webkit-text-size-adjust:100%;line-height:1.75;overflow:hidden;}
-    .page{max-width:var(--maxw);height:100dvh;margin:0 auto;padding:12px;display:flex;flex-direction:column;gap:12px;}
-    .top-banner-wrap{flex:0 0 auto;border-radius:24px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.10);background:transparent;}
-    .top-banner-img{display:block;width:100%;height:auto;}
-    .list-window{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:2px;-webkit-overflow-scrolling:touch;}
-    .list-window::-webkit-scrollbar{width:10px;}
-    .list-window::-webkit-scrollbar-track{background:#e7edf5;border-radius:999px;}
-    .list-window::-webkit-scrollbar-thumb{background:#a8b8cc;border-radius:999px;}
-    .card{background:var(--card);margin:0 0 18px;padding:18px;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);}
-    .card:last-child{margin-bottom:0;}
-    .meta{display:inline-block;margin-bottom:12px;padding:6px 12px;border-radius:999px;background:#edf4ff;color:#20508f;font-size:18px;font-weight:800;line-height:1.4;}
-    h2{margin:0 0 14px 0;font-size:30px;line-height:1.4;font-weight:800;color:var(--blue);border-left:6px solid var(--blue);padding-left:12px;word-break:break-word;}
-    .media-wrap{margin:0 0 16px;}
-    .single-image-wrap{width:100%;}
-    .main-img{width:100%;display:block;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);}
-    .gallery-wrap{width:100%;overflow:hidden;}
-    .gallery-scroll{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;touch-action:pan-x;padding:2px 2px 12px;}
-    .gallery-scroll::-webkit-scrollbar{height:10px;}
-    .gallery-scroll::-webkit-scrollbar-track{background:#e7edf5;border-radius:999px;}
-    .gallery-scroll::-webkit-scrollbar-thumb{background:#a8b8cc;border-radius:999px;}
-    .gallery-item{flex:0 0 100%;min-width:100%;scroll-snap-align:start;}
-    .gallery-img{width:100%;aspect-ratio:9 / 16;object-fit:cover;display:block;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);background:#dde5ef;pointer-events:none;}
-    .gallery-note{margin-top:4px;font-size:16px;line-height:1.6;color:#66758c;font-weight:700;}
-    .video-box{width:100%;aspect-ratio:9 / 16;overflow:hidden;border-radius:16px;background:#000;box-shadow:0 4px 12px rgba(0,0,0,.08);}
-    .video-box iframe{width:100%;height:100%;border:0;display:block;}
-    .native-video{width:100%;height:100%;display:block;background:#000;border:0;object-fit:contain;}
-    .placeholder{width:100%;aspect-ratio:9 / 16;border-radius:16px;background:linear-gradient(180deg,#dbe4f0 0%,#eef3f8 100%);color:#72839a;font-size:28px;font-weight:800;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.6;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,.05);}
-    .link-box{flex-direction:column;gap:14px;}
-    .media-link-btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:12px 18px;border-radius:999px;background:#1a73e8;color:#fff;text-decoration:none;font-size:20px;font-weight:800;}
-    .detail{font-size:24px;line-height:1.9;color:#2a3443;word-break:break-word;}
-    .btn-group{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
-    .btn{min-height:var(--tap);display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;border-radius:999px;padding:14px 16px;font-size:22px;font-weight:800;line-height:1.4;}
-    .primary{background:var(--red);color:#fff;box-shadow:0 4px 10px rgba(217,48,37,.28);}
-    .secondary{border:2px solid var(--blue);color:var(--blue);background:#fff;}
-    .note{font-size:18px;color:#66758c;line-height:1.7;padding:2px 2px 0;}
-    .empty-card,.loading-card,.error-card{background:#fff;padding:22px 18px;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);font-size:22px;line-height:1.8;font-weight:700;color:#556579;text-align:center;}
-    .error-card{color:#d93025;}
-    @media (max-width:430px){
-      .page{padding:10px;}
-      h2{font-size:27px;}
-      .meta{font-size:17px;}
-      .detail{font-size:22px;}
-      .btn{font-size:21px;}
-      .placeholder{font-size:25px;}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>志木お助け隊</title>
+<style>
+:root{
+--bg:#f3f5f9;
+--card:#ffffff;
+--text:#182433;
+--line:#e3e8ef;
+--blue:#1a73e8;
+--red:#d93025;
+--shadow:0 6px 20px rgba(0,0,0,.10);
+--maxw:560px;
+--tap:64px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,sans-serif;}
+body{-webkit-text-size-adjust:100%;line-height:1.75;overflow:hidden;}
+.page{max-width:var(--maxw);height:100dvh;margin:0 auto;padding:12px;display:flex;flex-direction:column;gap:12px;}
+.top-banner-wrap{flex:0 0 auto;border-radius:24px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.10);background:transparent;}
+.top-banner-img{display:block;width:100%;height:auto;}
+.list-window{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:2px;-webkit-overflow-scrolling:touch;}
+.list-window::-webkit-scrollbar{width:10px;}
+.list-window::-webkit-scrollbar-track{background:#e7edf5;border-radius:999px;}
+.list-window::-webkit-scrollbar-thumb{background:#a8b8cc;border-radius:999px;}
+.card{background:var(--card);margin:0 0 18px;padding:18px;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);}
+.card:last-child{margin-bottom:0;}
+.meta{display:inline-block;margin-bottom:12px;padding:6px 12px;border-radius:999px;background:#edf4ff;color:#20508f;font-size:18px;font-weight:800;line-height:1.4;}
+h2{margin:0 0 14px 0;font-size:30px;line-height:1.4;font-weight:800;color:var(--blue);border-left:6px solid var(--blue);padding-left:12px;word-break:break-word;}
+.media-wrap{margin:0 0 16px;}
+.single-image-wrap{width:100%;}
+.main-img{width:100%;display:block;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.gallery-wrap{width:100%;overflow:hidden;}
+.gallery-scroll{
+display:flex;
+gap:12px;
+overflow-x:auto;
+overflow-y:hidden;
+-webkit-overflow-scrolling:touch;
+scroll-snap-type:x mandatory;
+touch-action:pan-x;
+padding:2px 2px 12px;
+}
+.gallery-scroll::-webkit-scrollbar{height:10px;}
+.gallery-scroll::-webkit-scrollbar-track{background:#e7edf5;border-radius:999px;}
+.gallery-scroll::-webkit-scrollbar-thumb{background:#a8b8cc;border-radius:999px;}
+.gallery-item{
+flex:0 0 100%;
+min-width:100%;
+scroll-snap-align:start;
+}
+.gallery-img{
+width:100%;
+aspect-ratio:9 / 16;
+object-fit:cover;
+display:block;
+border-radius:16px;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+background:#dde5ef;
+pointer-events:none;
+}
+.gallery-note{margin-top:4px;font-size:16px;line-height:1.6;color:#66758c;font-weight:700;}
+.video-box{width:100%;aspect-ratio:9 / 16;overflow:hidden;border-radius:16px;background:#000;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.video-box iframe{width:100%;height:100%;border:0;display:block;}
+.native-video{width:100%;height:100%;display:block;background:#000;border:0;object-fit:contain;}
+.placeholder{width:100%;aspect-ratio:9 / 16;border-radius:16px;background:linear-gradient(180deg,#dbe4f0 0%,#eef3f8 100%);color:#72839a;font-size:28px;font-weight:800;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.6;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,.05);}
+.link-box{flex-direction:column;gap:14px;}
+.media-link-btn{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:12px 18px;border-radius:999px;background:#1a73e8;color:#fff;text-decoration:none;font-size:20px;font-weight:800;}
+.detail{font-size:24px;line-height:1.9;color:#2a3443;word-break:break-word;}
+.btn-group{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.btn{min-height:var(--tap);display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;border-radius:999px;padding:14px 16px;font-size:22px;font-weight:800;line-height:1.4;}
+.primary{background:var(--red);color:#fff;box-shadow:0 4px 10px rgba(217,48,37,.28);}
+.secondary{border:2px solid var(--blue);color:var(--blue);background:#fff;}
+.note{font-size:18px;color:#66758c;line-height:1.7;padding:2px 2px 0;}
+.empty-card{background:#fff;padding:22px 18px;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);font-size:22px;line-height:1.8;font-weight:700;color:#556579;text-align:center;}
+@media (max-width:430px){
+.page{padding:10px;}
+h2{font-size:27px;}
+.meta{font-size:17px;}
+.detail{font-size:22px;}
+.btn{font-size:21px;}
+.placeholder{font-size:25px;}
+}
+</style>
 </head>
 <body>
-  <div class="page">
-    <div class="top-banner-wrap">
-      <img src="https://drive.google.com/thumbnail?id=15nlhYqdMGrQM8aF87c4H0gQ9RaBTOf6g&sz=w3000" alt="お助け隊バナー" class="top-banner-img" referrerpolicy="no-referrer">
-    </div>
-    <div class="list-window" id="boardList">
-      <div class="loading-card">読み込み中です…</div>
-    </div>
-  </div>
+<div class="page">
+<div class="top-banner-wrap">
+<img src="https://drive.google.com/thumbnail?id=15nlhYqdMGrQM8aF87c4H0gQ9RaBTOf6g&sz=w3000" alt="お助け隊バナー" class="top-banner-img" referrerpolicy="no-referrer">
+</div>
+<div class="list-window" id="list-window">
+<div class="empty-card">データを読み込んでいます...</div>
+</div>
+</div>
 
-  <script>
-    const SPREADSHEET_ID = '1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
-    const SHEET_NAME = '回覧板データー';
+<script>
+// GitHub Pages等の静的ホスティング用に、GASの処理をフロントエンドのJSで再現します。
+// Google Sheets APIを使用してデータを取得するか、公開されたCSV形式で取得する必要があります。
+// ここでは、スプレッドシートを「ウェブに公開(CSV形式)」した前提のコードに書き換えています。
 
-    function toSortTime_(v) {
-      const d = new Date(v);
-      return isNaN(d.getTime()) ? 0 : d.getTime();
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M/pub?gid=0&single=true&output=csv'; // ※実際のGIDに合わせてください
+
+function parseCSV(text) {
+  let p = '', row = [''], ret = [row], i = 0, r = 0, s = !0, l;
+  for (l of text) {
+    if ('"' === l) {
+      if (s && l === p) row[i] += l;
+      s = !s;
+    } else if (',' === l && s) l = row[++i] = '';
+    else if ('\n' === l && s) {
+      if ('\r' === p) row[i] = row[i].slice(0, -1);
+      row = ret[++r] = [l = '']; i = 0;
+    } else row[i] += l;
+    p = l;
+  }
+  return ret;
+}
+
+function escapeHtml(text) {
+  return String(text || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function normalizeImageUrl(url) {
+  if (!url) return '';
+  url = url.trim();
+  if (/drive\.google\.com\/file\/d\//i.test(url)) {
+    const match = url.match(/\/file\/d\/([^/]+)/i);
+    if (match && match[1]) return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w3000';
+  }
+  if (/drive\.google\.com\/open\?id=/i.test(url)) {
+    const match = url.match(/[?&]id=([^&]+)/i);
+    if (match && match[1]) return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w3000';
+  }
+  if (/drive\.google\.com\/uc\?id=/i.test(url)) {
+    const match = url.match(/[?&]id=([^&]+)/i);
+    if (match && match[1]) return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w3000';
+  }
+  return url;
+}
+
+function parseMedia(url) {
+  url = String(url || '').trim();
+  if (!url) return { type: '', url: '' };
+  let ytMatch = url.match(/(?:v=|\/embed\/|youtu\.be\/|shorts\/|live\/)([^?&/]+)/);
+  if (ytMatch && ytMatch[1]) return { type: 'youtube', url: 'https://www.youtube.com/embed/' + ytMatch[1] };
+  let gdFileMatch = url.match(/\/file\/d\/([^/]+)/);
+  if (gdFileMatch && gdFileMatch[1]) return { type: 'drive', url: 'https://drive.google.com/file/d/' + gdFileMatch[1] + '/preview' };
+  let gdOpenMatch = url.match(/[?&]id=([^&]+)/);
+  if (url.includes('drive.google.com') && gdOpenMatch && gdOpenMatch[1]) return { type: 'drive', url: 'https://drive.google.com/file/d/' + gdOpenMatch[1] + '/preview' };
+  if (/\.(mp4|webm|mov)(\?|#|$)/i.test(url)) return { type: 'video', url: url };
+  return { type: 'link', url: url };
+}
+
+function buildImagesHtml(images) {
+  if (!images || !images.length) return '<div class="placeholder">志木お助け隊<br>回覧板</div>';
+  if (images.length === 1) {
+    return '<div class="single-image-wrap"><img src="' + escapeHtml(images[0]) + '" class="main-img" alt="お知らせ画像" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'<div class=&quot;placeholder&quot;>志木お助け隊<br>回覧板</div>\';"></div>';
+  }
+  const slides = images.map((url, index) => '<div class="gallery-item"><img src="' + escapeHtml(url) + '" class="gallery-img" alt="お知らせ画像' + (index + 1) + '" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';"></div>').join('');
+  return '<div class="gallery-wrap"><div class="gallery-scroll">' + slides + '</div><div class="gallery-note">画像を横にスライドできます</div></div>';
+}
+
+function buildMediaHtml(item) {
+  if (item.images && item.images.length) return buildImagesHtml(item.images);
+  if (item.mediaType === 'youtube' || item.mediaType === 'drive') return '<div class="video-box"><iframe src="' + escapeHtml(item.mediaUrl) + '" allowfullscreen></iframe></div>';
+  if (item.mediaType === 'video') return '<div class="video-box"><video class="native-video" controls playsinline preload="metadata"><source src="' + escapeHtml(item.mediaUrl) + '">動画を再生できません。</video></div>';
+  if (item.mediaType === 'link') return '<div class="placeholder link-box"><div>このメディアは埋め込み非対応です</div><a href="' + escapeHtml(item.mediaUrl) + '" target="_blank" rel="noopener noreferrer" class="media-link-btn">メディアを開く</a></div>';
+  return '<div class="placeholder">志木お助け隊<br>回覧板</div>';
+}
+
+function buildCardHtml(item) {
+  const title = item.title || '志木お助け隊';
+  const detail = item.detail || '詳細情報を確認中です。';
+  const mediaHtml = buildMediaHtml(item);
+  let buttons = '';
+  if (item.apply) buttons += '<a href="' + escapeHtml(item.apply) + '" class="btn primary" target="_blank" rel="noopener noreferrer">今すぐ申し込む</a>';
+  if (item.page) buttons += '<a href="' + escapeHtml(item.page) + '" class="btn secondary" target="_blank" rel="noopener noreferrer">詳細を見る</a>';
+  if (!buttons) buttons = '<div class="note">※詳細は上記の内容をご確認ください</div>';
+  return '<article class="card"><div class="meta">' + escapeHtml(item.date) + '</div><h2>' + escapeHtml(title) + '</h2><div class="media-wrap">' + mediaHtml + '</div><div class="detail">' + escapeHtml(detail).replace(/\n/g, '<br>') + '</div><div class="btn-group">' + buttons + '</div></article>';
+}
+
+fetch(CSV_URL)
+  .then(response => {
+    if (!response.ok) throw new Error('ネットワークエラー');
+    return response.text();
+  })
+  .then(text => {
+    const values = parseCSV(text);
+    if (values.length <= 1) {
+      document.getElementById('list-window').innerHTML = '<div class="empty-card">現在、お知らせはありません。</div>';
+      return;
     }
-
-    function formatDate_(d) {
-      const dt = new Date(d);
-      if (!isNaN(dt.getTime())) {
-        const y = dt.getFullYear();
-        const m = String(dt.getMonth() + 1).padStart(2, '0');
-        const day = String(dt.getDate()).padStart(2, '0');
-        return y + '/' + m + '/' + day;
+    const rows = values.slice(1);
+    const items = rows.map(row => {
+      const images = [normalizeImageUrl(row[2]), normalizeImageUrl(row[7]), normalizeImageUrl(row[8]), normalizeImageUrl(row[9]), normalizeImageUrl(row[10])].filter(url => !!url);
+      const media = parseMedia(row[6]);
+      let dateStr = row[0] || '';
+      let sortTime = 0;
+      if (dateStr) {
+        const d = new Date(dateStr);
+        if (!isNaN(d.getTime())) {
+          sortTime = d.getTime();
+          dateStr = d.getFullYear() + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + String(d.getDate()).padStart(2, '0');
+        }
       }
-      return String(d || '').trim();
-    }
+      return {
+        date: dateStr,
+        sortDate: sortTime,
+        title: String(row[1] || '').trim(),
+        images: images,
+        detail: String(row[3] || '').trim(),
+        apply: String(row[4] || '').trim(),
+        page: String(row[5] || '').trim(),
+        mediaRaw: String(row[6] || '').trim(),
+        mediaType: media.type,
+        mediaUrl: media.url
+      };
+    }).filter(item => item.date || item.title || item.detail || (item.images && item.images.length) || item.mediaUrl || item.page || item.apply || item.mediaRaw)
+      .sort((a, b) => b.sortDate - a.sortDate);
 
-    function normalizeImageUrl_(url) {
-      if (!url) return '';
-
-      if (/drive\.google\.com\/file\/d\//i.test(url)) {
-        const match = url.match(/\/file\/d\/([^/]+)/i);
-        if (match && match[1]) return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w3000';
-      }
-
-      if (/drive\.google\.com\/open\?id=/i.test(url) || /drive\.google\.com\/uc\?id=/i.test(url)) {
-        const match = url.match(/[?&]id=([^&]+)/i);
-        if (match && match[1]) return 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w3000';
-      }
-
-      if (/drive\.google\.com\/thumbnail\?/i.test(url)) return url;
-
-      return url;
-    }
-
-    function parseMedia_(url) {
-      url = String(url || '').trim();
-      if (!url) return { type: '', url: '' };
-
-      var ytMatch = url.match(/(?:v=|\/embed\/|youtu\.be\/|shorts\/|live\/)([^?&/]+)/);
-      if (ytMatch && ytMatch[1]) {
-        return { type: 'youtube', url: 'https://www.youtube.com/embed/' + ytMatch[1] };
-      }
-
-      var gdFileMatch = url.match(/\/file\/d\/([^/]+)/);
-      if (gdFileMatch && gdFileMatch[1]) {
-        return { type: 'drive', url: 'https://drive.google.com/file/d/' + gdFileMatch[1] + '/preview' };
-      }
-
-      var gdOpenMatch = url.match(/[?&]id=([^&]+)/);
-      if (url.indexOf('drive.google.com') !== -1 && gdOpenMatch && gdOpenMatch[1]) {
-        return { type: 'drive', url: 'https://drive.google.com/file/d/' + gdOpenMatch[1] + '/preview' };
-      }
-
-      if (/\.(mp4|webm|mov)(\?|#|$)/i.test(url)) {
-        return { type: 'video', url: url };
-      }
-
-      return { type: 'link', url: url };
-    }
-
-    function escapeHtml_(text) {
-      return String(text || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    function buildImagesHtml_(images) {
-      if (!images || !images.length) {
-        return '<div class="placeholder">志木お助け隊<br>回覧板</div>';
-      }
-
-      if (images.length === 1) {
-        return '' +
-          '<div class="single-image-wrap">' +
-            '<img src="' + escapeHtml_(images[0]) + '" class="main-img" alt="お知らせ画像" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'<div class=&quot;placeholder&quot;>志木お助け隊<br>回覧板</div>\';">' +
-          '</div>';
-      }
-
-      var slides = images.map(function(url, index) {
-        return '' +
-          '<div class="gallery-item">' +
-            '<img src="' + escapeHtml_(url) + '" class="gallery-img" alt="お知らせ画像' + (index + 1) + '" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';">' +
-          '</div>';
-      }).join('');
-
-      return '' +
-        '<div class="gallery-wrap">' +
-          '<div class="gallery-scroll">' + slides + '</div>' +
-          '<div class="gallery-note">画像を横にスライドできます</div>' +
-        '</div>';
-    }
-
-    function buildMediaHtml_(item) {
-      if (item.images && item.images.length) {
-        return buildImagesHtml_(item.images);
-      }
-
-      if (item.mediaType === 'youtube' || item.mediaType === 'drive') {
-        return '<div class="video-box"><iframe src="' + escapeHtml_(item.mediaUrl) + '" allowfullscreen></iframe></div>';
-      }
-
-      if (item.mediaType === 'video') {
-        return '' +
-          '<div class="video-box">' +
-            '<video class="native-video" controls playsinline preload="metadata">' +
-              '<source src="' + escapeHtml_(item.mediaUrl) + '">' +
-              '動画を再生できません。' +
-            '</video>' +
-          '</div>';
-      }
-
-      if (item.mediaType === 'link') {
-        return '' +
-          '<div class="placeholder link-box">' +
-            '<div>このメディアは埋め込み非対応です</div>' +
-            '<a href="' + escapeHtml_(item.mediaUrl) + '" target="_blank" rel="noopener noreferrer" class="media-link-btn">メディアを開く</a>' +
-          '</div>';
-      }
-
-      return '<div class="placeholder">志木お助け隊<br>回覧板</div>';
-    }
-
-    function buildCardHtml_(item) {
-      var title = item.title || '志木お助け隊';
-      var detail = item.detail || '詳細情報を確認中です。';
-      var mediaHtml = buildMediaHtml_(item);
-
-      var buttons = '';
-      if (item.apply) {
-        buttons += '<a href="' + escapeHtml_(item.apply) + '" class="btn primary" target="_blank" rel="noopener noreferrer">今すぐ申し込む</a>';
-      }
-      if (item.page) {
-        buttons += '<a href="' + escapeHtml_(item.page) + '" class="btn secondary" target="_blank" rel="noopener noreferrer">詳細を見る</a>';
-      }
-      if (!buttons) {
-        buttons = '<div class="note">※詳細は上記の内容をご確認ください</div>';
-      }
-
-      return (
-        '<article class="card">' +
-          '<div class="meta">' + escapeHtml_(item.date) + '</div>' +
-          '<h2>' + escapeHtml_(title) + '</h2>' +
-          '<div class="media-wrap">' + mediaHtml + '</div>' +
-          '<div class="detail">' + escapeHtml_(detail).replace(/\n/g, '<br>') + '</div>' +
-          '<div class="btn-group">' + buttons + '</div>' +
-        '</article>'
-      );
-    }
-
-    function parseGviz_(text) {
-      const json = JSON.parse(text.substring(47, text.length - 2));
-      return json.table.rows.map(r => (r.c || []).map(c => c ? c.v : ''));
-    }
-
-    async function loadSheetData_() {
-      const url = 'https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID +
-        '/gviz/tq?sheet=' + encodeURIComponent(SHEET_NAME) + '&tqx=out:json';
-
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('スプレッドシートの読み込みに失敗しました');
-      const text = await res.text();
-      const rows = parseGviz_(text);
-
-      return rows.map(function(row) {
-        const images = [
-          normalizeImageUrl_(String(row[2] || '').trim()),
-          normalizeImageUrl_(String(row[7] || '').trim()),
-          normalizeImageUrl_(String(row[8] || '').trim()),
-          normalizeImageUrl_(String(row[9] || '').trim()),
-          normalizeImageUrl_(String(row[10] || '').trim())
-        ].filter(Boolean);
-
-        const media = parseMedia_(String(row[6] || '').trim());
-
-        return {
-          date: formatDate_(row[0]),
-          sortDate: toSortTime_(row[0]),
-          title: String(row[1] || '').trim(),
-          images: images,
-          detail: String(row[3] || '').trim(),
-          apply: String(row[4] || '').trim(),
-          page: String(row[5] || '').trim(),
-          mediaRaw: String(row[6] || '').trim(),
-          mediaType: media.type,
-          mediaUrl: media.url
-        };
-      }).filter(function(item) {
-        return item.date || item.title || item.detail || (item.images && item.images.length) || item.mediaUrl || item.page || item.apply || item.mediaRaw;
-      }).sort(function(a, b) {
-        return b.sortDate - a.sortDate;
-      });
-    }
-
-    async function renderBoard_() {
-      const board = document.getElementById('boardList');
-      try {
-        const items = await loadSheetData_();
-        const cards = items.map(buildCardHtml_).join('');
-        board.innerHTML = cards || '<div class="empty-card">現在、お知らせはありません。</div>';
-      } catch (e) {
-        board.innerHTML = '<div class="error-card">読み込みに失敗しました。<br>' + escapeHtml_(e.message || e) + '</div>';
-      }
-    }
-
-    renderBoard_();
-  </script>
+    let cards = items.map(buildCardHtml).join('');
+    if (!cards) cards = '<div class="empty-card">現在、お知らせはありません。</div>';
+    document.getElementById('list-window').innerHTML = cards;
+  })
+  .catch(error => {
+    document.getElementById('list-window').innerHTML = '<div class="card"><div style="color:#d32f2f;font-size:26px;font-weight:800;margin:0 0 12px;">読み込みに失敗しました。</div><div style="font-size:18px;color:#555;">' + escapeHtml(error.message) + '</div></div>';
+  });
+</script>
 </body>
 </html>
