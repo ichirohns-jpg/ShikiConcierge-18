@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>志木お助け隊</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
   <style>
     * { box-sizing: border-box; }
 
@@ -20,23 +20,12 @@
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
     }
 
-    .topbar {
-      position: static;
-      width: 100%;
-      background: #ffffff;
-    }
-
-    .banner-wrap {
-      width: 100%;
-      background: #dfeaf5;
-      overflow: hidden;
-    }
-
-    .banner {
+    .top-banner {
       width: 100%;
       display: block;
       object-fit: cover;
       max-height: 110px;
+      background: #dfeaf5;
     }
 
     .page {
@@ -201,7 +190,7 @@
     }
 
     @media (min-width: 641px) {
-      .banner {
+      .top-banner {
         max-height: 140px;
       }
 
@@ -244,16 +233,11 @@
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="banner-wrap">
-      <img
-        id="topBanner"
-        class="banner"
-        src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w3000"
-        alt="バナー"
-      >
-    </div>
-  </div>
+  <img
+    class="top-banner"
+    src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w3000"
+    alt="バナー"
+  >
 
   <div class="page">
     <div id="status" class="status">読み込み中です…</div>
