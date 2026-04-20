@@ -21,7 +21,8 @@
     }
 
     .topbar {
-      position: relative;
+      position: static;
+      width: 100%;
       background: #ffffff;
     }
 
@@ -35,14 +36,14 @@
       width: 100%;
       display: block;
       object-fit: cover;
-      max-height: 150px;
+      max-height: 110px;
     }
 
     .page {
       width: 100%;
       max-width: 980px;
       margin: 0 auto;
-      padding: 12px 10px 40px;
+      padding: 10px 8px 32px;
     }
 
     .status {
@@ -57,15 +58,15 @@
 
     .card {
       background: #fff;
-      border-radius: 20px;
-      padding: 16px;
+      border-radius: 16px;
+      padding: 14px;
       margin: 0 0 16px 0;
       box-shadow: 0 5px 18px rgba(0,0,0,0.08);
       overflow: hidden;
     }
 
     .date {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       color: #42617e;
       margin-bottom: 8px;
@@ -73,7 +74,7 @@
     }
 
     .title {
-      font-size: 28px;
+      font-size: 24px;
       line-height: 1.35;
       font-weight: 800;
       color: #16324b;
@@ -82,8 +83,8 @@
     }
 
     .detail {
-      font-size: 22px;
-      line-height: 1.8;
+      font-size: 20px;
+      line-height: 1.75;
       color: #243849;
       white-space: pre-wrap;
       word-break: break-word;
@@ -113,10 +114,10 @@
 
     .image-item,
     .video-box {
-      flex: 0 0 min(82vw, 430px);
-      width: min(82vw, 430px);
-      min-width: min(82vw, 430px);
-      max-width: min(82vw, 430px);
+      flex: 0 0 84vw;
+      width: 84vw;
+      min-width: 84vw;
+      max-width: 84vw;
       aspect-ratio: 9 / 16;
       scroll-snap-align: start;
       border-radius: 18px;
@@ -168,11 +169,12 @@
       padding: 0 18px;
       border-radius: 14px;
       text-decoration: none;
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 800;
       line-height: 1.2;
       border: none;
       cursor: pointer;
+      width: 100%;
     }
 
     .btn-page {
@@ -198,44 +200,45 @@
       padding: 30px 18px;
     }
 
-    @media (max-width: 640px) {
+    @media (min-width: 641px) {
       .banner {
-        max-height: 110px;
+        max-height: 140px;
       }
 
       .page {
-        padding: 10px 8px 32px;
+        max-width: 980px;
+        padding: 12px 10px 40px;
       }
 
       .card {
-        border-radius: 16px;
-        padding: 14px;
+        border-radius: 20px;
+        padding: 16px;
       }
 
       .date {
-        font-size: 15px;
+        font-size: 16px;
       }
 
       .title {
-        font-size: 24px;
+        font-size: 28px;
       }
 
       .detail {
-        font-size: 20px;
-        line-height: 1.75;
+        font-size: 22px;
+        line-height: 1.8;
       }
 
       .btn {
-        width: 100%;
-        font-size: 19px;
+        width: auto;
+        font-size: 20px;
       }
 
       .image-item,
       .video-box {
-        flex: 0 0 84vw;
-        width: 84vw;
-        min-width: 84vw;
-        max-width: 84vw;
+        flex: 0 0 min(82vw, 430px);
+        width: min(82vw, 430px);
+        min-width: min(82vw, 430px);
+        max-width: min(82vw, 430px);
       }
     }
   </style>
@@ -310,4 +313,265 @@
     function extractYouTubeId(url) {
       const s = String(url || '');
       const patterns = [
-        /youtu
+        /youtu\.be\/([a-zA-Z0-9_-]{6,})/,
+        /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{6,})/,
+        /youtube\.com\/watch.*[?&]v=([a-zA-Z0-9_-]{6,})/,
+        /youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,})/,
+        /youtube\.com\/embed\/([a-zA-Z0-9_-]{6,})/,
+        /youtube\.com\/live\/([a-zA-Z0-9_-]{6,})/
+      ];
+      for (const pattern of patterns) {
+        const m = s.match(pattern);
+        if (m && m[1]) return m[1];
+      }
+      return '';
+    }
+
+    function extractVimeoId(url) {
+      const s = String(url || '');
+      const m = s.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+      return m && m[1] ? m[1] : '';
+    }
+
+    function buildVideoInfo(url) {
+      const raw = normalizeUrl(url);
+      if (!raw) return { type: '', embedUrl: '', originalUrl: '' };
+
+      const ytId = extractYouTubeId(raw);
+      if (ytId) {
+        return {
+          type: 'youtube',
+          embedUrl: `https://www.youtube.com/embed/${ytId}`,
+          originalUrl: raw
+        };
+      }
+
+      const vimeoId = extractVimeoId(raw);
+      if (vimeoId) {
+        return {
+          type: 'vimeo',
+          embedUrl: `https://player.vimeo.com/video/${vimeoId}`,
+          originalUrl: raw
+        };
+      }
+
+      const driveId = extractDriveId(raw);
+      if (driveId) {
+        return {
+          type: 'gdrive',
+          embedUrl: `https://drive.google.com/file/d/${driveId}/preview`,
+          originalUrl: raw
+        };
+      }
+
+      if (/\.(mp4|mov|m4v|webm|ogg)(\?.*)?$/i.test(raw)) {
+        return {
+          type: 'html5',
+          embedUrl: raw,
+          originalUrl: raw
+        };
+      }
+
+      if (/\.m3u8(\?.*)?$/i.test(raw)) {
+        return {
+          type: 'iframe',
+          embedUrl: raw,
+          originalUrl: raw
+        };
+      }
+
+      return {
+        type: 'iframe',
+        embedUrl: raw,
+        originalUrl: raw
+      };
+    }
+
+    function parseDateValue(value) {
+      const s = String(value || '').trim();
+      if (!s) return null;
+
+      const d1 = new Date(s);
+      if (!Number.isNaN(d1.getTime())) return d1;
+
+      const m = s.match(/(\d{4})[\/\-年](\d{1,2})[\/\-月](\d{1,2})/);
+      if (m) {
+        const y = Number(m[1]);
+        const mo = Number(m[2]) - 1;
+        const da = Number(m[3]);
+        const d2 = new Date(y, mo, da);
+        if (!Number.isNaN(d2.getTime())) return d2;
+      }
+
+      return null;
+    }
+
+    function formatDateText(value) {
+      const s = String(value || '').trim();
+      if (!s) return '';
+
+      if (/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}/.test(s)) return s;
+      if (/^\d{1,2}[\/\-]\d{1,2}/.test(s)) return s;
+      if (/年/.test(s) && /月/.test(s)) return s;
+
+      const d = new Date(s);
+      if (!Number.isNaN(d.getTime())) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}/${m}/${day}`;
+      }
+
+      return s;
+    }
+
+    function gvCell(row, index) {
+      if (!row || !row.c || !row.c[index]) return '';
+      const cell = row.c[index];
+      if (cell.f != null && cell.f !== '') return String(cell.f);
+      if (cell.v != null) return String(cell.v);
+      return '';
+    }
+
+    function parseGviz(text) {
+      const jsonText = text
+        .replace(/^\/\*O_o\*\/\s*/, '')
+        .replace(/^google\.visualization\.Query\.setResponse\(/, '')
+        .replace(/\);\s*$/, '');
+      return JSON.parse(jsonText);
+    }
+
+    function toItems(gvizJson) {
+      const rows = (((gvizJson || {}).table || {}).rows) || [];
+
+      const items = rows.map((row, idx) => {
+        const dateRaw  = gvCell(row, 0);
+        const title    = gvCell(row, 1);
+        const image1   = gvCell(row, 2);
+        const detail   = gvCell(row, 3);
+        const applyUrl = gvCell(row, 4);
+        const pageUrl  = gvCell(row, 5);
+        const videoUrl = gvCell(row, 6);
+        const image2   = gvCell(row, 7);
+        const image3   = gvCell(row, 8);
+        const image4   = gvCell(row, 9);
+        const image5   = gvCell(row, 10);
+
+        const images = [image1, image2, image3, image4, image5]
+          .map(convertDriveImageUrl)
+          .filter(Boolean)
+          .slice(0, 5);
+
+        const parsedDate = parseDateValue(dateRaw);
+
+        if (!title && !detail && !videoUrl && images.length === 0) return null;
+
+        return {
+          rowNumber: idx + 2,
+          title: title || '',
+          dateText: formatDateText(dateRaw || ''),
+          sortTime: parsedDate ? parsedDate.getTime() : 0,
+          detail: detail || '',
+          applyUrl: normalizeUrl(applyUrl || ''),
+          pageUrl: normalizeUrl(pageUrl || ''),
+          videoUrl: normalizeUrl(videoUrl || ''),
+          video: buildVideoInfo(videoUrl || ''),
+          images
+        };
+      }).filter(Boolean);
+
+      items.sort((a, b) => (b.sortTime || 0) - (a.sortTime || 0));
+      return items;
+    }
+
+    function renderVideo(video) {
+      if (!video || !video.type || !video.embedUrl) return '';
+
+      if (video.type === 'youtube' || video.type === 'vimeo' || video.type === 'gdrive' || video.type === 'iframe') {
+        return `<div class="video-box"><iframe class="video-iframe" src="${esc(video.embedUrl)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
+      }
+
+      if (video.type === 'html5') {
+        return `<div class="video-box"><video class="video-html5" controls playsinline preload="metadata" src="${esc(video.embedUrl)}"></video></div>`;
+      }
+
+      return '';
+    }
+
+    function renderMedia(item) {
+      const blocks = [];
+
+      if (item.video && item.video.embedUrl) {
+        blocks.push(renderVideo(item.video));
+      }
+
+      if (item.images && item.images.length) {
+        item.images.forEach((url, idx) => {
+          blocks.push(`<div class="image-item"><img src="${esc(url)}" alt="画像${idx + 1}"></div>`);
+        });
+      }
+
+      if (!blocks.length) return '';
+      return `<div class="media-strip">${blocks.join('')}</div>`;
+    }
+
+    function renderButtons(item) {
+      let html = '<div class="actions">';
+
+      if (item.pageUrl) {
+        html += `<a class="btn btn-page" href="${esc(item.pageUrl)}" target="_blank" rel="noopener noreferrer">詳しく見る</a>`;
+      }
+
+      if (item.applyUrl) {
+        html += `<a class="btn btn-apply" href="${esc(item.applyUrl)}" target="_blank" rel="noopener noreferrer">申込みはこちら</a>`;
+      }
+
+      if (item.videoUrl && (!item.video || !item.video.embedUrl)) {
+        html += `<a class="btn btn-video" href="${esc(item.videoUrl)}" target="_blank" rel="noopener noreferrer">動画を開く</a>`;
+      }
+
+      html += '</div>';
+      return html;
+    }
+
+    function renderItem(item) {
+      return `
+        <section class="card">
+          ${item.dateText ? `<div class="date">${esc(item.dateText)}</div>` : ''}
+          ${item.title ? `<div class="title">${esc(item.title)}</div>` : ''}
+          ${renderMedia(item)}
+          ${item.detail ? `<div class="detail">${nl2br(item.detail)}</div>` : ''}
+          ${renderButtons(item)}
+        </section>
+      `;
+    }
+
+    async function loadSheet() {
+      const status = document.getElementById('status');
+      const list = document.getElementById('list');
+
+      try {
+        const res = await fetch(buildSheetUrl(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('シートを読み込めませんでした。');
+
+        const text = await res.text();
+        const gvizJson = parseGviz(text);
+        const items = toItems(gvizJson);
+
+        status.style.display = 'none';
+
+        if (!items.length) {
+          list.innerHTML = '<div class="card empty">表示する記事がありません。</div>';
+          return;
+        }
+
+        list.innerHTML = items.map(renderItem).join('');
+      } catch (err) {
+        status.textContent = '読み込みエラー: ' + (err && err.message ? err.message : err);
+      }
+    }
+
+    loadSheet();
+  </script>
+</body>
+</html>
