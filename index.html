@@ -3,143 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>志木市AIコンシェルジュ</title>
-  <style>
-    body { margin:0; background:#f4f7fa; font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif; color:#223; }
-    .wrap { max-width:760px; margin:0 auto; padding:12px 12px 40px; }
-    .top { width:100%; border-radius:18px; display:block; }
-    .card { background:#fff; border-radius:22px; padding:20px; margin-top:16px; border:1px solid #dbe5f1; }
-    .title { font-size:28px; font-weight:900; color:#1a73e8; text-align:center; }
-    .label { font-size:18px; font-weight:900; color:#1a73e8; margin-bottom:12px; }
-    textarea { width:100%; height:120px; border:2px solid #d7dce3; border-radius:18px; padding:16px; font-size:18px; box-sizing:border-box; }
-    .btn { display:block; width:100%; padding:18px; border:none; border-radius:999px; font-size:22px; font-weight:900; color:#fff; background:#1a73e8; margin-top:14px; text-align:center; text-decoration:none; box-sizing:border-box; cursor:pointer; }
-    .out { white-space:pre-wrap; font-size:16px; line-height:1.7; }
-    .item { border:1px solid #dbe5f1; border-radius:16px; padding:14px; margin-top:10px; }
-    .item-title { font-size:22px; font-weight:900; color:#1a73e8; }
-    .item-sub { font-size:16px; line-height:1.7; margin-top:8px; }
-  </style>
+  <title>志木お助け隊</title>
+  <script>
+    window.location.replace("https://script.google.com/macros/s/AKfycbz-cnevx8-W9ukZ3Nsk5Kgkv7Ldacrlw1FrNqH6nHiZ2mdxpp0WIndWGTJ-l-KRKtPtQw/exec");
+  </script>
 </head>
 <body>
-  <div class="wrap">
-    <img src="https://drive.google.com/thumbnail?id=1q6NBKaTPNs0tskub_deePwNPb2u0xCYv&sz=w3000" class="top">
-    <div class="card"><div class="title">志木市AIコンシェルジュ</div></div>
-    <div class="card">
-      <div class="label">ご相談内容を入力してください</div>
-      <textarea id="msg" placeholder="例：洪水ハザードマップが見たい"></textarea>
-      <button class="btn" onclick="send()">相談する</button>
-    </div>
-    <div class="card">
-      <div class="label">結果</div>
-      <div id="result" class="out">ここに表示されます</div>
-    </div>
-  </div>
+  <p style="font-size:22px;text-align:center;margin-top:40px;">
+    志木お助け隊を開いています…
+  </p>
 
-  <script>
-    // ★重要：GASでデプロイしたウェブアプリのURLをここに貼り付けてください
-    const GAS_URL = "ここにGASのURLを貼り付けます";
-
-    async function send() {
-      const msg = document.getElementById("msg").value.trim();
-      const box = document.getElementById("result");
-      if (!msg) {
-        box.textContent = "相談内容を入力してください。";
-        return;
-      }
-
-      box.textContent = "確認中...";
-
-      try {
-        const response = await fetch(GAS_URL + "?action=ask&text=" + encodeURIComponent(msg));
-        const data = await response.json();
-        showAsk(data);
-      } catch (e) {
-        showErr(e);
-      }
-    }
-
-    async function openCandidate(id) {
-      const box = document.getElementById("result");
-      box.textContent = "詳細表示中...";
-
-      try {
-        const response = await fetch(GAS_URL + "?action=detail&id=" + encodeURIComponent(id));
-        const data = await response.json();
-        showDetail(data);
-      } catch (e) {
-        showErr(e);
-      }
-    }
-
-    function showErr(e) {
-      document.getElementById("result").textContent = "通信エラーが発生しました: " + e.message;
-    }
-
-    function showAsk(r) {
-      if (!r || !r.ok) { showErr(r); return; }
-      const box = document.getElementById("result");
-      box.innerHTML = "";
-      
-      const top = document.createElement("div");
-      top.textContent = r.aiText || "";
-      box.appendChild(top);
-
-      if (r.candidates && r.candidates.length) {
-        r.candidates.forEach(c => {
-          const d = document.createElement("div");
-          d.className = "item";
-          d.innerHTML = `<div class="item-title">${c.title}</div>
-                         <div class="item-sub">${c.desc || ""}</div>
-                         <div class="item-sub">担当: ${c.office || ""} ${c.counter ? " / " + c.counter : ""} ${c.phoneDisp ? " / " + c.phoneDisp : ""}</div>`;
-          
-          const b = document.createElement("button");
-          b.className = "btn";
-          b.style.fontSize = "18px";
-          b.textContent = "この案内を見る";
-          b.onclick = () => openCandidate(c.pageId);
-          d.appendChild(b);
-          box.appendChild(d);
-        });
-      } else {
-        const p = document.createElement("div");
-        p.textContent = "候補なし";
-        box.appendChild(p);
-      }
-    }
-
-    function showDetail(r) {
-      if (!r || !r.ok) { showErr(r); return; }
-      const box = document.getElementById("result");
-      box.innerHTML = "";
-      
-      if (r.match) {
-        const m = r.match;
-        const d = document.createElement("div");
-        d.className = "item";
-        d.innerHTML = `<div class="item-title">${m.title || ""}</div>
-                       <div class="item-sub">${m.desc || ""}</div>
-                       <div class="item-sub">担当: ${m.office || ""} ${m.counter ? " / " + m.counter : ""} ${m.phoneDisp ? " / " + m.phoneDisp : ""}</div>`;
-        
-        if (m.phone) {
-          const t = document.createElement("a");
-          t.className = "btn";
-          t.href = "tel:" + m.phone;
-          t.textContent = "電話をかける";
-          d.appendChild(t);
-        }
-        if (m.link) {
-          const a = document.createElement("a");
-          a.className = "btn";
-          a.href = m.link;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
-          a.textContent = "公式ページを見る";
-          d.appendChild(a);
-        }
-        box.appendChild(d);
-      } else {
-        box.textContent = r.aiText || "詳細なし";
-      }
-    }
-  </script>
+  <p style="text-align:center;">
+    <a href="https://script.google.com/macros/s/AKfycbz-cnevx8-W9ukZ3Nsk5Kgkv7Ldacrlw1FrNqH6nHiZ2mdxpp0WIndWGTJ-l-KRKtPtQw/exec" style="font-size:22px;">
+      開かない場合はこちら
+    </a>
+  </p>
 </body>
 </html>
