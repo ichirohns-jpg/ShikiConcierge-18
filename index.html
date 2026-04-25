@@ -5,13 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>志木お助け隊</title>
 
-  <script>
-    const GAS_EXEC_URL = 'ここにGASのウェブアプリURLを入れる';
-
-    if (!GAS_EXEC_URL.includes('ここに')) {
-      window.location.replace(GAS_EXEC_URL);
-    }
-  </script>
+  <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycbz-cnevx8-W9ukZ3Nsk5Kgkv7Ldacrlw1FrNqH6nHiZ2mdxpp0WIndWGTJ-l-KRKtPtQw/exec">
 
   <style>
     * {
@@ -33,18 +27,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 22px;
     }
 
     .box {
       width: 100%;
       max-width: 520px;
       background: #ffffff;
+      border: 1px solid #d7e4f2;
       border-radius: 22px;
       padding: 28px 20px;
       text-align: center;
       box-shadow: 0 8px 24px rgba(16, 56, 96, 0.16);
-      border: 1px solid #d7e4f2;
     }
 
     h1 {
@@ -66,7 +60,7 @@
     a {
       display: block;
       width: 100%;
-      padding: 17px 14px;
+      padding: 18px 14px;
       border-radius: 16px;
       background: #1c73c9;
       color: #ffffff;
@@ -75,34 +69,20 @@
       font-weight: 900;
       text-decoration: none;
     }
-
-    .note {
-      margin-top: 16px;
-      font-size: 17px;
-      line-height: 1.6;
-      color: #66788f;
-      font-weight: 700;
-    }
   </style>
+
+  <script>
+    window.location.replace("https://script.google.com/macros/s/AKfycbz-cnevx8-W9ukZ3Nsk5Kgkv7Ldacrlw1FrNqH6nHiZ2mdxpp0WIndWGTJ-l-KRKtPtQw/exec");
+  </script>
 </head>
 
 <body>
   <div class="box">
     <h1>志木お助け隊</h1>
-    <p>デジタル回覧板とAIコンシェルジュを開きます。</p>
-    <a id="openLink" href="#">ページを開く</a>
-    <div class="note">自動で開かない場合は、上のボタンを押してください。</div>
+    <p>ページを開いています。</p>
+    <a href="https://script.google.com/macros/s/AKfycbz-cnevx8-W9ukZ3Nsk5Kgkv7Ldacrlw1FrNqH6nHiZ2mdxpp0WIndWGTJ-l-KRKtPtQw/exec">
+      開かない場合はこちら
+    </a>
   </div>
-
-  <script>
-    const link = document.getElementById('openLink');
-
-    if (GAS_EXEC_URL.includes('ここに')) {
-      link.href = '#';
-      link.textContent = 'GASのURLを入れてください';
-    } else {
-      link.href = GAS_EXEC_URL;
-    }
-  </script>
 </body>
 </html>
