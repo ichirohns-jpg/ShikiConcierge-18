@@ -3,699 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#eef5fb">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>志木お助け隊</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html, body {
       margin: 0;
       padding: 0;
+      width: 100%;
+      min-height: 100%;
       background: #eef5fb;
-      color: #1d2a38;
       font-family: "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
       -webkit-text-size-adjust: 100%;
     }
 
     body {
-      overflow-x: hidden;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    img {
-      display: block;
-      max-width: 100%;
-    }
-
-    .page {
-      width: 100%;
-      max-width: 920px;
-      margin: 0 auto;
-      padding: 12px 12px 24px;
-    }
-
-    .section-banner {
-      width: 100%;
-      margin: 0 0 12px;
-      border-radius: 18px;
       overflow: hidden;
-      background: #dfeaf6;
-      box-shadow: 0 4px 14px rgba(19, 68, 119, 0.12);
-      border: 1px solid #d7e4f2;
     }
 
-    .section-banner img {
-      width: 100%;
-      height: auto;
-      max-height: 18svh;
-      min-height: 76px;
-      object-fit: cover;
+    .app {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: #eef5fb;
+      position: relative;
     }
 
-    .board-shell,
-    .concierge-shell {
-      background: #ffffff;
-      border-radius: 18px;
-      box-shadow: 0 6px 22px rgba(16, 56, 96, 0.14);
-      overflow: hidden;
-      border: 1px solid #d7e4f2;
-      margin-bottom: 18px;
-    }
-
-    .board-shell {
-      --board-window-height: 68svh;
-    }
-
-    .board-window {
-      height: var(--board-window-height);
-      max-height: var(--board-window-height);
-      min-height: var(--board-window-height);
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior-y: contain;
-      touch-action: pan-y;
-      padding: 14px 12px 18px;
-      background: #f7fbff;
-      scroll-snap-type: y mandatory;
-    }
-
-    .board-window::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    .board-window::-webkit-scrollbar-thumb {
-      background: #c1d5ea;
-      border-radius: 999px;
-    }
-
-    .board-card {
-      background: #ffffff;
-      border: 1px solid #d8e6f5;
-      border-radius: 18px;
-      padding: 16px;
-      margin: 0 0 14px;
-      box-shadow: 0 3px 12px rgba(21, 66, 112, 0.08);
-      min-height: calc(var(--board-window-height) - 32px);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      scroll-snap-align: start;
-    }
-
-    .date {
-      font-size: 18px;
-      line-height: 1.5;
-      color: #44627f;
-      font-weight: 700;
-      margin-bottom: 6px;
-      flex: 0 0 auto;
-    }
-
-    .title {
-      font-size: 30px;
-      line-height: 1.35;
-      font-weight: 800;
-      color: #173f6d;
-      margin: 0 0 12px;
-      word-break: break-word;
-      flex: 0 0 auto;
-    }
-
-    .image-strip {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      overflow-y: hidden;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior-x: contain;
-      touch-action: pan-x;
-      padding: 2px 2px 8px;
-      margin: 0 0 12px;
-      flex: 0 0 auto;
-    }
-
-    .image-strip::-webkit-scrollbar {
-      height: 10px;
-    }
-
-    .image-strip::-webkit-scrollbar-thumb {
-      background: #c7d9ec;
-      border-radius: 999px;
-    }
-
-    .image-item {
-      flex: 0 0 min(76vw, 300px);
-      width: min(76vw, 300px);
-      max-width: 300px;
-      aspect-ratio: 9 / 16;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #eaf2fa;
-      border: 1px solid #d8e6f5;
-    }
-
-    .image-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .media-box {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border-radius: 16px;
-      overflow: hidden;
-      margin: 0 0 12px;
-      background: #000;
-      border: 1px solid #d8e6f5;
-      flex: 0 0 auto;
-    }
-
-    .media-box iframe,
-    .media-box video {
+    iframe {
       width: 100%;
       height: 100%;
       border: 0;
       display: block;
-    }
-
-    .detail {
-      font-size: 24px;
-      line-height: 1.8;
-      color: #22384d;
-      word-break: break-word;
-      flex: 0 0 auto;
-    }
-
-    .detail.spacer {
-      flex: 1 1 auto;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: auto;
-      padding-top: 16px;
-      flex: 0 0 auto;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 56px;
-      padding: 12px 18px;
-      border-radius: 14px;
-      font-size: 22px;
-      line-height: 1.4;
-      font-weight: 800;
-      cursor: pointer;
-      border: 0;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: rgba(0,0,0,0);
-      user-select: none;
-      width: 100%;
-    }
-
-    .btn-detail {
-      background: #1c73c9;
-      color: #fff;
-      box-shadow: 0 3px 10px rgba(28, 115, 201, 0.25);
-    }
-
-    .btn-apply {
-      background: #1aa56c;
-      color: #fff;
-      box-shadow: 0 3px 10px rgba(26, 165, 108, 0.22);
-    }
-
-    .btn-media {
-      background: #6a4fd8;
-      color: #fff;
-      box-shadow: 0 3px 10px rgba(106, 79, 216, 0.22);
-    }
-
-    .empty-state {
-      background: #fff;
-      border: 1px solid #d8e6f5;
-      border-radius: 16px;
-      padding: 28px 20px;
-      font-size: 24px;
-      line-height: 1.8;
-      color: #35506c;
-      text-align: center;
-      margin: 14px;
+      background: #eef5fb;
     }
 
     .loading {
-      padding: 18px;
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #eef5fb;
+      color: #134477;
       font-size: 22px;
-      line-height: 1.8;
-      color: #35506c;
-    }
-
-    .concierge-inner {
-      padding: 16px;
-      background: #f7fbff;
-    }
-
-    .input-card,
-    .result-card {
-      background: #ffffff;
-      border-radius: 22px;
-      padding: 20px;
-      border: 1px solid #dbe5f1;
-      box-shadow: 0 4px 14px rgba(19, 68, 119, 0.10);
-      margin-bottom: 16px;
-    }
-
-    .consult-title {
-      font-size: 22px;
-      line-height: 1.5;
-      font-weight: 900;
-      color: #1a73e8;
-      margin: 0 0 14px;
-    }
-
-    textarea {
-      width: 100%;
-      height: 150px;
-      border: 4px solid #d7dce3;
-      border-radius: 22px;
-      padding: 18px;
-      font-size: 26px;
-      line-height: 1.7;
-      box-sizing: border-box;
-      color: #22384d;
-      resize: vertical;
-      background: #fff;
-    }
-
-    .consult-btn {
-      display: block;
-      width: 100%;
-      padding: 18px;
-      border: none;
-      border-radius: 999px;
-      font-size: 30px;
-      font-weight: 900;
-      color: #fff;
-      background: #1a73e8;
-      margin-top: 16px;
+      font-weight: 800;
       text-align: center;
-      text-decoration: none;
-      box-sizing: border-box;
-      box-shadow: 0 4px 14px rgba(26, 115, 232, 0.25);
-      cursor: pointer;
+      padding: 24px;
     }
 
-    .result-title {
-      font-size: 22px;
-      font-weight: 900;
-      color: #1a73e8;
-      margin: 0 0 14px;
-    }
-
-    .out {
-      white-space: pre-wrap;
-      font-size: 22px;
-      line-height: 1.8;
-      color: #22384d;
-      word-break: break-word;
-    }
-
-    .candidate-item {
-      border: 1px solid #dbe5f1;
-      border-radius: 18px;
-      padding: 16px;
-      margin-top: 12px;
-      background: #fff;
-    }
-
-    .candidate-title {
-      font-size: 30px;
-      font-weight: 900;
-      color: #1a73e8;
-      line-height: 1.4;
-      word-break: break-word;
-    }
-
-    .candidate-sub {
-      font-size: 22px;
-      line-height: 1.8;
-      margin-top: 10px;
-      color: #22384d;
-      word-break: break-word;
-    }
-
-    .candidate-btn {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      border: none;
+    .open-button {
+      position: fixed;
+      right: 14px;
+      bottom: calc(14px + env(safe-area-inset-bottom));
+      z-index: 20;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 12px 16px;
       border-radius: 999px;
-      font-size: 24px;
-      font-weight: 900;
-      color: #fff;
-      background: #1a73e8;
-      margin-top: 14px;
-      text-align: center;
+      background: #1c73c9;
+      color: #ffffff;
+      font-size: 17px;
+      font-weight: 800;
       text-decoration: none;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-
-    @media (max-width: 640px) {
-      .page {
-        padding: 10px 10px 18px;
-      }
-
-      .board-shell {
-        --board-window-height: 64svh;
-      }
-
-      .title {
-        font-size: 27px;
-      }
-
-      .detail {
-        font-size: 22px;
-        line-height: 1.75;
-      }
-
-      .image-item {
-        flex: 0 0 78vw;
-        width: 78vw;
-      }
-
-      .consult-title,
-      .result-title {
-        font-size: 20px;
-      }
-
-      textarea {
-        font-size: 24px;
-      }
-
-      .consult-btn {
-        font-size: 28px;
-      }
-
-      .candidate-title {
-        font-size: 28px;
-      }
-
-      .candidate-sub,
-      .out,
-      .loading {
-        font-size: 21px;
-      }
-
-      .candidate-btn,
-      .btn {
-        font-size: 22px;
-      }
+      box-shadow: 0 4px 14px rgba(28, 115, 201, 0.28);
     }
   </style>
 </head>
+
 <body>
-  <div class="page">
-    <div class="section-banner">
-      <img id="boardBanner" src="" alt="志木お助け隊バナー">
-    </div>
-
-    <section class="board-shell">
-      <div class="board-window" id="boardWindow">
-        <div class="loading">回覧板を読み込み中です...</div>
-      </div>
-    </section>
-
-    <div class="section-banner">
-      <img id="conciergeBanner" src="" alt="志木市AIコンシェルジュバナー">
-    </div>
-
-    <section class="concierge-shell">
-      <div class="concierge-inner">
-        <div class="input-card">
-          <h2 class="consult-title">ご相談内容を入力してください</h2>
-          <textarea id="msg" placeholder="例：洪水ハザードマップが見たい"></textarea>
-          <button class="consult-btn" id="consultBtn">相談する</button>
-        </div>
-
-        <div class="result-card">
-          <h2 class="result-title">結果</h2>
-          <div id="result" class="out">ここに表示されます</div>
-        </div>
-      </div>
-    </section>
+  <div class="app">
+    <div id="loading" class="loading">読み込み中です…</div>
+    <iframe id="gasFrame" title="志木お助け隊"></iframe>
+    <a id="openButton" class="open-button" target="_blank" rel="noopener">開く</a>
   </div>
 
   <script>
-    const GAS_BASE_URL = 'https://script.google.com/macros/s/AKfycbzaGBP4LOlK1i018XcfpGBbuTPqbvfIgE2ogXBIknMh6G_SkoX20BxSTWhzEgyMoikomQ/exec';
-    const CONCIERGE_BANNER_URL = 'https://drive.google.com/thumbnail?id=1q6NBKaTPNs0tskub_deePwNPb2u0xCYv&sz=w3000';
+    const GAS_APP_URL = 'ここにGASのウェブアプリURLを入れる';
 
-    document.getElementById('conciergeBanner').src = CONCIERGE_BANNER_URL;
-    document.getElementById('consultBtn').addEventListener('click', sendConcierge);
+    const frame = document.getElementById('gasFrame');
+    const loading = document.getElementById('loading');
+    const openButton = document.getElementById('openButton');
 
-    loadBoard();
+    frame.src = GAS_APP_URL;
+    openButton.href = GAS_APP_URL;
 
-    function jsonpRequest(params) {
-      return new Promise((resolve, reject) => {
-        const callbackName = '__jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
-        params = params || {};
-        params.callback = callbackName;
+    frame.addEventListener('load', function () {
+      loading.style.display = 'none';
+    });
 
-        const query = Object.keys(params)
-          .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key]))
-          .join('&');
-
-        const script = document.createElement('script');
-        const timeout = setTimeout(() => {
-          cleanup();
-          reject(new Error('タイムアウト'));
-        }, 20000);
-
-        function cleanup() {
-          clearTimeout(timeout);
-          try { delete window[callbackName]; } catch (e) {}
-          if (script.parentNode) script.parentNode.removeChild(script);
-        }
-
-        window[callbackName] = function(data) {
-          cleanup();
-          resolve(data);
-        };
-
-        script.onerror = function() {
-          cleanup();
-          reject(new Error('読み込み失敗'));
-        };
-
-        script.src = GAS_BASE_URL + '?' + query;
-        document.body.appendChild(script);
-      });
-    }
-
-    async function loadBoard() {
-      const boardWindow = document.getElementById('boardWindow');
-
-      try {
-        const data = await jsonpRequest({ action: 'board' });
-
-        if (!data || !data.ok) {
-          boardWindow.innerHTML = '<div class="empty-state">回覧板の読み込みに失敗しました。</div>';
-          return;
-        }
-
-        document.getElementById('boardBanner').src = data.bannerUrl || '';
-
-        const items = Array.isArray(data.items) ? data.items : [];
-        if (!items.length) {
-          boardWindow.innerHTML = '<div class="empty-state">現在、表示できるお知らせはありません。</div>';
-          return;
-        }
-
-        boardWindow.innerHTML = items.map(renderBoardCard).join('');
-      } catch (e) {
-        boardWindow.innerHTML = '<div class="empty-state">回覧板の読み込みに失敗しました。</div>';
-      }
-    }
-
-    function renderBoardCard(item) {
-      const dateHtml = item.dateText ? `<div class="date">${escapeHtml(item.dateText)}</div>` : '';
-      const titleHtml = `<h2 class="title">${escapeHtml(item.title || 'お知らせ')}</h2>`;
-
-      let imagesHtml = '';
-      if (Array.isArray(item.images) && item.images.length) {
-        imagesHtml = '<div class="image-strip">' +
-          item.images.map(url => `<div class="image-item"><img src="${escapeAttr(url)}" alt="${escapeAttr(item.title || 'お知らせ')}"></div>`).join('') +
-          '</div>';
-      }
-
-      let mediaHtml = '';
-      if (item.media && item.media.type && item.media.embedUrl) {
-        if (item.media.type === 'video') {
-          mediaHtml = `<div class="media-box"><video controls playsinline preload="metadata" src="${escapeAttr(item.media.embedUrl)}"></video></div>`;
-        } else {
-          mediaHtml = `<div class="media-box"><iframe src="${escapeAttr(item.media.embedUrl)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
-        }
-      }
-
-      const detailHtml = item.detail
-        ? `<div class="detail">${nl2br(item.detail)}</div>`
-        : `<div class="detail spacer"></div>`;
-
-      const actions = [];
-      if (item.detailUrl) {
-        actions.push(`<a class="btn btn-detail" href="${escapeAttr(item.detailUrl)}" target="_blank" rel="noopener noreferrer">市ホームページ</a>`);
-      }
-      if (item.applyUrl) {
-        actions.push(`<a class="btn btn-apply" href="${escapeAttr(item.applyUrl)}" target="_blank" rel="noopener noreferrer">申込みはこちら</a>`);
-      }
-      if (item.media && item.media.linkOnlyUrl) {
-        actions.push(`<a class="btn btn-media" href="${escapeAttr(item.media.linkOnlyUrl)}" target="_blank" rel="noopener noreferrer">動画を開く</a>`);
-      }
-
-      const actionsHtml = actions.length ? `<div class="actions">${actions.join('')}</div>` : '';
-
-      return `<article class="board-card">${dateHtml}${titleHtml}${imagesHtml}${mediaHtml}${detailHtml}${actionsHtml}</article>`;
-    }
-
-    async function sendConcierge() {
-      const msg = (document.getElementById('msg').value || '').trim();
-      const result = document.getElementById('result');
-      result.textContent = '確認中...';
-
-      try {
-        const data = await jsonpRequest({
-          action: 'concierge_search',
-          q: msg
-        });
-        showAsk(data);
-      } catch (e) {
-        result.textContent = 'エラー: 読み込みに失敗しました。';
-      }
-    }
-
-    async function openCandidate(pageId) {
-      const result = document.getElementById('result');
-      result.textContent = '詳細表示中...';
-
-      try {
-        const data = await jsonpRequest({
-          action: 'concierge_open',
-          pageId: pageId
-        });
-        showDetail(data);
-      } catch (e) {
-        result.textContent = 'エラー: 読み込みに失敗しました。';
-      }
-    }
-
-    function showAsk(r) {
-      const box = document.getElementById('result');
-
-      if (!r || !r.ok) {
-        box.textContent = 'エラー: 読み込みに失敗しました。';
-        return;
-      }
-
-      box.innerHTML = '';
-      const top = document.createElement('div');
-      top.textContent = r.aiText || '';
-      box.appendChild(top);
-
-      if (r.candidates && r.candidates.length) {
-        r.candidates.forEach(c => {
-          const d = document.createElement('div');
-          d.className = 'candidate-item';
-          d.innerHTML =
-            `<div class="candidate-title">${escapeHtml(c.title || '')}</div>` +
-            `<div class="candidate-sub">${escapeHtml(c.desc || '')}</div>` +
-            `<div class="candidate-sub">担当: ${escapeHtml(c.office || '')}${c.counter ? ' / ' + escapeHtml(c.counter) : ''}${c.phoneDisp ? ' / ' + escapeHtml(c.phoneDisp) : ''}</div>`;
-
-          const b = document.createElement('button');
-          b.className = 'candidate-btn';
-          b.textContent = 'この案内を見る';
-          b.onclick = function() { openCandidate(c.pageId); };
-
-          d.appendChild(b);
-          box.appendChild(d);
-        });
-      } else {
-        const p = document.createElement('div');
-        p.textContent = '候補なし';
-        box.appendChild(p);
-      }
-    }
-
-    function showDetail(r) {
-      const box = document.getElementById('result');
-
-      if (!r || !r.ok) {
-        box.textContent = 'エラー: 読み込みに失敗しました。';
-        return;
-      }
-
-      box.innerHTML = '';
-
-      if (r.match) {
-        const m = r.match;
-        const d = document.createElement('div');
-        d.className = 'candidate-item';
-        d.innerHTML =
-          `<div class="candidate-title">${escapeHtml(m.title || '')}</div>` +
-          `<div class="candidate-sub">${escapeHtml(m.desc || '')}</div>` +
-          `<div class="candidate-sub">担当: ${escapeHtml(m.office || '')}${m.counter ? ' / ' + escapeHtml(m.counter) : ''}${m.phoneDisp ? ' / ' + escapeHtml(m.phoneDisp) : ''}</div>`;
-
-        if (m.phone) {
-          const t = document.createElement('a');
-          t.className = 'candidate-btn';
-          t.href = 'tel:' + String(m.phone);
-          t.textContent = '電話をかける';
-          d.appendChild(t);
-        }
-
-        if (m.link) {
-          const a = document.createElement('a');
-          a.className = 'candidate-btn';
-          a.href = m.link;
-          a.target = '_blank';
-          a.rel = 'noopener noreferrer';
-          a.textContent = '公式ページを見る';
-          d.appendChild(a);
-        }
-
-        box.appendChild(d);
-      } else {
-        box.textContent = r.aiText || '詳細なし';
-      }
-    }
-
-    function escapeHtml(text) {
-      return String(text == null ? '' : text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    function escapeAttr(text) {
-      return escapeHtml(text);
-    }
-
-    function nl2br(text) {
-      return escapeHtml(text).replace(/\r\n|\r|\n/g, '<br>');
-    }
+    setTimeout(function () {
+      loading.style.display = 'none';
+    }, 5000);
   </script>
 </body>
 </html>
