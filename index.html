@@ -1,22 +1,15 @@
-function parseDateValue_(value) {
-  if (!value) return 0;
-  if (Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value.getTime())) return new Date(value.getFullYear(), value.getMonth(), value.getDate()).getTime();
-  if (typeof value === 'number' && isFinite(value)) { var d = new Date(new Date(1899, 11, 30).getTime() + value * 86400000); return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); }
-  var s = toHalfWidth_(String(value || '').trim()).replace(/[（(][^）)]*[）)]/g, '');
-  
-  var r = s.match(/令和\s*(\d+)年\s*(\d+)月\s*(\d+)日?/) || s.match(/平成\s*(\d+)年\s*(\d+)月\s*(\d+)日?/);
-  if (r) return new Date((s.indexOf('令和') !== -1 ? 2018 : 1988) + Number(r[1]), Number(r[2]) - 1, Number(r[3])).getTime();
-  
-  var ymd = s.match(/(\d{4})[年\/\-.](\d{1,2})[月\/\-.](\d{1,2})/) || s.match(/(\d{2})[\/\-.](\d{1,2})[\/\-.](\d{1,2})/);
-  if (ymd) return new Date(ymd[1].length === 4 ? Number(ymd[1]) : 2000 + Number(ymd[1]), Number(ymd[2]) - 1, Number(ymd[3])).getTime();
-  
-  // ▼誤って削ってしまった「〇月〇日」の読み取り処理を復活
-  var md = s.match(/(\d{1,2})[月\/](\d{1,2})日?/);
-  if (md) {
-    var now = new Date();
-    return new Date(now.getFullYear(), Number(md[1]) - 1, Number(md[2])).getTime();
-  }
-  
-  var dt = new Date(s); 
-  return isNaN(dt.getTime()) ? 0 : new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime();
-}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>志木お助け隊</title>
+  <style>
+    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #eef5fb; }
+    iframe { width: 100%; height: 100%; border: none; display: block; }
+  </style>
+</head>
+<body>
+  <iframe src="https://script.google.com/macros/s/AKfycbwA4Va_xlggsjR9d8swu6zq5NzblIvYi7sBoG8fFMjrNSC17f10XiZHsK3WfVkgSLea9g/exec"></iframe>
+</body>
+</html>
