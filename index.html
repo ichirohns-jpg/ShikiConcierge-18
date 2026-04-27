@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>志木お助け隊</title>
+
   <style>
     html, body {
       margin: 0;
@@ -14,7 +15,11 @@
       overflow: hidden;
     }
 
-    iframe {
+    body {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    #app {
       width: 100%;
       height: 100vh;
       height: 100svh;
@@ -24,10 +29,29 @@
     }
   </style>
 </head>
+
 <body>
-  <iframe
-    src="https://script.google.com/macros/s/AKfycbyvDqS0BRQSC3bIqlhcYx7fsWqu80YLPnwyUXv2O0AETlpJr3hQNGMxdQgvaxwJDpie0Q/exec?v=20260427_1"
-    title="志木お助け隊">
-  </iframe>
+  <iframe id="app" title="志木お助け隊"></iframe>
+
+  <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyvDqS0BRQSC3bIqlhcYx7fsWqu80YLPnwyUXv2O0AETlpJr3hQNGMxdQgvaxwJDpie0Q/exec";
+
+    function loadGasPage() {
+      const gas = new URL(GAS_URL);
+      const current = new URL(window.location.href);
+
+      current.searchParams.forEach(function(value, key) {
+        if (key !== "_") {
+          gas.searchParams.set(key, value);
+        }
+      });
+
+      gas.searchParams.set("_", Date.now().toString());
+
+      document.getElementById("app").src = gas.toString();
+    }
+
+    loadGasPage();
+  </script>
 </body>
 </html>
