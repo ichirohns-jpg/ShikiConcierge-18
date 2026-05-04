@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>志木お助け隊DX</title>
 <style>
-/* デザインは1ミリも変えずに維持 */
+/* 提示されたデザインを完全維持 */
 *{box-sizing:border-box}
 html,body{
   margin:0;
@@ -71,7 +71,7 @@ html,body{
 .green{background:linear-gradient(135deg,#27ae60,#1aa56c)}
 .dark{background:linear-gradient(135deg,#666,#444)}
 
-/* 回覧板カード用スタイル */
+/* 回覧板カード用 */
 .card-item {
   background:#fff;
   border:1px solid #d8e6f5;
@@ -85,19 +85,28 @@ html,body{
 .card-info-title { font-size:26px; font-weight:900; color:#173f6d; margin-bottom:12px; }
 .card-detail { font-size:21px; line-height:1.75; color:#22384d; white-space:pre-wrap; }
 
-/* ページ切り替え */
-.view { display: none; }
+/* ページ切り替え制御 */
+.section { display: none; }
 .active { display: block; }
+
+textarea {
+  width:100%;
+  height:130px;
+  border:2px solid #d7dce3;
+  border-radius:18px;
+  padding:16px;
+  font-size:18px;
+}
 </style>
 </head>
 <body>
 
 <div class="page">
 
-  <!-- ========================= トップ画面 ========================= -->
-  <div id="view-home" class="view active">
+  <!-- ========================= TOP画面 ========================= -->
+  <div id="section-home" class="section active">
     <div class="banner">
-      <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="志木お助け隊DX">
+      <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="TOP">
     </div>
     <div class="card">
       <h1 class="title">志木お助け隊DX</h1>
@@ -108,24 +117,23 @@ html,body{
   </div>
 
   <!-- ========================= 回覧板画面 ========================= -->
-  <div id="view-board" class="view">
+  <div id="section-board" class="section">
     <div class="banner">
       <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="回覧板">
     </div>
     <button class="btn dark" onclick="nav('home')">トップに戻る</button>
     
-    <div class="card" style="margin-top:14px; padding:14px;">
+    <div class="card" style="margin-top:14px;">
       <h1 class="title">回覧板</h1>
-      <p class="sub" style="margin-bottom:14px;">最新のお知らせ</p>
-      
+      <p class="sub">最新のお知らせ</p>
       <div id="board-list">
-        <!-- ここにJavaScriptで内容が入ります -->
+        <!-- JSでここにデータが入る -->
       </div>
     </div>
   </div>
 
   <!-- ========================= コンシェルジュ画面 ========================= -->
-  <div id="view-concierge" class="view">
+  <div id="section-concierge" class="section">
     <div class="banner">
       <img src="https://drive.google.com/thumbnail?id=1q6NBKaTPNs0tskub_deePwNPb2u0xCYv&sz=w3000" alt="コンシェルジュ">
     </div>
@@ -133,8 +141,7 @@ html,body{
     
     <div class="card" style="margin-top:14px;">
       <h1 class="title" style="color:#1a73e8">AIコンシェルジュ</h1>
-      <div style="text-align:left; font-size:18px; font-weight:900; color:#1a73e8; margin-bottom:8px;">ご相談内容を入力</div>
-      <textarea id="msg" style="width:100%; height:120px; border:2px solid #d7dce3; border-radius:18px; padding:12px; font-size:18px;"></textarea>
+      <textarea id="msg" placeholder="例：洪水ハザードマップが見たい" style="margin-top:10px;"></textarea>
       <button class="btn blue" onclick="alert('相談機能を準備中です')">相談する</button>
     </div>
   </div>
@@ -143,36 +150,34 @@ html,body{
 
 <script>
 /**
- * 画面を切り替える関数
+ * 画面遷移の仕組み
  */
-function nav(id) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + id).classList.add('active');
+function nav(target) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + target).classList.add('active');
   window.scrollTo(0,0);
 }
 
 /**
- * ダミーの回覧板データ（ここを書き換えれば内容が変わります）
+ * お知らせデータ (スプレッドシートの代わりにここを編集)
  */
-const dummyData = [
+const boardData = [
   {
     date: "2026年5月5日",
-    title: "GitHub Pages版が正常に起動しました",
-    detail: "回覧板の表示テストです。スプレッドシートとの連携がなくても、このコードを編集することで内容を更新できます。"
+    title: "志木お助け隊DX GitHub版が稼働しました",
+    detail: "静的ページとして正常に動作しています。スプレッドシートなしでも直接HTMLを編集することで情報を更新可能です。"
   },
   {
-    date: "2026年5月1日",
-    title: "志木お助け隊DX 運用開始",
-    detail: "地域のデジタル化を進めるための新しいツールをご活用ください。"
+    date: "2026年4月30日",
+    title: "新緑の季節になりました",
+    detail: "志木市内の公園や緑道が美しい季節です。散策の際は水分補給をお忘れなく。"
   }
 ];
 
-/**
- * ページ読み込み時に回覧板を表示する
- */
+// 初期化：お知らせを表示
 window.onload = function() {
-  const container = document.getElementById('board-list');
-  container.innerHTML = dummyData.map(item => `
+  const list = document.getElementById('board-list');
+  list.innerHTML = boardData.map(item => `
     <div class="card-item">
       <div class="card-date">${item.date}</div>
       <div class="card-info-title">${item.title}</div>
@@ -181,6 +186,5 @@ window.onload = function() {
   `).join('');
 };
 </script>
-
 </body>
 </html>
