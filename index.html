@@ -5,87 +5,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>志木お助け隊DX</title>
 <style>
-/* デザインは1ミリも変えずに維持 */
+/* 志木お助け隊DX オリジナルデザイン */
 *{box-sizing:border-box}
 html,body{
-  margin:0;
-  padding:0;
-  background:#eef5fb;
+  margin:0; padding:0; background:#eef5fb;
   font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
   color:#17324d;
 }
-.page{
-  width:100%;
-  max-width:760px;
-  margin:0 auto;
-  padding:14px;
-}
+.page{ width:100%; max-width:760px; margin:0 auto; padding:14px; }
 .banner{
-  width:100%;
-  border-radius:18px;
-  overflow:hidden;
-  background:#dfeaf6;
-  box-shadow:0 6px 18px rgba(20,70,120,.14);
+  width:100%; border-radius:18px; overflow:hidden;
+  background:#dfeaf6; box-shadow:0 6px 18px rgba(20,70,120,.14);
   margin-bottom:18px;
 }
-.banner img{
-  width:100%;
-  display:block;
-}
+.banner img{ width:100%; display:block; }
 .card{
-  background:#fff;
-  border-radius:24px;
-  padding:24px 18px;
-  box-shadow:0 6px 18px rgba(20,70,120,.12);
-  text-align:center;
+  background:#fff; border-radius:24px; padding:24px 18px;
+  box-shadow:0 6px 18px rgba(20,70,120,.12); text-align:center;
 }
-.title{
-  font-size:30px;
-  font-weight:900;
-  color:#134477;
-  margin:0 0 10px;
-}
-.sub{
-  font-size:20px;
-  font-weight:700;
-  color:#49657f;
-  margin:0 0 22px;
-}
+.title{ font-size:30px; font-weight:900; color:#134477; margin:0 0 10px; }
+.sub{ font-size:20px; font-weight:700; color:#49657f; margin:0 0 22px; }
 .btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  min-height:72px;
-  border-radius:20px;
-  color:#fff;
-  font-size:25px;
-  font-weight:900;
-  text-decoration:none;
-  margin:16px 0;
-  box-shadow:0 7px 16px rgba(0,0,0,.18);
-  border:none;
-  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  width:100%; min-height:72px; border-radius:20px;
+  color:#fff; font-size:25px; font-weight:900; text-decoration:none;
+  margin:16px 0; box-shadow:0 7px 16px rgba(0,0,0,.18);
+  border:none; cursor:pointer;
 }
 .blue{background:linear-gradient(135deg,#2f80ed,#1c73c9)}
 .green{background:linear-gradient(135deg,#27ae60,#1aa56c)}
 .dark{background:linear-gradient(135deg,#666,#444)}
 
-/* 回覧板カードのデザイン再現 */
+/* 回覧板アイテム */
 .board-item {
-  background:#fff;
-  border:1px solid #d8e6f5;
-  border-radius:18px;
-  padding:16px;
-  margin:20px 0;
-  text-align:left;
+  background:#fff; border:1px solid #d8e6f5; border-radius:18px;
+  padding:16px; margin:20px 0; text-align:left;
   box-shadow:0 3px 12px rgba(21,66,112,.08);
 }
 .date { font-size:18px; font-weight:800; color:#44627f; margin-bottom:6px; }
-.card-title { font-size:26px; font-weight:900; color:#173f6d; margin:0 0 12px; }
+.board-title { font-size:26px; font-weight:900; color:#173f6d; margin:0 0 12px; }
 .detail { font-size:21px; line-height:1.75; color:#22384d; white-space:pre-wrap; }
 
-/* 画面切り替え用 */
+/* 画面制御 */
 .section { display: none; }
 .active { display: block; }
 </style>
@@ -94,11 +55,9 @@ html,body{
 
 <div class="page">
 
-  <!-- ========================= TOP画面 ========================= -->
+  <!-- TOP -->
   <div id="view-home" class="section active">
-    <div class="banner">
-      <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="志木お助け隊DX">
-    </div>
+    <div class="banner"><img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="志木お助け隊DX"></div>
     <div class="card">
       <h1 class="title">志木お助け隊DX</h1>
       <p class="sub">見たいページを選んでください</p>
@@ -107,77 +66,63 @@ html,body{
     </div>
   </div>
 
-  <!-- ========================= 回覧板画面 ========================= -->
+  <!-- 回覧板 -->
   <div id="view-board" class="section">
-    <div class="banner">
-      <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="回覧板">
-    </div>
+    <div class="banner"><img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="回覧板"></div>
     <button class="btn dark" onclick="nav('home')">トップに戻る</button>
-    
-    <div class="card" style="margin-top:14px; padding:10px;">
+    <div class="card" style="margin-top:14px;">
       <h1 class="title">回覧板</h1>
-      <p class="sub">最新のお知らせ</p>
       <div id="board-list">
-        <!-- JavaScriptで内容を生成 -->
+        <!-- JSで内容を挿入 -->
       </div>
     </div>
   </div>
 
-  <!-- ========================= コンシェルジュ画面 ========================= -->
+  <!-- コンシェルジュ -->
   <div id="view-concierge" class="section">
-    <div class="banner">
-      <img src="https://drive.google.com/thumbnail?id=1q6NBKaTPNs0tskub_deePwNPb2u0xCYv&sz=w3000" alt="コンシェルジュ">
-    </div>
+    <div class="banner"><img src="https://drive.google.com/thumbnail?id=1q6NBKaTPNs0tskub_deePwNPb2u0xCYv&sz=w3000" alt="コンシェルジュ"></div>
     <button class="btn dark" onclick="nav('home')">トップに戻る</button>
     <div class="card" style="margin-top:14px;">
       <h1 class="title" style="color:#1a73e8">AIコンシェルジュ</h1>
-      <textarea id="msg" style="width:100%; height:120px; border:2px solid #d7dce3; border-radius:18px; padding:12px; font-size:18px;" placeholder="例：洪水ハザードマップが見たい"></textarea>
-      <button class="btn blue" onclick="alert('相談機能を実行中...')">相談する</button>
+      <textarea id="msg" style="width:100%; height:120px; border:2px solid #d7dce3; border-radius:18px; padding:12px; font-size:18px;" placeholder="洪水ハザードマップが見たい、など"></textarea>
+      <button class="btn blue" onclick="alert('相談機能を準備中です')">相談する</button>
     </div>
   </div>
 
 </div>
 
 <script>
-/**
- * 画面を切り替える関数
- */
-function nav(targetId) {
+// 確実に表示を切り替える関数
+function nav(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById('view-' + targetId).classList.add('active');
+  document.getElementById('view-' + id).classList.add('active');
   window.scrollTo(0,0);
 }
 
-/**
- * 回覧板データ（ここを編集すれば即座に反映されます）
- */
-const boardData = [
+// 表示するお知らせデータ
+const articles = [
   {
     date: "2026年5月5日",
-    title: "志木お助け隊DX システム更新",
-    detail: "GitHub Pagesでの回覧板表示に対応しました。デザインや動作の不具合を修正し、スマートフォンからも見やすくなっています。"
+    title: "志木お助け隊DX 本格始動",
+    detail: "回覧板が正常に表示されています。地域の皆様の生活に役立つ情報をここから発信していきます。"
   },
   {
-    date: "2026年4月30日",
-    title: "ゴールデンウィークの相談窓口",
-    detail: "連休中のAIコンシェルジュおよび各窓口の対応状況については、市役所ホームページをご確認ください。"
+    date: "2026年4月28日",
+    title: "AIコンシェルジュについて",
+    detail: "暮らしの困りごとをAIがサポートする準備を進めています。近日公開予定です。"
   }
 ];
 
-/**
- * 起動時に回覧板を組み立てる
- */
 window.onload = function() {
   const container = document.getElementById('board-list');
-  container.innerHTML = boardData.map(item => `
+  container.innerHTML = articles.map(a => `
     <div class="board-item">
-      <div class="date">${item.date}</div>
-      <div class="card-title">${item.title}</div>
-      <div class="detail">${item.detail}</div>
+      <div class="date">${a.date}</div>
+      <div class="board-title">${a.title}</div>
+      <div class="detail">${a.detail}</div>
     </div>
   `).join('');
 };
 </script>
-
 </body>
 </html>
