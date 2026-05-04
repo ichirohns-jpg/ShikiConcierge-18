@@ -8,39 +8,69 @@
 <style>
 *{box-sizing:border-box}
 html,body{
-  margin:0; padding:0; background:#eef5fb;
+  margin:0;
+  padding:0;
+  background:#eef5fb;
   font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
   color:#17324d;
 }
-.page{ width:100%; max-width:760px; margin:0 auto; padding:14px; }
-
+.page{
+  width:100%;
+  max-width:760px;
+  margin:0 auto;
+  padding:14px;
+}
 .banner{
-  width:100%; border-radius:18px; overflow:hidden;
-  background:#dfeaf6; box-shadow:0 6px 18px rgba(20,70,120,.14);
+  width:100%;
+  border-radius:18px;
+  overflow:hidden;
+  background:#dfeaf6;
+  box-shadow:0 6px 18px rgba(20,70,120,.14);
   margin-bottom:18px;
 }
-.banner img{ width:100%; display:block; }
-
+.banner img{
+  width:100%;
+  display:block;
+}
 .card{
-  background:#fff; border-radius:24px; padding:24px 18px;
+  background:#fff;
+  border-radius:24px;
+  padding:24px 18px;
   box-shadow:0 6px 18px rgba(20,70,120,.12);
   text-align:center;
 }
-
-.title{ font-size:30px; font-weight:900; color:#134477; margin:0 0 10px; }
-.sub{ font-size:20px; font-weight:700; color:#49657f; margin:0 0 22px; }
-
+.title{
+  font-size:30px;
+  font-weight:900;
+  color:#134477;
+  margin:0 0 10px;
+}
+.sub{
+  font-size:20px;
+  font-weight:700;
+  color:#49657f;
+  margin:0 0 22px;
+}
 .btn{
-  display:flex; align-items:center; justify-content:center;
-  width:100%; min-height:72px; border-radius:20px;
-  color:#fff; font-size:25px; font-weight:900;
-  text-decoration:none; margin:16px 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:72px;
+  border-radius:20px;
+  color:#fff;
+  font-size:25px;
+  font-weight:900;
+  text-decoration:none;
+  margin:16px 0;
   box-shadow:0 7px 16px rgba(0,0,0,.18);
 }
-
-.blue{background:linear-gradient(135deg,#2f80ed,#1c73c9)}
-.green{background:linear-gradient(135deg,#27ae60,#1aa56c)}
-
+.blue{
+  background:linear-gradient(135deg,#2f80ed,#1c73c9);
+}
+.green{
+  background:linear-gradient(135deg,#27ae60,#1aa56c);
+}
 .note{
   margin-top:20px;
   font-size:17px;
@@ -54,22 +84,19 @@ html,body{
 
 <div class="page">
 
-  <!-- バナー -->
   <div class="banner">
-    <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000">
+    <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="志木お助け隊DX">
   </div>
 
-  <!-- メイン -->
   <div class="card">
     <h1 class="title">志木お助け隊DX</h1>
     <p class="sub">見たいページを選んでください</p>
 
-    <!-- ここが超重要 -->
-    <a class="btn blue" href="https://script.google.com/macros/s/AKfycbyk0noKfvnS0uGUttnBaXyznoLtbiD7tAQOZTqd8YDwNFAlw8Uf_f_EN47WFbHJ_--2/exec?p=board">
+    <a class="btn blue" href="https://script.google.com/macros/s/AKfycbwRlMqXPplCyWzKv7vRAywWnava0cYPIK1TQh6uIQ0hnKSonaJqc4K4RVgWgHJc6Uo/exec?p=board">
       回覧板を見る
     </a>
 
-    <a class="btn green" href="https://script.google.com/macros/s/AKfycbyk0noKfvnS0uGUttnBaXyznoLtbiD7tAQOZTqd8YDwNFAlw8Uf_f_EN47WFbHJ_--2/exec?p=concierge">
+    <a class="btn green" href="https://script.google.com/macros/s/AKfycbwRlMqXPplCyWzKv7vRAywWnava0cYPIK1TQh6uIQ0hnKSonaJqc4K4RVgWgHJc6Uo/exec?p=concierge">
       AIコンシェルジュを使う
     </a>
 
