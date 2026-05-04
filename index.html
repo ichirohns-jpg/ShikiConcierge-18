@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>志木お助け隊DX</title>
 <style>
+/* 提示されたCSSデザインを100%維持 */
 *{box-sizing:border-box}
 html,body{
   margin:0; padding:0; background:#eef5fb;
@@ -29,44 +30,100 @@ html,body{
   width:100%; min-height:72px; border-radius:20px;
   color:#fff; font-size:25px; font-weight:900; text-decoration:none;
   margin:16px 0; box-shadow:0 7px 16px rgba(0,0,0,.18);
+  border:none; cursor:pointer;
 }
 .blue{background:linear-gradient(135deg,#2f80ed,#1c73c9)}
 .green{background:linear-gradient(135deg,#27ae60,#1aa56c)}
-.note{
-  margin-top:20px;
-  font-size:17px;
-  line-height:1.7;
-  color:#607488;
+.dark{background:linear-gradient(135deg,#666,#444)}
+
+/* 回覧板カードデザイン */
+.board-item {
+  background:#fff; border:1px solid #d8e6f5; border-radius:18px;
+  padding:16px; margin:20px 0; text-align:left;
+  box-shadow:0 3px 12px rgba(21,66,112,.08);
 }
+.date { font-size:18px; font-weight:800; color:#44627f; margin-bottom:6px; }
+.board-title { font-size:26px; font-weight:900; color:#173f6d; margin:0 0 12px; }
+.detail { font-size:21px; line-height:1.75; color:#22384d; white-space:pre-wrap; }
+
+/* 画面切り替え制御 */
+.section { display: none; }
+.active { display: block; }
 </style>
 </head>
 <body>
 
 <div class="page">
 
-  <div class="banner">
-    <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="志木お助け隊DX">
+  <!-- TOP画面 -->
+  <div id="view-home" class="section active">
+    <div class="banner"><img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="TOP"></div>
+    <div class="card">
+      <h1 class="title">志木お助け隊DX</h1>
+      <p class="sub">見たいページを選んでください</p>
+      <button class="btn blue" onclick="nav('board')">回覧板を見る</button>
+      <button class="btn green" onclick="nav('concierge')">AIコンシェルジュを使う</button>
+    </div>
   </div>
 
-  <div class="card">
-    <h1 class="title">志木お助け隊DX</h1>
-    <p class="sub">見たいページを選んでください</p>
+  <!-- 回覧板画面 -->
+  <div id="view-board" class="section">
+    <div class="banner"><img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="回覧板"></div>
+    <button class="btn dark" onclick="nav('home')">トップに戻る</button>
+    <div class="card" style="margin-top:14px;">
+      <h1 class="title">回覧板</h1>
+      <div id="board-list">
+        <!-- JSでお知らせを挿入 -->
+      </div>
+    </div>
+  </div>
 
-    <a class="btn blue" href="ここにGASのURL?p=board">
-      回覧板を見る
-    </a>
-
-    <a class="btn green" href="ここにGASのURL?p=concierge">
-      AIコンシェルジュを使う
-    </a>
-
-    <div class="note">
-      市からのお知らせと、暮らしの相談先を<br>
-      わかりやすく案内します。
+  <!-- コンシェルジュ -->
+  <div id="view-concierge" class="section">
+    <div class="banner"><img src="https://drive.google.com/thumbnail?id=1q6NBKaTPNs0tskub_deePwNPb2u0xCYv&sz=w3000" alt="コンシェルジュ"></div>
+    <button class="btn dark" onclick="nav('home')">トップに戻る</button>
+    <div class="card" style="margin-top:14px;">
+      <h1 class="title" style="color:#1a73e8">AIコンシェルジュ</h1>
+      <textarea id="msg" style="width:100%; height:120px; border:2px solid #d7dce3; border-radius:18px; padding:12px; font-size:18px;" placeholder="ご相談内容を入力..."></textarea>
+      <button class="btn blue" onclick="alert('相談機能を準備中です')">相談する</button>
     </div>
   </div>
 
 </div>
 
+<script>
+// 確実に画面を切り替える
+function nav(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// 表示するお知らせデータ（スプレッドシートの代わりにここを編集してください）
+const articles = [
+  {
+    date: "2026年5月5日",
+    title: "志木お助け隊DX 本格始動",
+    detail: "GitHub Pagesでの回覧板が正常に動いています。地域の皆様に役立つ情報を配信します。"
+  },
+  {
+    date: "2026年4月28日",
+    title: "AIコンシェルジュの準備について",
+    detail: "より便利な相談窓口を目指して、現在AI機能を調整中です。公開をお待ちください。"
+  }
+];
+
+// 初期化：回覧板を組み立てる
+window.onload = function() {
+  const container = document.getElementById('board-list');
+  container.innerHTML = articles.map(a => `
+    <div class="board-item">
+      <div class="date">${a.date}</div>
+      <div class="board-title">${a.title}</div>
+      <div class="detail">${a.detail}</div>
+    </div>
+  `).join('');
+};
+</script>
 </body>
 </html>
