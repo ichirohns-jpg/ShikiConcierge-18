@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>志木お助け隊DX</title>
 <style>
-/* 元のコードのデザインを完全維持 */
+/* デザインは1ミリも変えずに維持 */
 *{box-sizing:border-box}
 html,body{
   margin:0;
@@ -70,33 +70,32 @@ html,body{
 .blue{background:linear-gradient(135deg,#2f80ed,#1c73c9)}
 .green{background:linear-gradient(135deg,#27ae60,#1aa56c)}
 .dark{background:linear-gradient(135deg,#666,#444)}
-.note{
-  margin-top:20px;
-  font-size:17px;
-  line-height:1.7;
-  color:#607488;
-}
-textarea{
-  width:100%;
-  height:130px;
-  border:2px solid #d7dce3;
+
+/* 回覧板カード用スタイル */
+.card-item {
+  background:#fff;
+  border:1px solid #d8e6f5;
   border-radius:18px;
   padding:16px;
-  font-size:18px;
-  line-height:1.6;
+  margin-bottom:20px;
+  text-align:left;
+  box-shadow:0 3px 12px rgba(21,66,112,.08);
 }
+.card-date { font-size:18px; font-weight:800; color:#44627f; margin-bottom:6px; }
+.card-info-title { font-size:26px; font-weight:900; color:#173f6d; margin-bottom:12px; }
+.card-detail { font-size:21px; line-height:1.75; color:#22384d; white-space:pre-wrap; }
 
-/* 表示制御 */
+/* ページ切り替え */
 .view { display: none; }
-.view.active { display: block; }
+.active { display: block; }
 </style>
 </head>
 <body>
 
 <div class="page">
 
-  <!-- TOP画面 -->
-  <div id="home" class="view active">
+  <!-- ========================= トップ画面 ========================= -->
+  <div id="view-home" class="view active">
     <div class="banner">
       <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="志木お助け隊DX">
     </div>
@@ -105,42 +104,38 @@ textarea{
       <p class="sub">見たいページを選んでください</p>
       <button class="btn blue" onclick="nav('board')">回覧板を見る</button>
       <button class="btn green" onclick="nav('concierge')">AIコンシェルジュを使う</button>
-      <div class="note">
-        市からのお知らせと、暮らしの相談先を<br>
-        わかりやすく案内します。
-      </div>
     </div>
   </div>
 
-  <!-- 回覧板画面 -->
-  <div id="board" class="view">
+  <!-- ========================= 回覧板画面 ========================= -->
+  <div id="view-board" class="view">
     <div class="banner">
       <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="回覧板">
     </div>
     <button class="btn dark" onclick="nav('home')">トップに戻る</button>
-    <div class="card" style="margin-top:10px;">
+    
+    <div class="card" style="margin-top:14px; padding:14px;">
       <h1 class="title">回覧板</h1>
-      <p class="sub">最新のお知らせ</p>
-      <div id="board-content" style="text-align:left; font-size:18px; color:#607488;">
-        データを読み込んでいます...
+      <p class="sub" style="margin-bottom:14px;">最新のお知らせ</p>
+      
+      <div id="board-list">
+        <!-- ここにJavaScriptで内容が入ります -->
       </div>
     </div>
   </div>
 
-  <!-- コンシェルジュ画面 -->
-  <div id="concierge" class="view">
+  <!-- ========================= コンシェルジュ画面 ========================= -->
+  <div id="view-concierge" class="view">
     <div class="banner">
       <img src="https://drive.google.com/thumbnail?id=1q6NBKaTPNs0tskub_deePwNPb2u0xCYv&sz=w3000" alt="コンシェルジュ">
     </div>
     <button class="btn dark" onclick="nav('home')">トップに戻る</button>
-    <div class="card" style="margin-top:10px;">
+    
+    <div class="card" style="margin-top:14px;">
       <h1 class="title" style="color:#1a73e8">AIコンシェルジュ</h1>
-      <p class="sub" style="text-align:left; font-size:18px;">ご相談内容を入力してください</p>
-      <textarea id="msg" placeholder="例：洪水ハザードマップが見たい"></textarea>
-      <button class="btn blue" onclick="alert('相談機能を実行します')">相談する</button>
-      <div id="result" class="note" style="text-align:left; border-top:1px solid #eee; padding-top:10px; margin-top:20px;">
-        結果はここに表示されます
-      </div>
+      <div style="text-align:left; font-size:18px; font-weight:900; color:#1a73e8; margin-bottom:8px;">ご相談内容を入力</div>
+      <textarea id="msg" style="width:100%; height:120px; border:2px solid #d7dce3; border-radius:18px; padding:12px; font-size:18px;"></textarea>
+      <button class="btn blue" onclick="alert('相談機能を準備中です')">相談する</button>
     </div>
   </div>
 
@@ -148,28 +143,44 @@ textarea{
 
 <script>
 /**
- * 画面遷移関数：確実にIDで切り替えます
+ * 画面を切り替える関数
  */
 function nav(id) {
-  // 全画面を非表示
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  // 対象を表示
-  const target = document.getElementById(id);
-  if(target) {
-    target.classList.add('active');
-    window.scrollTo(0,0);
-  }
+  document.getElementById('view-' + id).classList.add('active');
+  window.scrollTo(0,0);
 }
 
-// ページ読み込み時の初期化
+/**
+ * ダミーの回覧板データ（ここを書き換えれば内容が変わります）
+ */
+const dummyData = [
+  {
+    date: "2026年5月5日",
+    title: "GitHub Pages版が正常に起動しました",
+    detail: "回覧板の表示テストです。スプレッドシートとの連携がなくても、このコードを編集することで内容を更新できます。"
+  },
+  {
+    date: "2026年5月1日",
+    title: "志木お助け隊DX 運用開始",
+    detail: "地域のデジタル化を進めるための新しいツールをご活用ください。"
+  }
+];
+
+/**
+ * ページ読み込み時に回覧板を表示する
+ */
 window.onload = function() {
-  document.getElementById('board-content').innerHTML = `
-    <div style="background:#f7fbff; border:1px solid #d8e6f5; border-radius:18px; padding:16px;">
-      <div style="font-weight:bold; color:#173f6d; font-size:22px; margin-bottom:8px;">【重要】システム移行のお知らせ</div>
-      <p style="margin:0; line-height:1.6;">GitHub Pages版の回覧板が正常に表示されました。</p>
+  const container = document.getElementById('board-list');
+  container.innerHTML = dummyData.map(item => `
+    <div class="card-item">
+      <div class="card-date">${item.date}</div>
+      <div class="card-info-title">${item.title}</div>
+      <div class="card-detail">${item.detail}</div>
     </div>
-  `;
+  `).join('');
 };
 </script>
+
 </body>
 </html>
