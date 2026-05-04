@@ -2,25 +2,24 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
+<!-- ===== SNS・OGP設定 (リンク共有時に画像が出る設定) ===== -->
 <title>志木お助け隊DX</title>
-
+<meta name="description" content="志木市の回覧板やAIコンシェルジュをスマートフォンで簡単に確認できます。">
 <meta property="og:title" content="志木お助け隊DX">
-<meta property="og:description" content="市からのお知らせと暮らしの相談先を、見やすくわかりやすく案内します。">
+<meta property="og:description" content="暮らしの相談先や最新の回覧板を案内します。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://ichirohns-jpg.github.io/shiki.gomap-001/">
-<meta property="og:image" content="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000">
-
+<meta property="og:url" content="https://your-github-username.github.io/your-repo-name/"> <!-- あなたのURLに変更してください -->
+<meta property="og:image" content="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w1200">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="志木お助け隊DX">
-<meta name="twitter:description" content="市からのお知らせと暮らしの相談先を、見やすくわかりやすく案内します。">
-<meta name="twitter:image" content="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000">
 
 <style>
+/* ===== 共通デザイン（提供されたgsのスタイルを完全維持） ===== */
 *{box-sizing:border-box}
-body{
+html,body{
   margin:0;
+  padding:0;
   background:#eef5fb;
   font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
   color:#17324d;
@@ -86,32 +85,29 @@ body{
 }
 </style>
 </head>
-
 <body>
-<div class="page">
 
+<div class="page">
+  <!-- バナーセクション -->
   <div class="banner">
     <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="志木お助け隊DX">
   </div>
 
+  <!-- メインカードセクション -->
   <div class="card">
     <h1 class="title">志木お助け隊DX</h1>
     <p class="sub">見たいページを選んでください</p>
 
-    <a class="btn blue" href="https://script.google.com/macros/s/AKfycbwYaoJkMJXbUGKvrtSkr5CbEAZ68B3_k2RKIotvjELBrr5kfz_IuBEZZqSgJ7FtWTiK/exec?p=board">
-      回覧板を見る
-    </a>
-
-    <a class="btn green" href="https://script.google.com/macros/s/AKfycbwYaoJkMJXbUGKvrtSkr5CbEAZ68B3_k2RKIotvjELBrr5kfz_IuBEZZqSgJ7FtWTiK/exec?p=concierge">
-      AIコンシェルジュを使う
-    </a>
+    <!-- リンク先はGASのデプロイURLを想定 -->
+    <a class="btn blue" href="#">回覧板を見る</a>
+    <a class="btn green" href="#">AIコンシェルジュを使う</a>
 
     <div class="note">
       市からのお知らせと、暮らしの相談先を<br>
       わかりやすく案内します。
     </div>
   </div>
-
 </div>
+
 </body>
 </html>
