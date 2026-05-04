@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>志木お助け隊DX</title>
-<meta name="description" content="志木お助け隊DX。市のお知らせが見やすい回覧板と、暮らしの相談先がすぐ分かるAIコンシェルジュが使えます。">
+<meta name="description" content="市のお知らせが見やすい回覧板と、暮らしの相談先がすぐ分かるAIコンシェルジュが使えます。">
 
 <meta property="og:title" content="志木お助け隊DX">
 <meta property="og:description" content="市のお知らせが見やすい回覧板と、暮らしの相談先がすぐ分かるAIコンシェルジュが使えます。">
@@ -27,11 +27,6 @@ html,body{
   background:#eef5fb;
   font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
   color:#17324d;
-  -webkit-text-size-adjust:100%;
-}
-
-body{
-  overflow-x:hidden;
 }
 
 .page{
@@ -68,7 +63,6 @@ body{
   font-weight:900;
   color:#134477;
   margin:0 0 10px;
-  line-height:1.35;
 }
 
 .sub{
@@ -76,7 +70,6 @@ body{
   font-weight:700;
   color:#49657f;
   margin:0 0 22px;
-  line-height:1.6;
 }
 
 .btn{
@@ -92,7 +85,6 @@ body{
   text-decoration:none;
   margin:16px 0;
   box-shadow:0 7px 16px rgba(0,0,0,.18);
-  line-height:1.35;
 }
 
 .blue{
@@ -109,57 +101,6 @@ body{
   line-height:1.7;
   color:#607488;
 }
-
-.guide{
-  margin-top:18px;
-  padding:16px 14px;
-  border-radius:18px;
-  background:#f7fbff;
-  border:1px solid #d8e6f5;
-  text-align:left;
-  font-size:16px;
-  line-height:1.7;
-  color:#35506c;
-  font-weight:700;
-}
-
-.guide-title{
-  font-size:18px;
-  font-weight:900;
-  color:#134477;
-  margin:0 0 8px;
-}
-
-.footer{
-  margin-top:18px;
-  text-align:center;
-  font-size:14px;
-  line-height:1.6;
-  color:#7a8ca0;
-}
-
-@media(max-width:640px){
-  .page{
-    padding:12px 10px 24px;
-  }
-
-  .title{
-    font-size:29px;
-  }
-
-  .sub{
-    font-size:19px;
-  }
-
-  .btn{
-    min-height:72px;
-    font-size:24px;
-  }
-
-  .note{
-    font-size:16px;
-  }
-}
 </style>
 </head>
 
@@ -172,37 +113,19 @@ body{
 
   <div class="card">
     <h1 class="title">志木お助け隊DX</h1>
+    <p class="sub">見たいページを選んでください</p>
 
-    <p class="sub">
-      見たいページを選んでください
-    </p>
-
-    <a class="btn blue"
-       href="https://script.google.com/macros/s/AKfycbysuSfJ35wQckdxPBLwnFgNyuxIttyE2kX1rS_2jbKl-bEfETWDm6_YOUmFH3AQhjXsbA/exec?p=board"
-       target="_top">
+    <a class="btn blue" href="https://script.google.com/macros/s/AKfycbysuSfJ35wQckdxPBLwnFgNyuxIttyE2kX1rS_2jbKl-bEfETWDm6_YOUmFH3AQhjXsbA/exec?p=board">
       回覧板を見る
     </a>
 
-    <a class="btn green"
-       href="https://script.google.com/macros/s/AKfycbysuSfJ35wQckdxPBLwnFgNyuxIttyE2kX1rS_2jbKl-bEfETWDm6_YOUmFH3AQhjXsbA/exec?p=concierge"
-       target="_top">
+    <a class="btn green" href="https://script.google.com/macros/s/AKfycbysuSfJ35wQckdxPBLwnFgNyuxIttyE2kX1rS_2jbKl-bEfETWDm6_YOUmFH3AQhjXsbA/exec?p=concierge">
       AIコンシェルジュを使う
     </a>
 
     <div class="note">
       市からのお知らせと、暮らしの相談先を<br>
       わかりやすく案内します。
-    </div>
-
-    <div class="guide">
-      <div class="guide-title">使い方</div>
-      上のボタンを押すと、回覧板またはAIコンシェルジュのページが開きます。<br>
-      回覧板では市からのお知らせを見やすく確認できます。<br>
-      AIコンシェルジュでは、困りごとを入力すると相談先を案内します。
-    </div>
-
-    <div class="footer">
-      志木お助け隊DX
     </div>
   </div>
 
