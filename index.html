@@ -3,148 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>志木お助け隊</title>
+<title>志木お助け隊DX</title>
+
 <style>
-/* 山口さんのデザインを100%維持 */
 *{box-sizing:border-box}
 html,body{
-  margin:0; padding:0; background:#eef5fb; color:#1d2a38;
+  margin:0; padding:0; background:#eef5fb;
   font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
-  -webkit-text-size-adjust:100%;
+  color:#17324d;
 }
-body{ overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; }
-a{ text-decoration:none; color:inherit; }
-img{ display:block; max-width:100%; }
-.page{ width:100%; max-width:920px; margin:0 auto; padding:10px 10px 36px; }
-.top-banner{
-  width:100%; margin:0 0 12px; border-radius:16px; overflow:hidden;
-  background:#dfeaf6; box-shadow:0 4px 14px rgba(19,68,119,.12);
+.page{ width:100%; max-width:760px; margin:0 auto; padding:14px; }
+
+.banner{
+  width:100%; border-radius:18px; overflow:hidden;
+  background:#dfeaf6; box-shadow:0 6px 18px rgba(20,70,120,.14);
+  margin-bottom:18px;
 }
-.top-banner img{ width:100%; height:105px; object-fit:cover; object-position:center; }
-.board-shell{ background:#ffffff; border-radius:18px; overflow:hidden; border:1px solid #d7e4f2; box-shadow:0 6px 22px rgba(16,56,96,.14); }
-.board-header{ padding:14px 16px; background:linear-gradient(180deg,#e9f3fb 0%,#f7fbff 100%); border-bottom:1px solid #d8e6f5; }
-.board-title{ margin:0; font-size:26px; line-height:1.35; font-weight:900; color:#134477; }
-.board-subtitle{ margin:6px 0 0; font-size:18px; line-height:1.6; color:#385779; }
-.board-content{ background:#f7fbff; padding:14px 12px 18px; }
-.card{ background:#ffffff; border:1px solid #d8e6f5; border-radius:18px; padding:16px; margin:0 0 20px; box-shadow:0 3px 12px rgba(21,66,112,.08); }
-.date{ font-size:18px; line-height:1.5; color:#44627f; font-weight:800; margin-bottom:6px; }
-.title{ font-size:28px; line-height:1.35; font-weight:900; color:#173f6d; margin:0 0 12px; word-break:break-word; }
-.image-strip{ display:flex; flex-direction:row; gap:0; overflow-x:auto; padding:6px 0 12px; margin:0 0 16px; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; }
-.image-strip::-webkit-scrollbar{ height:8px; }
-.image-strip::-webkit-scrollbar-thumb{ background:#c7d9ec; border-radius:999px; }
-.image-item{ flex:0 0 100%; width:100%; aspect-ratio:9/16; border-radius:16px; overflow:hidden; background:#eaf2fa; border:1px solid #d8e6f5; scroll-snap-align:start; }
-.image-item img{ width:100%; height:100%; object-fit:cover; display:block; }
-.video-box{ width:100%; aspect-ratio:16/9; border-radius:16px; overflow:hidden; background:#000; margin:0 0 16px; border:1px solid #d8e6f5; }
-.video-box iframe, .video-box video{ width:100%; height:100%; border:0; display:block; }
-.detail{ font-size:22px; line-height:1.8; color:#22384d; white-space:pre-wrap; margin:0 0 16px; }
-.actions{ display:flex; flex-direction:column; gap:12px; }
-.btn{ display:flex; align-items:center; justify-content:center; min-height:58px; padding:12px 16px; border-radius:14px; font-size:21px; line-height:1.4; font-weight:900; text-align:center; }
-.btn-detail{ background:#1c73c9; color:#ffffff; }
-.btn-apply{ background:#1aa56c; color:#ffffff; }
+.banner img{ width:100%; display:block; }
+
+.card{
+  background:#fff; border-radius:24px; padding:24px 18px;
+  box-shadow:0 6px 18px rgba(20,70,120,.12);
+  text-align:center;
+}
+
+.title{ font-size:30px; font-weight:900; color:#134477; margin:0 0 10px; }
+.sub{ font-size:20px; font-weight:700; color:#49657f; margin:0 0 22px; }
+
+.btn{
+  display:flex; align-items:center; justify-content:center;
+  width:100%; min-height:72px; border-radius:20px;
+  color:#fff; font-size:25px; font-weight:900;
+  text-decoration:none; margin:16px 0;
+  box-shadow:0 7px 16px rgba(0,0,0,.18);
+}
+
+.blue{background:linear-gradient(135deg,#2f80ed,#1c73c9)}
+.green{background:linear-gradient(135deg,#27ae60,#1aa56c)}
+
+.note{
+  margin-top:20px;
+  font-size:17px;
+  line-height:1.7;
+  color:#607488;
+}
 </style>
 </head>
+
 <body>
 
 <div class="page">
-  <div class="top-banner">
-    <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="志木お助け隊バナー">
+
+  <!-- バナー -->
+  <div class="banner">
+    <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000">
   </div>
 
-  <section class="board-shell">
-    <div class="board-header">
-      <h1 class="board-title">志木お助け隊 回覧板</h1>
-      <p class="board-subtitle">市からのお知らせを最新順に表示します</p>
+  <!-- メイン -->
+  <div class="card">
+    <h1 class="title">志木お助け隊DX</h1>
+    <p class="sub">見たいページを選んでください</p>
+
+    <!-- ここが超重要 -->
+    <a class="btn blue" href="https://script.google.com/macros/s/AKfycbyk0noKfvnS0uGUttnBaXyznoLtbiD7tAQOZTqd8YDwNFAlw8Uf_f_EN47WFbHJ_--2/exec?p=board">
+      回覧板を見る
+    </a>
+
+    <a class="btn green" href="https://script.google.com/macros/s/AKfycbyk0noKfvnS0uGUttnBaXyznoLtbiD7tAQOZTqd8YDwNFAlw8Uf_f_EN47WFbHJ_--2/exec?p=concierge">
+      AIコンシェルジュを使う
+    </a>
+
+    <div class="note">
+      市からのお知らせと、暮らしの相談先を<br>
+      わかりやすく案内します。
     </div>
-    <div id="board-content" class="board-content">
-      <!-- JavaScriptでここに記事が入ります -->
-    </div>
-  </section>
+  </div>
+
 </div>
 
-<script>
-/**
- * 山口さんのスプレッドシート（A列〜K列）のデータをここに反映させます。
- * 記事が増えたら、{ ... } のかたまりをコピーして増やしてください。
- */
-const spreadsheetData = [
-  {
-    date: "2026/05/05", // A列: 日付
-    title: "志木お助け隊DX 本格稼働", // B列: タイトル
-    image1: "https://drive.google.com/file/d/1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH/view", // C列: 画像1
-    detail: "静的HTML版としてGitHub Pagesでの動作を最適化しました。画像5枚のスワイプ表示にも対応しています。", // D列: 詳細内容
-    apply: "", // E列: 申込フォームURL
-    link: "https://www.city.shiki.lg.jp/", // F列: 市HP URL
-    media: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // G列: 動画URL
-    image2: "", // H列
-    image3: "", // I列
-    image4: "", // J列
-    image5: ""  // K列
-  },
-  {
-    date: "2026/04/30",
-    title: "春の火災予防運動のお知らせ",
-    image1: "",
-    detail: "火の元には十分ご注意ください。地域の安全は一人ひとりの心がけから。",
-    apply: "https://example.com/apply",
-    link: "https://www.city.shiki.lg.jp/",
-    media: "",
-    image2: "", image3: "", image4: "", image5: ""
-  }
-];
-
-// GoogleドライブのURLからIDを抽出する関数
-function getDriveId(url) {
-  if (!url) return '';
-  const m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/) || url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  return m ? m[1] : '';
-}
-
-// YouTubeのURLから埋め込み用IDを抽出する関数
-function getYoutubeId(url) {
-  if (!url) return '';
-  const m = url.match(/[?&]v=([a-zA-Z0-9_-]{11})/) || url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/) || url.match(/embed\/([a-zA-Z0-9_-]{11})/);
-  return m ? m[1] : '';
-}
-
-// 記事カードを生成する関数
-function render() {
-  const container = document.getElementById('board-content');
-  container.innerHTML = spreadsheetData.map(x => {
-    
-    // 画像エリアの生成（5枚対応）
-    const images = [x.image1, x.image2, x.image3, x.image4, x.image5]
-      .map(u => getDriveId(u))
-      .filter(id => id !== '')
-      .map(id => `<div class="image-item"><img loading="lazy" src="https://drive.google.com/thumbnail?id=${id}&sz=w1200"></div>`)
-      .join('');
-    
-    const imageSection = images ? `<div class="image-strip">${images}</div>` : '';
-
-    // 動画エリアの生成
-    let videoSection = '';
-    const ytId = getYoutubeId(x.media);
-    if (ytId) {
-      videoSection = `<div class="video-box"><iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe></div>`;
-    }
-
-    return `
-      <article class="card">
-        <div class="date">${x.date}</div>
-        <h2 class="title">${x.title}</h2>
-        ${imageSection}
-        ${videoSection}
-        ${x.detail ? `<div class="detail">${x.detail}</div>` : ''}
-        <div class="actions">
-          ${x.link ? `<a href="${x.link}" class="btn btn-detail" target="_blank">市ホームページを見る</a>` : ''}
-          ${x.apply ? `<a href="${x.apply}" class="btn btn-apply" target="_blank">申込みはこちら</a>` : ''}
-        </div>
-      </article>
-    `;
-  }).join('');
-}
-
-// 実行
-window.onload = render;
-</script>
 </body>
 </html>
