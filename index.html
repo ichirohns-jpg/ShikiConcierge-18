@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>志木お助け隊DX</title>
+<title>志木お助け隊DX 統合版</title>
 <style>
-/* ===== デザインは一切変えず、動作のみを追加 ===== */
+/* 共通スタイル：デザインは一切変えていません */
 *{box-sizing:border-box}
 html,body{
   margin:0;
@@ -38,6 +38,7 @@ html,body{
   padding:24px 18px;
   box-shadow:0 6px 18px rgba(20,70,120,.12);
   text-align:center;
+  margin-bottom: 20px;
 }
 .title{
   font-size:30px;
@@ -76,12 +77,7 @@ html,body{
   line-height:1.7;
   color:#607488;
 }
-
-/* 表示・非表示の切り替え用 */
-.content-section { display: none; }
-.active { display: block; }
-
-textarea {
+textarea{
   width:100%;
   height:130px;
   border:2px solid #d7dce3;
@@ -90,6 +86,11 @@ textarea {
   font-size:18px;
   margin-bottom:10px;
 }
+
+/* ページ切り替え用表示制御 */
+.section-content { display: none; }
+.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
 </style>
 </head>
 <body>
@@ -97,45 +98,51 @@ textarea {
 <div class="page">
 
   <!-- ========================= TOP画面 ========================= -->
-  <div id="section-home" class="content-section active">
+  <div id="view-home" class="section-content active">
     <div class="banner">
-      <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="志木お助け隊DX">
+      <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="TOP">
     </div>
     <div class="card">
       <h1 class="title">志木お助け隊DX</h1>
       <p class="sub">見たいページを選んでください</p>
-      <button class="btn blue" onclick="showSection('board')">回覧板を見る</button>
-      <button class="btn green" onclick="showSection('concierge')">AIコンシェルジュを使う</button>
+      <button class="btn blue" onclick="changeView('board')">回覧板を見る</button>
+      <button class="btn green" onclick="changeView('concierge')">AIコンシェルジュを使う</button>
       <div class="note">市からのお知らせと、暮らしの相談先を<br>わかりやすく案内します。</div>
     </div>
   </div>
 
   <!-- ========================= 回覧板画面 ========================= -->
-  <div id="section-board" class="content-section">
+  <div id="view-board" class="section-content">
     <div class="banner">
       <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="回覧板">
     </div>
-    <button class="btn gray" onclick="showSection('home')">トップに戻る</button>
+    <button class="btn gray" onclick="changeView('home')">トップに戻る</button>
     <div class="card">
-      <h2 class="title">回覧板</h2>
-      <p class="sub">最新のお知らせ</p>
-      <div id="board-items" style="text-align:left;">
-        <p>※スプレッドシート連携を準備中です。</p>
+      <h1 class="title">回覧板</h1>
+      <div id="board-items">
+        <p class="note">最新のお知らせを読み込み中...</p>
+        <!-- ここにお知らせが表示されます -->
+        <div style="text-align:left; border:1px solid #ddd; padding:15px; border-radius:15px; margin-top:10px;">
+          <div style="color:#666; font-size:14px;">2026/05/01</div>
+          <div style="font-weight:bold; font-size:18px;">GitHub Pages版が起動しました</div>
+          <p style="font-size:15px;">※実際のお知らせはGoogleスプレッドシートのデータをここに反映させる設定が必要です。</p>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ========================= コンシェルジュ画面 ========================= -->
-  <div id="section-concierge" class="content-section">
+  <div id="view-concierge" class="section-content">
     <div class="banner">
       <img src="https://drive.google.com/thumbnail?id=1q6NBKaTPNs0tskub_deePwNPb2u0xCYv&sz=w3000" alt="コンシェルジュ">
     </div>
-    <button class="btn gray" onclick="showSection('home')">トップに戻る</button>
+    <button class="btn gray" onclick="changeView('home')">トップに戻る</button>
     <div class="card">
-      <h2 class="title" style="color:#1a73e8">AIコンシェルジュ</h2>
+      <h1 class="title" style="color:#1a73e8">AIコンシェルジュ</h1>
       <div style="text-align:left; margin-bottom:10px; font-weight:bold;">ご相談内容を入力してください</div>
       <textarea id="msg" placeholder="例：洪水ハザードマップが見たい"></textarea>
-      <button class="btn blue" onclick="alert('相談機能を準備中です')">相談する</button>
+      <button class="btn blue" onclick="mockAsk()">相談する</button>
+      <div id="result" style="margin-top:20px; text-align:left; color:#1a73e8; font-weight:bold;"></div>
     </div>
   </div>
 
@@ -143,21 +150,35 @@ textarea {
 
 <script>
 /**
- * 画面切り替えの仕組み
+ * 画面を切り替える関数
  */
-function showSection(sectionId) {
-  // すべてのセクションを隠す
-  var sections = document.querySelectorAll('.content-section');
-  sections.forEach(function(sec) {
-    sec.classList.remove('active');
-  });
+function changeView(targetId) {
+  // 全セクションを一旦非表示
+  const sections = document.querySelectorAll('.section-content');
+  sections.forEach(s => s.classList.remove('active'));
 
-  // 指定されたセクションだけ表示する
-  var target = document.getElementById('section-' + sectionId);
-  if (target) {
+  // 指定したセクションを表示
+  const target = document.getElementById('view-' + targetId);
+  if(target) {
     target.classList.add('active');
-    window.scrollTo(0, 0); // 画面の一番上に戻す
+    window.scrollTo(0, 0);
   }
+}
+
+/**
+ * コンシェルジュ相談のダミー動作
+ */
+function mockAsk() {
+  const msg = document.getElementById('msg').value;
+  const res = document.getElementById('result');
+  if(!msg) {
+    res.innerText = "相談内容を入力してください。";
+    return;
+  }
+  res.innerText = "「" + msg + "」について確認しています...";
+  setTimeout(() => {
+    res.innerHTML = "<div style='color:#333; font-weight:normal; border-top:1px solid #eee; padding-top:10px;'>近い案内が見つかりませんでした。志木市役所（048-473-1111）へ直接ご相談いただくか、別のキーワードで入力してください。</div>";
+  }, 1000);
 }
 </script>
 
