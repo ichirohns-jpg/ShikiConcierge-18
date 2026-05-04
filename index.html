@@ -1,38 +1,152 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>志木お助け隊</title>
-  <style>
-    html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #eef5fb; font-family: sans-serif; }
-    .box { padding: 32px 18px; text-align: center; color: #173f6d; }
-    .title { font-size: 28px; font-weight: 900; margin-bottom: 18px; }
-    .text { font-size: 20px; line-height: 1.7; margin-bottom: 24px; }
-    .btn { display: block; width: 100%; max-width: 520px; margin: 0 auto; padding: 18px; border-radius: 16px; background: #1c73c9; color: #fff; font-size: 22px; font-weight: 900; text-decoration: none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>志木お助け隊DX</title>
+
+<!-- OG設定（絶対必要） -->
+<meta property="og:title" content="志木お助け隊DX">
+<meta property="og:description" content="志木市のお知らせを見やすくまとめた回覧板と、暮らしの相談先がすぐ分かるAIコンシェルジュが使えます。">
+<meta property="og:image" content="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w1200">
+<meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="志木お助け隊DX">
+
+<!-- X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="志木お助け隊DX">
+<meta name="twitter:description" content="市のお知らせと相談先をまとめて確認できます。">
+<meta name="twitter:image" content="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w1200">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#eef5fb;
+  font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+  color:#17324d;
+}
+
+.page{
+  max-width:760px;
+  margin:0 auto;
+  padding:14px;
+}
+
+.banner{
+  width:100%;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(20,70,120,.14);
+  margin-bottom:18px;
+}
+
+.banner img{
+  width:100%;
+  display:block;
+}
+
+.card{
+  background:#fff;
+  border-radius:24px;
+  padding:24px 18px;
+  box-shadow:0 6px 18px rgba(20,70,120,.12);
+  text-align:center;
+}
+
+.title{
+  font-size:30px;
+  font-weight:900;
+  color:#134477;
+  margin:0 0 10px;
+}
+
+.sub{
+  font-size:20px;
+  font-weight:700;
+  color:#49657f;
+  margin:0 0 22px;
+}
+
+.btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:72px;
+  border-radius:20px;
+  color:#fff;
+  font-size:25px;
+  font-weight:900;
+  text-decoration:none;
+  margin:16px 0;
+  box-shadow:0 7px 16px rgba(0,0,0,.18);
+}
+
+.blue{background:linear-gradient(135deg,#2f80ed,#1c73c9)}
+.green{background:linear-gradient(135deg,#27ae60,#1aa56c)}
+.orange{background:linear-gradient(135deg,#f39c12,#e67e22)}
+
+.note{
+  margin-top:20px;
+  font-size:17px;
+  line-height:1.7;
+  color:#607488;
+}
+</style>
 </head>
+
 <body>
-  <div class="box">
-    <div class="title">志木お助け隊</div>
-    <div class="text">最新の情報を読み込んでいます...</div>
-    <a class="btn" id="openBtn" href="#">ここを押して開始</a>
+
+<div class="page">
+
+  <div class="banner">
+    <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000">
   </div>
-  <script>
-    // 最新のGAS URL
-    var GAS_URL = "https://script.google.com/macros/s/AKfycbwvLcbEtK-bnoJpLCgthbbSPp8j-Lq2pKxs3waU4IZv-hmzJUGQqm3x3oPUs8SuajE-iA/exec";
-    
-    // キャッシュを回避し、かつ動画ブロックを防ぐためにパラメータを付与
-    var finalUrl = GAS_URL + "?t=" + new Date().getTime();
-    document.getElementById("openBtn").href = finalUrl;
-    
-    // 自動転送
-    setTimeout(function() {
-      window.location.replace(finalUrl);
-    }, 100);
-  </script>
+
+  <div class="card">
+    <h1 class="title">志木お助け隊DX</h1>
+    <p class="sub">見たいページを選んでください</p>
+
+    <a class="btn blue" href="https://script.google.com/macros/s/AKfycbyLb_CjoCZae0fa4r-78AlQ6Nx_nNK_0Tri1rrnxlFGsK6_18A0efZzsTuJvpA94tImOA/exec?p=board">
+      回覧板を見る
+    </a>
+
+    <a class="btn green" href="https://script.google.com/macros/s/AKfycbyLb_CjoCZae0fa4r-78AlQ6Nx_nNK_0Tri1rrnxlFGsK6_18A0efZzsTuJvpA94tImOA/exec?p=concierge">
+      AIコンシェルジュを使う
+    </a>
+
+    <button class="btn orange" onclick="copyShareText()">
+      シェア文をコピー
+    </button>
+
+    <div class="note">
+      市からのお知らせと、暮らしの相談先を<br>
+      わかりやすく案内します。
+    </div>
+  </div>
+
+</div>
+
+<script>
+function copyShareText(){
+const text =
+`志木お助け隊DXができました。
+
+市からのお知らせを見やすくまとめた「回覧板」と、
+暮らしの相談先を探せる「AIコンシェルジュ」が使えます。
+
+こちらからご覧ください。
+https://ichirohns-jpg.github.io/ShikiConcierge-18/`;
+
+navigator.clipboard.writeText(text).then(function(){
+alert("コピーしました");
+});
+}
+</script>
+
 </body>
 </html>
