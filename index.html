@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>志木お助け隊DX</title>
 <style>
-/* ===== 共通スタイル (トップ/回覧板/コンシェルジュ統合) ===== */
+/* ===== デザインは一切変えず、動作のみを追加 ===== */
 *{box-sizing:border-box}
 html,body{
   margin:0;
@@ -20,9 +20,6 @@ html,body{
   margin:0 auto;
   padding:14px;
 }
-.hidden { display: none !important; }
-
-/* トップ画面用 */
 .banner{
   width:100%;
   border-radius:18px;
@@ -31,17 +28,29 @@ html,body{
   box-shadow:0 6px 18px rgba(20,70,120,.14);
   margin-bottom:18px;
 }
-.banner img{ width:100%; display:block; }
+.banner img{
+  width:100%;
+  display:block;
+}
 .card{
   background:#fff;
   border-radius:24px;
   padding:24px 18px;
   box-shadow:0 6px 18px rgba(20,70,120,.12);
   text-align:center;
-  margin-bottom: 16px;
 }
-.title{ font-size:30px; font-weight:900; color:#134477; margin:0 0 10px; }
-.sub{ font-size:20px; font-weight:700; color:#49657f; margin:0 0 22px; }
+.title{
+  font-size:30px;
+  font-weight:900;
+  color:#134477;
+  margin:0 0 10px;
+}
+.sub{
+  font-size:20px;
+  font-weight:700;
+  color:#49657f;
+  margin:0 0 22px;
+}
 .btn{
   display:flex;
   align-items:center;
@@ -49,146 +58,107 @@ html,body{
   width:100%;
   min-height:72px;
   border-radius:20px;
-  color:#fff !important;
+  color:#fff;
   font-size:25px;
   font-weight:900;
   text-decoration:none;
   margin:16px 0;
   box-shadow:0 7px 16px rgba(0,0,0,.18);
-  border: none;
-  cursor: pointer;
+  border:none;
+  cursor:pointer;
 }
 .blue{background:linear-gradient(135deg,#2f80ed,#1c73c9)}
 .green{background:linear-gradient(135deg,#27ae60,#1aa56c)}
-.dark{background:linear-gradient(135deg,#666,#444)}
-.note{ margin-top:20px; font-size:17px; line-height:1.7; color:#607488; }
+.gray{background:linear-gradient(135deg,#666,#444)}
+.note{
+  margin-top:20px;
+  font-size:17px;
+  line-height:1.7;
+  color:#607488;
+}
 
-/* 回覧板用 */
-.board-shell{ background:#ffffff; border-radius:18px; overflow:hidden; border:1px solid #d7e4f2; box-shadow:0 6px 22px rgba(16,56,96,.14); }
-.board-header{ padding:14px 16px; background:linear-gradient(180deg,#e9f3fb 0%,#f7fbff 100%); border-bottom:1px solid #d8e6f5; }
-.board-content{ background:#f7fbff; padding:14px 12px 18px; }
-.card-board{ background:#ffffff; border:1px solid #d8e6f5; border-radius:18px; padding:16px; margin:0 0 20px; box-shadow:0 3px 12px rgba(21,66,112,.08); text-align: left; }
-.date{ font-size:18px; font-weight:800; color:#44627f; margin-bottom:6px; }
-.card-title{ font-size:28px; font-weight:900; color:#173f6d; margin:0 0 12px; }
-.image-strip{ display:flex; gap:0; overflow-x:auto; padding:6px 0 12px; margin:0 0 16px; scroll-snap-type:x mandatory; }
-.image-item{ flex:0 0 100%; aspect-ratio:9/16; border-radius:16px; overflow:hidden; background:#eaf2fa; border:1px solid #d8e6f5; scroll-snap-align:start; }
-.image-item img{ width:100%; height:100%; object-fit:cover; }
-.video-box{ width:100%; aspect-ratio:16/9; border-radius:16px; overflow:hidden; background:#000; margin:0 0 16px; }
-.video-box iframe, .video-box video{ width:100%; height:100%; border:0; }
-.detail{ font-size:22px; line-height:1.8; color:#22384d; white-space:pre-wrap; margin:0 0 16px; }
+/* 表示・非表示の切り替え用 */
+.content-section { display: none; }
+.active { display: block; }
 
-/* コンシェルジュ用 */
-textarea{ width:100%; height:130px; border:2px solid #d7dce3; border-radius:18px; padding:16px; font-size:18px; margin-bottom:10px; }
-.out{ white-space:pre-wrap; text-align: left; }
-.item-ans{ border:1px solid #dbe5f1; border-radius:16px; padding:14px; margin-top:10px; background:#fff; text-align: left; }
+textarea {
+  width:100%;
+  height:130px;
+  border:2px solid #d7dce3;
+  border-radius:18px;
+  padding:16px;
+  font-size:18px;
+  margin-bottom:10px;
+}
 </style>
 </head>
 <body>
 
 <div class="page">
-  <!-- 共通ヘッダー：トップに戻るボタン (ホーム以外で表示) -->
-  <button id="backBtn" class="btn dark hidden" onclick="showPage('home')">トップに戻る</button>
 
-  <!-- HOME PAGE -->
-  <div id="page-home">
-    <div class="banner"><img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="バナー"></div>
+  <!-- ========================= TOP画面 ========================= -->
+  <div id="section-home" class="content-section active">
+    <div class="banner">
+      <img src="https://drive.google.com/thumbnail?id=1e6vAa1Y0oOvOlAwpgHaSvqm5mZHEEWaH&sz=w2000" alt="志木お助け隊DX">
+    </div>
     <div class="card">
       <h1 class="title">志木お助け隊DX</h1>
       <p class="sub">見たいページを選んでください</p>
-      <button class="btn blue" onclick="showPage('board')">回覧板を見る</button>
-      <button class="btn green" onclick="showPage('concierge')">AIコンシェルジュを使う</button>
+      <button class="btn blue" onclick="showSection('board')">回覧板を見る</button>
+      <button class="btn green" onclick="showSection('concierge')">AIコンシェルジュを使う</button>
       <div class="note">市からのお知らせと、暮らしの相談先を<br>わかりやすく案内します。</div>
     </div>
   </div>
 
-  <!-- BOARD PAGE -->
-  <div id="page-board" class="hidden">
-    <div class="banner"><img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="回覧板"></div>
-    <section class="board-shell">
-      <div class="board-header">
-        <h1 class="title" style="font-size:26px;">志木お助け隊 回覧板</h1>
-        <p class="sub" style="font-size:18px;">市からのお知らせを表示します</p>
+  <!-- ========================= 回覧板画面 ========================= -->
+  <div id="section-board" class="content-section">
+    <div class="banner">
+      <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="回覧板">
+    </div>
+    <button class="btn gray" onclick="showSection('home')">トップに戻る</button>
+    <div class="card">
+      <h2 class="title">回覧板</h2>
+      <p class="sub">最新のお知らせ</p>
+      <div id="board-items" style="text-align:left;">
+        <p>※スプレッドシート連携を準備中です。</p>
       </div>
-      <div id="board-list" class="board-content">
-        <!-- JSで挿入 -->
-      </div>
-    </section>
+    </div>
   </div>
 
-  <!-- CONCIERGE PAGE -->
-  <div id="page-concierge" class="hidden">
-    <div class="banner"><img src="https://drive.google.com/thumbnail?id=1q6NBKaTPNs0tskub_deePwNPb2u0xCYv&sz=w3000" alt="コンシェルジュ"></div>
-    <div class="card">
-      <div class="title" style="color:#1a73e8">志木市AIコンシェルジュ</div>
+  <!-- ========================= コンシェルジュ画面 ========================= -->
+  <div id="section-concierge" class="content-section">
+    <div class="banner">
+      <img src="https://drive.google.com/thumbnail?id=1q6NBKaTPNs0tskub_deePwNPb2u0xCYv&sz=w3000" alt="コンシェルジュ">
     </div>
+    <button class="btn gray" onclick="showSection('home')">トップに戻る</button>
     <div class="card">
-      <div class="sub" style="text-align:left; color:#1a73e8">ご相談内容を入力してください</div>
+      <h2 class="title" style="color:#1a73e8">AIコンシェルジュ</h2>
+      <div style="text-align:left; margin-bottom:10px; font-weight:bold;">ご相談内容を入力してください</div>
       <textarea id="msg" placeholder="例：洪水ハザードマップが見たい"></textarea>
-      <button class="btn blue" onclick="ask()">相談する</button>
-    </div>
-    <div class="card">
-      <div class="sub" style="text-align:left; color:#1a73e8">結果</div>
-      <div id="result" class="out">ここに表示されます</div>
+      <button class="btn blue" onclick="alert('相談機能を準備中です')">相談する</button>
     </div>
   </div>
+
 </div>
 
 <script>
-/* ============================================================
-   データ（GASのスプレッドシートデータの代わりにここへ配置）
-   ※実際にはAPI化するか、ここにJSONを流し込んでください
-============================================================ */
-var boardData = []; // 回覧板データ配列
-var masters = { pageMap: {}, sampleRows: [] }; // コンシェルジュ用マスタ
+/**
+ * 画面切り替えの仕組み
+ */
+function showSection(sectionId) {
+  // すべてのセクションを隠す
+  var sections = document.querySelectorAll('.content-section');
+  sections.forEach(function(sec) {
+    sec.classList.remove('active');
+  });
 
-// 画面切り替え
-function showPage(pageId) {
-  document.getElementById('page-home').classList.add('hidden');
-  document.getElementById('page-board').classList.add('hidden');
-  document.getElementById('page-concierge').classList.add('hidden');
-  document.getElementById('backBtn').classList.add('hidden');
-  
-  document.getElementById('page-' + pageId).classList.remove('hidden');
-  if(pageId !== 'home') document.getElementById('backBtn').classList.remove('hidden');
-  window.scrollTo(0,0);
-}
-
-/* ===== 回覧板表示ロジック ===== */
-function renderBoard() {
-  var container = document.getElementById('board-list');
-  if(boardData.length === 0) {
-    container.innerHTML = '<div class="note">お知らせはありません。</div>';
-    return;
+  // 指定されたセクションだけ表示する
+  var target = document.getElementById('section-' + sectionId);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo(0, 0); // 画面の一番上に戻す
   }
-  var html = boardData.map(function(x) {
-    return `
-      <article class="card-board">
-        <div class="date">${x.date}</div>
-        <h2 class="card-title">${x.title}</h2>
-        <div class="detail">${x.detail}</div>
-        ${x.link ? `<a class="btn blue" style="min-height:50px; font-size:18px;" href="${x.link}" target="_blank">市HPを見る</a>` : ''}
-      </article>
-    `;
-  }).join('');
-  container.innerHTML = html;
 }
-
-/* ===== コンシェルジュロジック (GASのロジックを移植) ===== */
-function ask() {
-  var msg = document.getElementById('msg').value.trim();
-  var resDiv = document.getElementById('result');
-  if(!msg) { resDiv.textContent = "内容を入力してください"; return; }
-  
-  resDiv.textContent = "検索中...";
-  // ここに本来は buildRanking_ 等のロジックが走ります
-  // 今回は静的化のため、簡易的な案内を出すか、上記ロジックをJSへ完コピします
-  resDiv.innerHTML = "申し訳ありません。現在データベース接続を準備中です。<br>志木市役所（048-473-1111）へお問い合わせください。";
-}
-
-// 起動時
-window.onload = function() {
-  // 必要に応じて初期データロード
-};
 </script>
 
 </body>
