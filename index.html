@@ -7,13 +7,12 @@
 <title>志木お助け隊DX</title>
 <meta name="description" content="志木市のお知らせを見やすくまとめた回覧板と、暮らしの相談先がすぐ分かるAIコンシェルジュ。">
 
-<!-- ★ アイコン（GitHub直下に icon.png を置く） -->
-<link rel="icon" href="icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+<!-- ★ アイコン（名前そのまま） -->
+<link rel="icon" href="IMG_4059.png">
+<link rel="apple-touch-icon" href="IMG_4059.png">
 <meta name="apple-mobile-web-app-title" content="志木お助け隊DX">
-<meta name="apple-mobile-web-app-capable" content="yes">
 
-<!-- ★ SNSカード（GitHub直下に og-image.png を置く） -->
+<!-- ★ SNS -->
 <meta property="og:title" content="志木お助け隊DX">
 <meta property="og:description" content="志木市のお知らせが見やすい回覧板と、暮らしの相談先がすぐ分かるAIコンシェルジュが使えます。">
 <meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/og-image.png">
@@ -29,8 +28,9 @@
 <style>
 *{box-sizing:border-box}
 
-body{
+html,body{
   margin:0;
+  padding:0;
   background:#eef5fb;
   font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
   color:#17324d;
@@ -110,7 +110,6 @@ body{
 
 <div class="page">
 
-  <!-- ★ ここはSNS用と同じ画像を表示（ズレ防止） -->
   <div class="banner">
     <img src="https://ichirohns-jpg.github.io/ShikiConcierge-18/og-image.png" alt="志木お助け隊DX">
   </div>
@@ -119,17 +118,17 @@ body{
     <h1 class="title">志木お助け隊DX</h1>
     <p class="sub">見たいページを選んでください</p>
 
-    <!-- ★ 本命リンク（GAS） -->
-    <a class="btn blue" href="https://script.google.com/macros/s/AKfycbyLb_CjoCZae0fa4r-78AlQ6Nx_nNK_0Tri1rrnxlFGsK6_18A0efZzsTuJvpA94tImOA/exec?p=board" target="_top">
+    <a class="btn blue" href="https://script.google.com/macros/s/AKfycbyLb_CjoCZae0fa4r-78AlQ6Nx_nNK_0Tri1rrnxlFGsK6_18A0efZzsTuJvpA94tImOA/exec?p=board">
       回覧板を見る
     </a>
 
-    <a class="btn green" href="https://script.google.com/macros/s/AKfycbyLb_CjoCZae0fa4r-78AlQ6Nx_nNK_0Tri1rrnxlFGsK6_18A0efZzsTuJvpA94tImOA/exec?p=concierge" target="_top">
+    <a class="btn green" href="https://script.google.com/macros/s/AKfycbyLb_CjoCZae0fa4r-78AlQ6Nx_nNK_0Tri1rrnxlFGsK6_18A0efZzsTuJvpA94tImOA/exec?p=concierge">
       AIコンシェルジュを使う
     </a>
 
-    <!-- ★ シェア用コピー（GitHubのURLを使う） -->
-    <button class="btn orange" onclick="copyShareText()">シェア文をコピー</button>
+    <button class="btn orange" onclick="copyShareText()">
+      シェア文をコピー
+    </button>
 
     <div class="note">
       市からのお知らせと、暮らしの相談先を<br>
