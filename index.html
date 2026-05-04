@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>志木お助け隊DX</title>
-<meta name="description" content="市のお知らせが見やすい回覧板と、暮らしの相談先がすぐ分かるAIコンシェルジュが使えます。">
+<meta name="description" content="志木お助け隊DX。市のお知らせが見やすい回覧板と、暮らしの相談先がすぐ分かるAIコンシェルジュが使えます。">
 
 <meta property="og:title" content="志木お助け隊DX">
 <meta property="og:description" content="市のお知らせが見やすい回覧板と、暮らしの相談先がすぐ分かるAIコンシェルジュが使えます。">
@@ -20,19 +20,27 @@
 
 <style>
 *{box-sizing:border-box}
+
 html,body{
   margin:0;
   padding:0;
   background:#eef5fb;
   font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
   color:#17324d;
+  -webkit-text-size-adjust:100%;
 }
+
+body{
+  overflow-x:hidden;
+}
+
 .page{
   width:100%;
   max-width:760px;
   margin:0 auto;
   padding:14px;
 }
+
 .banner{
   width:100%;
   border-radius:18px;
@@ -41,60 +49,116 @@ html,body{
   box-shadow:0 6px 18px rgba(20,70,120,.14);
   margin-bottom:18px;
 }
+
 .banner img{
   width:100%;
   display:block;
 }
+
 .card{
   background:#fff;
   border-radius:24px;
   padding:24px 18px;
   box-shadow:0 6px 18px rgba(20,70,120,.12);
   text-align:center;
-  margin-bottom:18px;
 }
+
 .title{
   font-size:30px;
   font-weight:900;
   color:#134477;
   margin:0 0 10px;
+  line-height:1.35;
 }
+
 .sub{
   font-size:20px;
   font-weight:700;
   color:#49657f;
   margin:0 0 22px;
+  line-height:1.6;
 }
+
+.btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:72px;
+  border-radius:20px;
+  color:#fff;
+  font-size:25px;
+  font-weight:900;
+  text-decoration:none;
+  margin:16px 0;
+  box-shadow:0 7px 16px rgba(0,0,0,.18);
+  line-height:1.35;
+}
+
+.blue{
+  background:linear-gradient(135deg,#2f80ed,#1c73c9);
+}
+
+.green{
+  background:linear-gradient(135deg,#27ae60,#1aa56c);
+}
+
 .note{
   margin-top:20px;
   font-size:17px;
   line-height:1.7;
   color:#607488;
 }
-.section{
-  background:#fff;
-  border-radius:24px;
-  overflow:hidden;
-  box-shadow:0 6px 18px rgba(20,70,120,.12);
-  margin-bottom:22px;
+
+.guide{
+  margin-top:18px;
+  padding:16px 14px;
+  border-radius:18px;
+  background:#f7fbff;
+  border:1px solid #d8e6f5;
+  text-align:left;
+  font-size:16px;
+  line-height:1.7;
+  color:#35506c;
+  font-weight:700;
 }
-.section-title{
-  background:linear-gradient(135deg,#2f80ed,#1c73c9);
-  color:#fff;
-  font-size:24px;
+
+.guide-title{
+  font-size:18px;
   font-weight:900;
-  padding:16px;
+  color:#134477;
+  margin:0 0 8px;
+}
+
+.footer{
+  margin-top:18px;
   text-align:center;
+  font-size:14px;
+  line-height:1.6;
+  color:#7a8ca0;
 }
-.section-title.green{
-  background:linear-gradient(135deg,#27ae60,#1aa56c);
-}
-.frame{
-  width:100%;
-  height:78vh;
-  border:0;
-  display:block;
-  background:#fff;
+
+@media(max-width:640px){
+  .page{
+    padding:12px 10px 24px;
+  }
+
+  .title{
+    font-size:29px;
+  }
+
+  .sub{
+    font-size:19px;
+  }
+
+  .btn{
+    min-height:72px;
+    font-size:24px;
+  }
+
+  .note{
+    font-size:16px;
+  }
 }
 </style>
 </head>
@@ -108,26 +172,38 @@ html,body{
 
   <div class="card">
     <h1 class="title">志木お助け隊DX</h1>
-    <p class="sub">市のお知らせと暮らしの相談先を確認できます</p>
+
+    <p class="sub">
+      見たいページを選んでください
+    </p>
+
+    <a class="btn blue"
+       href="https://script.google.com/macros/s/AKfycbysuSfJ35wQckdxPBLwnFgNyuxIttyE2kX1rS_2jbKl-bEfETWDm6_YOUmFH3AQhjXsbA/exec?p=board"
+       target="_top">
+      回覧板を見る
+    </a>
+
+    <a class="btn green"
+       href="https://script.google.com/macros/s/AKfycbysuSfJ35wQckdxPBLwnFgNyuxIttyE2kX1rS_2jbKl-bEfETWDm6_YOUmFH3AQhjXsbA/exec?p=concierge"
+       target="_top">
+      AIコンシェルジュを使う
+    </a>
+
     <div class="note">
-      下に「回覧板」と「AIコンシェルジュ」を表示しています。
+      市からのお知らせと、暮らしの相談先を<br>
+      わかりやすく案内します。
     </div>
-  </div>
 
-  <div class="section">
-    <div class="section-title">回覧板を見る</div>
-    <iframe
-      class="frame"
-      src="https://script.google.com/macros/s/AKfycbysuSfJ35wQckdxPBLwnFgNyuxIttyE2kX1rS_2jbKl-bEfETWDm6_YOUmFH3AQhjXsbA/exec?p=board">
-    </iframe>
-  </div>
+    <div class="guide">
+      <div class="guide-title">使い方</div>
+      上のボタンを押すと、回覧板またはAIコンシェルジュのページが開きます。<br>
+      回覧板では市からのお知らせを見やすく確認できます。<br>
+      AIコンシェルジュでは、困りごとを入力すると相談先を案内します。
+    </div>
 
-  <div class="section">
-    <div class="section-title green">AIコンシェルジュを使う</div>
-    <iframe
-      class="frame"
-      src="https://script.google.com/macros/s/AKfycbysuSfJ35wQckdxPBLwnFgNyuxIttyE2kX1rS_2jbKl-bEfETWDm6_YOUmFH3AQhjXsbA/exec?p=concierge">
-    </iframe>
+    <div class="footer">
+      志木お助け隊DX
+    </div>
   </div>
 
 </div>
