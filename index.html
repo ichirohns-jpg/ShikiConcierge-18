@@ -2,64 +2,158 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>志木お助け隊DX</title>
+<meta name="description" content="志木市のお知らせを見やすくまとめた回覧板と、暮らしの相談先がすぐ分かるAIコンシェルジュ。">
 
-<!-- ★ここが超重要（全部書く） -->
+<!-- ★ アイコン（GitHub直下に icon.png を置く） -->
 <link rel="icon" href="icon.png">
-<link rel="apple-touch-icon" href="icon.png">
-<link rel="apple-touch-icon-precomposed" href="icon.png">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" sizes="180x180" href="icon.png">
 <meta name="apple-mobile-web-app-title" content="志木お助け隊DX">
+<meta name="apple-mobile-web-app-capable" content="yes">
 
-<!-- SNS -->
+<!-- ★ SNSカード（GitHub直下に og-image.png を置く） -->
 <meta property="og:title" content="志木お助け隊DX">
-<meta property="og:description" content="志木市のお知らせが見やすい回覧板とAIコンシェルジュ">
+<meta property="og:description" content="志木市のお知らせが見やすい回覧板と、暮らしの相談先がすぐ分かるAIコンシェルジュが使えます。">
 <meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/og-image.png">
 <meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="志木お助け隊DX">
 
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="志木お助け隊DX">
+<meta name="twitter:description" content="市のお知らせと相談先をまとめて確認できます。">
 <meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/og-image.png">
 
 <style>
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  font-family:sans-serif;
   background:#eef5fb;
+  font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+  color:#17324d;
+}
+
+.page{
+  max-width:760px;
+  margin:0 auto;
+  padding:14px;
+}
+
+.banner{
+  width:100%;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 6px 18px rgba(20,70,120,.14);
+  margin-bottom:18px;
+}
+
+.banner img{
+  width:100%;
+  display:block;
+}
+
+.card{
+  background:#fff;
+  border-radius:24px;
+  padding:24px 18px;
+  box-shadow:0 6px 18px rgba(20,70,120,.12);
   text-align:center;
 }
-h1{
-  font-size:28px;
+
+.title{
+  font-size:30px;
+  font-weight:900;
+  color:#134477;
+  margin:0 0 10px;
 }
+
+.sub{
+  font-size:20px;
+  font-weight:700;
+  color:#49657f;
+  margin:0 0 22px;
+}
+
 .btn{
-  display:block;
-  margin:20px;
-  padding:20px;
-  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:72px;
+  border-radius:20px;
   color:#fff;
-  font-size:22px;
+  font-size:25px;
+  font-weight:900;
   text-decoration:none;
+  margin:16px 0;
+  border:none;
+  box-shadow:0 7px 16px rgba(0,0,0,.18);
 }
-.blue{background:#2f80ed;}
-.green{background:#27ae60;}
+
+.blue{background:linear-gradient(135deg,#2f80ed,#1c73c9)}
+.green{background:linear-gradient(135deg,#27ae60,#1aa56c)}
+.orange{background:linear-gradient(135deg,#f39c12,#e67e22)}
+
+.note{
+  margin-top:20px;
+  font-size:17px;
+  line-height:1.7;
+  color:#607488;
+}
 </style>
 </head>
 
 <body>
 
-<h1>志木お助け隊DX</h1>
+<div class="page">
 
-<a class="btn blue" href="https://script.google.com/macros/s/AKfycbyLb_CjoCZae0fa4r-78AlQ6Nx_nNK_0Tri1rrnxlFGsK6_18A0efZzsTuJvpA94tImOA/exec?p=board">
-回覧板を見る
-</a>
+  <!-- ★ ここはSNS用と同じ画像を表示（ズレ防止） -->
+  <div class="banner">
+    <img src="https://ichirohns-jpg.github.io/ShikiConcierge-18/og-image.png" alt="志木お助け隊DX">
+  </div>
 
-<a class="btn green" href="https://script.google.com/macros/s/AKfycbyLb_CjoCZae0fa4r-78AlQ6Nx_nNK_0Tri1rrnxlFGsK6_18A0efZzsTuJvpA94tImOA/exec?p=concierge">
-AIコンシェルジュ
-</a>
+  <div class="card">
+    <h1 class="title">志木お助け隊DX</h1>
+    <p class="sub">見たいページを選んでください</p>
+
+    <!-- ★ 本命リンク（GAS） -->
+    <a class="btn blue" href="https://script.google.com/macros/s/AKfycbyLb_CjoCZae0fa4r-78AlQ6Nx_nNK_0Tri1rrnxlFGsK6_18A0efZzsTuJvpA94tImOA/exec?p=board" target="_top">
+      回覧板を見る
+    </a>
+
+    <a class="btn green" href="https://script.google.com/macros/s/AKfycbyLb_CjoCZae0fa4r-78AlQ6Nx_nNK_0Tri1rrnxlFGsK6_18A0efZzsTuJvpA94tImOA/exec?p=concierge" target="_top">
+      AIコンシェルジュを使う
+    </a>
+
+    <!-- ★ シェア用コピー（GitHubのURLを使う） -->
+    <button class="btn orange" onclick="copyShareText()">シェア文をコピー</button>
+
+    <div class="note">
+      市からのお知らせと、暮らしの相談先を<br>
+      わかりやすく案内します。
+    </div>
+  </div>
+
+</div>
+
+<script>
+function copyShareText(){
+const text =
+`志木お助け隊DXができました。
+
+市のお知らせが見やすい回覧板と、
+暮らしの相談先がすぐ分かるAIコンシェルジュが使えます。
+
+https://ichirohns-jpg.github.io/ShikiConcierge-18/`;
+
+navigator.clipboard.writeText(text).then(function(){
+alert("コピーしました");
+});
+}
+</script>
 
 </body>
 </html>
