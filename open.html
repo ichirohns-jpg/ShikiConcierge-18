@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>志木お助け隊DX</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+  background:linear-gradient(180deg,#eef7ff,#ffffff);
+  color:#17324d;
+}
+.wrap{
+  max-width:640px;
+  margin:0 auto;
+  padding:24px 16px 34px;
+}
+.hero{
+  background:#fff;
+  border-radius:28px;
+  padding:18px;
+  text-align:center;
+  box-shadow:0 10px 26px rgba(20,70,120,.16);
+}
+.hero img{
+  width:100%;
+  border-radius:22px;
+  display:block;
+  background:#eef5fb;
+}
+.card{
+  margin-top:18px;
+  background:#fff;
+  border-radius:28px;
+  padding:30px 20px 34px;
+  text-align:center;
+  box-shadow:0 10px 26px rgba(20,70,120,.16);
+}
+h1{
+  margin:0 0 12px;
+  font-size:34px;
+  font-weight:900;
+  color:#0d4778;
+}
+.lead{
+  font-size:19px;
+  line-height:1.7;
+  font-weight:800;
+  margin:0 0 24px;
+}
+.btn{
+  display:block;
+  margin-top:16px;
+  padding:21px 14px;
+  border-radius:22px;
+  text-decoration:none;
+  color:#fff;
+  font-size:23px;
+  font-weight:900;
+}
+.board{
+  background:linear-gradient(135deg,#1687e0,#0d5fa8);
+}
+.ai{
+  background:linear-gradient(135deg,#35b76b,#20884b);
+}
+.sub{
+  display:block;
+  margin-top:8px;
+  font-size:14px;
+}
+.note{
+  margin-top:22px;
+  padding:16px;
+  border-radius:18px;
+  background:#f6f9fc;
+  font-size:15px;
+  line-height:1.7;
+  color:#526b7f;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <img
+      id="mainImage"
+      src="./IMG_4059.png"
+      alt="志木お助け隊DX"
+      onerror="swapImage(this)"
+    >
+  </div>
+
+  <div class="card">
+    <h1>志木お助け隊DX</h1>
+
+    <p class="lead">
+      回覧板とAIコンシェルジュを<br>
+      ひとつにまとめた入口です。
+    </p>
+
+    <a class="btn board" href="https://script.google.com/macros/s/AKfycbwRlMqXPplCyWzKv7vRAywWnava0cYPIK1TQh6uIQ0hnKSonaJqc4K4RVgWgHJc6Uo/exec">
+      回覧板を見る
+      <span class="sub">市からのお知らせを確認</span>
+    </a>
+
+    <a class="btn ai" href="https://script.google.com/macros/s/AKfycbzhTd6DoEUjEYSY_ADQkjYC97fHdUUz4kEZ_cKFWoJGBYA-LCUBy85_7rBVqYBepWR9BA/exec">
+      AIコンシェルジュ
+      <span class="sub">困りごとの相談先を探す</span>
+    </a>
+
+    <div class="note">
+      見たい内容を選んでください。<br>
+      回覧板はお知らせ確認、AIコンシェルジュは相談先探しに使えます。
+    </div>
+  </div>
+
+</div>
+
+<script>
+var imageList = [
+  "./IMG_4059.png",
+  "./IMG_4060.png",
+  "./og-image.png"
+];
+
+var imageIndex = 0;
+
+function swapImage(img){
+  imageIndex++;
+  if(imageIndex < imageList.length){
+    img.src = imageList[imageIndex];
+  }else{
+    img.style.display = "none";
+  }
+}
+</script>
+
+</body>
+</html>
