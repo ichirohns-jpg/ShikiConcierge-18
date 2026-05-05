@@ -1,216 +1,67 @@
 <!DOCTYPE html>
-<html lang="ja" prefix="og: https://ogp.me/ns#">
+<html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>志木キッチンカー GO MAP</title>
-<meta name="description" content="志木市のキッチンカーは今どこ？今日のご飯が見つかるリアルタイム地図。">
+<title>志木お助け隊DX</title>
 
-<link rel="canonical" href="https://ichirohns-jpg.github.io/shiki.gomap-001/">
-
-<link rel="apple-touch-icon" href="https://ichirohns-jpg.github.io/shiki.gomap-001/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://ichirohns-jpg.github.io/shiki.gomap-001/apple-touch-icon.png">
-<link rel="icon" href="https://ichirohns-jpg.github.io/shiki.gomap-001/apple-touch-icon.png">
-<meta name="apple-mobile-web-app-title" content="志木Go map">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#2168b8">
-
+<meta property="og:title" content="志木お助け隊DX">
+<meta property="og:description" content="回覧板とAIコンシェルジュをひとつに">
+<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/ogp.png">
+<meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/">
 <meta property="og:type" content="website">
-<meta property="og:locale" content="ja_JP">
-<meta property="og:site_name" content="志木キッチンカー GO MAP">
-<meta property="og:url" content="https://ichirohns-jpg.github.io/shiki.gomap-001/">
-<meta property="og:title" content="志木キッチンカー GO MAP">
-<meta property="og:description" content="今日どこに来てる？すぐ見れる">
-<meta property="og:image" content="https://ichirohns-jpg.github.io/shiki.gomap-001/gomap-ogp.jpg">
-<meta property="og:image:secure_url" content="https://ichirohns-jpg.github.io/shiki.gomap-001/gomap-ogp.jpg">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="志木キッチンカー GO MAP">
-<meta name="twitter:description" content="今日どこに来てる？すぐ見れる">
-<meta name="twitter:image" content="https://ichirohns-jpg.github.io/shiki.gomap-001/gomap-ogp.jpg">
 
 <style>
-*{box-sizing:border-box}
-
-html,body{
+body{
   margin:0;
-  padding:0;
-  background:#eef5fb;
   font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
-  color:#17324d;
-  -webkit-text-size-adjust:100%;
-}
-
-.page{
-  width:100%;
-  max-width:760px;
-  margin:0 auto;
-  padding:26px 18px 40px;
-}
-
-.frame{
-  background:#fff;
-  border:7px solid #2168b8;
-  border-radius:30px;
-  padding:34px 28px 36px;
-}
-
-.top-banner{
-  width:100%;
-  border-radius:24px;
-  overflow:hidden;
   background:#eef5fb;
-  margin-bottom:34px;
-}
-
-.top-banner img{
-  width:100%;
-  display:block;
-}
-
-.title{
-  margin:0 0 26px;
   text-align:center;
-  font-size:44px;
-  line-height:1.2;
-  font-weight:900;
-  color:#2168b8;
 }
 
-.lead{
-  text-align:center;
-  font-size:30px;
-  line-height:1.7;
-  font-weight:900;
-  color:#111;
-  margin:0 0 34px;
+.wrap{
+  max-width:600px;
+  margin:0 auto;
+  padding:30px 16px;
 }
 
-.notice{
-  margin:0 0 22px;
-  padding:14px 16px;
-  border-radius:18px;
-  background:#fff3cd;
-  color:#5b4a00;
-  font-size:19px;
-  line-height:1.6;
-  font-weight:900;
-  text-align:center;
-  border:2px solid #ffd45a;
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:30px 20px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+h1{
+  font-size:26px;
 }
 
 .btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  min-height:86px;
-  border-radius:42px;
+  display:block;
+  margin-top:20px;
+  padding:18px;
+  border-radius:16px;
+  background:#1e88e5;
   color:#fff;
-  font-size:32px;
-  line-height:1.25;
-  font-weight:900;
   text-decoration:none;
-  text-align:center;
-  margin:22px 0;
-  padding:16px 20px;
-  box-shadow:0 8px 18px rgba(0,0,0,.16);
-  border:none;
-  cursor:pointer;
-  font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
-}
-
-.blue{background:#2168c7}
-.orange{background:#f45a00}
-
-.note{
-  margin-top:28px;
-  padding:20px;
-  border-radius:20px;
-  background:#f4f8fc;
-  color:#49657f;
-  font-size:21px;
-  line-height:1.8;
-  font-weight:700;
-  text-align:center;
-}
-
-@media(max-width:480px){
-  .page{
-    padding:18px 14px 34px;
-  }
-
-  .frame{
-    padding:28px 22px 32px;
-    border-width:6px;
-    border-radius:28px;
-  }
-
-  .title{
-    font-size:40px;
-  }
-
-  .lead{
-    font-size:28px;
-  }
-
-  .btn{
-    font-size:29px;
-    min-height:82px;
-  }
+  font-size:20px;
+  font-weight:bold;
 }
 </style>
+
 </head>
 
 <body>
+<div class="wrap">
+  <div class="card">
+    <h1>志木お助け隊DX</h1>
 
-<div class="page">
-  <div class="frame">
-
-    <div class="top-banner">
-      <img src="https://ichirohns-jpg.github.io/shiki.gomap-001/gomap-ogp.jpg" alt="志木キッチンカー GO MAP">
-    </div>
-
-    <h1 class="title">志木Go map</h1>
-
-    <p class="lead">
-      志木市のキッチンカー出店情報を<br>
-      見られるページです。
-    </p>
-
-    <div class="notice">
-      Facebookアプリで開いている場合は<br>
-      右上の「…」から<br>
-      <strong>ブラウザで開く</strong>を選んでください。<br>
-      ※そうしないと地図が動かない場合があります。
-    </div>
-
-    <a class="btn blue"
-       href="https://script.google.com/macros/s/AKfycbyzAMTakr5jWP-Ygj7H7dCMi4LnHWF73joHITw3DmznYTmL9HRHEWc4YzPIySPTmrzV/exec"
-       target="_blank"
-       rel="noopener noreferrer">
-      Go mapを開く
+    <a class="btn" href="open.html">
+      ここを押して開始
     </a>
-
-    <a class="btn orange"
-       href="https://forms.gle/jETDC4mjDRVoPtL16"
-       target="_blank"
-       rel="noopener noreferrer">
-      出店者募集はこちら
-    </a>
-
-    <div class="note">
-      登録・掲載・投稿は無料です。<br>
-      志木市内や周辺のキッチンカー情報を<br>
-      地域の人に見つけやすく届けます。
-    </div>
 
   </div>
 </div>
-
 </body>
 </html>
