@@ -3,12 +3,12 @@
   "short_name": "志木お助け隊",
   "start_url": "/ShikiConcierge-18/",
   "display": "standalone",
-  "background_color": "#f3f5f9",
-  "theme_color": "#f3f5f9",
+  "background_color": "#ffffff",
+  "theme_color": "#1687e0",
   "icons": [
     {
-      "src": "/ShikiConcierge-18/IMG_4059.png",
-      "sizes": "512x512",
+      "src": "IMG_4059.png",
+      "sizes": "1024x1024",
       "type": "image/png"
     }
   ]
