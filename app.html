@@ -2,243 +2,209 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>志木お助け隊 回覧板</title>
 
 <style>
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  background:#eef3f8;
-  font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
-  color:#17324d;
-}
-
-.wrap{
-  max-width:680px;
-  margin:0 auto;
-  padding:12px;
-}
-
-.banner{
-  border-radius:22px;
-  overflow:hidden;
-  margin-bottom:14px;
-}
-
-.banner img{
-  width:100%;
-  display:block;
-}
-
-.card{
-  background:#fff;
-  border-radius:22px;
-  padding:18px;
-  margin-bottom:18px;
-  box-shadow:0 4px 14px rgba(0,0,0,.08);
-}
-
-.date{
-  font-size:15px;
-  font-weight:700;
-  color:#60758a;
-  margin-bottom:10px;
-}
-
-.title{
-  font-size:28px;
-  line-height:1.45;
-  font-weight:900;
-  margin-bottom:14px;
-}
-
-.image{
-  width:100%;
-  border-radius:18px;
-  margin-bottom:16px;
-}
-
-.detail{
-  font-size:20px;
-  line-height:1.9;
-  white-space:pre-wrap;
-  margin-bottom:16px;
-}
-
-.btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:58px;
-  border-radius:16px;
-  text-decoration:none;
-  font-size:19px;
-  font-weight:900;
-  color:#fff;
-  margin-bottom:12px;
-}
-
-.home-btn{
-  background:#0b5ed7;
-}
-
-.apply-btn{
-  background:#16a34a;
-}
-
-.share-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:18px;
-}
-
-.share-btn{
-  border:0;
-  border-radius:16px;
-  min-height:54px;
-  font-size:17px;
-  font-weight:900;
-  color:#fff;
-}
-
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#eef3f8;font-family:sans-serif;color:#17324d}
+.wrap{max-width:680px;margin:0 auto;padding:12px}
+.banner{border-radius:22px;overflow:hidden;margin-bottom:14px;box-shadow:0 6px 18px rgba(0,0,0,.12)}
+.banner img{width:100%;display:block}
+.card{background:#fff;border-radius:22px;padding:18px;margin-bottom:18px;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.date{font-size:15px;font-weight:700;color:#60758a;margin-bottom:10px}
+.title{font-size:28px;line-height:1.45;font-weight:900;color:#10263b;margin-bottom:14px;word-break:break-word}
+.media-scroll{display:flex;gap:10px;overflow-x:auto;margin-bottom:16px}
+.media-item{flex:0 0 82%}
+.media-item img{width:100%;aspect-ratio:9/16;border-radius:18px;object-fit:cover;background:#000;border:0}
+.detail{font-size:20px;line-height:1.9;white-space:pre-wrap;word-break:break-word;margin-bottom:16px}
+.btns{display:flex;flex-direction:column;gap:12px}
+.btn{display:flex;align-items:center;justify-content:center;min-height:58px;border-radius:16px;text-decoration:none;font-size:19px;font-weight:900;color:#fff}
+.home-btn{background:#0b5ed7}
+.apply-btn{background:#16a34a}
+.share-area{margin-top:18px;padding-top:18px;border-top:1px solid #e3ebf2}
+.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.share-btn{min-height:54px;border:0;border-radius:16px;font-size:17px;font-weight:900;color:#fff;cursor:pointer}
 .fb{background:#1877f2}
 .x{background:#000}
 .line{background:#06c755}
 .copy{background:#5f7389}
-
-.loading{
-  text-align:center;
-  padding:40px;
-  font-size:22px;
-  font-weight:900;
-}
+.copy-ok{background:#1d9d5c!important}
+.loading,.empty,.error{text-align:center;padding:40px;font-size:20px;font-weight:bold}
+.error{color:#b00020}
 </style>
 </head>
 
 <body>
 
 <div class="wrap">
+  <div class="banner">
+    <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
+  </div>
 
-<div class="banner">
-<img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
-</div>
-
-<div id="board">
-<div class="loading">読み込み中...</div>
-</div>
-
+  <div id="board">
+    <div class="loading">読み込み中...</div>
+  </div>
 </div>
 
 <script>
-
-var SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
-var SHEET_NAME='回覧板データー';
+var SHEET_ID = '1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
+var SHEET_NAME = '回覧板データー';
+var APP_URL = 'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
 
 function v(c,i){
-  if(!c[i]) return '';
-  if(c[i].v===null||c[i].v===undefined) return '';
-  return String(c[i].v);
+  if(!c || !c[i] || c[i].v === undefined || c[i].v === null) return '';
+  return String(c[i].v).trim();
 }
 
-function driveImage(url){
+function esc(s){
+  return String(s || '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
 
-  var m=String(url||'').match(/\/d\/([a-zA-Z0-9_-]+)/);
-
-  if(m&&m[1]){
-    return 'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w2000';
+function driveThumb(url){
+  var s = String(url || '');
+  var m = s.match(/\/d\/([a-zA-Z0-9_-]+)/) || s.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if(m && m[1]){
+    return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w2000';
   }
-
   return url;
 }
 
-window.handleSheet=function(json){
+function copyText(text,id){
+  var t = document.createElement('textarea');
+  t.value = text;
+  document.body.appendChild(t);
+  t.select();
+  document.execCommand('copy');
+  document.body.removeChild(t);
 
-  var rows=json.table.rows||[];
+  var b = document.getElementById('copybtn-' + id);
+  if(b){
+    b.innerText = 'コピー完了';
+    b.classList.add('copy-ok');
+    setTimeout(function(){
+      b.innerText = 'URLコピー';
+      b.classList.remove('copy-ok');
+    },2000);
+  }
+}
 
-  var html='';
-
-  rows.forEach(function(r,index){
-
-    var c=r.c||[];
-
-    var date=v(c,0);
-    var title=v(c,1);
-    var image=v(c,2);
-    var detail=v(c,3);
-    var apply=v(c,4);
-    var page=v(c,5);
-    var sort=Number(v(c,10)||0);
-    var id=v(c,11)||String(index+1);
-
-    if(!title) return;
-
-    var shareUrl=
-    'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html?id='+id;
-
-    html+='
-    <div class="card" id="post-'+id+'">
-
-      <div class="date">'+date+'</div>
-
-      <div class="title">'+title+'</div>
-
-      '+(image?'<img class="image" src="'+driveImage(image)+'">':'')+'
-
-      <div class="detail">'+detail+'</div>
-
-      '+(page?'<a class="btn home-btn" href="'+page+'" target="_blank">詳しく見る</a>':'')+'
-
-      '+(apply?'<a class="btn apply-btn" href="'+apply+'" target="_blank">申込みはこちら</a>':'')+'
-
-      <div class="share-grid">
-
-        <button class="share-btn fb"
-        onclick="window.open(\'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareUrl)+'\',\'_blank\')">
-        Facebook
-        </button>
-
-        <button class="share-btn x"
-        onclick="window.open(\'https://twitter.com/intent/tweet?url='+encodeURIComponent(shareUrl)+'\',\'_blank\')">
-        X
-        </button>
-
-        <button class="share-btn line"
-        onclick="window.open(\'https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareUrl)+'\',\'_blank\')">
-        LINE
-        </button>
-
-        <button class="share-btn copy"
-        onclick="navigator.clipboard.writeText(\''+shareUrl+'\')">
-        URLコピー
-        </button>
-
-      </div>
-
-    </div>';
-
+function bindButtons(){
+  document.querySelectorAll('.js-open').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      window.open(btn.getAttribute('data-url'),'_blank');
+    });
   });
 
-  document.getElementById('board').innerHTML=html;
+  document.querySelectorAll('.js-copy').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      copyText(btn.getAttribute('data-url'),btn.getAttribute('data-id'));
+    });
+  });
+}
 
+window.handleSheet = function(json){
+  try{
+    var rows = json.table.rows || [];
+    var items = [];
+
+    rows.forEach(function(r,i){
+      var c = r.c || [];
+      var title = v(c,1);
+      if(!title) return;
+
+      items.push({
+        id: v(c,11) || String(i + 1),
+        date: v(c,0),
+        title: title,
+        media: v(c,2),
+        detail: v(c,3),
+        apply: v(c,4),
+        page: v(c,5),
+        sort: Number(v(c,10) || 0)
+      });
+    });
+
+    items.sort(function(a,b){
+      return b.sort - a.sort;
+    });
+
+    var target = new URLSearchParams(location.search).get('id');
+
+    if(target){
+      items.sort(function(a,b){
+        if(String(a.id) === String(target)) return -1;
+        if(String(b.id) === String(target)) return 1;
+        return b.sort - a.sort;
+      });
+    }
+
+    var html = '';
+
+    items.forEach(function(it){
+      var shareUrl = APP_URL + '?id=' + encodeURIComponent(it.id);
+      var fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl);
+      var xUrl = 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(shareUrl) + '&text=' + encodeURIComponent(it.title);
+      var lineUrl = 'https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(shareUrl);
+
+      html += '<div class="card" id="post-' + esc(it.id) + '">';
+      html += '<div class="date">' + esc(it.date) + '</div>';
+      html += '<div class="title">' + esc(it.title) + '</div>';
+
+      if(it.media){
+        html += '<div class="media-scroll"><div class="media-item"><img src="' + esc(driveThumb(it.media)) + '"></div></div>';
+      }
+
+      html += '<div class="detail">' + esc(it.detail) + '</div>';
+
+      html += '<div class="btns">';
+      if(it.page){
+        html += '<a class="btn home-btn" href="' + esc(it.page) + '" target="_blank">詳しく見る</a>';
+      }
+      if(it.apply){
+        html += '<a class="btn apply-btn" href="' + esc(it.apply) + '" target="_blank">申込みはこちら</a>';
+      }
+      html += '</div>';
+
+      html += '<div class="share-area"><div class="share-grid">';
+      html += '<button class="share-btn fb js-open" data-url="' + esc(fbUrl) + '">Facebook</button>';
+      html += '<button class="share-btn x js-open" data-url="' + esc(xUrl) + '">X</button>';
+      html += '<button class="share-btn line js-open" data-url="' + esc(lineUrl) + '">LINE</button>';
+      html += '<button id="copybtn-' + esc(it.id) + '" class="share-btn copy js-copy" data-url="' + esc(shareUrl) + '" data-id="' + esc(it.id) + '">URLコピー</button>';
+      html += '</div></div>';
+
+      html += '</div>';
+    });
+
+    document.getElementById('board').innerHTML = html || '<div class="empty">記事がありません</div>';
+
+    bindButtons();
+
+    if(target){
+      setTimeout(function(){
+        var el = document.getElementById('post-' + target);
+        if(el){
+          el.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+      },400);
+    }
+
+  }catch(e){
+    document.getElementById('board').innerHTML = '<div class="error">データ読み込みエラー</div>';
+  }
 };
 
-var s=document.createElement('script');
-
-s.src=
-'https://docs.google.com/spreadsheets/d/'+
-SHEET_ID+
-'/gviz/tq?sheet='+
-encodeURIComponent(SHEET_NAME)+
-'&tqx=out:json;responseHandler=handleSheet';
-
+var s = document.createElement('script');
+s.src = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?sheet=' + encodeURIComponent(SHEET_NAME) + '&tqx=out:json;responseHandler=handleSheet';
+s.onerror = function(){
+  document.getElementById('board').innerHTML = '<div class="error">スプレッドシートを読み込めません</div>';
+};
 document.body.appendChild(s);
-
 </script>
 
 </body>
