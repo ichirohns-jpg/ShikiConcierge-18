@@ -24,12 +24,8 @@ html,body{margin:0;padding:0;background:#eef3f8;font-family:sans-serif;color:#17
 .apply-btn{background:#16a34a}
 .share-area{margin-top:18px;padding-top:18px;border-top:1px solid #e3ebf2}
 .share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.share-btn{min-height:54px;border:0;border-radius:16px;font-size:17px;font-weight:900;color:#fff;cursor:pointer}
-.fb{background:#1877f2}
-.x{background:#000}
-.line{background:#06c755}
-.copy{background:#5f7389}
-.copy-ok{background:#1d9d5c!important}
+.share-btn{display:flex;align-items:center;justify-content:center;text-decoration:none;min-height:54px;border:0;border-radius:16px;font-size:17px;font-weight:900;color:#fff;cursor:pointer}
+.fb{background:#1877f2}.x{background:#000}.line{background:#06c755}.copy{background:#5f7389}.copy-ok{background:#1d9d5c!important}
 .loading,.empty,.error{text-align:center;padding:40px;font-size:20px;font-weight:bold}
 .error{color:#b00020}
 </style>
@@ -53,8 +49,16 @@ var SHEET_NAME = '回覧板データー';
 var APP_URL = 'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
 
 function v(c,i){
-  if(!c || !c[i] || c[i].v === undefined || c[i].v === null) return '';
-  return String(c[i].v).trim();
+  if(!c || !c[i]) return '';
+  if(c[i].f !== undefined && c[i].f !== null) return String(c[i].f).trim();
+  if(c[i].v !== undefined && c[i].v !== null) return String(c[i].v).trim();
+  return '';
+}
+
+function raw(c,i){
+  if(!c || !c[i]) return '';
+  if(c[i].v !== undefined && c[i].v !== null) return c[i].v;
+  return '';
 }
 
 function esc(s){
@@ -75,7 +79,7 @@ function driveThumb(url){
   return url;
 }
 
-function copyUrl(text,id){
+function copyText(text,id){
   var t = document.createElement('textarea');
   t.value = text;
   document.body.appendChild(t);
@@ -91,22 +95,6 @@ function copyUrl(text,id){
       b.innerText = 'URLコピー';
       b.classList.remove('copy-ok');
     },2000);
-  }
-}
-
-function bindShareButtons(){
-  var opens = document.querySelectorAll('.js-open');
-  for(var i=0;i<opens.length;i++){
-    opens[i].addEventListener('click',function(){
-      window.open(this.getAttribute('data-url'),'_blank');
-    });
-  }
-
-  var copies = document.querySelectorAll('.js-copy');
-  for(var j=0;j<copies.length;j++){
-    copies[j].addEventListener('click',function(){
-      copyUrl(this.getAttribute('data-url'),this.getAttribute('data-id'));
-    });
   }
 }
 
@@ -128,13 +116,11 @@ window.handleSheet = function(json){
         detail: v(c,3),
         apply: v(c,4),
         page: v(c,5),
-        sort: Number(v(c,10) || 0)
+        sort: Number(raw(c,10) || 0)
       });
     });
 
-    items.sort(function(a,b){
-      return b.sort - a.sort;
-    });
+    items.sort(function(a,b){ return b.sort - a.sort; });
 
     var target = new URLSearchParams(location.search).get('id');
 
@@ -174,10 +160,10 @@ window.handleSheet = function(json){
       html += '</div>';
 
       html += '<div class="share-area"><div class="share-grid">';
-      html += '<button class="share-btn fb js-open" data-url="' + esc(fbUrl) + '">Facebook</button>';
-      html += '<button class="share-btn x js-open" data-url="' + esc(xUrl) + '">X</button>';
-      html += '<button class="share-btn line js-open" data-url="' + esc(lineUrl) + '">LINE</button>';
-      html += '<button id="copybtn-' + esc(it.id) + '" class="share-btn copy js-copy" data-url="' + esc(shareUrl) + '" data-id="' + esc(it.id) + '">URLコピー</button>';
+      html += '<a class="share-btn fb" href="' + esc(fbUrl) + '" target="_blank">Facebook</a>';
+      html += '<a class="share-btn x" href="' + esc(xUrl) + '" target="_blank">X</a>';
+      html += '<a class="share-btn line" href="' + esc(lineUrl) + '" target="_blank">LINE</a>';
+      html += '<button id="copybtn-' + esc(it.id) + '" class="share-btn copy" data-url="' + esc(shareUrl) + '" data-id="' + esc(it.id) + '">URLコピー</button>';
       html += '</div></div>';
 
       html += '</div>';
@@ -185,7 +171,11 @@ window.handleSheet = function(json){
 
     document.getElementById('board').innerHTML = html || '<div class="empty">記事がありません</div>';
 
-    bindShareButtons();
+    document.querySelectorAll('.copy').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        copyText(btn.getAttribute('data-url'),btn.getAttribute('data-id'));
+      });
+    });
 
     if(target){
       setTimeout(function(){
@@ -197,7 +187,7 @@ window.handleSheet = function(json){
     }
 
   }catch(e){
-    document.getElementById('board').innerHTML = '<div class="error">データ読み込みエラー</div>';
+    document.getElementById('board').innerHTML = '<div class="error">読み込みエラー</div>';
   }
 };
 
