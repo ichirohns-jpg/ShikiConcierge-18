@@ -3,21 +3,168 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>志木お助け隊DX</title>
+
+<title>志木お助け隊</title>
+
+<meta property="og:title" content="志木お助け隊">
+<meta property="og:description" content="回覧板・AI相談・Go mapをひとつに。志木の暮らしを見やすく、使いやすく。">
+<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg">
+<meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/">
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="志木お助け隊">
+<meta name="twitter:description" content="回覧板・AI相談・Go mapをひとつに。">
+<meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);
+  font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+  color:#17324d;
+}
+
+.wrap{
+  max-width:720px;
+  margin:0 auto;
+  padding:18px 14px 42px;
+}
+
+.hero{
+  background:#ffffff;
+  border-radius:28px;
+  overflow:hidden;
+  box-shadow:0 10px 28px rgba(20,70,120,.14);
+  margin-bottom:22px;
+}
+
+.hero img{
+  width:100%;
+  display:block;
+}
+
+.hero-body{
+  padding:24px 20px 28px;
+  text-align:center;
+}
+
+h1{
+  margin:0;
+  font-size:38px;
+  line-height:1.25;
+  font-weight:900;
+  color:#0d5fa8;
+}
+
+.lead{
+  margin:14px 0 0;
+  font-size:19px;
+  line-height:1.7;
+  font-weight:800;
+  color:#526b7d;
+}
+
+.menu{
+  display:grid;
+  gap:16px;
+}
+
+.card{
+  display:block;
+  text-decoration:none;
+  background:#ffffff;
+  border-radius:24px;
+  padding:22px 20px;
+  box-shadow:0 8px 22px rgba(20,70,120,.11);
+  border-left:8px solid #1687e0;
+  color:#17324d;
+}
+
+.card h2{
+  margin:0;
+  font-size:26px;
+  line-height:1.35;
+  font-weight:900;
+  color:#0d5fa8;
+}
+
+.card p{
+  margin:10px 0 0;
+  font-size:18px;
+  line-height:1.65;
+  font-weight:700;
+  color:#536b7d;
+}
+
+.card.green{border-left-color:#16a05d}
+.card.orange{border-left-color:#f39c12}
+
+.note{
+  margin-top:24px;
+  padding:18px;
+  background:#f7fbff;
+  border-radius:20px;
+  font-size:16px;
+  line-height:1.7;
+  font-weight:700;
+  color:#5c6f7e;
+  text-align:center;
+}
+
+.footer{
+  margin-top:24px;
+  text-align:center;
+  font-size:14px;
+  color:#789;
+}
+</style>
 </head>
 
-<body style="margin:0;text-align:center;background:#eef5fb;font-family:sans-serif;">
+<body>
+<div class="wrap">
 
-<div style="max-width:600px;margin:40px auto;background:#fff;padding:30px;border-radius:20px;">
+  <div class="hero">
+    <img src="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg" alt="志木お助け隊">
+    <div class="hero-body">
+      <h1>志木お助け隊</h1>
+      <div class="lead">
+        回覧板・AI相談・Go mapをひとつに。<br>
+        志木の暮らしを、見やすく、使いやすく。
+      </div>
+    </div>
+  </div>
 
-<h1>志木お助け隊DX</h1>
+  <div class="menu">
 
-<a href="./open.html"
-style="display:block;margin-top:20px;padding:18px;background:#1e88e5;color:#fff;text-decoration:none;border-radius:12px;font-size:20px;">
-ここを押して開始
-</a>
+    <a class="card" href="app.html">
+      <h2>回覧板を見る</h2>
+      <p>市からのお知らせや地域情報を、スマホで見やすく確認できます。</p>
+    </a>
+
+    <a class="card green" href="concierge.html">
+      <h2>AIコンシェルジュを使う</h2>
+      <p>困りごとを入力すると、相談先や伝え方を分かりやすく案内します。</p>
+    </a>
+
+    <a class="card orange" href="https://ichirohns-jpg.github.io/shiki.gomap-001/">
+      <h2>志木Go mapを見る</h2>
+      <p>キッチンカーの出店情報や場所を、Googleマップで確認できます。</p>
+    </a>
+
+  </div>
+
+  <div class="note">
+    Facebook・LINE・Xなどで開きやすいよう、  
+    GitHub Pagesを入口にしたSNS対応ページです。
+  </div>
+
+  <div class="footer">
+    志木お助け隊
+  </div>
 
 </div>
-
 </body>
 </html>
