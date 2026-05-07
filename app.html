@@ -3,590 +3,199 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-
 <title>志木お助け隊 回覧板</title>
-
-<meta property="og:title" content="志木お助け隊 回覧板">
-<meta property="og:description" content="地域のお知らせを見やすくまとめて表示">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">
-<meta property="og:image" content="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
 
 <style>
 *{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  padding:0;
-  background:#eef3f8;
-  font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
-  color:#17324d;
-  -webkit-text-size-adjust:100%;
-}
-
-body{
-  overflow-x:hidden;
-}
-
-.wrap{
-  width:100%;
-  max-width:680px;
-  margin:0 auto;
-  padding:12px;
-}
-
-.banner{
-  width:100%;
-  border-radius:24px;
-  overflow:hidden;
-  margin-bottom:14px;
-  box-shadow:0 6px 20px rgba(0,0,0,.10);
-}
-
-.banner img{
-  width:100%;
-  display:block;
-}
-
-.card{
-  background:#fff;
-  border-radius:24px;
-  padding:18px;
-  margin-bottom:18px;
-  box-shadow:0 4px 14px rgba(0,0,0,.08);
-}
-
-.date{
-  font-size:15px;
-  color:#5f7389;
-  margin-bottom:10px;
-  font-weight:700;
-}
-
-.title{
-  font-size:28px;
-  line-height:1.45;
-  font-weight:900;
-  margin-bottom:16px;
-  color:#10263b;
-  word-break:break-word;
-}
-
-.media-scroll{
-  display:flex;
-  overflow-x:auto;
-  gap:10px;
-  margin-bottom:16px;
-  scroll-snap-type:x mandatory;
-  -webkit-overflow-scrolling:touch;
-}
-
-.media-item{
-  flex:0 0 82%;
-  scroll-snap-align:start;
-}
-
-.media-item img,
-.media-item iframe,
-.media-item video{
-  width:100%;
-  aspect-ratio:9/16;
-  border:none;
-  border-radius:18px;
-  object-fit:cover;
-  background:#000;
-}
-
-.detail{
-  font-size:20px;
-  line-height:1.95;
-  color:#24384b;
-  white-space:pre-wrap;
-  word-break:break-word;
-  margin-bottom:18px;
-}
-
-.btns{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  margin-top:12px;
-}
-
-.btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  border-radius:16px;
-  min-height:58px;
-  font-size:19px;
-  font-weight:900;
-  border:none;
-  cursor:pointer;
-  width:100%;
-}
-
-.home-btn{
-  background:#0b5ed7;
-  color:#fff;
-}
-
-.apply-btn{
-  background:#16a34a;
-  color:#fff;
-}
-
-.share-area{
-  margin-top:18px;
-  padding-top:18px;
-  border-top:1px solid #e3ebf2;
-}
-
-.share-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.share-btn{
-  border:none;
-  border-radius:16px;
-  min-height:54px;
-  font-size:17px;
-  font-weight:900;
-  color:#fff;
-  cursor:pointer;
-}
-
-.fb{background:#1877f2}
-.x{background:#000}
-.line{background:#06c755}
-.copy{background:#5f7389}
-.copy-ok{background:#1d9d5c!important}
-
-.loading,
-.empty{
-  text-align:center;
-  padding:40px 20px;
-  font-size:22px;
-  font-weight:900;
-  color:#45627f;
-}
-
-.error{
-  background:#fff;
-  border-radius:20px;
-  margin:20px 0;
-  padding:20px;
-  font-size:18px;
-  line-height:1.7;
-  color:#b00020;
-  font-weight:800;
-}
-
-.top-space{
-  height:10px;
-}
+html,body{margin:0;padding:0;background:#eef3f8;font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;color:#17324d}
+.wrap{max-width:680px;margin:0 auto;padding:12px}
+.banner{border-radius:22px;overflow:hidden;margin-bottom:14px;box-shadow:0 6px 18px rgba(0,0,0,.12)}
+.banner img{width:100%;display:block}
+.card{background:#fff;border-radius:22px;padding:18px;margin-bottom:18px;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.date{font-size:15px;font-weight:700;color:#60758a;margin-bottom:10px}
+.title{font-size:28px;line-height:1.45;font-weight:900;color:#10263b;margin-bottom:14px}
+.media-scroll{display:flex;gap:10px;overflow-x:auto;margin-bottom:16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.media-item{flex:0 0 82%;scroll-snap-align:start}
+.media-item img,.media-item iframe,.media-item video{width:100%;aspect-ratio:9/16;border:0;border-radius:18px;object-fit:cover;background:#000}
+.detail{font-size:20px;line-height:1.9;white-space:pre-wrap;word-break:break-word;margin-bottom:16px}
+.btns{display:flex;flex-direction:column;gap:12px}
+.btn{display:flex;align-items:center;justify-content:center;min-height:58px;border-radius:16px;text-decoration:none;font-size:19px;font-weight:900;color:#fff}
+.home-btn{background:#0b5ed7}
+.apply-btn{background:#16a34a}
+.share-area{margin-top:18px;padding-top:18px;border-top:1px solid #e3ebf2}
+.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.share-btn{min-height:54px;border:0;border-radius:16px;font-size:17px;font-weight:900;color:#fff}
+.fb{background:#1877f2}.x{background:#000}.line{background:#06c755}.copy{background:#5f7389}.copy-ok{background:#1d9d5c!important}
+.loading,.empty,.error{text-align:center;padding:40px 20px;font-size:22px;font-weight:900}
+.error{color:#b00020;background:#fff;border-radius:18px}
 </style>
 </head>
 
 <body>
-
 <div class="wrap">
-
   <div class="banner">
     <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
   </div>
-
-  <div id="board">
-    <div class="loading">読み込み中...</div>
-  </div>
-
-  <div class="top-space"></div>
-
+  <div id="board"><div class="loading">読み込み中...</div></div>
 </div>
 
 <script>
-var SHEET_ID = '1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
-var SHEET_NAME = '回覧板データー';
-var APP_URL = 'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
+var SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
+var SHEET_NAME='回覧板データー';
+var APP_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
 
-var JSONP_URL =
-  'https://docs.google.com/spreadsheets/d/' +
-  SHEET_ID +
-  '/gviz/tq?sheet=' +
-  encodeURIComponent(SHEET_NAME) +
-  '&tqx=out:json;responseHandler=handleSheet';
+var JSONP_URL='https://docs.google.com/spreadsheets/d/'+SHEET_ID+
+'/gviz/tq?sheet='+encodeURIComponent(SHEET_NAME)+
+'&tqx=out:json;responseHandler=handleSheet';
 
-function cellValue(cells,index){
-  if(!cells || !cells[index]) return '';
-  if(cells[index].f !== null && cells[index].f !== undefined) return String(cells[index].f).trim();
-  if(cells[index].v !== null && cells[index].v !== undefined) return String(cells[index].v).trim();
+function v(c,i){
+  if(!c||!c[i])return '';
+  if(c[i].f!==undefined&&c[i].f!==null)return String(c[i].f).trim();
+  if(c[i].v!==undefined&&c[i].v!==null)return String(c[i].v).trim();
   return '';
 }
 
-function rawValue(cells,index){
-  if(!cells || !cells[index]) return '';
-  if(cells[index].v !== null && cells[index].v !== undefined) return cells[index].v;
-  return '';
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-function getParam(name){
-  var params = new URLSearchParams(window.location.search);
-  return params.get(name);
+function idFromDrive(u){
+  var m=String(u).match(/\/d\/([a-zA-Z0-9_-]+)/)||String(u).match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  return m?m[1]:'';
 }
 
-function escapeHtml(str){
-  if(str === null || str === undefined) return '';
-  return String(str)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
+function driveThumb(u){
+  var id=idFromDrive(u);
+  return id?'https://drive.google.com/thumbnail?id='+id+'&sz=w2000':u;
 }
 
-function safeAttr(str){
-  return escapeHtml(str).replace(/`/g,'');
+function youtube(u){
+  var s=String(u);
+  var m=s.match(/[?&]v=([^&]+)/)||s.match(/youtu\.be\/([^?&]+)/)||s.match(/youtube\.com\/shorts\/([^?&]+)/);
+  if(s.indexOf('youtube.com/embed/')>-1)return s;
+  return m?'https://www.youtube.com/embed/'+m[1]:'';
 }
 
-function normalize(str){
-  if(str === null || str === undefined) return '';
-  return String(str).trim();
+function splitUrls(t){
+  return String(t||'').split(/\n|,|　|\s+/).map(function(x){return x.trim()}).filter(function(x){return x.indexOf('http')===0});
 }
 
-function parseDriveId(url){
-  if(!url) return '';
-  var m1 = String(url).match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if(m1 && m1[1]) return m1[1];
-
-  var m2 = String(url).match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  if(m2 && m2[1]) return m2[1];
-
-  return '';
-}
-
-function driveImage(url){
-  var id = parseDriveId(url);
-  if(id) return 'https://drive.google.com/thumbnail?id=' + id + '&sz=w2000';
-  return url;
-}
-
-function drivePreview(url){
-  var id = parseDriveId(url);
-  if(id) return 'https://drive.google.com/file/d/' + id + '/preview';
-  return url;
-}
-
-function youtubeEmbed(url){
-  if(!url) return '';
-
-  var u = String(url);
-
-  if(u.indexOf('youtube.com/embed/') !== -1) return u;
-
-  var m1 = u.match(/[?&]v=([^&]+)/);
-  if(m1 && m1[1]) return 'https://www.youtube.com/embed/' + m1[1];
-
-  var m2 = u.match(/youtu\.be\/([^?&]+)/);
-  if(m2 && m2[1]) return 'https://www.youtube.com/embed/' + m2[1];
-
-  var m3 = u.match(/youtube\.com\/shorts\/([^?&]+)/);
-  if(m3 && m3[1]) return 'https://www.youtube.com/embed/' + m3[1];
-
-  return '';
-}
-
-function splitUrls(text){
-  if(!text) return [];
-  return String(text)
-    .split(/\n|,|　|\s+/)
-    .map(function(v){return v.trim();})
-    .filter(function(v){return v.indexOf('http') === 0;});
-}
-
-function createMedia(urlText){
-  var urls = splitUrls(urlText);
-  var html = '';
-
-  urls.forEach(function(url){
-
-    var lower = url.toLowerCase();
-    var yt = youtubeEmbed(url);
-
-    if(yt){
-      html += '<div class="media-item"><iframe src="' + safeAttr(yt) + '" allowfullscreen loading="lazy"></iframe></div>';
-      return;
+function mediaHtml(t){
+  var urls=splitUrls(t);
+  var h='';
+  urls.forEach(function(u){
+    var l=u.toLowerCase();
+    var y=youtube(u);
+    if(y){
+      h+='<div class="media-item"><iframe src="'+esc(y)+'" allowfullscreen loading="lazy"></iframe></div>';
+    }else if(l.indexOf('.mp4')>-1||l.indexOf('.mov')>-1||l.indexOf('.webm')>-1){
+      h+='<div class="media-item"><video controls playsinline><source src="'+esc(u)+'"></video></div>';
+    }else{
+      h+='<div class="media-item"><img src="'+esc(driveThumb(u))+'" loading="lazy"></div>';
     }
-
-    if(
-      lower.indexOf('.mp4') !== -1 ||
-      lower.indexOf('.mov') !== -1 ||
-      lower.indexOf('.webm') !== -1 ||
-      lower.indexOf('.m4v') !== -1
-    ){
-      html += '<div class="media-item"><video controls playsinline><source src="' + safeAttr(url) + '"></video></div>';
-      return;
-    }
-
-    if(lower.indexOf('drive.google.com') !== -1){
-      html += '<div class="media-item"><img src="' + safeAttr(driveImage(url)) + '" loading="lazy"></div>';
-      return;
-    }
-
-    if(
-      lower.indexOf('.jpg') !== -1 ||
-      lower.indexOf('.jpeg') !== -1 ||
-      lower.indexOf('.png') !== -1 ||
-      lower.indexOf('.webp') !== -1 ||
-      lower.indexOf('.gif') !== -1
-    ){
-      html += '<div class="media-item"><img src="' + safeAttr(url) + '" loading="lazy"></div>';
-      return;
-    }
-
   });
-
-  return html;
+  return h;
 }
 
-function buildShareButtons(shareUrl,title,id){
-
-  var encodedUrl = encodeURIComponent(shareUrl);
-  var encodedText = encodeURIComponent(title || '志木お助け隊 回覧板');
-
-  var fbUrl =
-    'https://www.facebook.com/sharer/sharer.php?u=' +
-    encodedUrl;
-
-  var xUrl =
-    'https://twitter.com/intent/tweet?url=' +
-    encodedUrl +
-    '&text=' +
-    encodedText;
-
-  var lineUrl =
-    'https://social-plugins.line.me/lineit/share?url=' +
-    encodedUrl;
-
-  var safeId = safeAttr(id);
-  var safeShare = safeAttr(shareUrl);
-
-  return ''
-    + '<div class="share-area">'
-    +   '<div class="share-grid">'
-    +     '<button class="share-btn fb" onclick="window.open(\'' + fbUrl + '\',\'_blank\')">Facebook</button>'
-    +     '<button class="share-btn x" onclick="window.open(\'' + xUrl + '\',\'_blank\')">X</button>'
-    +     '<button class="share-btn line" onclick="window.open(\'' + lineUrl + '\',\'_blank\')">LINE</button>'
-    +     '<button id="copybtn-' + safeId + '" class="share-btn copy" onclick="copyUrl(\'' + safeShare + '\',\'' + safeId + '\')">URLコピー</button>'
-    +   '</div>'
-    + '</div>';
+function shareButtons(url,title,id){
+  var eu=encodeURIComponent(url);
+  var et=encodeURIComponent(title||'志木お助け隊 回覧板');
+  return '<div class="share-area"><div class="share-grid">'+
+    '<button class="share-btn fb" onclick="window.open(\'https://www.facebook.com/sharer/sharer.php?u='+eu+'\',\'_blank\')">Facebook</button>'+
+    '<button class="share-btn x" onclick="window.open(\'https://twitter.com/intent/tweet?url='+eu+'&text='+et+'\',\'_blank\')">X</button>'+
+    '<button class="share-btn line" onclick="window.open(\'https://social-plugins.line.me/lineit/share?url='+eu+'\',\'_blank\')">LINE</button>'+
+    '<button id="copybtn-'+esc(id)+'" class="share-btn copy" onclick="copyUrl(\''+esc(url)+'\',\''+esc(id)+'\')">URLコピー</button>'+
+  '</div></div>';
 }
 
 function copyUrl(url,id){
-
-  if(navigator.clipboard && navigator.clipboard.writeText){
-
-    navigator.clipboard.writeText(url).then(function(){
-      copyDone(id);
-    }).catch(function(){
-      fallbackCopy(url,id);
-    });
-
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(function(){done(id)});
   }else{
-    fallbackCopy(url,id);
+    var t=document.createElement('textarea');
+    t.value=url;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);done(id);
   }
-
 }
 
-function fallbackCopy(url,id){
-  var textarea = document.createElement('textarea');
-  textarea.value = url;
-  textarea.style.position = 'fixed';
-  textarea.style.left = '-9999px';
-  document.body.appendChild(textarea);
-  textarea.focus();
-  textarea.select();
+function done(id){
+  var b=document.getElementById('copybtn-'+id);
+  if(!b)return;
+  b.innerText='コピー完了';
+  b.classList.add('copy-ok');
+  setTimeout(function(){b.innerText='URLコピー';b.classList.remove('copy-ok')},2000);
+}
 
+window.handleSheet=function(json){
   try{
-    document.execCommand('copy');
-    copyDone(id);
-  }catch(e){
-    alert('コピーできませんでした');
-  }
+    var rows=json.table.rows||[];
+    var items=[];
 
-  document.body.removeChild(textarea);
-}
+    rows.forEach(function(r,index){
+      var c=r.c||[];
+      var title=v(c,1);
+      if(!title)return;
 
-function copyDone(id){
-  var btn = document.getElementById('copybtn-' + id);
-  if(!btn) return;
-
-  btn.innerText = 'コピー完了';
-  btn.classList.add('copy-ok');
-
-  setTimeout(function(){
-    btn.innerText = 'URLコピー';
-    btn.classList.remove('copy-ok');
-  },2000);
-}
-
-function buildItems(rows){
-
-  var items = [];
-
-  rows.forEach(function(r,index){
-
-    var c = r.c || [];
-
-    var title = cellValue(c,1);
-
-    if(!title) return;
-
-    var articleId = cellValue(c,11);
-
-    if(!articleId){
-      articleId = String(index + 1);
-    }
-
-    var sortRaw = rawValue(c,10);
-    var sortNum = Number(sortRaw);
-
-    if(!sortNum){
-      sortNum = 0;
-    }
-
-    items.push({
-      id: articleId,
-      dateText: cellValue(c,0),
-      title: title,
-      detail: cellValue(c,3),
-      applyUrl: cellValue(c,4),
-      pageUrl: cellValue(c,5),
-      mediaUrl: cellValue(c,6),
-      sortNum: sortNum
+      items.push({
+        id:v(c,11)||String(index+1),
+        date:v(c,0),
+        title:title,
+        media:v(c,2),
+        detail:v(c,3),
+        apply:v(c,4),
+        page:v(c,5),
+        sort:Number(v(c,10)||0)
+      });
     });
 
-  });
+    items.sort(function(a,b){return b.sort-a.sort});
 
-  return items;
-}
+    var target=new URLSearchParams(location.search).get('id');
+    if(target){
+      items.sort(function(a,b){
+        if(String(a.id)===String(target))return -1;
+        if(String(b.id)===String(target))return 1;
+        return b.sort-a.sort;
+      });
+    }
 
-function renderItems(items){
+    var html='';
+    items.forEach(function(it){
+      var share=APP_URL+'?id='+encodeURIComponent(it.id);
+      var mh=mediaHtml(it.media);
 
-  var board = document.getElementById('board');
-  var targetId = getParam('id');
-
-  items.sort(function(a,b){
-    return b.sortNum - a.sortNum;
-  });
-
-  if(targetId !== null && targetId !== ''){
-    items.sort(function(a,b){
-      if(String(a.id) === String(targetId)) return -1;
-      if(String(b.id) === String(targetId)) return 1;
-      return b.sortNum - a.sortNum;
+      html+='<div class="card" id="post-'+esc(it.id)+'">'+
+        '<div class="date">'+esc(it.date)+'</div>'+
+        '<div class="title">'+esc(it.title)+'</div>'+
+        (mh?'<div class="media-scroll">'+mh+'</div>':'')+
+        '<div class="detail">'+esc(it.detail)+'</div>'+
+        '<div class="btns">'+
+        (it.page?'<a class="btn home-btn" href="'+esc(it.page)+'" target="_blank">詳しく見る</a>':'')+
+        (it.apply?'<a class="btn apply-btn" href="'+esc(it.apply)+'" target="_blank">申込みはこちら</a>':'')+
+        '</div>'+
+        shareButtons(share,it.title,it.id)+
+      '</div>';
     });
-  }
 
-  var html = '';
+    document.getElementById('board').innerHTML=html||'<div class="empty">記事がありません</div>';
 
-  items.forEach(function(item){
-
-    var shareUrl =
-      APP_URL + '?id=' + encodeURIComponent(item.id);
-
-    var mediaHtml = createMedia(item.mediaUrl);
-
-    html += ''
-      + '<div class="card" id="post-' + safeAttr(item.id) + '">'
-      +   '<div class="date">' + escapeHtml(item.dateText) + '</div>'
-      +   '<div class="title">' + escapeHtml(item.title) + '</div>';
-
-    if(mediaHtml){
-      html += '<div class="media-scroll">' + mediaHtml + '</div>';
+    if(target){
+      setTimeout(function(){
+        var el=document.getElementById('post-'+target);
+        if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+      },400);
     }
-
-    html += ''
-      +   '<div class="detail">' + escapeHtml(item.detail) + '</div>'
-      +   '<div class="btns">';
-
-    if(item.pageUrl){
-      html += '<a class="btn home-btn" href="' + safeAttr(item.pageUrl) + '" target="_blank">市ホームページ</a>';
-    }
-
-    if(item.applyUrl){
-      html += '<a class="btn apply-btn" href="' + safeAttr(item.applyUrl) + '" target="_blank">申込みはこちら</a>';
-    }
-
-    html += ''
-      +   '</div>'
-      +   buildShareButtons(shareUrl,item.title,item.id)
-      + '</div>';
-
-  });
-
-  if(!html){
-    board.innerHTML = '<div class="empty">記事がありません</div>';
-    return;
-  }
-
-  board.innerHTML = html;
-
-  if(targetId !== null && targetId !== ''){
-    setTimeout(function(){
-      var el = document.getElementById('post-' + targetId);
-      if(el){
-        el.scrollIntoView({
-          behavior:'smooth',
-          block:'start'
-        });
-      }
-    },500);
-  }
-}
-
-window.handleSheet = function(json){
-
-  try{
-
-    var rows = [];
-
-    if(json && json.table && json.table.rows){
-      rows = json.table.rows;
-    }
-
-    if(!rows.length){
-      document.getElementById('board').innerHTML =
-        '<div class="empty">記事がありません</div>';
-      return;
-    }
-
-    var items = buildItems(rows);
-    renderItems(items);
 
   }catch(e){
-
-    document.getElementById('board').innerHTML =
-      '<div class="error">読み込みエラーです。コードをもう一度貼り直してください。</div>';
-
+    document.getElementById('board').innerHTML='<div class="error">読み込みエラー</div>';
   }
-
 };
 
-function loadSheet(){
-  var s = document.createElement('script');
-  s.src = JSONP_URL;
-  s.onerror = function(){
-    document.getElementById('board').innerHTML =
-      '<div class="error">スプレッドシートを読み込めませんでした。</div>';
-  };
-  document.body.appendChild(s);
-}
-
-loadSheet();
+var s=document.createElement('script');
+s.src=JSONP_URL;
+s.onerror=function(){
+  document.getElementById('board').innerHTML='<div class="error">スプレッドシートを読み込めません</div>';
+};
+document.body.appendChild(s);
 </script>
-
 </body>
 </html>
