@@ -75,7 +75,7 @@ function driveThumb(url){
   return url;
 }
 
-function copyText(text,id){
+function copyUrl(text,id){
   var t = document.createElement('textarea');
   t.value = text;
   document.body.appendChild(t);
@@ -94,18 +94,20 @@ function copyText(text,id){
   }
 }
 
-function bindButtons(){
-  document.querySelectorAll('.js-open').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      window.open(btn.getAttribute('data-url'),'_blank');
+function bindShareButtons(){
+  var opens = document.querySelectorAll('.js-open');
+  for(var i=0;i<opens.length;i++){
+    opens[i].addEventListener('click',function(){
+      window.open(this.getAttribute('data-url'),'_blank');
     });
-  });
+  }
 
-  document.querySelectorAll('.js-copy').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      copyText(btn.getAttribute('data-url'),btn.getAttribute('data-id'));
+  var copies = document.querySelectorAll('.js-copy');
+  for(var j=0;j<copies.length;j++){
+    copies[j].addEventListener('click',function(){
+      copyUrl(this.getAttribute('data-url'),this.getAttribute('data-id'));
     });
-  });
+  }
 }
 
 window.handleSheet = function(json){
@@ -183,7 +185,7 @@ window.handleSheet = function(json){
 
     document.getElementById('board').innerHTML = html || '<div class="empty">記事がありません</div>';
 
-    bindButtons();
+    bindShareButtons();
 
     if(target){
       setTimeout(function(){
@@ -200,7 +202,7 @@ window.handleSheet = function(json){
 };
 
 var s = document.createElement('script');
-s.src = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?sheet=' + encodeURIComponent(SHEET_NAME) + '&tqx=out:json;responseHandler=handleSheet';
+s.src = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?sheet=' + encodeURIComponent(SHEET_NAME) + '&tqx=out:json;responseHandler:handleSheet';
 s.onerror = function(){
   document.getElementById('board').innerHTML = '<div class="error">スプレッドシートを読み込めません</div>';
 };
