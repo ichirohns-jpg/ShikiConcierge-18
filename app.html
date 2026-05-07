@@ -102,7 +102,7 @@ body{
 
 .slide{
   flex:0 0 100%;
-  aspect-ratio:9/16;
+  aspect-ratio:16/9;
   scroll-snap-align:start;
   background:#000;
 }
@@ -114,11 +114,12 @@ body{
   height:100%;
   display:block;
   border:0;
-  object-fit:cover;
+  object-fit:contain;
+  background:#000;
 }
 
 .noimage{
-  aspect-ratio:9/16;
+  aspect-ratio:16/9;
   display:flex;
   align-items:center;
   justify-content:center;
