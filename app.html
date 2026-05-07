@@ -102,9 +102,16 @@ body{
 
 .slide{
   flex:0 0 100%;
-  aspect-ratio:16/9;
   scroll-snap-align:start;
   background:#000;
+}
+
+.slide.image{
+  aspect-ratio:9/16;
+}
+
+.slide.video{
+  aspect-ratio:16/9;
 }
 
 .slide img,
@@ -114,12 +121,20 @@ body{
   height:100%;
   display:block;
   border:0;
+}
+
+.slide img{
+  object-fit:cover;
+}
+
+.slide iframe,
+.slide video{
   object-fit:contain;
   background:#000;
 }
 
 .noimage{
-  aspect-ratio:16/9;
+  aspect-ratio:9/16;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -327,8 +342,8 @@ ${mediaHtml(d.image,d.mediaUrl)}
 <div class="date">${esc(d.date)}</div>
 <div class="name">${esc(d.title)}</div>
 ${d.detail?`<div class="msg">${esc(d.detail)}</div>`:''}
-${d.cityUrl?`<a class="btn blue" href="${escAttr(d.cityUrl)}" target="_blank" rel="noopener">詳しく見る</a>`:''}
-${d.applyUrl?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank" rel="noopener">申込みはこちら</a>`:''}
+${d.cityUrl?`<a class="btn blue" href="${escAttr(d.cityUrl)}" target="_blank">詳しく見る</a>`:''}
+${d.applyUrl?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank">申込みはこちら</a>`:''}
 </div>
 </div>`;
 }
@@ -351,13 +366,18 @@ function mediaHtml(imageText,mediaText){
   let html='<div class="media">';
 
   items.slice(0,5).forEach(m=>{
-    html+='<div class="slide">';
+
+    const cls=
+      (m.type==='youtube'||m.type==='driveVideo'||m.type==='video')
+      ? 'slide video'
+      : 'slide image';
+
+    html+='<div class="'+cls+'">';
 
     if(m.type==='youtube'||m.type==='driveVideo'){
       html+=`
 <iframe
 src="${escAttr(m.url)}"
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 allowfullscreen
 loading="lazy">
 </iframe>`;
@@ -388,71 +408,25 @@ function parseImages(s){
   if(!s)return[];
 
   const text=String(s).trim();
-  let urls=[];
-
-  try{
-    const data=JSON.parse(text);
-
-    if(Array.isArray(data)){
-      data.forEach(x=>{
-        if(typeof x==='string'){
-          urls.push(x);
-        }else if(x&&typeof x==='object'){
-          urls.push(String(x.url||x.src||x.link||'').trim());
-        }
-      });
-    }else if(data&&typeof data==='object'){
-      urls.push(String(data.url||data.src||data.link||'').trim());
-    }
-
-  }catch(e){
-    urls=extractUrls(text);
-  }
-
-  return urls.map(toImageUrl).filter(Boolean).slice(0,5);
+  return extractUrls(text).map(toImageUrl).filter(Boolean);
 }
 
 function parseMediaUrls(s){
   if(!s)return[];
 
   const text=String(s).trim();
-  let urls=[];
-
-  try{
-    const data=JSON.parse(text);
-
-    if(Array.isArray(data)){
-      data.forEach(x=>{
-        if(typeof x==='string'){
-          urls.push(x);
-        }else if(x&&typeof x==='object'){
-          urls.push(String(x.url||x.src||x.link||'').trim());
-        }
-      });
-    }else if(data&&typeof data==='object'){
-      urls.push(String(data.url||data.src||data.link||'').trim());
-    }
-
-  }catch(e){
-    urls=extractUrls(text);
-  }
-
-  return urls.map(toMediaObject).filter(Boolean).slice(0,5);
+  return extractUrls(text).map(toMediaObject).filter(Boolean);
 }
 
 function toImageUrl(url){
-  if(!url)return'';
-
   const id=driveFileId(url);
   if(id){
     return 'https://drive.google.com/thumbnail?id='+id+'&sz=w2000';
   }
-
   return url;
 }
 
 function toMediaObject(url){
-  if(!url)return null;
 
   const yt=youtubeEmbed(url);
   if(yt){
@@ -461,7 +435,10 @@ function toMediaObject(url){
 
   const id=driveFileId(url);
   if(id){
-    return {type:'driveVideo',url:'https://drive.google.com/file/d/'+id+'/preview'};
+    return {
+      type:'driveVideo',
+      url:'https://drive.google.com/file/d/'+id+'/preview'
+    };
   }
 
   if(isVideoUrl(url)){
@@ -475,7 +452,6 @@ function youtubeEmbed(url){
   const s=String(url||'');
 
   const m=
-    s.match(/youtube\.com\/embed\/([^?&/]+)/) ||
     s.match(/youtube\.com\/shorts\/([^?&/]+)/) ||
     s.match(/youtu\.be\/([^?&/]+)/) ||
     s.match(/[?&]v=([^?&/]+)/);
@@ -490,8 +466,7 @@ function driveFileId(url){
 
   const m=
     s.match(/\/file\/d\/([^/]+)/) ||
-    s.match(/[?&]id=([^&]+)/) ||
-    s.match(/\/d\/([^/]+)/);
+    s.match(/[?&]id=([^&]+)/);
 
   return m&&m[1]?m[1]:'';
 }
