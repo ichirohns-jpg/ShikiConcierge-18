@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>志木お助け隊 AIコンシェルジュ</title>
 
+<meta property="og:title" content="志木お助け隊 AIコンシェルジュ">
+<meta property="og:description" content="困っていることを、そのまま書いてください。相談先を分かりやすく案内します。">
+<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg">
+<meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/concierge.html">
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+
 <style>
 *{box-sizing:border-box}
 
@@ -55,64 +63,16 @@ body{
   color:#5a6f80;
 }
 
-.searchBox{
+.box{
   background:#fff;
   border-radius:24px;
-  padding:20px;
+  padding:22px 20px;
   box-shadow:0 8px 22px rgba(20,70,120,.10);
   margin-bottom:18px;
   border-left:8px solid #16a05d;
 }
 
-textarea{
-  width:100%;
-  min-height:130px;
-  border:2px solid #d8e8f5;
-  border-radius:18px;
-  padding:16px;
-  font-size:20px;
-  line-height:1.6;
-  font-family:inherit;
-  resize:vertical;
-}
-
-button{
-  width:100%;
-  min-height:62px;
-  border:0;
-  border-radius:18px;
-  margin-top:14px;
-  font-size:20px;
-  font-weight:900;
-  color:#fff;
-  background:linear-gradient(135deg,#18b76a,#0d8b4c);
-}
-
-.example{
-  margin-top:14px;
-  background:#f6fbff;
-  border-radius:18px;
-  padding:14px;
-  font-size:16px;
-  line-height:1.7;
-  font-weight:800;
-  color:#526b7d;
-}
-
-.result{
-  margin-top:18px;
-}
-
-.card{
-  background:#fff;
-  border-radius:24px;
-  padding:20px;
-  box-shadow:0 8px 22px rgba(20,70,120,.10);
-  margin-bottom:18px;
-  border-top:5px solid #1687e0;
-}
-
-.card h2{
+.box h2{
   margin:0;
   font-size:26px;
   line-height:1.35;
@@ -120,32 +80,23 @@ button{
   color:#0d5fa8;
 }
 
-.card .cat{
-  display:inline-block;
-  margin-top:10px;
-  background:#e9f6ff;
-  color:#0d5fa8;
-  padding:6px 12px;
-  border-radius:999px;
-  font-size:15px;
-  font-weight:900;
-}
-
-.card p{
-  margin:14px 0 0;
+.box p{
+  margin:12px 0 0;
   font-size:18px;
   line-height:1.8;
   font-weight:700;
-  color:#334;
-  white-space:pre-wrap;
+  color:#3e5668;
 }
 
-.tel{
-  display:block;
-  margin-top:14px;
-  font-size:18px;
-  font-weight:900;
-  color:#0d5fa8;
+.example{
+  background:#f6fbff;
+  border-radius:18px;
+  padding:16px;
+  margin-top:16px;
+  font-size:17px;
+  line-height:1.8;
+  font-weight:800;
+  color:#426070;
 }
 
 .btn{
@@ -153,12 +104,17 @@ button{
   align-items:center;
   justify-content:center;
   width:100%;
-  min-height:58px;
-  border-radius:18px;
+  min-height:66px;
+  border-radius:20px;
   text-decoration:none;
-  font-size:18px;
+  font-size:20px;
   font-weight:900;
-  margin-top:14px;
+  margin-top:18px;
+}
+
+.green{
+  background:linear-gradient(135deg,#18b76a,#0d8b4c);
+  color:#fff;
 }
 
 .blue{
@@ -169,14 +125,6 @@ button{
 .gray{
   background:linear-gradient(135deg,#6c7a89,#34495e);
   color:#fff;
-}
-
-.loading{
-  text-align:center;
-  padding:32px 16px;
-  font-size:20px;
-  color:#777;
-  font-weight:800;
 }
 
 .note{
@@ -191,6 +139,13 @@ button{
   text-align:center;
   box-shadow:0 6px 16px rgba(20,70,120,.08);
 }
+
+.footer{
+  margin-top:22px;
+  text-align:center;
+  font-size:14px;
+  color:#789;
+}
 </style>
 </head>
 
@@ -201,6 +156,7 @@ button{
 <img class="banner" src="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg">
 <div class="header-body">
 <h1 class="title">AIコンシェルジュ</h1>
+
 <div class="desc">
 困っていることを、そのまま書いてください。<br>
 相談先と伝え方を分かりやすく案内します。
@@ -208,192 +164,44 @@ button{
 </div>
 </div>
 
-<div class="searchBox">
-<textarea id="q" placeholder="例：親の物忘れが心配です。どこに相談すればいいですか？"></textarea>
-<button onclick="searchNow()">相談先を探す</button>
+<div class="box">
+<h2>どんな相談ができる？</h2>
+
+<p>
+介護、子育て、ごみ、道路、空き家、生活相談など、<br>
+「どこへ相談すればいいか分からない時」の入口です。
+</p>
 
 <div class="example">
-例：粗大ごみを出したい／道路の穴を直してほしい／空き家のことで相談したい／介護の相談をしたい
+例：<br>
+親の物忘れが心配<br>
+粗大ごみの出し方を知りたい<br>
+道路の穴を直してほしい<br>
+空き家のことで相談したい
 </div>
 </div>
 
-<div id="status" class="loading">相談先データを読み込み中...</div>
-<div id="result" class="result"></div>
-
-<a class="btn blue" href="app.html">回覧板を見る</a>
-<a class="btn gray" href="index.html">← トップに戻る</a>
-
+<div class="note">
+SNSで開きやすいように、GitHub Pagesを入口ページとして使用しています。
 </div>
 
-<script>
-const SHEET_ID='1hMbXOCMloUQbT1F25sBFuufoDgr83fEO';
-const SHEET_NAME='相談先マスター';
+<a class="btn green"
+href="https://script.google.com/macros/s/AKfycbzhTd6DoEUjEYSY_ADQkjYC97fHdUUz4kEZ_cKFWoJGBYA-LCUBy85_7rBVqYBepWR9BA/exec">
+AIコンシェルジュを開く
+</a>
 
-let DATA=[];
+<a class="btn blue" href="app.html">
+回覧板を見る
+</a>
 
-window.handleSheet=function(json){
-  try{
-    const rows=json.table.rows||[];
-    const cols=json.table.cols||[];
+<a class="btn gray" href="index.html">
+← トップに戻る
+</a>
 
-    const headers=cols.map(c=>String(c.label||'').trim());
-
-    DATA=rows.map(r=>{
-      const c=r.c||[];
-      const obj={};
-
-      headers.forEach((h,i)=>{
-        obj[h]=getCell(c[i]);
-      });
-
-      return normalizeRow(obj,c);
-    }).filter(d=>d.title||d.desc||d.keywords);
-
-    document.getElementById('status').innerHTML='相談内容を入力してください。';
-
-  }catch(e){
-    document.getElementById('status').innerHTML='読み込みに失敗しました。';
-  }
-};
-
-function loadSheet(){
-  const script=document.createElement('script');
-
-  script.src=
-    'https://docs.google.com/spreadsheets/d/' +
-    SHEET_ID +
-    '/gviz/tq?sheet=' +
-    encodeURIComponent(SHEET_NAME) +
-    '&tqx=out:json;responseHandler:handleSheet&v=' +
-    Date.now();
-
-  document.body.appendChild(script);
-}
-
-loadSheet();
-
-function normalizeRow(obj,c){
-  return{
-    category:pick(obj,['相談分類','大分類','分類','カテゴリ'],getCell(c[0])),
-    title:pick(obj,['表示名','相談先','タイトル','名称'],getCell(c[1])),
-    desc:pick(obj,['説明文','内容','案内文','窓口案内'],getCell(c[2])),
-    office:pick(obj,['相談先','窓口','担当課'],getCell(c[3])),
-    tel:pick(obj,['電話番号','電話','TEL'],getCell(c[4])),
-    url:pick(obj,['リンク','本命リンク','URL','公式ページ'],getCell(c[5])),
-    urgency:pick(obj,['緊急度','急ぎ'],getCell(c[6])),
-    keywords:pick(obj,['キーワード','検索語','検索の主語','検索の補助語'],getCell(c[7]))
-  };
-}
-
-function searchNow(){
-  const q=document.getElementById('q').value.trim();
-
-  if(!q){
-    document.getElementById('result').innerHTML='<div class="loading">困っていることを入力してください。</div>';
-    return;
-  }
-
-  const words=normalizeText(q).split(/\s+/).filter(Boolean);
-
-  let results=DATA.map(d=>{
-    const target=normalizeText([
-      d.category,d.title,d.desc,d.office,d.keywords
-    ].join(' '));
-
-    let score=0;
-
-    words.forEach(w=>{
-      if(w.length>=2 && target.includes(w)){
-        score+=3;
-      }
-    });
-
-    const qn=normalizeText(q);
-
-    if(target.includes(qn))score+=10;
-
-    return Object.assign({},d,{score});
-  }).filter(d=>d.score>0);
-
-  results.sort((a,b)=>b.score-a.score);
-
-  if(!results.length){
-    results=[{
-      title:'志木市役所代表',
-      category:'総合案内',
-      desc:'相談先がはっきりしない場合は、まず市役所代表へ相談してください。内容を伝えると、関係する課につないでもらえます。',
-      office:'志木市役所',
-      tel:'048-473-1111',
-      url:'https://www.city.shiki.lg.jp/',
-      score:1
-    }];
-  }
-
-  renderResults(results.slice(0,3),q);
-}
-
-function renderResults(list,q){
-  let html='';
-
-  html+=`
-<div class="card">
-<h2>このまま電話で伝える内容</h2>
-<p>${esc(q)}</p>
+<div class="footer">
+志木お助け隊
 </div>
-`;
 
-  list.forEach(d=>{
-    html+=`
-<div class="card">
-<h2>${esc(d.title || d.office || '相談先')}</h2>
-${d.category?`<div class="cat">${esc(d.category)}</div>`:''}
-${d.desc?`<p>${esc(d.desc)}</p>`:''}
-${d.office?`<p><strong>相談先：</strong>${esc(d.office)}</p>`:''}
-${d.tel?`<a class="tel" href="tel:${escAttr(d.tel)}">電話：${esc(d.tel)}</a>`:''}
-${d.url?`<a class="btn blue" href="${escAttr(d.url)}" target="_blank" rel="noopener">関係するページを見る</a>`:''}
 </div>
-`;
-  });
-
-  document.getElementById('status').innerHTML='';
-  document.getElementById('result').innerHTML=html;
-}
-
-function pick(obj,names,fallback){
-  for(let i=0;i<names.length;i++){
-    const k=names[i];
-    if(obj[k])return obj[k];
-  }
-  return fallback||'';
-}
-
-function normalizeText(s){
-  return String(s||'')
-    .toLowerCase()
-    .replace(/[　]/g,' ')
-    .replace(/[、。・／/]/g,' ')
-    .replace(/\s+/g,' ')
-    .trim();
-}
-
-function getCell(c){
-  if(!c)return'';
-  if(c.f!==null&&c.f!==undefined)return String(c.f);
-  if(c.v!==null&&c.v!==undefined)return String(c.v);
-  return'';
-}
-
-function esc(s){
-  return String(s||'')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
-}
-
-function escAttr(s){return esc(s)}
-</script>
-
 </body>
 </html>
