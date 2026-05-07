@@ -1,181 +1,59 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>志木お助け隊 回覧板</title>
-<meta property="og:title" content="志木お助け隊 回覧板">
-<meta property="og:description" content="地域のお知らせを見やすくまとめて表示">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">
-<meta property="og:image" content="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
-
-<style>
-*{box-sizing:border-box;}
-html,body{margin:0;padding:0;background:#eef3f8;font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;color:#17324d;-webkit-text-size-adjust:100%;}
-body{overflow-x:hidden;}
-.wrap{width:100%;max-width:680px;margin:0 auto;padding:12px;}
-.banner{width:100%;border-radius:24px;overflow:hidden;margin-bottom:14px;box-shadow:0 6px 20px rgba(0,0,0,.10);}
-.banner img{width:100%;display:block;}
-.card{background:#fff;border-radius:24px;padding:18px;margin-bottom:18px;box-shadow:0 4px 14px rgba(0,0,0,.08);}
-.date{font-size:14px;color:#5f7389;margin-bottom:10px;font-weight:700;}
-.title{font-size:28px;line-height:1.45;font-weight:900;margin-bottom:16px;color:#10263b;word-break:break-word;}
-.media-scroll{display:flex;overflow-x:auto;gap:10px;margin-bottom:16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
-.media-scroll::-webkit-scrollbar{height:8px;}
-.media-scroll::-webkit-scrollbar-thumb{background:#c9d7e4;border-radius:10px;}
-.media-item{flex:0 0 82%;scroll-snap-align:start;}
-.media-item img, .media-item iframe, .media-item video{width:100%;aspect-ratio:9/16;border:none;border-radius:18px;object-fit:cover;background:#000;}
-.detail{font-size:20px;line-height:1.95;color:#24384b;white-space:pre-wrap;word-break:break-word;margin-bottom:18px;}
-.btns{display:flex;flex-direction:column;gap:12px;margin-top:12px;}
-.btn{display:flex;align-items:center;justify-content:center;text-decoration:none;border-radius:16px;min-height:58px;font-size:19px;font-weight:900;border:none;cursor:pointer;width:100%;}
-.home-btn{background:#0b5ed7;color:#fff;}
-.apply-btn{background:#16a34a;color:#fff;}
-.share-area{margin-top:18px;padding-top:18px;border-top:1px solid #e3ebf2;}
-.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.share-btn{border:none;border-radius:16px;min-height:54px;font-size:17px;font-weight:900;color:#fff;cursor:pointer;}
-.fb{background:#1877f2;}
-.x{background:#000;}
-.line{background:#06c755;}
-.copy{background:#5f7389;}
-.copy-ok{background:#1d9d5c !important;}
-.loading, .empty{text-align:center;padding:40px 20px;font-size:22px;font-weight:900;color:#45627f;}
-.top-space{height:10px;}
-</style>
-</head>
-<body>
-
-<div class="wrap">
-  <div class="banner">
-    <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
-  </div>
-  <div id="board"><div class="loading">読み込み中...</div></div>
-  <div class="top-space"></div>
-</div>
-
 <script>
-const SHEET_ID = '1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
-const SHEET_NAME = '回覧板データー';
-const APP_URL = 'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
-
-const JSONP_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=${encodeURIComponent(SHEET_NAME)}&tqx=out:json;responseHandler=handleSheet`;
-
-function getParam(name){
-  return new URLSearchParams(window.location.search).get(name);
-}
-
-function escapeHtml(str){
-  if(!str) return '';
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-
-function normalize(v){
-  return v ? String(v).trim() : '';
-}
-
-function parseDriveImage(url){
-  if(!url) return '';
-  if(url.includes('thumbnail?id=')) return url;
-  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  return m ? 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w2000' : url;
-}
-
-function youtubeEmbed(url){
-  if(!url) return '';
-  if(url.includes('youtube.com/embed/')) return url;
-  if(url.includes('watch?v=')) return url.replace('watch?v=','embed/');
-  if(url.includes('youtu.be/')) return url.replace('youtu.be/','youtube.com/embed/');
-  if(url.includes('/shorts/')) return url.replace('/shorts/','/embed/');
-  return '';
-}
-
-function createMedia(url){
-  if(!url) return '';
-  const y = youtubeEmbed(url);
-  if(y) return `<div class="media-item"><iframe src="${y}" allowfullscreen loading="lazy"></iframe></div>`;
-  const lower = url.toLowerCase();
-  if(lower.includes('.jpg') || lower.includes('.jpeg') || lower.includes('.png') || lower.includes('.webp') || lower.includes('drive.google.com')){
-    return `<div class="media-item"><img src="${parseDriveImage(url)}" loading="lazy"></div>`;
-  }
-  if(lower.includes('.mp4') || lower.includes('.mov') || lower.includes('.webm')){
-    return `<div class="media-item"><video controls playsinline><source src="${url}"></video></div>`;
-  }
-  return '';
-}
-
-// 修正ポイント：シェアボタンの生成関数
-function buildShareButtons(shareUrl, title, id){
-  const encodedUrl = encodeURIComponent(shareUrl);
-  const encodedText = encodeURIComponent(title);
-  return `
-    <div class="share-area">
-      <div class="share-grid">
-        <button class="share-btn fb" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}','_blank')">Facebook</button>
-        <button class="share-btn x" onclick="window.open('https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}','_blank')">X</button>
-        <button class="share-btn line" onclick="window.open('https://social-plugins.line.me/lineit/share?url=${encodedUrl}','_blank')">LINE</button>
-        <button id="copybtn-${id}" class="share-btn copy" onclick="copyUrl('${shareUrl}','${id}')">URLコピー</button>
-      </div>
-    </div>
-  `;
-}
-
-async function copyUrl(url, id){
-  try {
-    await navigator.clipboard.writeText(url);
-    const btn = document.getElementById('copybtn-' + id);
-    if(btn){
-      btn.innerText = 'コピー完了';
-      btn.classList.add('copy-ok');
-      setTimeout(()=>{
-        btn.innerText = 'URLコピー';
-        btn.classList.remove('copy-ok');
-      }, 2000);
-    }
-  } catch(e) {
-    alert('コピーできませんでした');
-  }
-}
-
 window.handleSheet = function(json){
   const rows = json.table.rows || [];
   const board = document.getElementById('board');
+
   if(!rows.length){
     board.innerHTML = '<div class="empty">記事がありません</div>';
     return;
   }
 
   let items = [];
-  rows.forEach((r, index)=>{
+
+  rows.forEach((r, index) => {
     const c = r.c || [];
-    // スプレッドシートの列定義に合わせる（適宜インデックスを確認してください）
+
+    // 各項目の取得（存在しない場合に備えて空文字をデフォルトに）
+    const dateText = normalize(c[0]?.v);
+    const title    = normalize(c[1]?.v) || "無題のお知らせ"; // タイトルがないとシェアが崩れるため
+    const detail   = normalize(c[3]?.v);
+    const applyUrl = normalize(c[4]?.v);
+    const pageUrl  = normalize(c[5]?.v);
+    const mediaUrl = normalize(c[6]?.v);
+    
+    // 11列目(c[10])がなくても動作するようにデフォルト値を設定
+    const sortNum  = (c[10] && typeof c[10].v === 'number') ? c[10].v : 0;
+
+    const id = index + 1;
+
     items.push({
-      id: index, // 行番号をIDにする
-      dateText: normalize(c[0]?.v),
-      title: normalize(c[1]?.v),
-      detail: normalize(c[3]?.v),
-      applyUrl: normalize(c[4]?.v),
-      pageUrl: normalize(c[5]?.v),
-      mediaUrl: normalize(c[6]?.v),
-      sortNum: Number(c[10]?.v || 0)
+      id, dateText, title, detail, applyUrl, pageUrl, mediaUrl, sortNum
     });
   });
 
-  items.sort((a,b)=> b.sortNum - a.sortNum);
+  // 並び替え（エラー防止のため数値で比較）
+  items.sort((a, b) => b.sortNum - a.sortNum);
 
   const targetId = getParam('id');
   let html = '';
 
   items.forEach(item => {
-    const shareUrl = `${APP_URL}?id=${item.id}`;
+    // シェア用URLの生成
+    const shareUrl = APP_URL + '?id=' + item.id;
+
     html += `
       <div class="card" id="post-${item.id}">
         <div class="date">${escapeHtml(item.dateText)}</div>
         <div class="title">${escapeHtml(item.title)}</div>
         ${item.mediaUrl ? `<div class="media-scroll">${createMedia(item.mediaUrl)}</div>` : ''}
         <div class="detail">${escapeHtml(item.detail)}</div>
+
         <div class="btns">
           ${item.pageUrl ? `<a class="btn home-btn" href="${item.pageUrl}" target="_blank">市ホームページ</a>` : ''}
           ${item.applyUrl ? `<a class="btn apply-btn" href="${item.applyUrl}" target="_blank">申込みはこちら</a>` : ''}
         </div>
+
+        <!-- ここで確実にボタンを生成 -->
         ${buildShareButtons(shareUrl, item.title, item.id)}
       </div>
     `;
@@ -183,17 +61,12 @@ window.handleSheet = function(json){
 
   board.innerHTML = html;
 
-  if(targetId !== null){
-    setTimeout(()=>{
+  // スクロール処理
+  if(targetId){
+    setTimeout(() => {
       const el = document.getElementById('post-' + targetId);
       if(el) el.scrollIntoView({ behavior:'smooth', block:'start' });
     }, 500);
   }
 };
-
-const s = document.createElement('script');
-s.src = JSONP_URL;
-document.body.appendChild(s);
 </script>
-</body>
-</html>
