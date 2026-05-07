@@ -7,33 +7,123 @@
 
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:#eef3f8;font-family:sans-serif;color:#17324d}
-.wrap{max-width:680px;margin:0 auto;padding:12px}
-.banner{border-radius:22px;overflow:hidden;margin-bottom:14px;box-shadow:0 6px 18px rgba(0,0,0,.12)}
-.banner img{width:100%;display:block}
-.card{background:#fff;border-radius:22px;padding:18px;margin-bottom:18px;box-shadow:0 4px 14px rgba(0,0,0,.08)}
-.date{font-size:15px;font-weight:700;color:#60758a;margin-bottom:10px}
-.title{font-size:28px;line-height:1.45;font-weight:900;color:#10263b;margin-bottom:14px;word-break:break-word}
-.media-scroll{display:flex;gap:10px;overflow-x:auto;margin-bottom:16px}
-.media-item{flex:0 0 82%}
-.media-item img{width:100%;aspect-ratio:9/16;border-radius:18px;object-fit:cover;background:#000;border:0}
-.detail{font-size:20px;line-height:1.9;white-space:pre-wrap;word-break:break-word;margin-bottom:16px}
-.btns{display:flex;flex-direction:column;gap:12px}
-.btn{display:flex;align-items:center;justify-content:center;min-height:58px;border-radius:16px;text-decoration:none;font-size:19px;font-weight:900;color:#fff}
-.home-btn{background:#0b5ed7}
-.apply-btn{background:#16a34a}
-.share-area{margin-top:18px;padding-top:18px;border-top:1px solid #e3ebf2}
-.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.share-btn{display:flex;align-items:center;justify-content:center;text-decoration:none;min-height:54px;border:0;border-radius:16px;font-size:17px;font-weight:900;color:#fff;cursor:pointer}
-.fb{background:#1877f2}.x{background:#000}.line{background:#06c755}.copy{background:#5f7389}.copy-ok{background:#1d9d5c!important}
-.loading,.empty,.error{text-align:center;padding:40px;font-size:20px;font-weight:bold}
-.error{color:#b00020}
+html,body{
+  margin:0;
+  padding:0;
+  background:#eef3f8;
+  font-family:sans-serif;
+  color:#17324d;
+}
+
+.wrap{
+  max-width:680px;
+  margin:0 auto;
+  padding:12px;
+}
+
+.banner{
+  border-radius:22px;
+  overflow:hidden;
+  margin-bottom:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+.banner img{
+  width:100%;
+  display:block;
+}
+
+.card{
+  background:#fff;
+  border-radius:22px;
+  padding:18px;
+  margin-bottom:18px;
+  box-shadow:0 4px 14px rgba(0,0,0,.08);
+}
+
+.date{
+  font-size:15px;
+  font-weight:700;
+  color:#60758a;
+  margin-bottom:10px;
+}
+
+.title{
+  font-size:28px;
+  line-height:1.45;
+  font-weight:900;
+  color:#10263b;
+  margin-bottom:14px;
+  word-break:break-word;
+}
+
+.media-scroll{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  margin-bottom:16px;
+}
+
+.media-item{
+  flex:0 0 82%;
+}
+
+.media-item img{
+  width:100%;
+  aspect-ratio:9/16;
+  border-radius:18px;
+  object-fit:cover;
+  background:#000;
+  border:0;
+}
+
+.detail{
+  font-size:20px;
+  line-height:1.9;
+  white-space:pre-wrap;
+  word-break:break-word;
+  margin-bottom:16px;
+}
+
+.btns{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:58px;
+  border-radius:16px;
+  text-decoration:none;
+  font-size:19px;
+  font-weight:900;
+  color:#fff;
+}
+
+.home-btn{
+  background:#0b5ed7;
+}
+
+.apply-btn{
+  background:#16a34a;
+}
+
+.loading,.error{
+  text-align:center;
+  padding:40px;
+  font-size:20px;
+  font-weight:bold;
+}
 </style>
 </head>
 
 <body>
 
 <div class="wrap">
+
   <div class="banner">
     <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
   </div>
@@ -41,28 +131,20 @@ html,body{margin:0;padding:0;background:#eef3f8;font-family:sans-serif;color:#17
   <div id="board">
     <div class="loading">読み込み中...</div>
   </div>
+
 </div>
 
 <script>
-var SHEET_ID = '1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
-var SHEET_NAME = '回覧板データー';
-var APP_URL = 'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
+var SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
+var SHEET_NAME='回覧板データー';
 
 function v(c,i){
-  if(!c || !c[i]) return '';
-  if(c[i].f !== undefined && c[i].f !== null) return String(c[i].f).trim();
-  if(c[i].v !== undefined && c[i].v !== null) return String(c[i].v).trim();
-  return '';
-}
-
-function raw(c,i){
-  if(!c || !c[i]) return '';
-  if(c[i].v !== undefined && c[i].v !== null) return c[i].v;
-  return '';
+  if(!c || !c[i] || c[i].v===undefined || c[i].v===null) return '';
+  return String(c[i].v).trim();
 }
 
 function esc(s){
-  return String(s || '')
+  return String(s||'')
     .replace(/&/g,'&amp;')
     .replace(/</g,'&lt;')
     .replace(/>/g,'&gt;')
@@ -71,131 +153,95 @@ function esc(s){
 }
 
 function driveThumb(url){
-  var s = String(url || '');
-  var m = s.match(/\/d\/([a-zA-Z0-9_-]+)/) || s.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  if(m && m[1]){
-    return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w2000';
-  }
-  return url;
+  var m=String(url||'').match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m
+    ? 'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w2000'
+    : url;
 }
 
-function copyText(text,id){
-  var t = document.createElement('textarea');
-  t.value = text;
-  document.body.appendChild(t);
-  t.select();
-  document.execCommand('copy');
-  document.body.removeChild(t);
+window.handleSheet=function(json){
 
-  var b = document.getElementById('copybtn-' + id);
-  if(b){
-    b.innerText = 'コピー完了';
-    b.classList.add('copy-ok');
-    setTimeout(function(){
-      b.innerText = 'URLコピー';
-      b.classList.remove('copy-ok');
-    },2000);
-  }
-}
-
-window.handleSheet = function(json){
   try{
-    var rows = json.table.rows || [];
-    var items = [];
+
+    var rows=json.table.rows||[];
+    var items=[];
 
     rows.forEach(function(r,i){
-      var c = r.c || [];
-      var title = v(c,1);
-      if(!title) return;
+
+      var c=r.c||[];
+
+      if(!v(c,1)) return;
 
       items.push({
-        id: v(c,11) || String(i + 1),
-        date: v(c,0),
-        title: title,
-        media: v(c,2),
-        detail: v(c,3),
-        apply: v(c,4),
-        page: v(c,5),
-        sort: Number(raw(c,10) || 0)
+        date:v(c,0),
+        title:v(c,1),
+        media:v(c,2),
+        detail:v(c,3),
+        apply:v(c,4),
+        page:v(c,5),
+        sort:Number(v(c,10)||0)
       });
+
     });
 
-    items.sort(function(a,b){ return b.sort - a.sort; });
+    items.sort(function(a,b){
+      return b.sort-a.sort;
+    });
 
-    var target = new URLSearchParams(location.search).get('id');
-
-    if(target){
-      items.sort(function(a,b){
-        if(String(a.id) === String(target)) return -1;
-        if(String(b.id) === String(target)) return 1;
-        return b.sort - a.sort;
-      });
-    }
-
-    var html = '';
+    var html='';
 
     items.forEach(function(it){
-      var shareUrl = APP_URL + '?id=' + encodeURIComponent(it.id);
-      var fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl);
-      var xUrl = 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(shareUrl) + '&text=' + encodeURIComponent(it.title);
-      var lineUrl = 'https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(shareUrl);
 
-      html += '<div class="card" id="post-' + esc(it.id) + '">';
-      html += '<div class="date">' + esc(it.date) + '</div>';
-      html += '<div class="title">' + esc(it.title) + '</div>';
+      html += '<div class="card">';
+
+      html += '<div class="date">'+esc(it.date)+'</div>';
+
+      html += '<div class="title">'+esc(it.title)+'</div>';
 
       if(it.media){
-        html += '<div class="media-scroll"><div class="media-item"><img src="' + esc(driveThumb(it.media)) + '"></div></div>';
+        html += '<div class="media-scroll">';
+        html += '<div class="media-item">';
+        html += '<img src="'+esc(driveThumb(it.media))+'">';
+        html += '</div>';
+        html += '</div>';
       }
 
-      html += '<div class="detail">' + esc(it.detail) + '</div>';
+      html += '<div class="detail">'+esc(it.detail)+'</div>';
 
       html += '<div class="btns">';
+
       if(it.page){
-        html += '<a class="btn home-btn" href="' + esc(it.page) + '" target="_blank">詳しく見る</a>';
+        html += '<a class="btn home-btn" href="'+esc(it.page)+'" target="_blank">詳しく見る</a>';
       }
+
       if(it.apply){
-        html += '<a class="btn apply-btn" href="' + esc(it.apply) + '" target="_blank">申込みはこちら</a>';
+        html += '<a class="btn apply-btn" href="'+esc(it.apply)+'" target="_blank">申込みはこちら</a>';
       }
-      html += '</div>';
-
-      html += '<div class="share-area"><div class="share-grid">';
-      html += '<a class="share-btn fb" href="' + esc(fbUrl) + '" target="_blank">Facebook</a>';
-      html += '<a class="share-btn x" href="' + esc(xUrl) + '" target="_blank">X</a>';
-      html += '<a class="share-btn line" href="' + esc(lineUrl) + '" target="_blank">LINE</a>';
-      html += '<button id="copybtn-' + esc(it.id) + '" class="share-btn copy" data-url="' + esc(shareUrl) + '" data-id="' + esc(it.id) + '">URLコピー</button>';
-      html += '</div></div>';
 
       html += '</div>';
+
+      html += '</div>';
+
     });
 
-    document.getElementById('board').innerHTML = html || '<div class="empty">記事がありません</div>';
-
-    document.querySelectorAll('.copy').forEach(function(btn){
-      btn.addEventListener('click',function(){
-        copyText(btn.getAttribute('data-url'),btn.getAttribute('data-id'));
-      });
-    });
-
-    if(target){
-      setTimeout(function(){
-        var el = document.getElementById('post-' + target);
-        if(el){
-          el.scrollIntoView({behavior:'smooth',block:'start'});
-        }
-      },400);
-    }
+    document.getElementById('board').innerHTML=html;
 
   }catch(e){
-    document.getElementById('board').innerHTML = '<div class="error">読み込みエラー</div>';
+
+    document.getElementById('board').innerHTML='<div class="error">読み込みエラー</div>';
+
   }
+
 };
 
-var s = document.createElement('script');
-s.src = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?sheet=' + encodeURIComponent(SHEET_NAME) + '&tqx=out:json;responseHandler:handleSheet';
-s.onerror = function(){
-  document.getElementById('board').innerHTML = '<div class="error">スプレッドシートを読み込めません</div>';
-};
+var s=document.createElement('script');
+
+s.src='https://docs.google.com/spreadsheets/d/'+
+SHEET_ID+
+'/gviz/tq?sheet='+
+encodeURIComponent(SHEET_NAME)+
+'&tqx=out:json;responseHandler:handleSheet';
+
 document.body.appendChild(s);
 </script>
 
