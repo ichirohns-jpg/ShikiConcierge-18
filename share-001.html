@@ -6,21 +6,82 @@
 
 <title>ここに記事タイトル</title>
 
+<meta property="og:type" content="article">
 <meta property="og:title" content="ここに記事タイトル">
 <meta property="og:description" content="ここに記事説明文">
-<meta property="og:image" content="ここに画像URL">
+<meta property="og:image" content="ここに記事画像URL">
+<meta property="og:image:secure_url" content="ここに記事画像URL">
 <meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html">
-<meta property="og:type" content="article">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ここに記事タイトル">
 <meta name="twitter:description" content="ここに記事説明文">
-<meta name="twitter:image" content="ここに画像URL">
+<meta name="twitter:image" content="ここに記事画像URL">
 
-<meta http-equiv="refresh" content="1; url=https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html?id=1">
+<style>
+body{
+  margin:0;
+  background:#eef6ff;
+  font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+  color:#17324d;
+}
+.wrap{
+  max-width:680px;
+  margin:0 auto;
+  padding:18px 14px 40px;
+}
+.card{
+  background:#fff;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 8px 22px rgba(20,70,120,.12);
+}
+.main-img{
+  width:100%;
+  display:block;
+}
+.body{
+  padding:20px;
+}
+h1{
+  font-size:28px;
+  line-height:1.4;
+  color:#0d5fa8;
+  margin:0 0 14px;
+}
+p{
+  font-size:18px;
+  line-height:1.8;
+  margin:0 0 20px;
+  white-space:pre-wrap;
+}
+.btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:58px;
+  border-radius:18px;
+  background:#0d5fa8;
+  color:#fff;
+  text-decoration:none;
+  font-size:18px;
+  font-weight:900;
+}
+</style>
 </head>
 
 <body>
-記事ページへ移動します。
+<div class="wrap">
+  <div class="card">
+    <img class="main-img" src="ここに記事画像URL" alt="">
+    <div class="body">
+      <h1>ここに記事タイトル</h1>
+      <p>ここに記事説明文</p>
+      <a class="btn" href="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html?id=1">
+        記事を開く
+      </a>
+    </div>
+  </div>
+</div>
 </body>
 </html>
