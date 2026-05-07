@@ -13,7 +13,7 @@
 <meta property="og:image" content="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
 
 <style>
-*{box-sizing:border-box;}
+*{box-sizing:border-box}
 
 html,body{
   margin:0;
@@ -57,7 +57,7 @@ body{
 }
 
 .date{
-  font-size:14px;
+  font-size:15px;
   color:#5f7389;
   margin-bottom:10px;
   font-weight:700;
@@ -79,15 +79,6 @@ body{
   margin-bottom:16px;
   scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;
-}
-
-.media-scroll::-webkit-scrollbar{
-  height:8px;
-}
-
-.media-scroll::-webkit-scrollbar-thumb{
-  background:#c9d7e4;
-  border-radius:10px;
 }
 
 .media-item{
@@ -168,25 +159,11 @@ body{
   cursor:pointer;
 }
 
-.fb{
-  background:#1877f2;
-}
-
-.x{
-  background:#000;
-}
-
-.line{
-  background:#06c755;
-}
-
-.copy{
-  background:#5f7389;
-}
-
-.copy-ok{
-  background:#1d9d5c !important;
-}
+.fb{background:#1877f2}
+.x{background:#000}
+.line{background:#06c755}
+.copy{background:#5f7389}
+.copy-ok{background:#1d9d5c!important}
 
 .loading,
 .empty{
@@ -195,6 +172,17 @@ body{
   font-size:22px;
   font-weight:900;
   color:#45627f;
+}
+
+.error{
+  background:#fff;
+  border-radius:20px;
+  margin:20px 0;
+  padding:20px;
+  font-size:18px;
+  line-height:1.7;
+  color:#b00020;
+  font-weight:800;
 }
 
 .top-space{
@@ -220,24 +208,37 @@ body{
 </div>
 
 <script>
-const SHEET_ID = '1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
-const SHEET_NAME = '回覧板データー';
+var SHEET_ID = '1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
+var SHEET_NAME = '回覧板データー';
+var APP_URL = 'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
 
-const APP_URL = 'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
-
-const JSONP_URL =
+var JSONP_URL =
   'https://docs.google.com/spreadsheets/d/' +
   SHEET_ID +
   '/gviz/tq?sheet=' +
   encodeURIComponent(SHEET_NAME) +
   '&tqx=out:json;responseHandler=handleSheet';
 
+function cellValue(cells,index){
+  if(!cells || !cells[index]) return '';
+  if(cells[index].f !== null && cells[index].f !== undefined) return String(cells[index].f).trim();
+  if(cells[index].v !== null && cells[index].v !== undefined) return String(cells[index].v).trim();
+  return '';
+}
+
+function rawValue(cells,index){
+  if(!cells || !cells[index]) return '';
+  if(cells[index].v !== null && cells[index].v !== undefined) return cells[index].v;
+  return '';
+}
+
 function getParam(name){
-  return new URLSearchParams(window.location.search).get(name);
+  var params = new URLSearchParams(window.location.search);
+  return params.get(name);
 }
 
 function escapeHtml(str){
-  if(!str) return '';
+  if(str === null || str === undefined) return '';
   return String(str)
     .replace(/&/g,'&amp;')
     .replace(/</g,'&lt;')
@@ -246,133 +247,102 @@ function escapeHtml(str){
     .replace(/'/g,'&#39;');
 }
 
-function normalize(v){
-  return v !== null && v !== undefined ? String(v).trim() : '';
+function safeAttr(str){
+  return escapeHtml(str).replace(/`/g,'');
 }
 
-function parseDriveImage(url){
+function normalize(str){
+  if(str === null || str === undefined) return '';
+  return String(str).trim();
+}
+
+function parseDriveId(url){
   if(!url) return '';
+  var m1 = String(url).match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(m1 && m1[1]) return m1[1];
 
-  if(url.includes('thumbnail?id=')){
-    return url;
-  }
+  var m2 = String(url).match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if(m2 && m2[1]) return m2[1];
 
-  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return '';
+}
 
-  if(m){
-    return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w2000';
-  }
-
+function driveImage(url){
+  var id = parseDriveId(url);
+  if(id) return 'https://drive.google.com/thumbnail?id=' + id + '&sz=w2000';
   return url;
 }
 
-function parseDriveVideo(url){
-  if(!url) return '';
-
-  if(url.includes('/preview')){
-    return url;
-  }
-
-  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-
-  if(m){
-    return 'https://drive.google.com/file/d/' + m[1] + '/preview';
-  }
-
-  return '';
+function drivePreview(url){
+  var id = parseDriveId(url);
+  if(id) return 'https://drive.google.com/file/d/' + id + '/preview';
+  return url;
 }
 
 function youtubeEmbed(url){
   if(!url) return '';
 
-  if(url.includes('youtube.com/embed/')){
-    return url;
-  }
+  var u = String(url);
 
-  if(url.includes('watch?v=')){
-    return url.replace('watch?v=','embed/');
-  }
+  if(u.indexOf('youtube.com/embed/') !== -1) return u;
 
-  if(url.includes('youtu.be/')){
-    return url.replace('youtu.be/','youtube.com/embed/');
-  }
+  var m1 = u.match(/[?&]v=([^&]+)/);
+  if(m1 && m1[1]) return 'https://www.youtube.com/embed/' + m1[1];
 
-  if(url.includes('/shorts/')){
-    return url.replace('/shorts/','/embed/');
-  }
+  var m2 = u.match(/youtu\.be\/([^?&]+)/);
+  if(m2 && m2[1]) return 'https://www.youtube.com/embed/' + m2[1];
+
+  var m3 = u.match(/youtube\.com\/shorts\/([^?&]+)/);
+  if(m3 && m3[1]) return 'https://www.youtube.com/embed/' + m3[1];
 
   return '';
 }
 
-function createMedia(url){
-  if(!url) return '';
+function splitUrls(text){
+  if(!text) return [];
+  return String(text)
+    .split(/\n|,|　|\s+/)
+    .map(function(v){return v.trim();})
+    .filter(function(v){return v.indexOf('http') === 0;});
+}
 
-  const parts = String(url)
-    .split(/\n|,|\s+/)
-    .map(v => v.trim())
-    .filter(v => v);
+function createMedia(urlText){
+  var urls = splitUrls(urlText);
+  var html = '';
 
-  let html = '';
+  urls.forEach(function(url){
 
-  parts.forEach(oneUrl => {
+    var lower = url.toLowerCase();
+    var yt = youtubeEmbed(url);
 
-    const y = youtubeEmbed(oneUrl);
-
-    if(y){
-      html += `
-        <div class="media-item">
-          <iframe src="${escapeHtml(y)}" allowfullscreen loading="lazy"></iframe>
-        </div>
-      `;
-      return;
-    }
-
-    const lower = oneUrl.toLowerCase();
-
-    if(
-      lower.includes('.mp4') ||
-      lower.includes('.mov') ||
-      lower.includes('.webm')
-    ){
-      html += `
-        <div class="media-item">
-          <video controls playsinline>
-            <source src="${escapeHtml(oneUrl)}">
-          </video>
-        </div>
-      `;
+    if(yt){
+      html += '<div class="media-item"><iframe src="' + safeAttr(yt) + '" allowfullscreen loading="lazy"></iframe></div>';
       return;
     }
 
     if(
-      lower.includes('drive.google.com') &&
-      !lower.includes('thumbnail') &&
-      !lower.includes('.jpg') &&
-      !lower.includes('.jpeg') &&
-      !lower.includes('.png') &&
-      !lower.includes('.webp')
+      lower.indexOf('.mp4') !== -1 ||
+      lower.indexOf('.mov') !== -1 ||
+      lower.indexOf('.webm') !== -1 ||
+      lower.indexOf('.m4v') !== -1
     ){
-      const preview = parseDriveVideo(oneUrl);
-      html += `
-        <div class="media-item">
-          <iframe src="${escapeHtml(preview)}" allowfullscreen loading="lazy"></iframe>
-        </div>
-      `;
+      html += '<div class="media-item"><video controls playsinline><source src="' + safeAttr(url) + '"></video></div>';
+      return;
+    }
+
+    if(lower.indexOf('drive.google.com') !== -1){
+      html += '<div class="media-item"><img src="' + safeAttr(driveImage(url)) + '" loading="lazy"></div>';
       return;
     }
 
     if(
-      lower.includes('.jpg') ||
-      lower.includes('.jpeg') ||
-      lower.includes('.png') ||
-      lower.includes('.webp') ||
-      lower.includes('thumbnail?id=')
+      lower.indexOf('.jpg') !== -1 ||
+      lower.indexOf('.jpeg') !== -1 ||
+      lower.indexOf('.png') !== -1 ||
+      lower.indexOf('.webp') !== -1 ||
+      lower.indexOf('.gif') !== -1
     ){
-      html += `
-        <div class="media-item">
-          <img src="${escapeHtml(parseDriveImage(oneUrl))}" loading="lazy">
-        </div>
-      `;
+      html += '<div class="media-item"><img src="' + safeAttr(url) + '" loading="lazy"></div>';
       return;
     }
 
@@ -383,242 +353,239 @@ function createMedia(url){
 
 function buildShareButtons(shareUrl,title,id){
 
-  const encodedUrl = encodeURIComponent(shareUrl);
-  const encodedText = encodeURIComponent(title || '志木お助け隊 回覧板');
+  var encodedUrl = encodeURIComponent(shareUrl);
+  var encodedText = encodeURIComponent(title || '志木お助け隊 回覧板');
 
-  const fbUrl =
+  var fbUrl =
     'https://www.facebook.com/sharer/sharer.php?u=' +
     encodedUrl;
 
-  const xUrl =
+  var xUrl =
     'https://twitter.com/intent/tweet?url=' +
     encodedUrl +
     '&text=' +
     encodedText;
 
-  const lineUrl =
+  var lineUrl =
     'https://social-plugins.line.me/lineit/share?url=' +
     encodedUrl;
 
-  return `
-    <div class="share-area">
-      <div class="share-grid">
+  var safeId = safeAttr(id);
+  var safeShare = safeAttr(shareUrl);
 
-        <button
-          class="share-btn fb"
-          onclick="window.open('${fbUrl}','_blank')">
-          Facebook
-        </button>
-
-        <button
-          class="share-btn x"
-          onclick="window.open('${xUrl}','_blank')">
-          X
-        </button>
-
-        <button
-          class="share-btn line"
-          onclick="window.open('${lineUrl}','_blank')">
-          LINE
-        </button>
-
-        <button
-          id="copybtn-${escapeHtml(id)}"
-          class="share-btn copy"
-          onclick="copyUrl('${escapeHtml(shareUrl)}','${escapeHtml(id)}')">
-          URLコピー
-        </button>
-
-      </div>
-    </div>
-  `;
+  return ''
+    + '<div class="share-area">'
+    +   '<div class="share-grid">'
+    +     '<button class="share-btn fb" onclick="window.open(\'' + fbUrl + '\',\'_blank\')">Facebook</button>'
+    +     '<button class="share-btn x" onclick="window.open(\'' + xUrl + '\',\'_blank\')">X</button>'
+    +     '<button class="share-btn line" onclick="window.open(\'' + lineUrl + '\',\'_blank\')">LINE</button>'
+    +     '<button id="copybtn-' + safeId + '" class="share-btn copy" onclick="copyUrl(\'' + safeShare + '\',\'' + safeId + '\')">URLコピー</button>'
+    +   '</div>'
+    + '</div>';
 }
 
-async function copyUrl(url,id){
+function copyUrl(url,id){
 
-  try{
+  if(navigator.clipboard && navigator.clipboard.writeText){
 
-    await navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(url).then(function(){
+      copyDone(id);
+    }).catch(function(){
+      fallbackCopy(url,id);
+    });
 
-    const btn = document.getElementById('copybtn-' + id);
-
-    if(btn){
-      btn.innerText = 'コピー完了';
-      btn.classList.add('copy-ok');
-
-      setTimeout(()=>{
-        btn.innerText = 'URLコピー';
-        btn.classList.remove('copy-ok');
-      },2000);
-    }
-
-  }catch(e){
-
-    const textarea = document.createElement('textarea');
-    textarea.value = url;
-    document.body.appendChild(textarea);
-    textarea.select();
-
-    try{
-      document.execCommand('copy');
-
-      const btn = document.getElementById('copybtn-' + id);
-
-      if(btn){
-        btn.innerText = 'コピー完了';
-        btn.classList.add('copy-ok');
-
-        setTimeout(()=>{
-          btn.innerText = 'URLコピー';
-          btn.classList.remove('copy-ok');
-        },2000);
-      }
-
-    }catch(err){
-      alert('コピーできませんでした');
-    }
-
-    document.body.removeChild(textarea);
-
+  }else{
+    fallbackCopy(url,id);
   }
 
 }
 
-window.handleSheet = function(json){
+function fallbackCopy(url,id){
+  var textarea = document.createElement('textarea');
+  textarea.value = url;
+  textarea.style.position = 'fixed';
+  textarea.style.left = '-9999px';
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
 
-  const rows = json.table.rows || [];
-  const board = document.getElementById('board');
+  try{
+    document.execCommand('copy');
+    copyDone(id);
+  }catch(e){
+    alert('コピーできませんでした');
+  }
 
-  if(!rows.length){
+  document.body.removeChild(textarea);
+}
+
+function copyDone(id){
+  var btn = document.getElementById('copybtn-' + id);
+  if(!btn) return;
+
+  btn.innerText = 'コピー完了';
+  btn.classList.add('copy-ok');
+
+  setTimeout(function(){
+    btn.innerText = 'URLコピー';
+    btn.classList.remove('copy-ok');
+  },2000);
+}
+
+function buildItems(rows){
+
+  var items = [];
+
+  rows.forEach(function(r,index){
+
+    var c = r.c || [];
+
+    var title = cellValue(c,1);
+
+    if(!title) return;
+
+    var articleId = cellValue(c,11);
+
+    if(!articleId){
+      articleId = String(index + 1);
+    }
+
+    var sortRaw = rawValue(c,10);
+    var sortNum = Number(sortRaw);
+
+    if(!sortNum){
+      sortNum = 0;
+    }
+
+    items.push({
+      id: articleId,
+      dateText: cellValue(c,0),
+      title: title,
+      detail: cellValue(c,3),
+      applyUrl: cellValue(c,4),
+      pageUrl: cellValue(c,5),
+      mediaUrl: cellValue(c,6),
+      sortNum: sortNum
+    });
+
+  });
+
+  return items;
+}
+
+function renderItems(items){
+
+  var board = document.getElementById('board');
+  var targetId = getParam('id');
+
+  items.sort(function(a,b){
+    return b.sortNum - a.sortNum;
+  });
+
+  if(targetId !== null && targetId !== ''){
+    items.sort(function(a,b){
+      if(String(a.id) === String(targetId)) return -1;
+      if(String(b.id) === String(targetId)) return 1;
+      return b.sortNum - a.sortNum;
+    });
+  }
+
+  var html = '';
+
+  items.forEach(function(item){
+
+    var shareUrl =
+      APP_URL + '?id=' + encodeURIComponent(item.id);
+
+    var mediaHtml = createMedia(item.mediaUrl);
+
+    html += ''
+      + '<div class="card" id="post-' + safeAttr(item.id) + '">'
+      +   '<div class="date">' + escapeHtml(item.dateText) + '</div>'
+      +   '<div class="title">' + escapeHtml(item.title) + '</div>';
+
+    if(mediaHtml){
+      html += '<div class="media-scroll">' + mediaHtml + '</div>';
+    }
+
+    html += ''
+      +   '<div class="detail">' + escapeHtml(item.detail) + '</div>'
+      +   '<div class="btns">';
+
+    if(item.pageUrl){
+      html += '<a class="btn home-btn" href="' + safeAttr(item.pageUrl) + '" target="_blank">市ホームページ</a>';
+    }
+
+    if(item.applyUrl){
+      html += '<a class="btn apply-btn" href="' + safeAttr(item.applyUrl) + '" target="_blank">申込みはこちら</a>';
+    }
+
+    html += ''
+      +   '</div>'
+      +   buildShareButtons(shareUrl,item.title,item.id)
+      + '</div>';
+
+  });
+
+  if(!html){
     board.innerHTML = '<div class="empty">記事がありません</div>';
     return;
   }
 
-  let items = [];
-
-  rows.forEach((r,index)=>{
-
-    const c = r.c || [];
-
-    const title = normalize(c[1]?.v);
-
-    if(!title){
-      return;
-    }
-
-    items.push({
-      id: normalize(c[11]?.v || index + 1),
-      dateText: normalize(c[0]?.v),
-      title: title,
-      detail: normalize(c[3]?.v),
-      applyUrl: normalize(c[4]?.v),
-      pageUrl: normalize(c[5]?.v),
-      mediaUrl: normalize(c[6]?.v),
-      sortNum: Number(c[10]?.v || 0)
-    });
-
-  });
-
-  items.sort((a,b)=> b.sortNum - a.sortNum);
-
-  const targetId = getParam('id');
-
-  if(targetId !== null && targetId !== ''){
-
-    items.sort((a,b)=>{
-
-      if(String(a.id) === String(targetId)) return -1;
-      if(String(b.id) === String(targetId)) return 1;
-
-      return b.sortNum - a.sortNum;
-
-    });
-
-  }
-
-  let html = '';
-
-  items.forEach(item=>{
-
-    const shareUrl =
-      APP_URL + '?id=' + encodeURIComponent(item.id);
-
-    const mediaHtml = createMedia(item.mediaUrl);
-
-    html += `
-      <div class="card" id="post-${escapeHtml(item.id)}">
-
-        <div class="date">
-          ${escapeHtml(item.dateText)}
-        </div>
-
-        <div class="title">
-          ${escapeHtml(item.title)}
-        </div>
-
-        ${
-          mediaHtml
-          ?
-          `<div class="media-scroll">${mediaHtml}</div>`
-          :
-          ''
-        }
-
-        <div class="detail">
-          ${escapeHtml(item.detail)}
-        </div>
-
-        <div class="btns">
-
-          ${
-            item.pageUrl
-            ?
-            `<a class="btn home-btn" href="${escapeHtml(item.pageUrl)}" target="_blank">市ホームページ</a>`
-            :
-            ''
-          }
-
-          ${
-            item.applyUrl
-            ?
-            `<a class="btn apply-btn" href="${escapeHtml(item.applyUrl)}" target="_blank">申込みはこちら</a>`
-            :
-            ''
-          }
-
-        </div>
-
-        ${buildShareButtons(shareUrl,item.title,item.id)}
-
-      </div>
-    `;
-
-  });
-
   board.innerHTML = html;
 
   if(targetId !== null && targetId !== ''){
-
-    setTimeout(()=>{
-
-      const el = document.getElementById('post-' + targetId);
-
+    setTimeout(function(){
+      var el = document.getElementById('post-' + targetId);
       if(el){
         el.scrollIntoView({
           behavior:'smooth',
           block:'start'
         });
       }
-
     },500);
+  }
+}
+
+window.handleSheet = function(json){
+
+  try{
+
+    var rows = [];
+
+    if(json && json.table && json.table.rows){
+      rows = json.table.rows;
+    }
+
+    if(!rows.length){
+      document.getElementById('board').innerHTML =
+        '<div class="empty">記事がありません</div>';
+      return;
+    }
+
+    var items = buildItems(rows);
+    renderItems(items);
+
+  }catch(e){
+
+    document.getElementById('board').innerHTML =
+      '<div class="error">読み込みエラーです。コードをもう一度貼り直してください。</div>';
 
   }
 
 };
 
-const s = document.createElement('script');
-s.src = JSONP_URL;
-document.body.appendChild(s);
+function loadSheet(){
+  var s = document.createElement('script');
+  s.src = JSONP_URL;
+  s.onerror = function(){
+    document.getElementById('board').innerHTML =
+      '<div class="error">スプレッドシートを読み込めませんでした。</div>';
+  };
+  document.body.appendChild(s);
+}
+
+loadSheet();
 </script>
 
 </body>
