@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
 <title>志木お助け隊 回覧板</title>
 
 <meta property="og:title" content="志木お助け隊 回覧板">
@@ -12,7 +13,9 @@
 <meta property="og:image" content="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 html,body{
   margin:0;
@@ -20,7 +23,6 @@ html,body{
   background:#eef3f8;
   font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
   color:#17324d;
-  -webkit-text-size-adjust:100%;
 }
 
 body{
@@ -152,11 +154,25 @@ body{
   cursor:pointer;
 }
 
-.fb{background:#1877f2}
-.x{background:#000}
-.line{background:#06c755}
-.copy{background:#5f7389}
-.copy-ok{background:#1d9d5c!important}
+.fb{
+  background:#1877f2;
+}
+
+.x{
+  background:#000;
+}
+
+.line{
+  background:#06c755;
+}
+
+.copy{
+  background:#5f7389;
+}
+
+.copy-ok{
+  background:#1d9d5c!important;
+}
 
 .loading,
 .empty,
@@ -180,7 +196,7 @@ body{
 <div class="wrap">
 
   <div class="banner">
-    <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="志木お助け隊 回覧板">
+    <img src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
   </div>
 
   <div id="board">
@@ -190,321 +206,302 @@ body{
 </div>
 
 <script>
-var SHEET_ID = '1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
-var SHEET_NAME = '回覧板データー';
-var APP_URL = 'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
+var SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
+var SHEET_NAME='回覧板データー';
+var APP_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
 
-var JSONP_URL =
-  'https://docs.google.com/spreadsheets/d/' +
-  SHEET_ID +
-  '/gviz/tq?sheet=' +
-  encodeURIComponent(SHEET_NAME) +
-  '&tqx=out:json;responseHandler=handleSheet';
+var JSONP_URL=
+'https://docs.google.com/spreadsheets/d/'+
+SHEET_ID+
+'/gviz/tq?sheet='+
+encodeURIComponent(SHEET_NAME)+
+'&tqx=out:json;responseHandler=handleSheet';
 
 function getCell(c,i){
-  if(!c || !c[i]) return '';
-  if(c[i].f !== undefined && c[i].f !== null) return String(c[i].f).trim();
-  if(c[i].v !== undefined && c[i].v !== null) return String(c[i].v).trim();
-  return '';
-}
-
-function getRaw(c,i){
-  if(!c || !c[i]) return '';
-  if(c[i].v !== undefined && c[i].v !== null) return c[i].v;
+  if(!c||!c[i]) return '';
+  if(c[i].v!==undefined&&c[i].v!==null) return String(c[i].v).trim();
   return '';
 }
 
 function esc(s){
-  return String(s || '')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
+  return String(s||'')
+  .replace(/&/g,'&amp;')
+  .replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;')
+  .replace(/'/g,'&#39;');
 }
 
 function getParam(name){
-  return new URLSearchParams(window.location.search).get(name);
+  return new URLSearchParams(location.search).get(name);
 }
 
 function getDriveId(url){
-  var s = String(url || '');
-  var m1 = s.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if(m1 && m1[1]) return m1[1];
+  var m=String(url||'').match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(m&&m[1]) return m[1];
 
-  var m2 = s.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-  if(m2 && m2[1]) return m2[1];
+  var m2=String(url||'').match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if(m2&&m2[1]) return m2[1];
 
   return '';
 }
 
 function driveThumb(url){
-  var id = getDriveId(url);
+  var id=getDriveId(url);
   if(id){
-    return 'https://drive.google.com/thumbnail?id=' + id + '&sz=w2000';
+    return 'https://drive.google.com/thumbnail?id='+id+'&sz=w2000';
   }
   return url;
 }
 
 function youtubeEmbed(url){
-  var s = String(url || '');
 
-  if(s.indexOf('youtube.com/embed/') !== -1){
+  var s=String(url||'');
+
+  if(s.indexOf('youtube.com/embed/')>-1){
     return s;
   }
 
-  var m1 = s.match(/[?&]v=([^&]+)/);
-  if(m1 && m1[1]){
-    return 'https://www.youtube.com/embed/' + m1[1];
+  var m1=s.match(/[?&]v=([^&]+)/);
+  if(m1&&m1[1]){
+    return 'https://www.youtube.com/embed/'+m1[1];
   }
 
-  var m2 = s.match(/youtu\.be\/([^?&]+)/);
-  if(m2 && m2[1]){
-    return 'https://www.youtube.com/embed/' + m2[1];
+  var m2=s.match(/youtu\.be\/([^?&]+)/);
+  if(m2&&m2[1]){
+    return 'https://www.youtube.com/embed/'+m2[1];
   }
 
-  var m3 = s.match(/youtube\.com\/shorts\/([^?&]+)/);
-  if(m3 && m3[1]){
-    return 'https://www.youtube.com/embed/' + m3[1];
+  var m3=s.match(/youtube\.com\/shorts\/([^?&]+)/);
+  if(m3&&m3[1]){
+    return 'https://www.youtube.com/embed/'+m3[1];
   }
 
   return '';
 }
 
 function splitUrls(text){
-  return String(text || '')
-    .split(/\n|,|　|\s+/)
-    .map(function(x){return x.trim();})
-    .filter(function(x){return x.indexOf('http') === 0;});
+  return String(text||'')
+  .split(/\n|,|　|\s+/)
+  .map(function(x){
+    return x.trim();
+  })
+  .filter(function(x){
+    return x.indexOf('http')===0;
+  });
 }
 
-function makeMedia(text){
-  var urls = splitUrls(text);
-  var html = '';
+function mediaHtml(text){
+
+  var urls=splitUrls(text);
+  var html='';
 
   urls.forEach(function(url){
 
-    var lower = url.toLowerCase();
-    var yt = youtubeEmbed(url);
+    var lower=url.toLowerCase();
+    var yt=youtubeEmbed(url);
 
     if(yt){
-      html += '<div class="media-item"><iframe src="' + esc(yt) + '" allowfullscreen loading="lazy"></iframe></div>';
+      html+='<div class="media-item"><iframe src="'+esc(yt)+'" allowfullscreen loading="lazy"></iframe></div>';
       return;
     }
 
     if(
-      lower.indexOf('.mp4') !== -1 ||
-      lower.indexOf('.mov') !== -1 ||
-      lower.indexOf('.webm') !== -1 ||
-      lower.indexOf('.m4v') !== -1
+      lower.indexOf('.mp4')>-1||
+      lower.indexOf('.mov')>-1||
+      lower.indexOf('.webm')>-1
     ){
-      html += '<div class="media-item"><video controls playsinline><source src="' + esc(url) + '"></video></div>';
+      html+='<div class="media-item"><video controls playsinline><source src="'+esc(url)+'"></video></div>';
       return;
     }
 
-    html += '<div class="media-item"><img src="' + esc(driveThumb(url)) + '" loading="lazy"></div>';
+    html+='<div class="media-item"><img src="'+esc(driveThumb(url))+'" loading="lazy"></div>';
 
   });
 
   return html;
 }
 
-function shareButtons(shareUrl,title,id){
-  var eu = encodeURIComponent(shareUrl);
-  var et = encodeURIComponent(title || '志木お助け隊 回覧板');
+function shareButtons(url,title,id){
 
-  var fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + eu;
-  var xUrl = 'https://twitter.com/intent/tweet?url=' + eu + '&text=' + et;
-  var lineUrl = 'https://social-plugins.line.me/lineit/share?url=' + eu;
+  var eu=encodeURIComponent(url);
+  var et=encodeURIComponent(title||'志木お助け隊 回覧板');
 
   return ''
-    + '<div class="share-area">'
-    + '<div class="share-grid">'
-    + '<button class="share-btn fb" onclick="window.open(\'' + fbUrl + '\',\'_blank\')">Facebook</button>'
-    + '<button class="share-btn x" onclick="window.open(\'' + xUrl + '\',\'_blank\')">X</button>'
-    + '<button class="share-btn line" onclick="window.open(\'' + lineUrl + '\',\'_blank\')">LINE</button>'
-    + '<button id="copybtn-' + esc(id) + '" class="share-btn copy" onclick="copyUrl(\'' + esc(shareUrl) + '\',\'' + esc(id) + '\')">URLコピー</button>'
-    + '</div>'
-    + '</div>';
+  +'<div class="share-area">'
+  +'<div class="share-grid">'
+
+  +'<button class="share-btn fb" onclick="window.open(\'https://www.facebook.com/sharer/sharer.php?u='+eu+'\',\'_blank\')">Facebook</button>'
+
+  +'<button class="share-btn x" onclick="window.open(\'https://twitter.com/intent/tweet?url='+eu+'&text='+et+'\',\'_blank\')">X</button>'
+
+  +'<button class="share-btn line" onclick="window.open(\'https://social-plugins.line.me/lineit/share?url='+eu+'\',\'_blank\')">LINE</button>'
+
+  +'<button id="copybtn-'+esc(id)+'" class="share-btn copy" onclick="copyUrl(\''+esc(url)+'\',\''+esc(id)+'\')">URLコピー</button>'
+
+  +'</div>'
+  +'</div>';
 }
 
 function copyUrl(url,id){
-  if(navigator.clipboard && navigator.clipboard.writeText){
+
+  if(navigator.clipboard){
+
     navigator.clipboard.writeText(url).then(function(){
-      copyDone(id);
-    }).catch(function(){
-      fallbackCopy(url,id);
+      done(id);
     });
+
   }else{
-    fallbackCopy(url,id);
-  }
-}
 
-function fallbackCopy(url,id){
-  var t = document.createElement('textarea');
-  t.value = url;
-  t.style.position = 'fixed';
-  t.style.left = '-9999px';
-  document.body.appendChild(t);
-  t.focus();
-  t.select();
-
-  try{
+    var t=document.createElement('textarea');
+    t.value=url;
+    document.body.appendChild(t);
+    t.select();
     document.execCommand('copy');
-    copyDone(id);
-  }catch(e){
-    alert('コピーできませんでした');
+    document.body.removeChild(t);
+
+    done(id);
+
   }
 
-  document.body.removeChild(t);
 }
 
-function copyDone(id){
-  var b = document.getElementById('copybtn-' + id);
+function done(id){
+
+  var b=document.getElementById('copybtn-'+id);
+
   if(!b) return;
 
-  b.innerText = 'コピー完了';
+  b.innerText='コピー完了';
   b.classList.add('copy-ok');
 
   setTimeout(function(){
-    b.innerText = 'URLコピー';
+    b.innerText='URLコピー';
     b.classList.remove('copy-ok');
   },2000);
+
 }
 
-window.handleSheet = function(json){
+window.handleSheet=function(json){
 
   try{
 
-    var rows = [];
-    if(json && json.table && json.table.rows){
-      rows = json.table.rows;
-    }
+    var rows=json.table.rows||[];
 
-    if(!rows.length){
-      document.getElementById('board').innerHTML = '<div class="empty">記事がありません</div>';
-      return;
-    }
-
-    var items = [];
+    var items=[];
 
     rows.forEach(function(r,index){
 
-      var c = r.c || [];
+      var c=r.c||[];
 
-      var dateText = getCell(c,0);
-      var title = getCell(c,1);
-      var media = getCell(c,2);
-      var detail = getCell(c,3);
-      var apply = getCell(c,4);
-      var page = getCell(c,5);
-      var sortRaw = getRaw(c,10);
-      var articleId = getCell(c,11);
+      var title=getCell(c,1);
 
-      if(!title){
-        return;
-      }
-
-      if(!articleId){
-        articleId = String(index + 1);
-      }
-
-      var sortNum = Number(sortRaw);
-      if(!sortNum){
-        sortNum = 0;
-      }
+      if(!title) return;
 
       items.push({
-        id: articleId,
-        date: dateText,
-        title: title,
-        media: media,
-        detail: detail,
-        apply: apply,
-        page: page,
-        sort: sortNum
+        id:getCell(c,11)||String(index+1),
+        date:getCell(c,0),
+        title:title,
+        media:getCell(c,2),
+        detail:getCell(c,3),
+        apply:getCell(c,4),
+        page:getCell(c,5),
+        sort:Number(getCell(c,10)||0)
       });
 
     });
 
     items.sort(function(a,b){
-      return b.sort - a.sort;
+      return b.sort-a.sort;
     });
 
-    var target = getParam('id');
+    var target=getParam('id');
 
     if(target){
+
       items.sort(function(a,b){
-        if(String(a.id) === String(target)) return -1;
-        if(String(b.id) === String(target)) return 1;
-        return b.sort - a.sort;
+
+        if(String(a.id)===String(target)) return -1;
+        if(String(b.id)===String(target)) return 1;
+
+        return b.sort-a.sort;
+
       });
+
     }
 
-    var html = '';
+    var html='';
 
     items.forEach(function(it){
 
-      var share = APP_URL + '?id=' + encodeURIComponent(it.id);
-      var mediaHtml = makeMedia(it.media);
+      var share=
+      APP_URL+'?id='+encodeURIComponent(it.id);
 
-      html += ''
-        + '<div class="card" id="post-' + esc(it.id) + '">'
-        + '<div class="date">' + esc(it.date) + '</div>'
-        + '<div class="title">' + esc(it.title) + '</div>';
+      html+=''
+      +'<div class="card" id="post-'+esc(it.id)+'">'
 
-      if(mediaHtml){
-        html += '<div class="media-scroll">' + mediaHtml + '</div>';
-      }
+      +'<div class="date">'+esc(it.date)+'</div>'
 
-      html += ''
-        + '<div class="detail">' + esc(it.detail) + '</div>'
-        + '<div class="btns">';
+      +'<div class="title">'+esc(it.title)+'</div>'
 
-      if(it.page){
-        html += '<a class="btn home-btn" href="' + esc(it.page) + '" target="_blank">詳しく見る</a>';
-      }
+      +(it.media?'<div class="media-scroll">'+mediaHtml(it.media)+'</div>':'')
 
-      if(it.apply){
-        html += '<a class="btn apply-btn" href="' + esc(it.apply) + '" target="_blank">申込みはこちら</a>';
-      }
+      +'<div class="detail">'+esc(it.detail)+'</div>'
 
-      html += ''
-        + '</div>'
-        + shareButtons(share,it.title,it.id)
-        + '</div>';
+      +'<div class="btns">'
+
+      +(it.page?'<a class="btn home-btn" href="'+esc(it.page)+'" target="_blank">詳しく見る</a>':'')
+
+      +(it.apply?'<a class="btn apply-btn" href="'+esc(it.apply)+'" target="_blank">申込みはこちら</a>':'')
+
+      +'</div>'
+
+      +shareButtons(share,it.title,it.id)
+
+      +'</div>';
 
     });
 
-    document.getElementById('board').innerHTML = html || '<div class="empty">記事がありません</div>';
+    document.getElementById('board').innerHTML=
+    html||'<div class="empty">記事がありません</div>';
 
     if(target){
+
       setTimeout(function(){
-        var el = document.getElementById('post-' + target);
+
+        var el=document.getElementById('post-'+target);
+
         if(el){
           el.scrollIntoView({
             behavior:'smooth',
             block:'start'
           });
         }
+
       },400);
+
     }
 
   }catch(e){
 
-    document.getElementById('board').innerHTML =
-      '<div class="error">読み込みエラー</div>';
+    document.getElementById('board').innerHTML=
+    '<div class="error">読み込みエラー</div>';
 
   }
 
 };
 
-var s = document.createElement('script');
-s.src = JSONP_URL;
-s.onerror = function(){
-  document.getElementById('board').innerHTML =
-    '<div class="error">スプレッドシートを読み込めません</div>';
+var s=document.createElement('script');
+
+s.src=JSONP_URL;
+
+s.onerror=function(){
+
+  document.getElementById('board').innerHTML=
+  '<div class="error">スプレッドシートを読み込めません</div>';
+
 };
+
 document.body.appendChild(s);
 </script>
 
