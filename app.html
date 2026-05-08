@@ -230,17 +230,9 @@ body{
   border:0;
 }
 
-.facebook{
-  background:#1877f2;
-}
-
-.xbtn{
-  background:#000;
-}
-
-.linebtn{
-  background:#06c755;
-}
+.facebook{background:#1877f2}
+.xbtn{background:#000}
+.linebtn{background:#06c755}
 
 .loading{
   text-align:center;
@@ -328,7 +320,6 @@ window.handleSheet=function(json){
         mediaUrl:getCell(c[6]),
         sortKey:Number(getCell(c[10]) || 0)
       };
-
     }).filter(d=>d.title||d.detail||d.image||d.mediaUrl);
 
     ALL.sort((a,b)=>{
@@ -375,14 +366,14 @@ function showLatest(){
   setTab('latest');
   document.getElementById('note').className='note';
   document.getElementById('note').innerHTML='新しいお知らせから順番に表示します。';
-  render(ALL.slice(0,5),'表示できる情報はありません',false);
+  render(ALL.slice(0,5),'表示できる情報はありません');
 }
 
 function showArchive(){
   setTab('archive');
   document.getElementById('note').className='note';
   document.getElementById('note').innerHTML='過去のお知らせを表示します。';
-  render(ALL.slice(5),'過去の情報はありません',false);
+  render(ALL.slice(5),'過去の情報はありません');
 }
 
 function showSingle(id){
@@ -393,7 +384,7 @@ function showSingle(id){
   const one=ALL.find(d=>String(d.id)===String(id));
 
   if(one){
-    render([one],'記事が見つかりません',true);
+    render([one],'記事が見つかりません');
   }else{
     document.getElementById('list').innerHTML='<div class="loading">記事が見つかりません</div>';
   }
@@ -404,13 +395,13 @@ function setTab(mode){
   document.getElementById('archiveBtn').className=mode==='archive'?'tab active':'tab normal';
 }
 
-function render(list,emptyText,singleMode){
+function render(list,emptyText){
   let html='';
-  list.forEach(d=>html+=card(d,singleMode));
+  list.forEach(d=>html+=card(d));
   document.getElementById('list').innerHTML=html||'<div class="loading">'+emptyText+'</div>';
 }
 
-function card(d,singleMode){
+function card(d){
 return `
 <div class="card">
 ${mediaHtml(d.image,d.mediaUrl)}
@@ -426,54 +417,23 @@ ${shareHtml(d)}
 }
 
 function shareHtml(d){
-
   const idText=String(d.id).padStart(3,'0');
-
-  const shareUrl=
-    SHARE_BASE+
-    'share-'+idText+
-    '.html?v='+
-    new Date().getTime();
-
+  const shareUrl=SHARE_BASE+'share-'+idText+'.html?v='+Date.now();
   const text=d.title||'志木お助け隊 回覧板';
 
-  const fb=
-    'https://www.facebook.com/sharer/sharer.php?u='+
-    encodeURIComponent(shareUrl);
-
-  const x=
-    'https://twitter.com/intent/tweet?url='+
-    encodeURIComponent(shareUrl)+
-    '&text='+
-    encodeURIComponent(text);
-
-  const line=
-    'https://social-plugins.line.me/lineit/share?url='+
-    encodeURIComponent(shareUrl);
+  const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareUrl);
+  const x='https://twitter.com/intent/tweet?url='+encodeURIComponent(shareUrl)+'&text='+encodeURIComponent(text);
+  const line='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareUrl);
 
   return `
-  <div class="shareBtns">
-
-    <a class="shareBtn fb"
-       href="${fb}"
-       target="_blank">
-       Facebook
-    </a>
-
-    <a class="shareBtn x"
-       href="${x}"
-       target="_blank">
-       X
-    </a>
-
-    <a class="shareBtn line"
-       href="${line}"
-       target="_blank">
-       LINE
-    </a>
-
-  </div>
-  `;
+<div class="shareBox">
+<div class="shareTitle">この記事をシェア</div>
+<div class="shareGrid">
+<a class="shareBtn facebook" href="${escAttr(fb)}" target="_blank" rel="noopener">Facebookでシェア</a>
+<a class="shareBtn xbtn" href="${escAttr(x)}" target="_blank" rel="noopener">Xで投稿</a>
+<a class="shareBtn linebtn" href="${escAttr(line)}" target="_blank" rel="noopener">LINEで共有</a>
+</div>
+</div>`;
 }
 
 function mediaHtml(imageText,mediaText){
@@ -555,7 +515,6 @@ function toImageUrl(url){
 }
 
 function toMediaObject(url){
-
   const yt=youtubeEmbed(url);
   if(yt){
     return {type:'youtube',url:yt};
