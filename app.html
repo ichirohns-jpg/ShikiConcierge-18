@@ -3,14 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>志木お助け隊 回覧板</title>
 
+<meta property="og:title" content="志木お助け隊 回覧板">
+<meta property="og:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/">
+<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/IMG_4059.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/IMG_4059.png">
+
 <style>
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
-  background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);
+  background:#eef6ff;
   font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
   color:#17324d;
 }
@@ -18,7 +31,7 @@ body{
 .wrap{
   max-width:760px;
   margin:0 auto;
-  padding:18px 14px 50px;
+  padding:16px;
 }
 
 .header{
@@ -55,92 +68,18 @@ body{
   color:#5a6f80;
 }
 
-.tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin:20px 0;
-}
-
-.tab{
-  min-height:60px;
-  border-radius:18px;
-  font-size:19px;
-  font-weight:900;
-  border:0;
-}
-
-.active{
-  background:linear-gradient(135deg,#1687e0,#0d5fa8);
-  color:#fff;
-}
-
-.normal{
-  background:#fff;
-  color:#456;
-  box-shadow:0 6px 16px rgba(20,70,120,.08);
-}
-
 .card{
   background:#fff;
   border-radius:24px;
   overflow:hidden;
   box-shadow:0 8px 22px rgba(20,70,120,.10);
-  margin-bottom:20px;
+  margin-bottom:22px;
   border-top:5px solid #1687e0;
 }
 
-.media{
+.media img{
   width:100%;
-  display:flex;
-  overflow-x:auto;
-  overflow-y:hidden;
-  scroll-snap-type:x mandatory;
-  -webkit-overflow-scrolling:touch;
-  background:#e9eef4;
-}
-
-.slide{
-  flex:0 0 100%;
-  scroll-snap-align:start;
-  background:#000;
-}
-
-.slide.image{
-  aspect-ratio:9/16;
-}
-
-.slide.video{
-  aspect-ratio:16/9;
-}
-
-.slide img,
-.slide iframe,
-.slide video{
-  width:100%;
-  height:100%;
   display:block;
-  border:0;
-}
-
-.slide img{
-  object-fit:cover;
-}
-
-.slide iframe,
-.slide video{
-  object-fit:contain;
-  background:#000;
-}
-
-.noimage{
-  aspect-ratio:9/16;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#999;
-  font-size:22px;
-  background:#f1f1f1;
 }
 
 .body{
@@ -193,23 +132,17 @@ body{
   color:#fff;
 }
 
-.home{
-  background:linear-gradient(135deg,#6c7a89,#34495e);
-  color:#fff;
-  margin-top:30px;
-}
-
 .share-box{
-  margin-top:18px;
-  padding-top:16px;
+  margin-top:20px;
   border-top:1px solid #e5edf5;
+  padding-top:18px;
 }
 
 .share-title{
   font-size:16px;
   font-weight:900;
+  margin-bottom:12px;
   color:#5b6d7c;
-  margin-bottom:10px;
 }
 
 .share-buttons{
@@ -219,8 +152,8 @@ body{
 }
 
 .share-btn{
-  min-height:50px;
-  border-radius:15px;
+  min-height:52px;
+  border-radius:16px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -228,365 +161,224 @@ body{
   color:#fff;
   font-size:16px;
   font-weight:900;
+}
+
+.share-line{
+  background:#06c755;
+}
+
+.share-fb{
+  background:#1877f2;
+}
+
+.share-x{
+  background:#111;
+}
+
+.share-copy{
+  background:#6c7a89;
   border:0;
 }
 
-.share-line{background:#06c755}
-.share-fb{background:#1877f2}
-.share-x{background:#111}
-.share-copy{background:#6c7a89}
-
 .loading{
   text-align:center;
-  padding:40px 16px;
-  font-size:20px;
-  color:#777;
-  font-weight:800;
+  padding:50px 20px;
+  font-size:22px;
+  font-weight:900;
+  color:#789;
 }
 
-.note{
-  margin:18px 0;
-  background:#fff;
-  border-radius:20px;
-  padding:16px;
-  font-size:16px;
-  line-height:1.7;
-  font-weight:700;
-  color:#5b6d7c;
-  text-align:center;
-  box-shadow:0 6px 16px rgba(20,70,120,.08);
-}
 </style>
 </head>
 
 <body>
+
 <div class="wrap">
 
 <div class="header">
-<img class="banner" src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
+
+<img
+class="banner"
+src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
+
 <div class="header-body">
-<h1 class="title">志木お助け隊 回覧板</h1>
+
+<h1 class="title">
+志木お助け隊 回覧板
+</h1>
+
 <div class="desc">
 市からのお知らせや地域情報を<br>
 スマホで見やすくまとめて表示します
 </div>
-</div>
-</div>
 
-<div class="tabs">
-<button id="latestBtn" class="tab active" onclick="showLatest()">最新情報</button>
-<button id="archiveBtn" class="tab normal" onclick="showArchive()">過去の情報</button>
 </div>
-
-<div class="note">
-新しいお知らせから順番に表示します。
 </div>
 
 <div id="list">
 <div class="loading">読み込み中...</div>
 </div>
 
-<a class="btn home" href="index.html">← トップに戻る</a>
-
 </div>
 
 <script>
+
 const SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
 const SHEET_NAME='回覧板データー';
 
-let ALL=[];
-
 window.handleSheet=function(json){
+
   try{
+
     const rows=json.table.rows||[];
 
-    ALL=rows.map((r,index)=>{
+    let html='';
+
+    rows.reverse().forEach((r,index)=>{
+
       const c=r.c||[];
-      const id=index+2;
 
-      return{
-        id:id,
-        rowIndex:index,
-        date:getCell(c[0]),
-        title:getCell(c[1]),
-        image:getCell(c[2]),
-        detail:getCell(c[3]),
-        applyUrl:getCell(c[4]),
-        cityUrl:getCell(c[5]),
-        mediaUrl:getCell(c[6]),
-        sortKey:Number(getCell(c[10]) || 0)
-      };
+      const title=getCell(c[1]);
+      const image=getCell(c[2]);
+      const detail=getCell(c[3]);
+      const applyUrl=getCell(c[4]);
+      const cityUrl=getCell(c[5]);
 
-    }).filter(d=>d.title||d.detail||d.image||d.mediaUrl);
+      if(!title && !detail)return;
 
-    ALL.sort((a,b)=>{
-      const sb=Number(b.sortKey||0);
-      const sa=Number(a.sortKey||0);
+      html+=`
+      <div class="card">
 
-      if(sb!==sa){
-        return sb-sa;
-      }
+        <div class="media">
+          ${image ? `<img src="${image}">` : ''}
+        </div>
 
-      return b.rowIndex-a.rowIndex;
+        <div class="body">
+
+          <div class="date">
+            ${getCell(c[0])}
+          </div>
+
+          <div class="name">
+            ${title}
+          </div>
+
+          <div class="msg">
+            ${detail||''}
+          </div>
+
+          ${cityUrl ? `
+          <a
+            class="btn blue"
+            href="${cityUrl}"
+            target="_blank">
+            詳しく見る
+          </a>
+          ` : ''}
+
+          ${applyUrl ? `
+          <a
+            class="btn green"
+            href="${applyUrl}"
+            target="_blank">
+            申込みはこちら
+          </a>
+          ` : ''}
+
+          <div class="share-box">
+
+            <div class="share-title">
+              この記事をシェアする
+            </div>
+
+            <div class="share-buttons">
+
+              <a
+                class="share-btn share-line"
+                target="_blank"
+                href="https://social-plugins.line.me/lineit/share?url=https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html">
+                LINE
+              </a>
+
+              <a
+                class="share-btn share-fb"
+                target="_blank"
+                href="https://www.facebook.com/sharer/sharer.php?u=https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html">
+                Facebook
+              </a>
+
+              <a
+                class="share-btn share-x"
+                target="_blank"
+                href="https://twitter.com/intent/tweet?url=https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html&text=志木お助け隊 回覧板">
+                X
+              </a>
+
+              <button
+                class="share-btn share-copy"
+                onclick="copyUrl()">
+                URLコピー
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+      `;
+
     });
 
-    const params=new URLSearchParams(location.search);
-    const id=params.get('id');
-
-    if(id){
-      document.querySelector('.tabs').style.display='none';
-      document.querySelector('.note').innerHTML='この記事だけを表示しています。';
-      const one=ALL.filter(d=>String(d.id)===String(id));
-      render(one,'この記事は見つかりません');
-    }else{
-      showLatest();
-    }
+    document.getElementById('list').innerHTML=html;
 
   }catch(e){
-    document.getElementById('list').innerHTML='<div class="loading">読み込み失敗</div>';
+
+    document.getElementById('list').innerHTML=
+      '<div class="loading">読み込み失敗</div>';
+
   }
+
 };
 
-function loadSheet(){
-  const script=document.createElement('script');
+function copyUrl(){
 
-  script.src=
-    'https://docs.google.com/spreadsheets/d/' +
-    SHEET_ID +
-    '/gviz/tq?sheet=' +
-    encodeURIComponent(SHEET_NAME) +
-    '&tqx=out:json;responseHandler:handleSheet&v=' +
-    Date.now();
+  navigator.clipboard.writeText(
+    'https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html'
+  );
 
-  document.body.appendChild(script);
-}
-
-loadSheet();
-
-function showLatest(){
-  setTab('latest');
-  render(ALL.slice(0,5),'表示できる情報はありません');
-}
-
-function showArchive(){
-  setTab('archive');
-  render(ALL.slice(5),'過去の情報はありません');
-}
-
-function setTab(mode){
-  document.getElementById('latestBtn').className=mode==='latest'?'tab active':'tab normal';
-  document.getElementById('archiveBtn').className=mode==='archive'?'tab active':'tab normal';
-}
-
-function render(list,emptyText){
-  let html='';
-  list.forEach(d=>html+=card(d));
-  document.getElementById('list').innerHTML=html||'<div class="loading">'+emptyText+'</div>';
-}
-
-function card(d){
-  const shareUrl=getShareUrl(d.id);
-  const shareText=(d.title||'志木お助け隊 回覧板')+'｜志木お助け隊 回覧板';
-
-return `
-<div class="card" id="post-${d.id}">
-${mediaHtml(d.image,d.mediaUrl)}
-<div class="body">
-<div class="date">${esc(d.date)}</div>
-<div class="name">${esc(d.title)}</div>
-${d.detail?`<div class="msg">${esc(d.detail)}</div>`:''}
-
-${d.cityUrl?`<a class="btn blue" href="${escAttr(d.cityUrl)}" target="_blank">詳しく見る</a>`:''}
-${d.applyUrl?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank">申込みはこちら</a>`:''}
-
-<div class="share-box">
-  <div class="share-title">この記事をシェアする</div>
-  <div class="share-buttons">
-    <a class="share-btn share-line" target="_blank" href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}">LINE</a>
-    <a class="share-btn share-fb" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}">Facebook</a>
-    <a class="share-btn share-x" target="_blank" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}">X</a>
-    <button class="share-btn share-copy" onclick="copyShare('${escAttr(shareUrl)}')">URLコピー</button>
-  </div>
-</div>
-
-</div>
-</div>`;
-}
-
-function getShareUrl(id){
-  return 'https://ichirohns-jpg.github.io/ShikiConcierge-18/share-' + String(id).padStart(3,'0') + '.html';
-}
-
-function copyShare(url){
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(url).then(()=>{
-      alert('URLをコピーしました');
-    }).catch(()=>{
-      fallbackCopy(url);
-    });
-  }else{
-    fallbackCopy(url);
-  }
-}
-
-function fallbackCopy(url){
-  const t=document.createElement('textarea');
-  t.value=url;
-  document.body.appendChild(t);
-  t.select();
-  document.execCommand('copy');
-  document.body.removeChild(t);
   alert('URLをコピーしました');
-}
 
-function mediaHtml(imageText,mediaText){
-  const items=[];
-
-  parseImages(imageText).forEach(url=>{
-    items.push({type:'image',url:url});
-  });
-
-  parseMediaUrls(mediaText).forEach(m=>{
-    items.push(m);
-  });
-
-  if(!items.length){
-    return `<div class="noimage">No Image</div>`;
-  }
-
-  let html='<div class="media">';
-
-  items.slice(0,5).forEach(m=>{
-
-    const cls=
-      (m.type==='youtube'||m.type==='driveVideo'||m.type==='video')
-      ? 'slide video'
-      : 'slide image';
-
-    html+='<div class="'+cls+'">';
-
-    if(m.type==='youtube'||m.type==='driveVideo'){
-      html+=`
-<iframe
-src="${escAttr(m.url)}"
-allowfullscreen
-loading="lazy">
-</iframe>`;
-    }else if(m.type==='video'){
-      html+=`
-<video
-src="${escAttr(m.url)}"
-controls
-playsinline
-preload="metadata">
-</video>`;
-    }else{
-      html+=`
-<img
-src="${escAttr(m.url)}"
-loading="lazy">
-`;
-    }
-
-    html+='</div>';
-  });
-
-  html+='</div>';
-  return html;
-}
-
-function parseImages(s){
-  if(!s)return[];
-
-  const text=String(s).trim();
-  return extractUrls(text).map(toImageUrl).filter(Boolean);
-}
-
-function parseMediaUrls(s){
-  if(!s)return[];
-
-  const text=String(s).trim();
-  return extractUrls(text).map(toMediaObject).filter(Boolean);
-}
-
-function toImageUrl(url){
-  const id=driveFileId(url);
-  if(id){
-    return 'https://drive.google.com/thumbnail?id='+id+'&sz=w2000';
-  }
-  return url;
-}
-
-function toMediaObject(url){
-
-  const yt=youtubeEmbed(url);
-  if(yt){
-    return {type:'youtube',url:yt};
-  }
-
-  const id=driveFileId(url);
-  if(id){
-    return {
-      type:'driveVideo',
-      url:'https://drive.google.com/file/d/'+id+'/preview'
-    };
-  }
-
-  if(isVideoUrl(url)){
-    return {type:'video',url:url};
-  }
-
-  return {type:'image',url:toImageUrl(url)};
-}
-
-function youtubeEmbed(url){
-  const s=String(url||'');
-
-  const m=
-    s.match(/youtube\.com\/shorts\/([^?&/]+)/) ||
-    s.match(/youtu\.be\/([^?&/]+)/) ||
-    s.match(/[?&]v=([^?&/]+)/);
-
-  if(!m||!m[1])return'';
-
-  return 'https://www.youtube.com/embed/'+m[1];
-}
-
-function driveFileId(url){
-  const s=String(url||'');
-
-  const m=
-    s.match(/\/file\/d\/([^/]+)/) ||
-    s.match(/[?&]id=([^&]+)/);
-
-  return m&&m[1]?m[1]:'';
-}
-
-function isVideoUrl(url){
-  return /\.(mp4|mov|m4v|webm|ogg)(\?|#|$)/i.test(String(url||''));
-}
-
-function extractUrls(text){
-  return String(text||'').match(/https?:\/\/[^\s"'<>]+/g)||[];
 }
 
 function getCell(c){
+
   if(!c)return'';
-  if(c.f!==null&&c.f!==undefined)return String(c.f);
-  if(c.v!==null&&c.v!==undefined)return String(c.v);
+
+  if(c.f!==null && c.f!==undefined){
+    return String(c.f);
+  }
+
+  if(c.v!==null && c.v!==undefined){
+    return String(c.v);
+  }
+
   return'';
+
 }
 
-function esc(s){
-  return String(s||'')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
-}
+const script=document.createElement('script');
 
-function escAttr(s){return esc(s)}
+script.src=
+'https://docs.google.com/spreadsheets/d/' +
+SHEET_ID +
+'/gviz/tq?sheet=' +
+encodeURIComponent(SHEET_NAME) +
+'&tqx=out:json;responseHandler:handleSheet';
+
+document.body.appendChild(script);
+
 </script>
 
 </body>
