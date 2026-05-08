@@ -180,6 +180,7 @@ body{
   font-size:18px;
   font-weight:900;
   margin-top:16px;
+  border:0;
 }
 
 .blue{
@@ -197,6 +198,43 @@ body{
   color:#fff;
   margin-top:30px;
 }
+
+.share-box{
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px solid #e5edf5;
+}
+
+.share-title{
+  font-size:16px;
+  font-weight:900;
+  color:#5b6d7c;
+  margin-bottom:10px;
+}
+
+.share-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.share-btn{
+  min-height:50px;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#fff;
+  font-size:16px;
+  font-weight:900;
+  border:0;
+}
+
+.share-line{background:#06c755}
+.share-fb{background:#1877f2}
+.share-x{background:#111}
+.share-copy{background:#6c7a89}
 
 .loading{
   text-align:center;
@@ -264,8 +302,10 @@ window.handleSheet=function(json){
 
     ALL=rows.map((r,index)=>{
       const c=r.c||[];
+      const id=index+2;
 
       return{
+        id:id,
         rowIndex:index,
         date:getCell(c[0]),
         title:getCell(c[1]),
@@ -290,7 +330,17 @@ window.handleSheet=function(json){
       return b.rowIndex-a.rowIndex;
     });
 
-    showLatest();
+    const params=new URLSearchParams(location.search);
+    const id=params.get('id');
+
+    if(id){
+      document.querySelector('.tabs').style.display='none';
+      document.querySelector('.note').innerHTML='この記事だけを表示しています。';
+      const one=ALL.filter(d=>String(d.id)===String(id));
+      render(one,'この記事は見つかりません');
+    }else{
+      showLatest();
+    }
 
   }catch(e){
     document.getElementById('list').innerHTML='<div class="loading">読み込み失敗</div>';
@@ -335,17 +385,58 @@ function render(list,emptyText){
 }
 
 function card(d){
+  const shareUrl=getShareUrl(d.id);
+  const shareText=(d.title||'志木お助け隊 回覧板')+'｜志木お助け隊 回覧板';
+
 return `
-<div class="card">
+<div class="card" id="post-${d.id}">
 ${mediaHtml(d.image,d.mediaUrl)}
 <div class="body">
 <div class="date">${esc(d.date)}</div>
 <div class="name">${esc(d.title)}</div>
 ${d.detail?`<div class="msg">${esc(d.detail)}</div>`:''}
+
 ${d.cityUrl?`<a class="btn blue" href="${escAttr(d.cityUrl)}" target="_blank">詳しく見る</a>`:''}
 ${d.applyUrl?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank">申込みはこちら</a>`:''}
+
+<div class="share-box">
+  <div class="share-title">この記事をシェアする</div>
+  <div class="share-buttons">
+    <a class="share-btn share-line" target="_blank" href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}">LINE</a>
+    <a class="share-btn share-fb" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}">Facebook</a>
+    <a class="share-btn share-x" target="_blank" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}">X</a>
+    <button class="share-btn share-copy" onclick="copyShare('${escAttr(shareUrl)}')">URLコピー</button>
+  </div>
+</div>
+
 </div>
 </div>`;
+}
+
+function getShareUrl(id){
+  return 'https://ichirohns-jpg.github.io/ShikiConcierge-18/share-' + String(id).padStart(3,'0') + '.html';
+}
+
+function copyShare(url){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>{
+      alert('URLをコピーしました');
+    }).catch(()=>{
+      fallbackCopy(url);
+    });
+  }else{
+    fallbackCopy(url);
+  }
+}
+
+function fallbackCopy(url){
+  const t=document.createElement('textarea');
+  t.value=url;
+  document.body.appendChild(t);
+  t.select();
+  document.execCommand('copy');
+  document.body.removeChild(t);
+  alert('URLをコピーしました');
 }
 
 function mediaHtml(imageText,mediaText){
