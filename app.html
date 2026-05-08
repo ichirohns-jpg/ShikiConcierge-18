@@ -198,42 +198,6 @@ body{
   margin-top:30px;
 }
 
-.shareBox{
-  margin-top:20px;
-  padding-top:18px;
-  border-top:1px solid #e1edf6;
-}
-
-.shareTitle{
-  font-size:17px;
-  font-weight:900;
-  color:#456;
-  margin-bottom:12px;
-}
-
-.shareGrid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:12px;
-}
-
-.shareBtn{
-  min-height:58px;
-  border-radius:18px;
-  color:#fff;
-  text-decoration:none;
-  font-size:18px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border:0;
-}
-
-.facebook{background:#1877f2}
-.xbtn{background:#000}
-.linebtn{background:#06c755}
-
 .loading{
   text-align:center;
   padding:40px 16px;
@@ -254,11 +218,6 @@ body{
   text-align:center;
   box-shadow:0 6px 16px rgba(20,70,120,.08);
 }
-
-.singleNote{
-  background:#fff7df;
-  color:#7a5200;
-}
 </style>
 </head>
 
@@ -276,12 +235,12 @@ body{
 </div>
 </div>
 
-<div id="tabs" class="tabs">
+<div class="tabs">
 <button id="latestBtn" class="tab active" onclick="showLatest()">最新情報</button>
 <button id="archiveBtn" class="tab normal" onclick="showArchive()">過去の情報</button>
 </div>
 
-<div id="note" class="note">
+<div class="note">
 新しいお知らせから順番に表示します。
 </div>
 
@@ -296,8 +255,6 @@ body{
 <script>
 const SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
 const SHEET_NAME='回覧板データー';
-const APP_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
-const SHARE_BASE='https://ichirohns-jpg.github.io/ShikiConcierge-18/';
 
 let ALL=[];
 
@@ -310,7 +267,6 @@ window.handleSheet=function(json){
 
       return{
         rowIndex:index,
-        id:getCell(c[11]) || String(index+1),
         date:getCell(c[0]),
         title:getCell(c[1]),
         image:getCell(c[2]),
@@ -320,6 +276,7 @@ window.handleSheet=function(json){
         mediaUrl:getCell(c[6]),
         sortKey:Number(getCell(c[10]) || 0)
       };
+
     }).filter(d=>d.title||d.detail||d.image||d.mediaUrl);
 
     ALL.sort((a,b)=>{
@@ -333,13 +290,7 @@ window.handleSheet=function(json){
       return b.rowIndex-a.rowIndex;
     });
 
-    const id=getParam('id');
-
-    if(id){
-      showSingle(id);
-    }else{
-      showLatest();
-    }
+    showLatest();
 
   }catch(e){
     document.getElementById('list').innerHTML='<div class="loading">読み込み失敗</div>';
@@ -364,30 +315,12 @@ loadSheet();
 
 function showLatest(){
   setTab('latest');
-  document.getElementById('note').className='note';
-  document.getElementById('note').innerHTML='新しいお知らせから順番に表示します。';
   render(ALL.slice(0,5),'表示できる情報はありません');
 }
 
 function showArchive(){
   setTab('archive');
-  document.getElementById('note').className='note';
-  document.getElementById('note').innerHTML='過去のお知らせを表示します。';
   render(ALL.slice(5),'過去の情報はありません');
-}
-
-function showSingle(id){
-  document.getElementById('tabs').style.display='none';
-  document.getElementById('note').className='note singleNote';
-  document.getElementById('note').innerHTML='この記事だけを表示しています。';
-
-  const one=ALL.find(d=>String(d.id)===String(id));
-
-  if(one){
-    render([one],'記事が見つかりません');
-  }else{
-    document.getElementById('list').innerHTML='<div class="loading">記事が見つかりません</div>';
-  }
 }
 
 function setTab(mode){
@@ -411,28 +344,6 @@ ${mediaHtml(d.image,d.mediaUrl)}
 ${d.detail?`<div class="msg">${esc(d.detail)}</div>`:''}
 ${d.cityUrl?`<a class="btn blue" href="${escAttr(d.cityUrl)}" target="_blank">詳しく見る</a>`:''}
 ${d.applyUrl?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank">申込みはこちら</a>`:''}
-${shareHtml(d)}
-</div>
-</div>`;
-}
-
-function shareHtml(d){
-  const idText=String(d.id).padStart(3,'0');
-  const shareUrl=SHARE_BASE+'share-'+idText+'.html?v='+Date.now();
-  const text=d.title||'志木お助け隊 回覧板';
-
-  const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareUrl);
-  const x='https://twitter.com/intent/tweet?url='+encodeURIComponent(shareUrl)+'&text='+encodeURIComponent(text);
- 　cconst lineUrl=SHARE_BASE+'share-'+idText+'.html';
-const line='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(lineUrl);
-
-  return `
-<div class="shareBox">
-<div class="shareTitle">この記事をシェア</div>
-<div class="shareGrid">
-<a class="shareBtn facebook" href="${escAttr(fb)}" target="_blank" rel="noopener">Facebookでシェア</a>
-<a class="shareBtn xbtn" href="${escAttr(x)}" target="_blank" rel="noopener">Xで投稿</a>
-<a class="shareBtn linebtn" href="${escAttr(line)}" target="_blank" rel="noopener">LINEで共有</a>
 </div>
 </div>`;
 }
@@ -516,6 +427,7 @@ function toImageUrl(url){
 }
 
 function toMediaObject(url){
+
   const yt=youtubeEmbed(url);
   if(yt){
     return {type:'youtube',url:yt};
@@ -554,7 +466,6 @@ function driveFileId(url){
 
   const m=
     s.match(/\/file\/d\/([^/]+)/) ||
-    s.match(/\/d\/([^/]+)/) ||
     s.match(/[?&]id=([^&]+)/);
 
   return m&&m[1]?m[1]:'';
@@ -575,10 +486,6 @@ function getCell(c){
   return'';
 }
 
-function getParam(name){
-  return new URLSearchParams(location.search).get(name);
-}
-
 function esc(s){
   return String(s||'')
     .replace(/&/g,'&amp;')
@@ -588,9 +495,7 @@ function esc(s){
     .replace(/'/g,'&#39;');
 }
 
-function escAttr(s){
-  return esc(s);
-}
+function escAttr(s){return esc(s)}
 </script>
 
 </body>
