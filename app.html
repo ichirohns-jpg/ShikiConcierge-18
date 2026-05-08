@@ -423,7 +423,8 @@ function shareHtml(d){
 
   const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareUrl);
   const x='https://twitter.com/intent/tweet?url='+encodeURIComponent(shareUrl)+'&text='+encodeURIComponent(text);
-  const line='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareUrl);
+ 　cconst lineUrl=SHARE_BASE+'share-'+idText+'.html';
+const line='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(lineUrl);
 
   return `
 <div class="shareBox">
