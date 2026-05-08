@@ -426,23 +426,54 @@ ${shareHtml(d)}
 }
 
 function shareHtml(d){
+
   const idText=String(d.id).padStart(3,'0');
-  const shareUrl=SHARE_BASE+'share-'+idText+'.html';
+
+  const shareUrl=
+    SHARE_BASE+
+    'share-'+idText+
+    '.html?v='+
+    new Date().getTime();
+
   const text=d.title||'志木お助け隊 回覧板';
 
-  const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareUrl);
-  const x='https://twitter.com/intent/tweet?url='+encodeURIComponent(shareUrl)+'&text='+encodeURIComponent(text);
-  const line='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareUrl);
+  const fb=
+    'https://www.facebook.com/sharer/sharer.php?u='+
+    encodeURIComponent(shareUrl);
+
+  const x=
+    'https://twitter.com/intent/tweet?url='+
+    encodeURIComponent(shareUrl)+
+    '&text='+
+    encodeURIComponent(text);
+
+  const line=
+    'https://social-plugins.line.me/lineit/share?url='+
+    encodeURIComponent(shareUrl);
 
   return `
-<div class="shareBox">
-<div class="shareTitle">この記事をシェア</div>
-<div class="shareGrid">
-<a class="shareBtn facebook" href="${escAttr(fb)}" target="_blank">Facebookでシェア</a>
-<a class="shareBtn xbtn" href="${escAttr(x)}" target="_blank">Xで投稿</a>
-<a class="shareBtn linebtn" href="${escAttr(line)}" target="_blank">LINEで共有</a>
-</div>
-</div>`;
+  <div class="shareBtns">
+
+    <a class="shareBtn fb"
+       href="${fb}"
+       target="_blank">
+       Facebook
+    </a>
+
+    <a class="shareBtn x"
+       href="${x}"
+       target="_blank">
+       X
+    </a>
+
+    <a class="shareBtn line"
+       href="${line}"
+       target="_blank">
+       LINE
+    </a>
+
+  </div>
+  `;
 }
 
 function mediaHtml(imageText,mediaText){
