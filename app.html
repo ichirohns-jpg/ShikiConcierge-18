@@ -171,7 +171,7 @@ ${d.applyUrl?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank"
   <div class="share-title">この記事をシェアする</div>
   <div class="share-buttons">
     <a class="share-btn share-line" target="_blank" rel="noopener" href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}">LINE</a>
-    <button class="share-btn share-fb" onclick="shareFacebook('${escAttr(shareUrl)}')">Facebook</button>
+    <button class="share-btn share-fb" onclick="nativeShare('${escAttr(shareUrl)}','${escAttr(shareText)}')">Facebook</button>
     <a class="share-btn share-x" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}">X</a>
     <button class="share-btn share-copy" onclick="copyShare('${escAttr(shareUrl)}')">URLコピー</button>
   </div>
@@ -185,16 +185,26 @@ function getShareUrl(id){
   return SITE_BASE + '/share/' + String(id).padStart(3,'0') + '.html';
 }
 
-function shareFacebook(url){
-  const encoded = encodeURIComponent(url);
-  const webUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encoded;
-  const appUrl = 'fb://facewebmodal/f?href=' + encodeURIComponent(webUrl);
+function nativeShare(url,title){
+  if(navigator.share){
+    navigator.share({
+      title:title,
+      text:title,
+      url:url
+    }).catch(function(){
+      fallbackFacebook(url);
+    });
+  }else{
+    fallbackFacebook(url);
+  }
+}
 
-  location.href = appUrl;
-
-  setTimeout(function(){
-    window.open(webUrl, '_blank', 'noopener');
-  }, 900);
+function fallbackFacebook(url){
+  window.open(
+    'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url),
+    '_blank',
+    'noopener'
+  );
 }
 
 function copyShare(url){
