@@ -3,7 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>志木お助け隊 回覧板</title>
+
+<meta name="description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="志木お助け隊">
+<meta property="og:title" content="志木お助け隊 回覧板">
+<meta property="og:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
+<meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">
+<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/ogp.jpg?v=1">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="志木お助け隊 回覧板">
+<meta name="twitter:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
+<meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/ogp.jpg?v=1">
 
 <style>
 *{box-sizing:border-box}
@@ -52,7 +68,7 @@ body{margin:0;background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);font-fa
 <div class="wrap">
 
 <div class="header">
-<img class="banner" src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
+<img class="banner" src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="志木お助け隊 回覧板">
 <div class="header-body">
 <h1 class="title">志木お助け隊 回覧板</h1>
 <div class="desc">市からのお知らせや地域情報を<br>スマホで見やすくまとめて表示します</div>
@@ -167,8 +183,8 @@ ${mediaHtml(d.image,d.mediaUrl)}
 <div class="date">${esc(d.date)}</div>
 <div class="name">${esc(d.title)}</div>
 ${d.detail?`<div class="msg">${esc(d.detail)}</div>`:''}
-${d.cityUrl?`<a class="btn blue" href="${escAttr(d.cityUrl)}" target="_blank">詳しく見る</a>`:''}
-${d.applyUrl?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank">申込みはこちら</a>`:''}
+${d.cityUrl?`<a class="btn blue" href="${escAttr(d.cityUrl)}" target="_blank" rel="noopener noreferrer">詳しく見る</a>`:''}
+${d.applyUrl?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank" rel="noopener noreferrer">申込みはこちら</a>`:''}
 ${shareHtml(d)}
 </div>
 </div>`;
@@ -186,9 +202,9 @@ function shareHtml(d){
 <div class="share">
 <div class="share-title">この記事をシェアする</div>
 <div class="share-grid">
-<a class="fb" href="${fb}">Facebook</a>
-<a class="x" href="${x}">X</a>
-<a class="line" href="${line}">LINE</a>
+<a class="fb" href="${fb}" target="_blank" rel="noopener noreferrer">Facebook</a>
+<a class="x" href="${x}" target="_blank" rel="noopener noreferrer">X</a>
+<a class="line" href="${line}" target="_blank" rel="noopener noreferrer">LINE</a>
 <button class="copy" onclick="copyShareUrl('${escAttr(shareUrl)}')">URLコピー</button>
 </div>
 </div>`;
