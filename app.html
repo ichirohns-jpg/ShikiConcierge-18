@@ -198,6 +198,42 @@ body{
   margin-top:30px;
 }
 
+.shareBox{
+  margin-top:20px;
+  padding-top:18px;
+  border-top:1px solid #e1edf6;
+}
+
+.shareTitle{
+  font-size:17px;
+  font-weight:900;
+  color:#456;
+  margin-bottom:12px;
+}
+
+.shareGrid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+.shareBtn{
+  min-height:58px;
+  border-radius:18px;
+  color:#fff;
+  text-decoration:none;
+  font-size:18px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+}
+
+.facebook{background:#1877f2}
+.xbtn{background:#000}
+.linebtn{background:#06c755}
+
 .loading{
   text-align:center;
   padding:40px 16px;
@@ -219,44 +255,10 @@ body{
   box-shadow:0 6px 16px rgba(20,70,120,.08);
 }
 
-.share{
-  margin-top:20px;
-  padding-top:14px;
-  border-top:1px solid #e4edf5;
+.singleNote{
+  background:#fff7df;
+  color:#7a5200;
 }
-
-.share-title{
-  font-size:15px;
-  font-weight:900;
-  color:#678;
-  margin-bottom:10px;
-}
-
-.share-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.share a,
-.share button{
-  min-height:46px;
-  border:0;
-  border-radius:14px;
-  color:#fff;
-  font-size:15px;
-  font-weight:900;
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:inherit;
-}
-
-.fb{background:#1877f2}
-.x{background:#000}
-.line{background:#06c755}
-.copy{background:#e1306c}
 </style>
 </head>
 
@@ -274,12 +276,12 @@ body{
 </div>
 </div>
 
-<div class="tabs" id="tabs">
+<div id="tabs" class="tabs">
 <button id="latestBtn" class="tab active" onclick="showLatest()">最新情報</button>
 <button id="archiveBtn" class="tab normal" onclick="showArchive()">過去の情報</button>
 </div>
 
-<div class="note" id="note">
+<div id="note" class="note">
 新しいお知らせから順番に表示します。
 </div>
 
@@ -294,7 +296,7 @@ body{
 <script>
 const SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
 const SHEET_NAME='回覧板データー';
-const BASE_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
+const SHARE_BASE='https://ichirohns-jpg.github.io/ShikiConcierge-18/';
 
 let ALL=[];
 
@@ -306,8 +308,8 @@ window.handleSheet=function(json){
       const c=r.c||[];
 
       return{
-        id:String(index+1),
         rowIndex:index,
+        id:getCell(c[11]) || String(index+1),
         date:getCell(c[0]),
         title:getCell(c[1]),
         image:getCell(c[2]),
@@ -317,17 +319,12 @@ window.handleSheet=function(json){
         mediaUrl:getCell(c[6]),
         sortKey:Number(getCell(c[10]) || 0)
       };
-
     }).filter(d=>d.title||d.detail||d.image||d.mediaUrl);
 
     ALL.sort((a,b)=>{
       const sb=Number(b.sortKey||0);
       const sa=Number(a.sortKey||0);
-
-      if(sb!==sa){
-        return sb-sa;
-      }
-
+      if(sb!==sa)return sb-sa;
       return b.rowIndex-a.rowIndex;
     });
 
@@ -360,32 +357,32 @@ function loadSheet(){
 
 loadSheet();
 
-function showSingle(id){
-  document.getElementById('tabs').style.display='none';
-  document.getElementById('note').innerHTML='この記事を表示しています。';
-
-  const item=ALL.find(d=>d.id===String(id));
-
-  if(!item){
-    document.getElementById('list').innerHTML='<div class="loading">記事が見つかりません</div>';
-    return;
-  }
-
-  render([item],'記事が見つかりません');
-}
-
 function showLatest(){
-  document.getElementById('tabs').style.display='grid';
-  document.getElementById('note').innerHTML='新しいお知らせから順番に表示します。';
   setTab('latest');
+  document.getElementById('note').className='note';
+  document.getElementById('note').innerHTML='新しいお知らせから順番に表示します。';
   render(ALL.slice(0,5),'表示できる情報はありません');
 }
 
 function showArchive(){
-  document.getElementById('tabs').style.display='grid';
-  document.getElementById('note').innerHTML='過去の情報を表示しています。';
   setTab('archive');
+  document.getElementById('note').className='note';
+  document.getElementById('note').innerHTML='過去のお知らせを表示します。';
   render(ALL.slice(5),'過去の情報はありません');
+}
+
+function showSingle(id){
+  document.getElementById('tabs').style.display='none';
+  document.getElementById('note').className='note singleNote';
+  document.getElementById('note').innerHTML='この記事だけを表示しています。';
+
+  const one=ALL.find(d=>String(d.id)===String(id));
+
+  if(one){
+    render([one],'記事が見つかりません');
+  }else{
+    document.getElementById('list').innerHTML='<div class="loading">記事が見つかりません</div>';
+  }
 }
 
 function setTab(mode){
@@ -415,31 +412,23 @@ ${shareHtml(d)}
 }
 
 function shareHtml(d){
-  const shareUrl=BASE_URL+'?id='+encodeURIComponent(d.id);
-  const title=d.title||'志木お助け隊 回覧板';
+  const idText=String(d.id).padStart(3,'0');
+  const shareUrl=SHARE_BASE+'share-'+idText+'.html';
+  const text=d.title||'志木お助け隊 回覧板';
 
   const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareUrl);
-  const x='https://twitter.com/intent/tweet?url='+encodeURIComponent(shareUrl)+'&text='+encodeURIComponent(title);
+  const x='https://twitter.com/intent/tweet?url='+encodeURIComponent(shareUrl)+'&text='+encodeURIComponent(text);
   const line='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareUrl);
 
   return `
-<div class="share">
-<div class="share-title">この記事をシェアする</div>
-<div class="share-grid">
-<a class="fb" href="${fb}" target="_blank">Facebook</a>
-<a class="x" href="${x}" target="_blank">X</a>
-<a class="line" href="${line}" target="_blank">LINE</a>
-<button class="copy" onclick="copyShareUrl('${escAttr(shareUrl)}')">URLコピー</button>
+<div class="shareBox">
+<div class="shareTitle">この記事をシェア</div>
+<div class="shareGrid">
+<a class="shareBtn facebook" href="${escAttr(fb)}" target="_blank" rel="noopener">Facebookでシェア</a>
+<a class="shareBtn xbtn" href="${escAttr(x)}" target="_blank" rel="noopener">Xで投稿</a>
+<a class="shareBtn linebtn" href="${escAttr(line)}" target="_blank" rel="noopener">LINEで共有</a>
 </div>
 </div>`;
-}
-
-function copyShareUrl(url){
-  navigator.clipboard.writeText(url).then(()=>{
-    alert('記事のURLをコピーしました');
-  }).catch(()=>{
-    prompt('このURLをコピーしてください',url);
-  });
 }
 
 function mediaHtml(imageText,mediaText){
@@ -500,14 +489,12 @@ loading="lazy">
 
 function parseImages(s){
   if(!s)return[];
-
   const text=String(s).trim();
   return extractUrls(text).map(toImageUrl).filter(Boolean);
 }
 
 function parseMediaUrls(s){
   if(!s)return[];
-
   const text=String(s).trim();
   return extractUrls(text).map(toMediaObject).filter(Boolean);
 }
@@ -521,7 +508,6 @@ function toImageUrl(url){
 }
 
 function toMediaObject(url){
-
   const yt=youtubeEmbed(url);
   if(yt){
     return {type:'youtube',url:yt};
@@ -560,6 +546,7 @@ function driveFileId(url){
 
   const m=
     s.match(/\/file\/d\/([^/]+)/) ||
+    s.match(/\/d\/([^/]+)/) ||
     s.match(/[?&]id=([^&]+)/);
 
   return m&&m[1]?m[1]:'';
@@ -573,16 +560,15 @@ function extractUrls(text){
   return String(text||'').match(/https?:\/\/[^\s"'<>]+/g)||[];
 }
 
-function getParam(name){
-  const p=new URLSearchParams(window.location.search);
-  return p.get(name)||'';
-}
-
 function getCell(c){
   if(!c)return'';
   if(c.f!==null&&c.f!==undefined)return String(c.f);
   if(c.v!==null&&c.v!==undefined)return String(c.v);
   return'';
+}
+
+function getParam(name){
+  return new URLSearchParams(location.search).get(name);
 }
 
 function esc(s){
@@ -594,7 +580,9 @@ function esc(s){
     .replace(/'/g,'&#39;');
 }
 
-function escAttr(s){return esc(s)}
+function escAttr(s){
+  return esc(s);
+}
 </script>
 
 </body>
