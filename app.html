@@ -101,7 +101,7 @@ const SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
 const SHEET_NAME='回覧板データー';
 const BASE_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
 const SHARE_TOP_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/';
-const FACEBOOK_SHARE_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/?v=20260509';
+const FACEBOOK_SHARE_PAGE='https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html';
 
 let ALL=[];
 
@@ -202,7 +202,7 @@ function shareHtml(d){
   const title=d.title||'志木お助け隊 回覧板';
   const articleUrl=BASE_URL+'?id='+encodeURIComponent(d.id);
 
-  const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(FACEBOOK_SHARE_URL);
+  const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(FACEBOOK_SHARE_PAGE);
   const x='https://twitter.com/intent/tweet?url='+encodeURIComponent(SHARE_TOP_URL)+'&text='+encodeURIComponent(title);
 
   const lineText=title+'\n'+articleUrl;
