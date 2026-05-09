@@ -208,16 +208,26 @@ function shareHtml(d){
   const lineText=title+'\n'+articleUrl;
   const line='https://line.me/R/msg/text/?'+encodeURIComponent(lineText);
 
+  const copyText=title+'\n'+articleUrl;
+
   return `
 <div class="share">
 <div class="share-title">この記事をシェアする</div>
 <div class="share-grid">
-<a class="fb" href="${fb}" target="_blank" rel="noopener noreferrer">Facebook</a>
+<button class="fb" onclick="location.href='${fb}'">Facebook</button>
 <a class="x" href="${x}" target="_blank" rel="noopener noreferrer">X</a>
 <a class="line" href="${line}" target="_blank" rel="noopener noreferrer">LINE</a>
-<button class="copy" onclick="copyShareUrl('${escAttr(articleUrl)}')">URLコピー</button>
+<button class="copy" onclick="copyShareText('${escAttr(copyText)}')">文章コピー</button>
 </div>
 </div>`;
+}
+
+function copyShareText(text){
+  navigator.clipboard.writeText(text).then(()=>{
+    alert('投稿用の文章をコピーしました');
+  }).catch(()=>{
+    prompt('この文章をコピーしてください',text);
+  });
 }
 
 function copyShareUrl(url){
