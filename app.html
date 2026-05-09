@@ -36,23 +36,69 @@ body{margin:0;background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);font-fa
 .active{background:linear-gradient(135deg,#1687e0,#0d5fa8);color:#fff}
 .normal{background:#fff;color:#456;box-shadow:0 6px 16px rgba(20,70,120,.08)}
 .card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 8px 22px rgba(20,70,120,.10);margin-bottom:20px;border-top:5px solid #1687e0}
-.media{width:100%;display:flex;overflow-x:auto;background:#e9eef4}
-.slide{flex:0 0 100%}
+.media{width:100%;display:flex;overflow-x:auto;overflow-y:hidden;background:#e9eef4}
+.slide{flex:0 0 100%;background:#000}
 .slide.image{aspect-ratio:9/16}
-.slide img{width:100%;height:100%;object-fit:cover;display:block}
+.slide.video{aspect-ratio:16/9}
+.slide img,.slide iframe,.slide video{
+width:100%;
+height:100%;
+display:block;
+border:0;
+}
+.slide img{object-fit:cover}
+.slide iframe,.slide video{
+object-fit:contain;
+background:#000;
+}
 .body{padding:20px}
 .date{font-size:15px;color:#789;font-weight:900}
 .name{margin-top:8px;font-size:28px;line-height:1.35;font-weight:900;color:#0d5fa8}
 .msg{margin-top:14px;font-size:18px;line-height:1.85;color:#334;white-space:pre-wrap}
-.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:58px;border-radius:18px;text-decoration:none;font-size:18px;font-weight:900;margin-top:16px}
+.btn{
+display:flex;
+align-items:center;
+justify-content:center;
+width:100%;
+min-height:58px;
+border-radius:18px;
+text-decoration:none;
+font-size:18px;
+font-weight:900;
+margin-top:16px;
+}
 .blue{background:linear-gradient(135deg,#1687e0,#0d5fa8);color:#fff}
 .green{background:linear-gradient(135deg,#18b76a,#0d8b4c);color:#fff}
 .home{background:linear-gradient(135deg,#6c7a89,#34495e);color:#fff;margin-top:30px}
 .loading{text-align:center;padding:40px 16px;font-size:20px;color:#777;font-weight:800}
-.note{margin:18px 0;background:#fff;border-radius:20px;padding:16px;font-size:16px;line-height:1.7;font-weight:700;color:#5b6d7c;text-align:center;box-shadow:0 6px 16px rgba(20,70,120,.08)}
-.share{margin-top:20px;padding-top:14px;border-top:1px solid #e4edf5}
-.share-title{font-size:15px;font-weight:900;color:#678;margin-bottom:10px}
-.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.note{
+margin:18px 0;
+background:#fff;
+border-radius:20px;
+padding:16px;
+font-size:16px;
+line-height:1.7;
+font-weight:700;
+color:#5b6d7c;
+text-align:center;
+box-shadow:0 6px 16px rgba(20,70,120,.08);
+}
+.share{
+margin-top:20px;
+padding-top:14px;
+border-top:1px solid #e4edf5;
+}
+.share-title{
+font-size:15px;
+font-weight:900;
+color:#678;
+margin-bottom:10px;
+}
+.share-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
 .share a,.share button{
 min-height:46px;
 border:0;
@@ -79,21 +125,24 @@ font-family:inherit;
 
 <div class="header">
 <img class="banner" src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
+
 <div class="header-body">
 <h1 class="title">志木お助け隊 回覧板</h1>
+
 <div class="desc">
 市からのお知らせや地域情報を<br>
 スマホで見やすくまとめて表示します
 </div>
+
 </div>
 </div>
 
-<div class="tabs" id="tabs">
+<div class="tabs">
 <button id="latestBtn" class="tab active" onclick="showLatest()">最新情報</button>
 <button id="archiveBtn" class="tab normal" onclick="showArchive()">過去の情報</button>
 </div>
 
-<div class="note" id="note">
+<div class="note">
 新しいお知らせから順番に表示します。
 </div>
 
@@ -136,10 +185,11 @@ image:getCell(c[2]),
 detail:getCell(c[3]),
 applyUrl:getCell(c[4]),
 cityUrl:getCell(c[5]),
+mediaUrl:getCell(c[6]),
 sortKey:Number(getCell(c[10])||0)
 };
 
-}).filter(d=>d.title||d.detail||d.image);
+}).filter(d=>d.title||d.detail||d.image||d.mediaUrl);
 
 ALL.sort((a,b)=>{
 const sb=Number(b.sortKey||0);
@@ -178,25 +228,13 @@ document.body.appendChild(script);
 loadSheet();
 
 function showLatest(){
-
 setTab('latest');
-
-render(
-ALL.slice(0,5),
-'表示できる情報はありません'
-);
-
+render(ALL.slice(0,5));
 }
 
 function showArchive(){
-
 setTab('archive');
-
-render(
-ALL.slice(5),
-'過去の情報はありません'
-);
-
+render(ALL.slice(5));
 }
 
 function setTab(mode){
@@ -213,7 +251,7 @@ mode==='archive'
 
 }
 
-function render(list,emptyText){
+function render(list){
 
 let html='';
 
@@ -223,7 +261,7 @@ html+=card(d);
 
 document.getElementById('list').innerHTML=
 html||
-'<div class="loading">'+emptyText+'</div>';
+'<div class="loading">表示できる情報はありません</div>';
 
 }
 
@@ -232,7 +270,7 @@ function card(d){
 return `
 <div class="card">
 
-${mediaHtml(d.image)}
+${mediaHtml(d.image,d.mediaUrl)}
 
 <div class="body">
 
@@ -343,11 +381,19 @@ prompt('この文章をコピーしてください',text);
 
 }
 
-function mediaHtml(imageText){
+function mediaHtml(imageText,mediaText){
 
-const urls=parseImages(imageText);
+const items=[];
 
-if(!urls.length){
+parseImages(imageText).forEach(url=>{
+items.push({type:'image',url:url});
+});
+
+parseMediaUrls(mediaText).forEach(m=>{
+items.push(m);
+});
+
+if(!items.length){
 
 return `
 <div class="slide image">
@@ -358,12 +404,44 @@ return `
 
 let html='<div class="media">';
 
-urls.slice(0,5).forEach(url=>{
+items.slice(0,5).forEach(m=>{
+
+const cls=
+(m.type==='youtube'||m.type==='driveVideo'||m.type==='video')
+?'slide video'
+:'slide image';
+
+html+='<div class="'+cls+'">';
+
+if(m.type==='youtube'||m.type==='driveVideo'){
 
 html+=`
-<div class="slide image">
-<img src="${escAttr(url)}" loading="lazy">
-</div>`;
+<iframe
+src="${escAttr(m.url)}"
+allowfullscreen
+loading="lazy">
+</iframe>`;
+
+}else if(m.type==='video'){
+
+html+=`
+<video
+src="${escAttr(m.url)}"
+controls
+playsinline
+preload="metadata">
+</video>`;
+
+}else{
+
+html+=`
+<img
+src="${escAttr(m.url)}"
+loading="lazy">`;
+
+}
+
+html+='</div>';
 
 });
 
@@ -379,6 +457,16 @@ if(!s)return[];
 
 return extractUrls(String(s))
 .map(toImageUrl)
+.filter(Boolean);
+
+}
+
+function parseMediaUrls(s){
+
+if(!s)return[];
+
+return extractUrls(String(s))
+.map(toMediaObject)
 .filter(Boolean);
 
 }
@@ -399,6 +487,53 @@ return url;
 
 }
 
+function toMediaObject(url){
+
+const yt=youtubeEmbed(url);
+
+if(yt){
+return {type:'youtube',url:yt};
+}
+
+const id=driveFileId(url);
+
+if(id){
+return {
+type:'driveVideo',
+url:'https://drive.google.com/file/d/'+id+'/preview'
+};
+}
+
+if(isVideoUrl(url)){
+return {type:'video',url:url};
+}
+
+return {
+type:'image',
+url:toImageUrl(url)
+};
+
+}
+
+function youtubeEmbed(url){
+
+const s=String(url||'');
+
+const m=
+s.match(/youtube\.com\/shorts\/([^?&/]+)/)
+||
+s.match(/youtu\.be\/([^?&/]+)/)
+||
+s.match(/[?&]v=([^?&/]+)/)
+||
+s.match(/youtube\.com\/embed\/([^?&/]+)/);
+
+if(!m||!m[1])return'';
+
+return 'https://www.youtube.com/embed/'+m[1];
+
+}
+
 function driveFileId(url){
 
 const s=String(url||'');
@@ -409,6 +544,13 @@ s.match(/\/file\/d\/([^/]+)/)
 s.match(/[?&]id=([^&]+)/);
 
 return m&&m[1]?m[1]:'';
+
+}
+
+function isVideoUrl(url){
+
+return /\.(mp4|mov|m4v|webm|ogg)(\?|#|$)/i
+.test(String(url||''));
 
 }
 
