@@ -24,37 +24,131 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;color:#17324d}
-.wrap{max-width:760px;margin:0 auto;padding:18px 14px 50px}
-.header{background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 10px 28px rgba(20,70,120,.13);margin-bottom:18px}
-.banner{width:100%;display:block}
-.header-body{padding:22px 18px 26px;text-align:center}
-.title{margin:0;font-size:34px;line-height:1.3;font-weight:900;color:#0d5fa8}
-.desc{margin-top:12px;font-size:18px;line-height:1.7;font-weight:800;color:#5a6f80}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
-.tab{min-height:60px;border-radius:18px;font-size:19px;font-weight:900;border:0}
-.active{background:linear-gradient(135deg,#1687e0,#0d5fa8);color:#fff}
-.normal{background:#fff;color:#456;box-shadow:0 6px 16px rgba(20,70,120,.08)}
-.card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 8px 22px rgba(20,70,120,.10);margin-bottom:20px;border-top:5px solid #1687e0}
-.media{width:100%;display:flex;overflow-x:auto;overflow-y:hidden;background:#e9eef4}
-.slide{flex:0 0 100%;background:#000}
-.slide.image{aspect-ratio:9/16}
-.slide.video{aspect-ratio:16/9}
-.slide img,.slide iframe,.slide video{
+body{
+margin:0;
+background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);
+font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+color:#17324d;
+}
+.wrap{
+max-width:760px;
+margin:0 auto;
+padding:18px 14px 50px;
+}
+.header{
+background:#fff;
+border-radius:28px;
+overflow:hidden;
+box-shadow:0 10px 28px rgba(20,70,120,.13);
+margin-bottom:18px;
+}
+.banner{
+width:100%;
+display:block;
+}
+.header-body{
+padding:22px 18px 26px;
+text-align:center;
+}
+.title{
+margin:0;
+font-size:34px;
+line-height:1.3;
+font-weight:900;
+color:#0d5fa8;
+}
+.desc{
+margin-top:12px;
+font-size:18px;
+line-height:1.7;
+font-weight:800;
+color:#5a6f80;
+}
+.tabs{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin:20px 0;
+}
+.tab{
+min-height:60px;
+border-radius:18px;
+font-size:19px;
+font-weight:900;
+border:0;
+}
+.active{
+background:linear-gradient(135deg,#1687e0,#0d5fa8);
+color:#fff;
+}
+.normal{
+background:#fff;
+color:#456;
+box-shadow:0 6px 16px rgba(20,70,120,.08);
+}
+.card{
+background:#fff;
+border-radius:24px;
+overflow:hidden;
+box-shadow:0 8px 22px rgba(20,70,120,.10);
+margin-bottom:20px;
+border-top:5px solid #1687e0;
+}
+.media{
+width:100%;
+display:flex;
+overflow-x:auto;
+overflow-y:hidden;
+background:#e9eef4;
+}
+.slide{
+flex:0 0 100%;
+background:#000;
+}
+.slide.image{
+aspect-ratio:9/16;
+}
+.slide.video{
+aspect-ratio:16/9;
+}
+.slide img,
+.slide iframe,
+.slide video{
 width:100%;
 height:100%;
 display:block;
 border:0;
 }
-.slide img{object-fit:cover}
-.slide iframe,.slide video{
+.slide img{
+object-fit:cover;
+}
+.slide iframe,
+.slide video{
 object-fit:contain;
 background:#000;
 }
-.body{padding:20px}
-.date{font-size:15px;color:#789;font-weight:900}
-.name{margin-top:8px;font-size:28px;line-height:1.35;font-weight:900;color:#0d5fa8}
-.msg{margin-top:14px;font-size:18px;line-height:1.85;color:#334;white-space:pre-wrap}
+.body{
+padding:20px;
+}
+.date{
+font-size:15px;
+color:#789;
+font-weight:900;
+}
+.name{
+margin-top:8px;
+font-size:28px;
+line-height:1.35;
+font-weight:900;
+color:#0d5fa8;
+}
+.msg{
+margin-top:14px;
+font-size:18px;
+line-height:1.85;
+color:#334;
+white-space:pre-wrap;
+}
 .btn{
 display:flex;
 align-items:center;
@@ -67,10 +161,26 @@ font-size:18px;
 font-weight:900;
 margin-top:16px;
 }
-.blue{background:linear-gradient(135deg,#1687e0,#0d5fa8);color:#fff}
-.green{background:linear-gradient(135deg,#18b76a,#0d8b4c);color:#fff}
-.home{background:linear-gradient(135deg,#6c7a89,#34495e);color:#fff;margin-top:30px}
-.loading{text-align:center;padding:40px 16px;font-size:20px;color:#777;font-weight:800}
+.blue{
+background:linear-gradient(135deg,#1687e0,#0d5fa8);
+color:#fff;
+}
+.green{
+background:linear-gradient(135deg,#18b76a,#0d8b4c);
+color:#fff;
+}
+.home{
+background:linear-gradient(135deg,#6c7a89,#34495e);
+color:#fff;
+margin-top:30px;
+}
+.loading{
+text-align:center;
+padding:40px 16px;
+font-size:20px;
+color:#777;
+font-weight:800;
+}
 .note{
 margin:18px 0;
 background:#fff;
@@ -99,7 +209,8 @@ display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
 }
-.share a,.share button{
+.share a,
+.share button{
 min-height:46px;
 border:0;
 border-radius:14px;
@@ -124,10 +235,16 @@ font-family:inherit;
 <div class="wrap">
 
 <div class="header">
-<img class="banner" src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
+
+<img
+class="banner"
+src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
 
 <div class="header-body">
-<h1 class="title">志木お助け隊 回覧板</h1>
+
+<h1 class="title">
+志木お助け隊 回覧板
+</h1>
 
 <div class="desc">
 市からのお知らせや地域情報を<br>
@@ -138,8 +255,21 @@ font-family:inherit;
 </div>
 
 <div class="tabs">
-<button id="latestBtn" class="tab active" onclick="showLatest()">最新情報</button>
-<button id="archiveBtn" class="tab normal" onclick="showArchive()">過去の情報</button>
+
+<button
+id="latestBtn"
+class="tab active"
+onclick="showLatest()">
+最新情報
+</button>
+
+<button
+id="archiveBtn"
+class="tab normal"
+onclick="showArchive()">
+過去の情報
+</button>
+
 </div>
 
 <div class="note">
@@ -150,19 +280,26 @@ font-family:inherit;
 <div class="loading">読み込み中...</div>
 </div>
 
-<a class="btn home" href="index.html">← トップに戻る</a>
+<a class="btn home" href="index.html">
+← トップに戻る
+</a>
 
 </div>
 
 <script>
+
 const SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
+
 const SHEET_NAME='回覧板データー';
 
-const BASE_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
+const BASE_URL=
+'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
 
-const SHARE_TOP_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/';
+const SHARE_TOP_URL=
+'https://ichirohns-jpg.github.io/ShikiConcierge-18/';
 
-const FACEBOOK_SHARE_PAGE='https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html';
+const FACEBOOK_SHARE_PAGE=
+'https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html';
 
 let ALL=[];
 
@@ -177,25 +314,41 @@ ALL=rows.map((r,index)=>{
 const c=r.c||[];
 
 return{
+
 id:String(index+1),
+
 rowIndex:index,
+
 date:getCell(c[0]),
+
 title:getCell(c[1]),
+
 image:getCell(c[2]),
+
 detail:getCell(c[3]),
+
 applyUrl:getCell(c[4]),
+
 cityUrl:getCell(c[5]),
+
 mediaUrl:getCell(c[6]),
+
 sortKey:Number(getCell(c[10])||0)
+
 };
 
 }).filter(d=>d.title||d.detail||d.image||d.mediaUrl);
 
 ALL.sort((a,b)=>{
+
 const sb=Number(b.sortKey||0);
+
 const sa=Number(a.sortKey||0);
+
 if(sb!==sa)return sb-sa;
+
 return b.rowIndex-a.rowIndex;
+
 });
 
 showLatest();
@@ -216,10 +369,10 @@ const script=document.createElement('script');
 script.src=
 'https://docs.google.com/spreadsheets/d/'
 +SHEET_ID+
-'/gviz/tq?sheet='+
-encodeURIComponent(SHEET_NAME)+
-'&tqx=out:json;responseHandler:handleSheet&v='+
-Date.now();
+'/gviz/tq?sheet='
++encodeURIComponent(SHEET_NAME)
++'&tqx=out:json;responseHandler:handleSheet&v='
++Date.now();
 
 document.body.appendChild(script);
 
@@ -228,13 +381,19 @@ document.body.appendChild(script);
 loadSheet();
 
 function showLatest(){
+
 setTab('latest');
+
 render(ALL.slice(0,5));
+
 }
 
 function showArchive(){
+
 setTab('archive');
+
 render(ALL.slice(5));
+
 }
 
 function setTab(mode){
@@ -256,7 +415,9 @@ function render(list){
 let html='';
 
 list.forEach(d=>{
+
 html+=card(d);
+
 });
 
 document.getElementById('list').innerHTML=
@@ -298,7 +459,8 @@ ${shareHtml(d)}
 
 function shareHtml(d){
 
-const title=d.title||'志木お助け隊 回覧板';
+const title=
+d.title||'志木お助け隊 回覧板';
 
 const articleUrl=
 BASE_URL+'?id='+encodeURIComponent(d.id);
@@ -346,14 +508,16 @@ Facebook
 <a
 class="x"
 href="${x}"
-target="_blank">
+target="_blank"
+rel="noopener noreferrer">
 X
 </a>
 
 <a
 class="line"
 href="${line}"
-target="_blank">
+target="_blank"
+rel="noopener noreferrer">
 LINE
 </a>
 
@@ -386,11 +550,18 @@ function mediaHtml(imageText,mediaText){
 const items=[];
 
 parseImages(imageText).forEach(url=>{
-items.push({type:'image',url:url});
+
+items.push({
+type:'image',
+url:url
+});
+
 });
 
 parseMediaUrls(mediaText).forEach(m=>{
+
 items.push(m);
+
 });
 
 if(!items.length){
@@ -407,13 +578,16 @@ let html='<div class="media">';
 items.slice(0,5).forEach(m=>{
 
 const cls=
-(m.type==='youtube'||m.type==='driveVideo'||m.type==='video')
+(m.type==='youtube'
+||m.type==='driveVideo'
+||m.type==='video')
 ?'slide video'
 :'slide image';
 
 html+='<div class="'+cls+'">';
 
-if(m.type==='youtube'||m.type==='driveVideo'){
+if(m.type==='youtube'
+||m.type==='driveVideo'){
 
 html+=`
 <iframe
@@ -492,20 +666,32 @@ function toMediaObject(url){
 const yt=youtubeEmbed(url);
 
 if(yt){
-return {type:'youtube',url:yt};
+
+return {
+type:'youtube',
+url:yt
+};
+
 }
 
 const id=driveFileId(url);
 
 if(id){
+
 return {
 type:'driveVideo',
 url:'https://drive.google.com/file/d/'+id+'/preview'
 };
+
 }
 
 if(isVideoUrl(url)){
-return {type:'video',url:url};
+
+return {
+type:'video',
+url:url
+};
+
 }
 
 return {
@@ -592,6 +778,7 @@ function escAttr(s){
 return esc(s);
 
 }
+
 </script>
 
 </body>
