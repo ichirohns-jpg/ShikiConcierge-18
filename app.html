@@ -202,22 +202,63 @@ function shareHtml(d){
   const title=d.title||'志木お助け隊 回覧板';
   const articleUrl=BASE_URL+'?id='+encodeURIComponent(d.id);
 
-  const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(FACEBOOK_SHARE_PAGE);
-  const x='https://twitter.com/intent/tweet?url='+encodeURIComponent(SHARE_TOP_URL)+'&text='+encodeURIComponent(title);
+  const fbText=title+'\n'+articleUrl;
+
+  const fb='https://www.facebook.com/sharer/sharer.php?u='
+    +encodeURIComponent(FACEBOOK_SHARE_PAGE)
+    +'&quote='
+    +encodeURIComponent(fbText);
+
+  const x='https://twitter.com/intent/tweet?url='
+    +encodeURIComponent(SHARE_TOP_URL)
+    +'&text='
+    +encodeURIComponent(title);
 
   const lineText=title+'\n'+articleUrl;
-  const line='https://line.me/R/msg/text/?'+encodeURIComponent(lineText);
+
+  const line='https://line.me/R/msg/text/?'
+    +encodeURIComponent(lineText);
 
   const copyText=title+'\n'+articleUrl;
 
   return `
 <div class="share">
 <div class="share-title">この記事をシェアする</div>
+
 <div class="share-grid">
-<button class="fb" onclick="location.href='${fb}'">Facebook</button>
-<a class="x" href="${x}" target="_blank" rel="noopener noreferrer">X</a>
-<a class="line" href="${line}" target="_blank" rel="noopener noreferrer">LINE</a>
-<button class="copy" onclick="copyShareText('${escAttr(copyText)}')">文章コピー</button>
+
+<button
+  class="fb"
+  onclick="location.href='${fb}'"
+>
+Facebook
+</button>
+
+<a
+  class="x"
+  href="${x}"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+X
+</a>
+
+<a
+  class="line"
+  href="${line}"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+LINE
+</a>
+
+<button
+  class="copy"
+  onclick="copyShareText('${escAttr(copyText)}')"
+>
+文章コピー
+</button>
+
 </div>
 </div>`;
 }
@@ -227,14 +268,6 @@ function copyShareText(text){
     alert('投稿用の文章をコピーしました');
   }).catch(()=>{
     prompt('この文章をコピーしてください',text);
-  });
-}
-
-function copyShareUrl(url){
-  navigator.clipboard.writeText(url).then(()=>{
-    alert('記事URLをコピーしました');
-  }).catch(()=>{
-    prompt('このURLをコピーしてください',url);
   });
 }
 
@@ -337,17 +370,4 @@ function getCell(c){
 
 function esc(s){
   return String(s||'')
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
-}
-
-function escAttr(s){
-  return esc(s);
-}
-</script>
-
-</body>
-</html>
+    .replace(/
