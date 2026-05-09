@@ -15,8 +15,8 @@
 <meta property="og:title" content="志木お助け隊 回覧板">
 <meta property="og:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
 <meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">
-<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=90">
-<meta property="og:image:secure_url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=90">
+<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=120">
+<meta property="og:image:secure_url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=120">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -24,7 +24,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="志木お助け隊 回覧板">
 <meta name="twitter:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
-<meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=90">
+<meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=120">
 
 <style>
 *{box-sizing:border-box}
@@ -71,8 +71,6 @@ body{margin:0;background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);font-fa
 
 <body>
 
-<div id="fb-root"></div>
-
 <div class="wrap">
 
 <div class="header">
@@ -99,30 +97,12 @@ body{margin:0;background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);font-fa
 </div>
 
 <script>
-const META_APP_ID='1519320129765759';
 const SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
 const SHEET_NAME='回覧板データー';
 const BASE_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
+const SHARE_TOP_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/';
 
 let ALL=[];
-
-window.fbAsyncInit=function(){
-  FB.init({
-    appId:META_APP_ID,
-    autoLogAppEvents:false,
-    xfbml:false,
-    version:'v19.0'
-  });
-};
-
-(function(d,s,id){
-  var js,fjs=d.getElementsByTagName(s)[0];
-  if(d.getElementById(id)){return;}
-  js=d.createElement(s);
-  js.id=id;
-  js.src='https://connect.facebook.net/ja_JP/sdk.js';
-  fjs.parentNode.insertBefore(js,fjs);
-}(document,'script','facebook-jssdk'));
 
 window.handleSheet=function(json){
   try{
@@ -218,40 +198,27 @@ ${shareHtml(d)}
 }
 
 function shareHtml(d){
-  const shareUrl=BASE_URL+'?id='+encodeURIComponent(d.id);
   const title=d.title||'志木お助け隊 回覧板';
 
-  const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareUrl);
-  const x='https://twitter.com/intent/tweet?url='+encodeURIComponent(shareUrl)+'&text='+encodeURIComponent(title);
-  const line='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareUrl);
+  const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(SHARE_TOP_URL);
+  const x='https://twitter.com/intent/tweet?url='+encodeURIComponent(SHARE_TOP_URL)+'&text='+encodeURIComponent(title);
+  const line='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(SHARE_TOP_URL);
 
   return `
 <div class="share">
 <div class="share-title">この記事をシェアする</div>
 <div class="share-grid">
-<button class="fb" onclick="shareByMeta('${escAttr(shareUrl)}')">Facebook</button>
+<a class="fb" href="${fb}" target="_blank" rel="noopener noreferrer">Facebook</a>
 <a class="x" href="${x}" target="_blank" rel="noopener noreferrer">X</a>
 <a class="line" href="${line}" target="_blank" rel="noopener noreferrer">LINE</a>
-<button class="copy" onclick="copyShareUrl('${escAttr(shareUrl)}')">URLコピー</button>
+<button class="copy" onclick="copyShareUrl('${escAttr(SHARE_TOP_URL)}')">URLコピー</button>
 </div>
 </div>`;
 }
 
-function shareByMeta(url){
-  if(window.FB){
-    FB.ui({
-      method:'share',
-      href:url
-    },function(response){});
-  }else{
-    const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url);
-    window.open(fb,'_blank');
-  }
-}
-
 function copyShareUrl(url){
   navigator.clipboard.writeText(url).then(()=>{
-    alert('記事URLをコピーしました');
+    alert('URLをコピーしました');
   }).catch(()=>{
     prompt('このURLをコピーしてください',url);
   });
