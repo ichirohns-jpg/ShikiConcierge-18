@@ -16,10 +16,6 @@
 <meta property="og:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
 <meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">
 <meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=150">
-<meta property="og:image:secure_url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=150">
-<meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="志木お助け隊 回覧板">
@@ -40,14 +36,10 @@ body{margin:0;background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);font-fa
 .active{background:linear-gradient(135deg,#1687e0,#0d5fa8);color:#fff}
 .normal{background:#fff;color:#456;box-shadow:0 6px 16px rgba(20,70,120,.08)}
 .card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 8px 22px rgba(20,70,120,.10);margin-bottom:20px;border-top:5px solid #1687e0}
-.media{width:100%;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;background:#e9eef4}
-.slide{flex:0 0 100%;scroll-snap-align:start;background:#000}
+.media{width:100%;display:flex;overflow-x:auto;background:#e9eef4}
+.slide{flex:0 0 100%}
 .slide.image{aspect-ratio:9/16}
-.slide.video{aspect-ratio:16/9}
-.slide img,.slide iframe,.slide video{width:100%;height:100%;display:block;border:0}
-.slide img{object-fit:cover}
-.slide iframe,.slide video{object-fit:contain;background:#000}
-.noimage{aspect-ratio:9/16;display:flex;align-items:center;justify-content:center;color:#999;font-size:22px;background:#f1f1f1}
+.slide img{width:100%;height:100%;object-fit:cover;display:block}
 .body{padding:20px}
 .date{font-size:15px;color:#789;font-weight:900}
 .name{margin-top:8px;font-size:28px;line-height:1.35;font-weight:900;color:#0d5fa8}
@@ -61,7 +53,19 @@ body{margin:0;background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);font-fa
 .share{margin-top:20px;padding-top:14px;border-top:1px solid #e4edf5}
 .share-title{font-size:15px;font-weight:900;color:#678;margin-bottom:10px}
 .share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.share a,.share button{min-height:46px;border:0;border-radius:14px;color:#fff;font-size:15px;font-weight:900;text-decoration:none;display:flex;align-items:center;justify-content:center;font-family:inherit}
+.share a,.share button{
+min-height:46px;
+border:0;
+border-radius:14px;
+color:#fff;
+font-size:15px;
+font-weight:900;
+text-decoration:none;
+display:flex;
+align-items:center;
+justify-content:center;
+font-family:inherit;
+}
 .fb{background:#1877f2}
 .x{background:#000}
 .line{background:#06c755}
@@ -74,10 +78,13 @@ body{margin:0;background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);font-fa
 <div class="wrap">
 
 <div class="header">
-<img class="banner" src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="志木お助け隊 回覧板">
+<img class="banner" src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
 <div class="header-body">
 <h1 class="title">志木お助け隊 回覧板</h1>
-<div class="desc">市からのお知らせや地域情報を<br>スマホで見やすくまとめて表示します</div>
+<div class="desc">
+市からのお知らせや地域情報を<br>
+スマホで見やすくまとめて表示します
+</div>
 </div>
 </div>
 
@@ -86,7 +93,9 @@ body{margin:0;background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);font-fa
 <button id="archiveBtn" class="tab normal" onclick="showArchive()">過去の情報</button>
 </div>
 
-<div class="note" id="note">新しいお知らせから順番に表示します。</div>
+<div class="note" id="note">
+新しいお知らせから順番に表示します。
+</div>
 
 <div id="list">
 <div class="loading">読み込み中...</div>
@@ -99,163 +108,220 @@ body{margin:0;background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);font-fa
 <script>
 const SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
 const SHEET_NAME='回覧板データー';
+
 const BASE_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
+
 const SHARE_TOP_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/';
+
 const FACEBOOK_SHARE_PAGE='https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html';
 
 let ALL=[];
 
 window.handleSheet=function(json){
-  try{
-    const rows=json.table.rows||[];
 
-    ALL=rows.map((r,index)=>{
-      const c=r.c||[];
-      return{
-        id:String(index+1),
-        rowIndex:index,
-        date:getCell(c[0]),
-        title:getCell(c[1]),
-        image:getCell(c[2]),
-        detail:getCell(c[3]),
-        applyUrl:getCell(c[4]),
-        cityUrl:getCell(c[5]),
-        mediaUrl:getCell(c[6]),
-        sortKey:Number(getCell(c[10])||0)
-      };
-    }).filter(d=>d.title||d.detail||d.image||d.mediaUrl);
+try{
 
-    ALL.sort((a,b)=>{
-      const sb=Number(b.sortKey||0);
-      const sa=Number(a.sortKey||0);
-      if(sb!==sa)return sb-sa;
-      return b.rowIndex-a.rowIndex;
-    });
+const rows=json.table.rows||[];
 
-    const id=getParam('id');
-    if(id){showSingle(id)}else{showLatest()}
+ALL=rows.map((r,index)=>{
 
-  }catch(e){
-    document.getElementById('list').innerHTML='<div class="loading">読み込み失敗</div>';
-  }
+const c=r.c||[];
+
+return{
+id:String(index+1),
+rowIndex:index,
+date:getCell(c[0]),
+title:getCell(c[1]),
+image:getCell(c[2]),
+detail:getCell(c[3]),
+applyUrl:getCell(c[4]),
+cityUrl:getCell(c[5]),
+sortKey:Number(getCell(c[10])||0)
+};
+
+}).filter(d=>d.title||d.detail||d.image);
+
+ALL.sort((a,b)=>{
+const sb=Number(b.sortKey||0);
+const sa=Number(a.sortKey||0);
+if(sb!==sa)return sb-sa;
+return b.rowIndex-a.rowIndex;
+});
+
+showLatest();
+
+}catch(e){
+
+document.getElementById('list').innerHTML=
+'<div class="loading">読み込み失敗</div>';
+
+}
+
 };
 
 function loadSheet(){
-  const script=document.createElement('script');
-  script.src='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?sheet='+encodeURIComponent(SHEET_NAME)+'&tqx=out:json;responseHandler:handleSheet&v='+Date.now();
-  document.body.appendChild(script);
+
+const script=document.createElement('script');
+
+script.src=
+'https://docs.google.com/spreadsheets/d/'
++SHEET_ID+
+'/gviz/tq?sheet='+
+encodeURIComponent(SHEET_NAME)+
+'&tqx=out:json;responseHandler:handleSheet&v='+
+Date.now();
+
+document.body.appendChild(script);
+
 }
+
 loadSheet();
 
-function showSingle(id){
-  document.getElementById('tabs').style.display='none';
-  document.getElementById('note').innerHTML='この記事を表示しています。';
-  const item=ALL.find(d=>d.id===String(id));
-  if(!item){
-    document.getElementById('list').innerHTML='<div class="loading">記事が見つかりません</div>';
-    return;
-  }
-  render([item],'記事が見つかりません');
-}
-
 function showLatest(){
-  document.getElementById('tabs').style.display='grid';
-  document.getElementById('note').innerHTML='新しいお知らせから順番に表示します。';
-  setTab('latest');
-  render(ALL.slice(0,5),'表示できる情報はありません');
+
+setTab('latest');
+
+render(
+ALL.slice(0,5),
+'表示できる情報はありません'
+);
+
 }
 
 function showArchive(){
-  document.getElementById('tabs').style.display='grid';
-  document.getElementById('note').innerHTML='過去の情報を表示しています。';
-  setTab('archive');
-  render(ALL.slice(5),'過去の情報はありません');
+
+setTab('archive');
+
+render(
+ALL.slice(5),
+'過去の情報はありません'
+);
+
 }
 
 function setTab(mode){
-  document.getElementById('latestBtn').className=mode==='latest'?'tab active':'tab normal';
-  document.getElementById('archiveBtn').className=mode==='archive'?'tab active':'tab normal';
+
+document.getElementById('latestBtn').className=
+mode==='latest'
+?'tab active'
+:'tab normal';
+
+document.getElementById('archiveBtn').className=
+mode==='archive'
+?'tab active'
+:'tab normal';
+
 }
 
 function render(list,emptyText){
-  let html='';
-  list.forEach(d=>html+=card(d));
-  document.getElementById('list').innerHTML=html||'<div class="loading">'+emptyText+'</div>';
+
+let html='';
+
+list.forEach(d=>{
+html+=card(d);
+});
+
+document.getElementById('list').innerHTML=
+html||
+'<div class="loading">'+emptyText+'</div>';
+
 }
 
 function card(d){
+
 return `
 <div class="card">
-${mediaHtml(d.image,d.mediaUrl)}
+
+${mediaHtml(d.image)}
+
 <div class="body">
+
 <div class="date">${esc(d.date)}</div>
+
 <div class="name">${esc(d.title)}</div>
-${d.detail?`<div class="msg">${esc(d.detail)}</div>`:''}
-${d.cityUrl?`<a class="btn blue" href="${escAttr(d.cityUrl)}" target="_blank" rel="noopener noreferrer">詳しく見る</a>`:''}
-${d.applyUrl?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank" rel="noopener noreferrer">申込みはこちら</a>`:''}
+
+${d.detail
+?`<div class="msg">${esc(d.detail)}</div>`
+:''}
+
+${d.cityUrl
+?`<a class="btn blue" href="${escAttr(d.cityUrl)}" target="_blank">詳しく見る</a>`
+:''}
+
+${d.applyUrl
+?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank">申込みはこちら</a>`
+:''}
+
 ${shareHtml(d)}
+
 </div>
 </div>`;
 }
 
 function shareHtml(d){
-  const title=d.title||'志木お助け隊 回覧板';
-  const articleUrl=BASE_URL+'?id='+encodeURIComponent(d.id);
 
-  const fbText=title+'\n'+articleUrl;
+const title=d.title||'志木お助け隊 回覧板';
 
-  const fb='https://www.facebook.com/sharer/sharer.php?u='
-    +encodeURIComponent(FACEBOOK_SHARE_PAGE)
-    +'&quote='
-    +encodeURIComponent(fbText);
+const articleUrl=
+BASE_URL+'?id='+encodeURIComponent(d.id);
 
-  const x='https://twitter.com/intent/tweet?url='
-    +encodeURIComponent(SHARE_TOP_URL)
-    +'&text='
-    +encodeURIComponent(title);
+const fbText=
+title+'\n'+articleUrl;
 
-  const lineText=title+'\n'+articleUrl;
+const fb=
+'https://www.facebook.com/sharer/sharer.php?u='
++encodeURIComponent(FACEBOOK_SHARE_PAGE)
++'&quote='
++encodeURIComponent(fbText);
 
-  const line='https://line.me/R/msg/text/?'
-    +encodeURIComponent(lineText);
+const x=
+'https://twitter.com/intent/tweet?url='
++encodeURIComponent(SHARE_TOP_URL)
++'&text='
++encodeURIComponent(title);
 
-  const copyText=title+'\n'+articleUrl;
+const lineText=
+title+'\n'+articleUrl;
 
-  return `
+const line=
+'https://line.me/R/msg/text/?'
++encodeURIComponent(lineText);
+
+const copyText=
+title+'\n'+articleUrl;
+
+return `
 <div class="share">
-<div class="share-title">この記事をシェアする</div>
+
+<div class="share-title">
+この記事をシェアする
+</div>
 
 <div class="share-grid">
 
 <button
-  class="fb"
-  onclick="location.href='${fb}'"
->
+class="fb"
+onclick="location.href='${fb}'">
 Facebook
 </button>
 
 <a
-  class="x"
-  href="${x}"
-  target="_blank"
-  rel="noopener noreferrer"
->
+class="x"
+href="${x}"
+target="_blank">
 X
 </a>
 
 <a
-  class="line"
-  href="${line}"
-  target="_blank"
-  rel="noopener noreferrer"
->
+class="line"
+href="${line}"
+target="_blank">
 LINE
 </a>
 
 <button
-  class="copy"
-  onclick="copyShareText('${escAttr(copyText)}')"
->
+class="copy"
+onclick="copyShareText('${escAttr(copyText)}')">
 文章コピー
 </button>
 
@@ -264,110 +330,127 @@ LINE
 }
 
 function copyShareText(text){
-  navigator.clipboard.writeText(text).then(()=>{
-    alert('投稿用の文章をコピーしました');
-  }).catch(()=>{
-    prompt('この文章をコピーしてください',text);
-  });
+
+navigator.clipboard.writeText(text).then(()=>{
+
+alert('投稿用文章をコピーしました');
+
+}).catch(()=>{
+
+prompt('この文章をコピーしてください',text);
+
+});
+
 }
 
-function mediaHtml(imageText,mediaText){
-  const items=[];
+function mediaHtml(imageText){
 
-  parseImages(imageText).forEach(url=>{
-    items.push({type:'image',url:url});
-  });
+const urls=parseImages(imageText);
 
-  parseMediaUrls(mediaText).forEach(m=>{
-    items.push(m);
-  });
+if(!urls.length){
 
-  if(!items.length){
-    return `<div class="noimage">No Image</div>`;
-  }
+return `
+<div class="slide image">
+<img src="https://placehold.jp/cccccc/ffffff/800x1400.png?text=No+Image">
+</div>`;
 
-  let html='<div class="media">';
+}
 
-  items.slice(0,5).forEach(m=>{
-    const cls=(m.type==='youtube'||m.type==='driveVideo'||m.type==='video')?'slide video':'slide image';
-    html+='<div class="'+cls+'">';
+let html='<div class="media">';
 
-    if(m.type==='youtube'||m.type==='driveVideo'){
-      html+=`<iframe src="${escAttr(m.url)}" allowfullscreen loading="lazy"></iframe>`;
-    }else if(m.type==='video'){
-      html+=`<video src="${escAttr(m.url)}" controls playsinline preload="metadata"></video>`;
-    }else{
-      html+=`<img src="${escAttr(m.url)}" loading="lazy">`;
-    }
+urls.slice(0,5).forEach(url=>{
 
-    html+='</div>';
-  });
+html+=`
+<div class="slide image">
+<img src="${escAttr(url)}" loading="lazy">
+</div>`;
 
-  html+='</div>';
-  return html;
+});
+
+html+='</div>';
+
+return html;
+
 }
 
 function parseImages(s){
-  if(!s)return[];
-  return extractUrls(String(s).trim()).map(toImageUrl).filter(Boolean);
-}
 
-function parseMediaUrls(s){
-  if(!s)return[];
-  return extractUrls(String(s).trim()).map(toMediaObject).filter(Boolean);
+if(!s)return[];
+
+return extractUrls(String(s))
+.map(toImageUrl)
+.filter(Boolean);
+
 }
 
 function toImageUrl(url){
-  const id=driveFileId(url);
-  if(id)return 'https://drive.google.com/thumbnail?id='+id+'&sz=w2000';
-  return url;
+
+const id=driveFileId(url);
+
+if(id){
+
+return 'https://drive.google.com/thumbnail?id='
++id+
+'&sz=w2000';
+
 }
 
-function toMediaObject(url){
-  const yt=youtubeEmbed(url);
-  if(yt)return {type:'youtube',url:yt};
+return url;
 
-  const id=driveFileId(url);
-  if(id)return {type:'driveVideo',url:'https://drive.google.com/file/d/'+id+'/preview'};
-
-  if(isVideoUrl(url))return {type:'video',url:url};
-
-  return {type:'image',url:toImageUrl(url)};
-}
-
-function youtubeEmbed(url){
-  const s=String(url||'');
-  const m=s.match(/youtube\.com\/shorts\/([^?&/]+)/)||s.match(/youtu\.be\/([^?&/]+)/)||s.match(/[?&]v=([^?&/]+)/)||s.match(/youtube\.com\/embed\/([^?&/]+)/);
-  if(!m||!m[1])return'';
-  return 'https://www.youtube.com/embed/'+m[1];
 }
 
 function driveFileId(url){
-  const s=String(url||'');
-  const m=s.match(/\/file\/d\/([^/]+)/)||s.match(/[?&]id=([^&]+)/);
-  return m&&m[1]?m[1]:'';
-}
 
-function isVideoUrl(url){
-  return /\.(mp4|mov|m4v|webm|ogg)(\?|#|$)/i.test(String(url||''));
+const s=String(url||'');
+
+const m=
+s.match(/\/file\/d\/([^/]+)/)
+||
+s.match(/[?&]id=([^&]+)/);
+
+return m&&m[1]?m[1]:'';
+
 }
 
 function extractUrls(text){
-  return String(text||'').match(/https?:\/\/[^\s"'<>]+/g)||[];
-}
 
-function getParam(name){
-  const p=new URLSearchParams(window.location.search);
-  return p.get(name)||'';
+return String(text||'')
+.match(/https?:\/\/[^\s"'<>]+/g)
+||[];
+
 }
 
 function getCell(c){
-  if(!c)return'';
-  if(c.f!==null&&c.f!==undefined)return String(c.f);
-  if(c.v!==null&&c.v!==undefined)return String(c.v);
-  return'';
+
+if(!c)return'';
+
+if(c.f!==null&&c.f!==undefined)
+return String(c.f);
+
+if(c.v!==null&&c.v!==undefined)
+return String(c.v);
+
+return'';
+
 }
 
 function esc(s){
-  return String(s||'')
-    .replace(/
+
+return String(s||'')
+.replace(/&/g,'&amp;')
+.replace(/</g,'&lt;')
+.replace(/>/g,'&gt;')
+.replace(/"/g,'&quot;')
+.replace(/'/g,'&#39;');
+
+}
+
+function escAttr(s){
+
+return esc(s);
+
+}
+</script>
+
+</body>
+</html>
