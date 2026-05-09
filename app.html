@@ -155,7 +155,6 @@ function render(list,emptyText){
 function card(d){
   const shareUrl=getShareUrl(d.id);
   const shareText=(d.title||'志木お助け隊 回覧板')+'｜志木お助け隊 回覧板';
-  const fbText=shareText + '\n' + shareUrl;
 
 return `
 <div class="card" id="post-${escAttr(d.id)}">
@@ -172,7 +171,7 @@ ${d.applyUrl?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank"
   <div class="share-title">この記事をシェアする</div>
   <div class="share-buttons">
     <a class="share-btn share-line" target="_blank" href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(shareUrl)}">LINE</a>
-    <a class="share-btn share-fb" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(fbText)}">Facebook</a>
+    <a class="share-btn share-fb" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}">Facebook</a>
     <a class="share-btn share-x" target="_blank" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}">X</a>
     <button class="share-btn share-copy" onclick="copyShare('${escAttr(shareUrl)}')">URLコピー</button>
   </div>
