@@ -2,22 +2,21 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta property="fb:app_id" content="1519320129765759">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>志木お助け隊 回覧板</title>
-<meta property="fb:app_id" content="1519320129765759">
 
 <meta name="description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
 
-<meta property="fb:app_id" content="1519320129765759">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:site_name" content="志木お助け隊">
 <meta property="og:title" content="志木お助け隊 回覧板">
 <meta property="og:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
 <meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">
-<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=140">
-<meta property="og:image:secure_url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=140">
+<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=150">
+<meta property="og:image:secure_url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=150">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -25,7 +24,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="志木お助け隊 回覧板">
 <meta name="twitter:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
-<meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=140">
+<meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=150">
 
 <style>
 *{box-sizing:border-box}
@@ -102,6 +101,7 @@ const SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
 const SHEET_NAME='回覧板データー';
 const BASE_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
 const SHARE_TOP_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/';
+const FACEBOOK_SHARE_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/?v=20260509';
 
 let ALL=[];
 
@@ -202,7 +202,7 @@ function shareHtml(d){
   const title=d.title||'志木お助け隊 回覧板';
   const articleUrl=BASE_URL+'?id='+encodeURIComponent(d.id);
 
-  const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(SHARE_TOP_URL);
+  const fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(FACEBOOK_SHARE_URL);
   const x='https://twitter.com/intent/tweet?url='+encodeURIComponent(SHARE_TOP_URL)+'&text='+encodeURIComponent(title);
 
   const lineText=title+'\n'+articleUrl;
