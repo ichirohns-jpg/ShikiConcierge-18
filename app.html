@@ -7,19 +7,13 @@
 
 <title>志木お助け隊 回覧板</title>
 
-<meta name="description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
-
 <meta property="og:type" content="website">
-<meta property="og:locale" content="ja_JP">
-<meta property="og:site_name" content="志木お助け隊">
 <meta property="og:title" content="志木お助け隊 回覧板">
 <meta property="og:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
-<meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">
 <meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=150">
+<meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="志木お助け隊 回覧板">
-<meta name="twitter:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
 <meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=150">
 
 <style>
@@ -181,18 +175,6 @@ font-size:20px;
 color:#777;
 font-weight:800;
 }
-.note{
-margin:18px 0;
-background:#fff;
-border-radius:20px;
-padding:16px;
-font-size:16px;
-line-height:1.7;
-font-weight:700;
-color:#5b6d7c;
-text-align:center;
-box-shadow:0 6px 16px rgba(20,70,120,.08);
-}
 .share{
 margin-top:20px;
 padding-top:14px;
@@ -272,10 +254,6 @@ onclick="showArchive()">
 
 </div>
 
-<div class="note">
-新しいお知らせから順番に表示します。
-</div>
-
 <div id="list">
 <div class="loading">読み込み中...</div>
 </div>
@@ -316,23 +294,15 @@ const c=r.c||[];
 return{
 
 id:String(index+1),
-
 rowIndex:index,
 
 date:getCell(c[0]),
-
 title:getCell(c[1]),
-
 image:getCell(c[2]),
-
 detail:getCell(c[3]),
-
 applyUrl:getCell(c[4]),
-
 cityUrl:getCell(c[5]),
-
 mediaUrl:getCell(c[6]),
-
 sortKey:Number(getCell(c[10])||0)
 
 };
@@ -342,7 +312,6 @@ sortKey:Number(getCell(c[10])||0)
 ALL.sort((a,b)=>{
 
 const sb=Number(b.sortKey||0);
-
 const sa=Number(a.sortKey||0);
 
 if(sb!==sa)return sb-sa;
@@ -523,7 +492,7 @@ LINE
 
 <button
 class="copy"
-onclick="copyShareText('${escAttr(copyText)}')">
+onclick='copyShareText(${JSON.stringify(copyText)})'>
 文章コピー
 </button>
 
