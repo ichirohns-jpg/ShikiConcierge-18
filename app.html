@@ -312,9 +312,8 @@ body{
 const SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
 const SHEET_NAME='回覧板データー';
 
-const BASE_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
-const SHARE_TOP_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/';
-const FACEBOOK_SHARE_PAGE='https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html';
+const SITE_ROOT='https://ichirohns-jpg.github.io/ShikiConcierge-18/';
+const BASE_URL=SITE_ROOT+'app.html';
 
 let ALL=[];
 
@@ -421,40 +420,55 @@ ${shareHtml(d)}
 
 function shareHtml(d){
   const title=d.title||'志木お助け隊 回覧板';
+  const detail=d.detail||'';
   const articleUrl=BASE_URL+'?id='+encodeURIComponent(d.id);
 
-  const fbText=title+'\n'+articleUrl;
+  const shareNo=String(d.id).padStart(3,'0');
+  const facebookOgpUrl=SITE_ROOT+'share-'+shareNo+'.html';
 
-  const fb='https://www.facebook.com/sharer/sharer.php?u='
-    +encodeURIComponent(FACEBOOK_SHARE_PAGE)
-    +'&quote='
-    +encodeURIComponent(fbText);
+  const copyText=
+title+'\n\n'+
+(detail?detail+'\n\n':'')+
+articleUrl;
 
-  const x='https://twitter.com/intent/tweet?url='
-    +encodeURIComponent(SHARE_TOP_URL)
-    +'&text='
-    +encodeURIComponent(title);
+  const xText=title+'\n'+articleUrl;
+  const x='https://twitter.com/intent/tweet?text='+encodeURIComponent(xText);
 
   const lineText=title+'\n'+articleUrl;
   const line='https://line.me/R/msg/text/?'+encodeURIComponent(lineText);
-
-  const copyText=title+'\n'+articleUrl;
 
   return `
 <div class="share">
 <div class="share-title">この記事をシェアする</div>
 <div class="share-grid">
-<button class="fb" onclick="location.href='${fb}'">Facebook</button>
-<a class="x" href="${x}" target="_blank" rel="noopener noreferrer">X</a>
-<a class="line" href="${line}" target="_blank" rel="noopener noreferrer">LINE</a>
-<button class="copy" onclick='copyShareText(${JSON.stringify(copyText)})'>Facebook文章コピー</button>
+<button class="fb" onclick='shareToFacebook(${JSON.stringify(copyText)},${JSON.stringify(facebookOgpUrl)})'>Facebook</button>
+<a class="x" href="${escAttr(x)}" target="_blank" rel="noopener noreferrer">X</a>
+<a class="line" href="${escAttr(line)}" target="_blank" rel="noopener noreferrer">LINE</a>
+<button class="copy" onclick='copyShareText(${JSON.stringify(copyText)})'>文章コピー</button>
 </div>
 </div>`;
 }
 
+async function shareToFacebook(copyText,shareUrl){
+  await copyShareTextSilent(copyText);
+
+  const fbUrl='https://www.facebook.com/sharer/sharer.php?u='
+    +encodeURIComponent(shareUrl);
+
+  window.open(fbUrl,'_blank','noopener,noreferrer');
+}
+
+async function copyShareTextSilent(text){
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch(e){
+    console.log(e);
+  }
+}
+
 function copyShareText(text){
   navigator.clipboard.writeText(text).then(()=>{
-    alert('投稿用文章をコピーしました');
+    alert('投稿用文章をコピーしました。Facebook投稿画面で貼り付けできます。');
   }).catch(()=>{
     prompt('この文章をコピーしてください',text);
   });
