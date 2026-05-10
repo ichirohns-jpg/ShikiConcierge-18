@@ -18,193 +18,38 @@
 
 <style>
 *{box-sizing:border-box}
-body{
-margin:0;
-background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);
-font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
-color:#17324d;
-}
-.wrap{
-max-width:760px;
-margin:0 auto;
-padding:18px 14px 50px;
-}
-.header{
-background:#fff;
-border-radius:28px;
-overflow:hidden;
-box-shadow:0 10px 28px rgba(20,70,120,.13);
-margin-bottom:18px;
-}
-.banner{
-width:100%;
-display:block;
-}
-.header-body{
-padding:22px 18px 26px;
-text-align:center;
-}
-.title{
-margin:0;
-font-size:34px;
-line-height:1.3;
-font-weight:900;
-color:#0d5fa8;
-}
-.desc{
-margin-top:12px;
-font-size:18px;
-line-height:1.7;
-font-weight:800;
-color:#5a6f80;
-}
-.tabs{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
-margin:20px 0;
-}
-.tab{
-min-height:60px;
-border-radius:18px;
-font-size:19px;
-font-weight:900;
-border:0;
-}
-.active{
-background:linear-gradient(135deg,#1687e0,#0d5fa8);
-color:#fff;
-}
-.normal{
-background:#fff;
-color:#456;
-box-shadow:0 6px 16px rgba(20,70,120,.08);
-}
-.card{
-background:#fff;
-border-radius:24px;
-overflow:hidden;
-box-shadow:0 8px 22px rgba(20,70,120,.10);
-margin-bottom:20px;
-border-top:5px solid #1687e0;
-}
-.media{
-width:100%;
-display:flex;
-overflow-x:auto;
-overflow-y:hidden;
-background:#e9eef4;
-}
-.slide{
-flex:0 0 100%;
-background:#000;
-}
-.slide.image{
-aspect-ratio:9/16;
-}
-.slide.video{
-aspect-ratio:16/9;
-}
-.slide img,
-.slide iframe,
-.slide video{
-width:100%;
-height:100%;
-display:block;
-border:0;
-}
-.slide img{
-object-fit:cover;
-}
-.slide iframe,
-.slide video{
-object-fit:contain;
-background:#000;
-}
-.body{
-padding:20px;
-}
-.date{
-font-size:15px;
-color:#789;
-font-weight:900;
-}
-.name{
-margin-top:8px;
-font-size:28px;
-line-height:1.35;
-font-weight:900;
-color:#0d5fa8;
-}
-.msg{
-margin-top:14px;
-font-size:18px;
-line-height:1.85;
-color:#334;
-white-space:pre-wrap;
-}
-.btn{
-display:flex;
-align-items:center;
-justify-content:center;
-width:100%;
-min-height:58px;
-border-radius:18px;
-text-decoration:none;
-font-size:18px;
-font-weight:900;
-margin-top:16px;
-}
-.blue{
-background:linear-gradient(135deg,#1687e0,#0d5fa8);
-color:#fff;
-}
-.green{
-background:linear-gradient(135deg,#18b76a,#0d8b4c);
-color:#fff;
-}
-.home{
-background:linear-gradient(135deg,#6c7a89,#34495e);
-color:#fff;
-margin-top:30px;
-}
-.loading{
-text-align:center;
-padding:40px 16px;
-font-size:20px;
-color:#777;
-font-weight:800;
-}
-.share{
-margin-top:20px;
-padding-top:14px;
-border-top:1px solid #e4edf5;
-}
-.share-title{
-font-size:15px;
-font-weight:900;
-color:#678;
-margin-bottom:10px;
-}
-.share-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-}
-.share a,
-.share button{
-min-height:46px;
-border:0;
-border-radius:14px;
-color:#fff;
-font-size:15px;
-font-weight:900;
-text-decoration:none;
-display:flex;
-align-items:center;
-justify-content:center;
-font-family:inherit;
-}
+body{margin:0;background:linear-gradient(180deg,#eef6ff 0%,#ffffff 100%);font-family:"Hiragino Sans","Yu Gothic","Meiryo",sans-serif;color:#17324d}
+.wrap{max-width:760px;margin:0 auto;padding:18px 14px 50px}
+.header{background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 10px 28px rgba(20,70,120,.13);margin-bottom:18px}
+.banner{width:100%;display:block}
+.header-body{padding:22px 18px 26px;text-align:center}
+.title{margin:0;font-size:34px;line-height:1.3;font-weight:900;color:#0d5fa8}
+.desc{margin-top:12px;font-size:18px;line-height:1.7;font-weight:800;color:#5a6f80}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.tab{min-height:60px;border-radius:18px;font-size:19px;font-weight:900;border:0}
+.active{background:linear-gradient(135deg,#1687e0,#0d5fa8);color:#fff}
+.normal{background:#fff;color:#456;box-shadow:0 6px 16px rgba(20,70,120,.08)}
+.card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 8px 22px rgba(20,70,120,.10);margin-bottom:20px;border-top:5px solid #1687e0}
+.media{width:100%;display:flex;overflow-x:auto;overflow-y:hidden;background:#e9eef4}
+.slide{flex:0 0 100%;background:#000}
+.slide.image{aspect-ratio:9/16}
+.slide.video{aspect-ratio:16/9}
+.slide img,.slide iframe,.slide video{width:100%;height:100%;display:block;border:0}
+.slide img{object-fit:cover}
+.slide iframe,.slide video{object-fit:contain;background:#000}
+.body{padding:20px}
+.date{font-size:15px;color:#789;font-weight:900}
+.name{margin-top:8px;font-size:28px;line-height:1.35;font-weight:900;color:#0d5fa8}
+.msg{margin-top:14px;font-size:18px;line-height:1.85;color:#334;white-space:pre-wrap}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:58px;border-radius:18px;text-decoration:none;font-size:18px;font-weight:900;margin-top:16px}
+.blue{background:linear-gradient(135deg,#1687e0,#0d5fa8);color:#fff}
+.green{background:linear-gradient(135deg,#18b76a,#0d8b4c);color:#fff}
+.home{background:linear-gradient(135deg,#6c7a89,#34495e);color:#fff;margin-top:30px}
+.loading{text-align:center;padding:40px 16px;font-size:20px;color:#777;font-weight:800}
+.share{margin-top:20px;padding-top:14px;border-top:1px solid #e4edf5}
+.share-title{font-size:15px;font-weight:900;color:#678;margin-bottom:10px}
+.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.share a,.share button{min-height:46px;border:0;border-radius:14px;color:#fff;font-size:15px;font-weight:900;text-decoration:none;display:flex;align-items:center;justify-content:center;font-family:inherit}
 .fb{background:#1877f2}
 .x{background:#000}
 .line{background:#06c755}
@@ -217,85 +62,47 @@ font-family:inherit;
 <div class="wrap">
 
 <div class="header">
-
-<img
-class="banner"
-src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
-
+<img class="banner" src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000">
 <div class="header-body">
-
-<h1 class="title">
-志木お助け隊 回覧板
-</h1>
-
-<div class="desc">
-市からのお知らせや地域情報を<br>
-スマホで見やすくまとめて表示します
-</div>
-
+<h1 class="title">志木お助け隊 回覧板</h1>
+<div class="desc">市からのお知らせや地域情報を<br>スマホで見やすくまとめて表示します</div>
 </div>
 </div>
 
 <div class="tabs">
-
-<button
-id="latestBtn"
-class="tab active"
-onclick="showLatest()">
-最新情報
-</button>
-
-<button
-id="archiveBtn"
-class="tab normal"
-onclick="showArchive()">
-過去の情報
-</button>
-
+<button id="latestBtn" class="tab active" onclick="showLatest()">最新情報</button>
+<button id="archiveBtn" class="tab normal" onclick="showArchive()">過去の情報</button>
 </div>
 
 <div id="list">
 <div class="loading">読み込み中...</div>
 </div>
 
-<a class="btn home" href="index.html">
-← トップに戻る
-</a>
+<a class="btn home" href="index.html">← トップに戻る</a>
 
 </div>
 
 <script>
-
 const SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
-
 const SHEET_NAME='回覧板データー';
 
-const BASE_URL=
-'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
+const META_APP_ID='1519320129765759';
 
-const SHARE_TOP_URL=
-'https://ichirohns-jpg.github.io/ShikiConcierge-18/';
-
-const FACEBOOK_SHARE_PAGE=
-'https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html';
+const BASE_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
+const SHARE_TOP_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/';
+const FACEBOOK_SHARE_PAGE='https://ichirohns-jpg.github.io/ShikiConcierge-18/share-001.html';
 
 let ALL=[];
 
 window.handleSheet=function(json){
-
 try{
-
 const rows=json.table.rows||[];
 
 ALL=rows.map((r,index)=>{
-
 const c=r.c||[];
-
 return{
-
 id:String(index+1),
 rowIndex:index,
-
 date:getCell(c[0]),
 title:getCell(c[1]),
 image:getCell(c[2]),
@@ -304,37 +111,25 @@ applyUrl:getCell(c[4]),
 cityUrl:getCell(c[5]),
 mediaUrl:getCell(c[6]),
 sortKey:Number(getCell(c[10])||0)
-
 };
-
 }).filter(d=>d.title||d.detail||d.image||d.mediaUrl);
 
 ALL.sort((a,b)=>{
-
 const sb=Number(b.sortKey||0);
 const sa=Number(a.sortKey||0);
-
 if(sb!==sa)return sb-sa;
-
 return b.rowIndex-a.rowIndex;
-
 });
 
 showLatest();
 
 }catch(e){
-
-document.getElementById('list').innerHTML=
-'<div class="loading">読み込み失敗</div>';
-
+document.getElementById('list').innerHTML='<div class="loading">読み込み失敗</div>';
 }
-
 };
 
 function loadSheet(){
-
 const script=document.createElement('script');
-
 script.src=
 'https://docs.google.com/spreadsheets/d/'
 +SHEET_ID+
@@ -342,106 +137,66 @@ script.src=
 +encodeURIComponent(SHEET_NAME)
 +'&tqx=out:json;responseHandler:handleSheet&v='
 +Date.now();
-
 document.body.appendChild(script);
-
 }
 
 loadSheet();
 
 function showLatest(){
-
 setTab('latest');
-
 render(ALL.slice(0,5));
-
 }
 
 function showArchive(){
-
 setTab('archive');
-
 render(ALL.slice(5));
-
 }
 
 function setTab(mode){
-
 document.getElementById('latestBtn').className=
-mode==='latest'
-?'tab active'
-:'tab normal';
+mode==='latest'?'tab active':'tab normal';
 
 document.getElementById('archiveBtn').className=
-mode==='archive'
-?'tab active'
-:'tab normal';
-
+mode==='archive'?'tab active':'tab normal';
 }
 
 function render(list){
-
 let html='';
-
 list.forEach(d=>{
-
 html+=card(d);
-
 });
-
 document.getElementById('list').innerHTML=
-html||
-'<div class="loading">表示できる情報はありません</div>';
-
+html||'<div class="loading">表示できる情報はありません</div>';
 }
 
 function card(d){
-
 return `
 <div class="card">
-
 ${mediaHtml(d.image,d.mediaUrl)}
-
 <div class="body">
-
 <div class="date">${esc(d.date)}</div>
-
 <div class="name">${esc(d.title)}</div>
-
-${d.detail
-?`<div class="msg">${esc(d.detail)}</div>`
-:''}
-
-${d.cityUrl
-?`<a class="btn blue" href="${escAttr(d.cityUrl)}" target="_blank">詳しく見る</a>`
-:''}
-
-${d.applyUrl
-?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank">申込みはこちら</a>`
-:''}
-
+${d.detail?`<div class="msg">${esc(d.detail)}</div>`:''}
+${d.cityUrl?`<a class="btn blue" href="${escAttr(d.cityUrl)}" target="_blank">詳しく見る</a>`:''}
+${d.applyUrl?`<a class="btn green" href="${escAttr(d.applyUrl)}" target="_blank">申込みはこちら</a>`:''}
 ${shareHtml(d)}
-
 </div>
 </div>`;
 }
 
 function shareHtml(d){
+const title=d.title||'志木お助け隊 回覧板';
+const articleUrl=BASE_URL+'?id='+encodeURIComponent(d.id);
 
-const title=
-d.title||'志木お助け隊 回覧板';
-
-const articleUrl=
-BASE_URL+'?id='+encodeURIComponent(d.id);
-
-const fbText=
-title+'\n'+articleUrl;
+const fbText=title+'\n'+articleUrl;
 
 const fb=
-'https://www.facebook.com/sharer/sharer.php?u='
-+encodeURIComponent(FACEBOOK_SHARE_PAGE)
-+'&quote='
-+encodeURIComponent(fbText);
+'https://www.facebook.com/dialog/share'
++'?app_id='+encodeURIComponent(META_APP_ID)
++'&display=popup'
++'&href='+encodeURIComponent(FACEBOOK_SHARE_PAGE)
++'&quote='+encodeURIComponent(fbText)
++'&redirect_uri='+encodeURIComponent(SHARE_TOP_URL);
 
 const x=
 'https://twitter.com/intent/tweet?url='
@@ -449,23 +204,14 @@ const x=
 +'&text='
 +encodeURIComponent(title);
 
-const lineText=
-title+'\n'+articleUrl;
+const lineText=title+'\n'+articleUrl;
+const line='https://line.me/R/msg/text/?'+encodeURIComponent(lineText);
 
-const line=
-'https://line.me/R/msg/text/?'
-+encodeURIComponent(lineText);
-
-const copyText=
-title+'\n'+articleUrl;
+const copyText=title+'\n'+articleUrl;
 
 return `
 <div class="share">
-
-<div class="share-title">
-この記事をシェアする
-</div>
-
+<div class="share-title">この記事をシェアする</div>
 <div class="share-grid">
 
 <button
@@ -501,72 +247,45 @@ onclick='copyShareText(${JSON.stringify(copyText)})'>
 }
 
 function copyShareText(text){
-
 navigator.clipboard.writeText(text).then(()=>{
-
 alert('投稿用文章をコピーしました');
-
 }).catch(()=>{
-
 prompt('この文章をコピーしてください',text);
-
 });
-
 }
 
 function mediaHtml(imageText,mediaText){
-
 const items=[];
 
 parseImages(imageText).forEach(url=>{
-
-items.push({
-type:'image',
-url:url
-});
-
+items.push({type:'image',url:url});
 });
 
 parseMediaUrls(mediaText).forEach(m=>{
-
 items.push(m);
-
 });
 
 if(!items.length){
-
 return `
 <div class="slide image">
 <img src="https://placehold.jp/cccccc/ffffff/800x1400.png?text=No+Image">
 </div>`;
-
 }
 
 let html='<div class="media">';
 
 items.slice(0,5).forEach(m=>{
-
-const cls=
-(m.type==='youtube'
-||m.type==='driveVideo'
-||m.type==='video')
-?'slide video'
-:'slide image';
-
+const cls=(m.type==='youtube'||m.type==='driveVideo'||m.type==='video')?'slide video':'slide image';
 html+='<div class="'+cls+'">';
 
-if(m.type==='youtube'
-||m.type==='driveVideo'){
-
+if(m.type==='youtube'||m.type==='driveVideo'){
 html+=`
 <iframe
 src="${escAttr(m.url)}"
 allowfullscreen
 loading="lazy">
 </iframe>`;
-
 }else if(m.type==='video'){
-
 html+=`
 <video
 src="${escAttr(m.url)}"
@@ -574,106 +293,64 @@ controls
 playsinline
 preload="metadata">
 </video>`;
-
 }else{
-
 html+=`
 <img
 src="${escAttr(m.url)}"
 loading="lazy">`;
-
 }
 
 html+='</div>';
-
 });
 
 html+='</div>';
-
 return html;
-
 }
 
 function parseImages(s){
-
 if(!s)return[];
-
-return extractUrls(String(s))
-.map(toImageUrl)
-.filter(Boolean);
-
+return extractUrls(String(s)).map(toImageUrl).filter(Boolean);
 }
 
 function parseMediaUrls(s){
-
 if(!s)return[];
-
-return extractUrls(String(s))
-.map(toMediaObject)
-.filter(Boolean);
-
+return extractUrls(String(s)).map(toMediaObject).filter(Boolean);
 }
 
 function toImageUrl(url){
-
 const id=driveFileId(url);
-
 if(id){
-
-return 'https://drive.google.com/thumbnail?id='
-+id+
-'&sz=w2000';
-
+return 'https://drive.google.com/thumbnail?id='+id+'&sz=w2000';
 }
-
 return url;
-
 }
 
 function toMediaObject(url){
-
 const yt=youtubeEmbed(url);
-
 if(yt){
-
-return {
-type:'youtube',
-url:yt
-};
-
+return {type:'youtube',url:yt};
 }
 
 const id=driveFileId(url);
-
 if(id){
-
 return {
 type:'driveVideo',
 url:'https://drive.google.com/file/d/'+id+'/preview'
 };
-
 }
 
 if(isVideoUrl(url)){
-
-return {
-type:'video',
-url:url
-};
-
+return {type:'video',url:url};
 }
 
 return {
 type:'image',
 url:toImageUrl(url)
 };
-
 }
 
 function youtubeEmbed(url){
-
 const s=String(url||'');
-
 const m=
 s.match(/youtube\.com\/shorts\/([^?&/]+)/)
 ||
@@ -684,70 +361,46 @@ s.match(/[?&]v=([^?&/]+)/)
 s.match(/youtube\.com\/embed\/([^?&/]+)/);
 
 if(!m||!m[1])return'';
-
 return 'https://www.youtube.com/embed/'+m[1];
-
 }
 
 function driveFileId(url){
-
 const s=String(url||'');
-
 const m=
 s.match(/\/file\/d\/([^/]+)/)
 ||
 s.match(/[?&]id=([^&]+)/);
 
 return m&&m[1]?m[1]:'';
-
 }
 
 function isVideoUrl(url){
-
-return /\.(mp4|mov|m4v|webm|ogg)(\?|#|$)/i
-.test(String(url||''));
-
+return /\.(mp4|mov|m4v|webm|ogg)(\?|#|$)/i.test(String(url||''));
 }
 
 function extractUrls(text){
-
-return String(text||'')
-.match(/https?:\/\/[^\s"'<>]+/g)
-||[];
-
+return String(text||'').match(/https?:\/\/[^\s"'<>]+/g)||[];
 }
 
 function getCell(c){
-
 if(!c)return'';
-
-if(c.f!==null&&c.f!==undefined)
-return String(c.f);
-
-if(c.v!==null&&c.v!==undefined)
-return String(c.v);
-
+if(c.f!==null&&c.f!==undefined)return String(c.f);
+if(c.v!==null&&c.v!==undefined)return String(c.v);
 return'';
-
 }
 
 function esc(s){
-
 return String(s||'')
 .replace(/&/g,'&amp;')
 .replace(/</g,'&lt;')
 .replace(/>/g,'&gt;')
 .replace(/"/g,'&quot;')
 .replace(/'/g,'&#39;');
-
 }
 
 function escAttr(s){
-
 return esc(s);
-
 }
-
 </script>
 
 </body>
