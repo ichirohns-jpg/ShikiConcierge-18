@@ -311,7 +311,6 @@ body{
 <script>
 const SHEET_ID='1Xx0a0dRqSrL6pacX7xY5jyTtiQ1Ot8E03oLmMICfI6M';
 const SHEET_NAME='回覧板データー';
-const META_APP_ID='1519320129765759';
 
 const BASE_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html';
 const SHARE_TOP_URL='https://ichirohns-jpg.github.io/ShikiConcierge-18/';
@@ -426,12 +425,10 @@ function shareHtml(d){
 
   const fbText=title+'\n'+articleUrl;
 
-  const fb='https://www.facebook.com/dialog/share'
-    +'?app_id='+encodeURIComponent(META_APP_ID)
-    +'&display=popup'
-    +'&href='+encodeURIComponent(FACEBOOK_SHARE_PAGE)
-    +'&quote='+encodeURIComponent(fbText)
-    +'&redirect_uri='+encodeURIComponent(SHARE_TOP_URL);
+  const fb='https://www.facebook.com/sharer/sharer.php?u='
+    +encodeURIComponent(FACEBOOK_SHARE_PAGE)
+    +'&quote='
+    +encodeURIComponent(fbText);
 
   const x='https://twitter.com/intent/tweet?url='
     +encodeURIComponent(SHARE_TOP_URL)
