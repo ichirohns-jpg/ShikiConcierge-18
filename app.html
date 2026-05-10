@@ -9,6 +9,87 @@ BASE_URL+'?id='+encodeURIComponent(d.id);
 const fbText=
 title+'\n'+articleUrl;
 
+/* Facebookアプリ直接起動 */
+const fb=
+'fb://facewebmodal/f?href='
++encodeURIComponent(
+'https://www.facebook.com/dialog/share'
++'?app_id='+encodeURIComponent(META_APP_ID)
++'&display=popup'
++'&href='+encodeURIComponent(FACEBOOK_SHARE_PAGE)
++'&quote='+encodeURIComponent(fbText)
++'&redirect_uri='+encodeURIComponent(SHARE_TOP_URL)
+);
+
+/* X */
+const x=
+'https://twitter.com/intent/tweet?url='
++encodeURIComponent(SHARE_TOP_URL)
++'&text='
++encodeURIComponent(title);
+
+/* LINE */
+const lineText=
+title+'\n'+articleUrl;
+
+const line=
+'https://line.me/R/msg/text/?'
++encodeURIComponent(lineText);
+
+/* コピー */
+const copyText=
+title+'\n'+articleUrl;
+
+return `
+<div class="share">
+
+<div class="share-title">
+この記事をシェアする
+</div>
+
+<div class="share-grid">
+
+<button
+class="fb"
+onclick="location.href='${fb}'">
+Facebook
+</button>
+
+<a
+class="x"
+href="${x}"
+target="_blank"
+rel="noopener noreferrer">
+X
+</a>
+
+<a
+class="line"
+href="${line}"
+target="_blank"
+rel="noopener noreferrer">
+LINE
+</a>
+
+<button
+class="copy"
+onclick='copyShareText(${JSON.stringify(copyText)})'>
+Facebook文章コピー
+</button>
+
+</div>
+</div>`;
+}
+
+const title=
+d.title||'志木お助け隊 回覧板';
+
+const articleUrl=
+BASE_URL+'?id='+encodeURIComponent(d.id);
+
+const fbText=
+title+'\n'+articleUrl;
+
 const fb=
 'https://www.facebook.com/dialog/share'
 +'?app_id='+encodeURIComponent(META_APP_ID)
