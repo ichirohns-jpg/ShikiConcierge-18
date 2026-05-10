@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>志木お助け隊 回覧板</title>
-
 <meta name="description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
 
 <meta property="og:type" content="website">
@@ -15,8 +14,8 @@
 <meta property="og:title" content="志木お助け隊 回覧板">
 <meta property="og:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
 <meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">
-<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=401">
-<meta property="og:image:secure_url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=401">
+<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=501">
+<meta property="og:image:secure_url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=501">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -24,7 +23,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="志木お助け隊 回覧板">
 <meta name="twitter:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
-<meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=401">
+<meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=501">
 
 <style>
 *{box-sizing:border-box}
@@ -422,29 +421,36 @@ function shareHtml(d){
   const title=d.title||'志木お助け隊 回覧板';
   const detail=d.detail||'';
   const articleUrl=BASE_URL+'?id='+encodeURIComponent(d.id);
+  const shareUrl=SITE_ROOT+'share.html?id='+encodeURIComponent(d.id);
 
-  const shareNo=String(d.id).padStart(3,'0');
-  const facebookOgpUrl=SITE_ROOT+'share-'+shareNo+'.html';
+  const shareText =
+'【志木お助け隊 回覧板】\n\n' +
+title + '\n\n' +
+(detail ? detail + '\n\n' : '') +
+'詳しくはこちら\n' +
+shareUrl;
 
-  const copyText=
-title+'\n\n'+
-(detail?detail+'\n\n':'')+
-articleUrl;
+  const xText =
+'【志木お助け隊 回覧板】\n\n' +
+title + '\n\n' +
+(detail ? detail + '\n\n' : '') +
+'詳しくはこちら';
 
-  const xText=title+'\n'+articleUrl;
-  const x='https://twitter.com/intent/tweet?text='+encodeURIComponent(xText);
+  const x='https://twitter.com/intent/tweet?text='
+    +encodeURIComponent(xText)
+    +'&url='
+    +encodeURIComponent(shareUrl);
 
-  const lineText=title+'\n'+articleUrl;
-  const line='https://line.me/R/msg/text/?'+encodeURIComponent(lineText);
+  const line='https://line.me/R/msg/text/?'+encodeURIComponent(shareText);
 
   return `
 <div class="share">
 <div class="share-title">この記事をシェアする</div>
 <div class="share-grid">
-<button class="fb" onclick='shareToFacebook(${JSON.stringify(copyText)},${JSON.stringify(facebookOgpUrl)})'>Facebook</button>
+<button class="fb" onclick='shareToFacebook(${JSON.stringify(shareText)},${JSON.stringify(shareUrl)})'>Facebook</button>
 <a class="x" href="${escAttr(x)}" target="_blank" rel="noopener noreferrer">X</a>
 <a class="line" href="${escAttr(line)}" target="_blank" rel="noopener noreferrer">LINE</a>
-<button class="copy" onclick='copyShareText(${JSON.stringify(copyText)})'>文章コピー</button>
+<button class="copy" onclick='copyShareText(${JSON.stringify(shareText)})'>文章コピー</button>
 </div>
 </div>`;
 }
@@ -475,7 +481,7 @@ async function shareToFacebook(copyText,shareUrl){
 
 function copyShareText(text){
   navigator.clipboard.writeText(text).then(()=>{
-    alert('投稿用文章をコピーしました。Facebook投稿画面で貼り付けできます。');
+    alert('投稿用文章をコピーしました。Facebook・LINE・Xで貼り付けできます。');
   }).catch(()=>{
     prompt('この文章をコピーしてください',text);
   });
