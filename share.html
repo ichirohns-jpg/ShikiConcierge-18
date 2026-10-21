@@ -25,19 +25,41 @@
 <meta name="twitter:description" content="市からのお知らせや地域情報をスマホで見やすくまとめて表示します。">
 <meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/top-banner.jpg?v=601">
 
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:#f1f7fb;color:#18384b;font-family:system-ui,-apple-system,sans-serif;line-height:1.7}
+main{max-width:560px;margin:32px auto;padding:24px;background:#fff;border-radius:18px}
+h1{font-size:24px;line-height:1.5;margin:0 0 16px}
+p{margin:12px 0}
+.button{display:block;padding:14px 16px;border-radius:12px;background:#087e65;color:#fff;text-align:center;text-decoration:none;font-weight:700;min-height:48px}
+.list{display:block;margin-top:18px;text-align:center;color:#155e91}
+@media(max-width:600px){main{margin:16px 12px;padding:20px}}
+</style>
+</head>
+<body>
+<main>
+<h1>志木お助け隊 回覧板</h1>
+<p id="status" role="status">お知らせを開く準備をしています。</p>
+<a id="openArticle" class="button" href="app.html">回覧板を開く</a>
+<p>自動で開かない場合は、上のボタンを押してください。</p>
+<a class="list" href="app.html">回覧板の一覧を見る</a>
+<noscript><p>自動移動を利用できないため、上のボタンから回覧板を開いてください。</p></noscript>
+</main>
 <script>
 (function(){
-  var p = new URLSearchParams(location.search);
-  var id = p.get('id') || '1';
-
-  setTimeout(function(){
-    location.href = 'https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html?id=' + encodeURIComponent(id);
-  }, 800);
+  var rawId = new URLSearchParams(location.search).get('id');
+  var validId = rawId !== null && /^[1-9][0-9]*$/.test(rawId);
+  var destination = 'app.html' + (validId ? '?id=' + encodeURIComponent(rawId) : '');
+  var link = document.getElementById('openArticle');
+  var status = document.getElementById('status');
+  link.href = destination;
+  link.textContent = validId ? 'この記事を開く' : '回覧板の一覧を開く';
+  status.textContent = validId
+    ? '指定された記事を開いています。'
+    : '回覧板の一覧を開いています。';
+  setTimeout(function(){location.replace(destination);},800);
 })();
 </script>
-</head>
-
-<body>
-志木お助け隊 回覧板の記事を開いています。
 </body>
 </html>
