@@ -506,7 +506,9 @@ function shareHtml(d){
   const title=d.title||'志木お助け隊 回覧板';
   const detail=d.detail||'';
   const articleUrl=BASE_URL+'?id='+encodeURIComponent(d.id);
-  const shareUrl=SITE_ROOT+'share.html?id='+encodeURIComponent(d.id);
+  const shareUrl=(String(d.id)==='139' && title==='敷島神社「七五三詣」のご案内')
+    ? SITE_ROOT+'share/139.html'
+    : SITE_ROOT+'share.html?id='+encodeURIComponent(d.id);
 
   const shareText =
 '【志木お助け隊 回覧板】\n\n' +
