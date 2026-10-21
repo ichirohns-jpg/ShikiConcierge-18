@@ -564,12 +564,16 @@ async function shareToFacebook(copyText,shareUrl){
   location.href=fbUrl;
 }
 
-function copyShareText(text){
-  navigator.clipboard.writeText(text).then(()=>{
-    alert('投稿用文章をコピーしました。Facebook・LINE・Xで貼り付けできます。');
-  }).catch(()=>{
-    prompt('この文章をコピーしてください',text);
-  });
+async function copyShareText(text){
+  try{
+    if(!navigator.clipboard || typeof navigator.clipboard.writeText!=='function'){
+      throw new Error('Clipboard unavailable');
+    }
+    await navigator.clipboard.writeText(text);
+    alert('投稿用文章をコピーしました。Facebook・LINE・Xを開いて、投稿欄に貼り付けてください。');
+  }catch(e){
+    prompt('自動コピーを利用できません。この文章を長押しして、すべて選択してコピーしてください。SNSの投稿欄に貼り付けてください。',text);
+  }
 }
 
 function mediaHtml(imageText,mediaText){
