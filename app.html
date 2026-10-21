@@ -343,7 +343,7 @@ if(new URLSearchParams(location.search).get("id"))document.body.classList.add("s
     </div>
   </div>
 
-  <a class="return-home" href="https://ichirohns-jpg.github.io/shiki-senior-life-concierge-dx/">← シニア生活相談DXへ戻る</a>
+  <a class="return-home" target="_top" href="https://ichirohns-jpg.github.io/shiki-senior-life-concierge-dx/">← シニア生活相談DXへ戻る</a>
 
   <div class="tabs" id="tabs">
     <button id="latestBtn" class="tab active" onclick="showLatest()">最新情報</button>
@@ -356,7 +356,7 @@ if(new URLSearchParams(location.search).get("id"))document.body.classList.add("s
     <div class="loading">読み込み中...</div>
   </div>
 
-  <a class="btn home" href="https://ichirohns-jpg.github.io/shiki-senior-life-concierge-dx/">← シニア生活相談DXへ戻る</a>
+  <a class="btn home" target="_top" href="https://ichirohns-jpg.github.io/shiki-senior-life-concierge-dx/">← シニア生活相談DXへ戻る</a>
 
 </div>
 
@@ -371,6 +371,7 @@ let ALL=[];
 
 window.handleSheet=function(json){
   try{
+    if(!json || json.status==="error" || !json.table || !Array.isArray(json.table.rows))throw new Error("invalid response");
     const rows=json.table.rows||[];
 
     ALL=rows.map((r,index)=>{
@@ -404,13 +405,44 @@ window.handleSheet=function(json){
     }
 
   }catch(e){
-    document.getElementById('list').innerHTML='<div class="loading">読み込み失敗</div>';
+    showSheetError();
   }
 };
 
+let sheetLoadToken=0;
+let sheetCleanup=null;
+function showSheetError(){
+  document.getElementById('list').innerHTML='<div class="loading" role="alert">お知らせを読み込めませんでした。通信を確認して、もう一度お試しください。<button type="button" class="btn blue" onclick="loadSheet()">再読み込み</button></div>';
+}
 function loadSheet(){
+  if(sheetCleanup)sheetCleanup();
+  const token=++sheetLoadToken;
   const script=document.createElement('script');
-  script.src='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?sheet='+encodeURIComponent(SHEET_NAME)+'&tqx=out:json;responseHandler:handleSheet&v='+Date.now();
+  const callback='__boardSheet_'+Date.now()+'_'+token;
+  let finished=false;
+  let timer;
+  const cleanup=()=>{
+    finished=true;
+    clearTimeout(timer);
+    script.remove();
+    delete window[callback];
+    if(sheetCleanup===cleanup)sheetCleanup=null;
+  };
+  const fail=()=>{
+    if(finished||token!==sheetLoadToken)return;
+    cleanup();
+    showSheetError();
+  };
+  sheetCleanup=cleanup;
+  document.getElementById('list').innerHTML='<div class="loading" role="status">読み込み中...</div>';
+  window[callback]=json=>{
+    if(finished||token!==sheetLoadToken)return;
+    cleanup();
+    window.handleSheet(json);
+  };
+  script.onerror=fail;
+  timer=setTimeout(fail,15000);
+  script.src='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?sheet='+encodeURIComponent(SHEET_NAME)+'&tqx=out:json;responseHandler:'+callback+'&v='+Date.now();
   document.body.appendChild(script);
 }
 
@@ -500,10 +532,10 @@ title + '\n\n' +
 <div class="share">
 <div class="share-title">この記事をシェアする</div>
 <div class="share-grid">
-<button class="fb" onclick='shareToFacebook(${JSON.stringify(shareText)},${JSON.stringify(shareUrl)})'>Facebook</button>
+<button class="fb" onclick="${escAttr('shareToFacebook('+JSON.stringify(shareText)+','+JSON.stringify(shareUrl)+')')}">Facebook</button>
 <a class="x" href="${escAttr(x)}" target="_blank" rel="noopener noreferrer">X</a>
 <a class="line" href="${escAttr(line)}" target="_blank" rel="noopener noreferrer">LINE</a>
-<button class="copy" onclick='copyShareText(${JSON.stringify(shareText)})'>文章コピー</button>
+<button class="copy" onclick="${escAttr('copyShareText('+JSON.stringify(shareText)+')')}">文章コピー</button>
 </div>
 </div>`;
 }
