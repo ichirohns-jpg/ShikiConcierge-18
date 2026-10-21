@@ -300,17 +300,45 @@ body{
 .x{background:#000}
 .line{background:#06c755}
 .copy{background:#e1306c}
+
+/* スマホで見出しと記事画像を読みやすく表示 */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.title{font-size:clamp(22px,6vw,34px);line-height:1.4}
+.title span{display:inline-block;white-space:nowrap}
+.header-body{padding:16px 12px}
+.desc{font-size:16px;font-weight:700;line-height:1.65}
+.return-home{font-size:16px;min-height:48px;padding:10px 12px}
+.media{align-items:flex-start}
+.slide.image{aspect-ratio:auto;background:#fff}
+.slide.image img{height:auto;object-fit:contain}
+.name,.msg{overflow-wrap:anywhere}
+.single-article .wrap{padding-top:10px}
+.single-article .banner,.single-article .desc,.single-article #note{display:none}
+.single-article .header{margin-bottom:10px;border-radius:16px}
+.single-article .header-body{padding:10px 8px}
+.single-article .title{font-size:clamp(20px,5.5vw,28px)}
+.single-article .return-home{margin-bottom:12px}
+@media(max-width:480px){
+  .wrap{padding:10px 10px 32px}
+  .header{border-radius:18px}
+  .desc br{display:none}
+  .body{padding:16px}
+  .name{font-size:24px}
+}
 </style>
 </head>
 
 <body>
+<script>
+if(new URLSearchParams(location.search).get("id"))document.body.classList.add("single-article");
+</script>
 
 <div class="wrap">
 
   <div class="header">
     <img class="banner" src="https://drive.google.com/thumbnail?id=1HhzMcMDxsz5O_TVsux2Ycz2TvQMY4UTT&sz=w2000" alt="志木お助け隊 回覧板">
     <div class="header-body">
-      <h1 class="title">志木お助け隊 回覧板</h1>
+      <h1 class="title"><span>志木お助け隊</span> <span>回覧板</span></h1>
       <div class="desc">市からのお知らせや地域情報を<br>スマホで見やすくまとめて表示します</div>
     </div>
   </div>
