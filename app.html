@@ -262,7 +262,7 @@ body{
     </div>
   </div>
 
-  <a class="return-home" target="_top" href="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">← トップに戻る</a>
+  <a class="return-home" target="_top" href="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">← 最新のお知らせを見る</a>
 
   <div class="tabs" id="tabs">
     <button id="latestBtn" class="tab active" onclick="showLatest()">最新情報</button>
@@ -275,7 +275,7 @@ body{
     <div class="loading">読み込み中...</div>
   </div>
 
-  <a class="btn home" target="_top" href="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">← トップに戻る</a>
+  <a class="btn home" target="_top" href="https://ichirohns-jpg.github.io/ShikiConcierge-18/app.html">← 最新のお知らせを見る</a>
 
 </div>
 
@@ -386,8 +386,8 @@ function loadSheet(){
 }
 
 function showSingle(id){
-  document.getElementById('tabs').style.display='none';
-  document.getElementById('note').innerHTML='この記事を表示しています。';
+  document.getElementById('tabs').style.display='grid';
+  document.getElementById('note').textContent='個別の記事を表示しています。新しいお知らせは上の「最新情報」を押してください。';
 
   const item=ALL.find(d=>d.id===String(id));
 
@@ -662,3 +662,4 @@ loadSheet();
 
 </body>
 </html>
+
