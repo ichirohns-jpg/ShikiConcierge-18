@@ -1,0 +1,25 @@
+{
+  "name": "志木なるほど お店めぐりDX",
+  "short_name": "お店めぐりDX",
+  "lang": "ja",
+  "id": "/ShikiConcierge-18/omise-demo/",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f8f4",
+  "theme_color": "#146b57",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
