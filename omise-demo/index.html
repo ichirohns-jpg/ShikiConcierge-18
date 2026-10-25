@@ -1,85 +1,567 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#146b57"><title>志木なるほど お店めぐりDX｜操作版</title><meta property="og:type" content="website"><meta property="og:site_name" content="志木なるほど お店めぐりDX"><meta property="og:title" content="志木なるほど お店めぐりDX"><meta property="og:description" content="見つけて、知って、行ってみよう！志木のお店をふじこと一緒に発見。"><meta property="og:url" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/"><meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/IMG_4362.JPG"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/IMG_4362.JPG"><meta name="description" content="志木のお店を見つけて、知って、行ってみよう。"><style>
-*{box-sizing:border-box}body{margin:0;background:#f5f8f4;color:#193f33;font:16px/1.7 -apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif}header{background:#f5f8f4;color:#193f33;text-align:center;padding:0;margin:0}header .hero-wrap{max-width:720px;margin:auto}header h1{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}header h1{font-size:28px;line-height:1.3;margin:7px 0}main{max-width:720px;margin:auto;padding:14px}section{background:white;border:1px solid #d4e5db;border-radius:17px;padding:18px;margin:14px 0;scroll-margin-top:12px}h2{font-size:21px;margin:0 0 12px}h3{font-size:19px;margin:0 0 7px}p{margin:8px 0 14px}button,.btn{font:inherit;display:inline-block;cursor:pointer;background:#156e57;color:white;border:0;border-radius:12px;padding:12px 14px;text-decoration:none;font-weight:750;text-align:center;min-height:46px}button.secondary,.btn.secondary{background:#e4f1e9;color:#155844;border:1px solid #bed9c9}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid orange;outline-offset:2px}.nav,.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.nav button{min-height:88px}.nav b{display:block;font-size:24px}.wide{width:100%}.card{border:1px solid #d4e5db;border-radius:12px;padding:15px;margin:12px 0}.muted{color:#60786a;font-size:13px}.small{font-size:14px}.notice{background:#fff5dd;border:1px solid #f0d9a6;padding:12px;border-radius:12px}.pill{display:inline-block;background:#e4f1e9;color:#155844;border-radius:100px;padding:2px 10px;font-size:12px}input,textarea{font:inherit;width:100%;border:1px solid #a8c8b7;border-radius:10px;padding:12px;margin:5px 0 12px}label{display:block;font-weight:700}a{color:#0c7256}#mediaPreview img,#mediaPreview video{max-width:100%;width:100%;border-radius:12px;max-height:450px;object-fit:contain;background:#e8f1e9}footer{text-align:center;color:#68796f;font-size:12px;padding:20px}.hidden{display:none!important}.stack>*{margin:6px 0}.back{display:block;margin-top:12px} .emoji{font-size:48px;text-align:center;background:#e7f4ea;border-radius:12px;padding:8px}.sr-only{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}
-header .official-banner{display:block;width:min(100%,720px);max-height:300px;object-fit:contain;margin:0 auto 12px;border-radius:12px;background:#fff2}header .official-banner[hidden]{display:none}</style></head><body><header id="top"><div class="hero-wrap"><img id="official-banner" class="official-banner" alt="志木なるほど お店めぐりDX ふじこの公式バナー" hidden></div><h1>志木なるほど お店めぐりDX</h1></header><main>
-<section><h2>どこを見てみる？</h2><div class="nav"><button data-target="shops"><b>🥐</b>お店を探す</button><button data-target="fujiko"><b>🎬</b>ふじこからのお知らせ</button><button data-target="cheer"><b>💚</b>ふじこの応援団</button><button data-target="news"><b>📣</b>新着・セール情報</button><button data-target="guide"><b>📱</b>投稿・シェアの使い方</button><button data-target="register"><b>📝</b>店舗登録について</button></div></section>
-<section id="shops"><h2>🥐 志木のお店を探す</h2><label for="search">店名・業種で検索</label><input id="search" placeholder="例：パン、カフェ、店名"><p id="syncStatus" class="muted" role="status">店舗データを読み込んでいます…</p><div id="shopList"></div></section>
-<section id="detail" class="hidden"><button class="secondary" data-target="shops">← お店一覧へ</button><div id="shopDetail"></div></section>
-<section id="fujiko"><h2>🎬 ふじこからのお知らせ</h2><p>写真・動画を選んで、その場でプレビューできます。</p><label for="media">📸 写真・動画を選ぶ</label><input id="media" type="file" accept="image/*,video/*"><div id="mediaPreview"></div><p class="notice small">これは自分の端末での確認機能です。一般公開するアップロード機能はまだ接続されていません。</p></section>
-<section id="cheer"><h2>💚 ふじこの勝手に応援団！</h2><p>ふじこが応援したいお店を紹介するコーナー。応援動画やコメントを追加できる設計です。</p><p class="muted">現在は準備中。未確認の推薦文や架空のセール情報は掲載しません。</p><button data-target="shops">お店を見る</button></section>
-<section id="news"><h2>📣 お店の新着・セール情報</h2><p>確認済みのお知らせを、掲載期限付きで表示する予定です。</p><p class="muted">現在、公開できるセール情報はありません。</p></section>
-<section id="guide"><h2>📱 自分のお店を宣伝しよう</h2><p>各店舗の詳細ページにある「紹介記事をコピー」から、文章とURLをまとめてコピーできます。Xへの投稿やLINE共有も選べます。</p><p>Facebook・Instagram・LINE公式アカウントでの配信は、投稿先を開いてコピーした文章を貼り付けてください。Instagramでは写真や動画も用意すると便利です。</p><button data-target="shops">お店の紹介ページを開く</button></section>
-<section id="register"><h2>📝 お店のかんたん登録</h2><p>店舗名・住所・写真だけで申請できる仕組みを準備しています。自分で登録できない場合は、ふじこが代理登録する構想です。</p><p class="notice small">現在の公開版には登録データの保存・承認機能はまだありません。入力しても申請完了にはなりません。</p></section>
-</main><footer>志木なるほど お店めぐりDX｜操作版（登録情報は確認待ち）</footer><script>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#146b57">
+<title>志木なるほど お店めぐりDX</title>
+<meta name="description" content="志木のお店と地域活動を、ふじこと一緒に見つけよう。">
+<meta property="og:title" content="志木なるほど お店めぐりDX">
+<meta property="og:description" content="志木のお店と地域活動を、ふじこと一緒に見つけよう。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/IMG_4362.JPG">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f8f4;color:#193f33;font:16px/1.8 -apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif}
+main,header{max-width:720px;margin:auto;padding:14px}
+header{text-align:center}
+h1{font-size:25px;line-height:1.4}
+h2{font-size:22px;margin:0 0 12px}
+h3{font-size:19px}
+section,.card{background:white;border:1px solid #d4e5db;border-radius:16px;padding:18px;margin:16px 0;scroll-margin-top:12px}
+p{margin:10px 0}
+a{color:#146b57}
+button,.btn{font:inherit;display:inline-block;min-height:48px;border:0;border-radius:12px;background:#156e57;color:white;text-align:center;text-decoration:none;padding:12px 14px;font-weight:700;cursor:pointer}
+.secondary{background:#e4f1e9;color:#155844}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid>*{min-width:0}
+input,textarea{font:inherit;width:100%;padding:12px;border:1px solid #a8c8b7;border-radius:10px;margin:6px 0 12px}
+label{font-weight:700}
+img,video{display:block;width:100%;height:auto;border-radius:12px}
+figure{margin:14px 0}
+figcaption,.muted{font-size:13px;color:#60786a}
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;background:#e4f1e9;font-size:13px}
+.notice{background:#fff5dd;border-radius:12px;padding:12px;font-size:14px}
+.activity{padding:0;overflow:hidden}
+.activity img{aspect-ratio:1/1}
+.activity h3,.activity p{margin:14px 16px}
+.hidden{display:none!important}
+.wide{width:100%}
+footer{text-align:center;font-size:13px;color:#60786a;padding:24px}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid orange;outline-offset:3px}
+</style>
+</head>
+<body>
+<header id="top">
+<img id="banner" alt="志木なるほど お店めぐりDXの公式バナー" hidden>
+<h1>志木なるほど お店めぐりDX</h1>
+</header>
+
+<main>
+<section>
+<h2>どこを見てみる？</h2>
+<div class="grid">
+<button data-target="shops">🥐 お店を探す</button>
+<button data-target="fujiko">🎬 ふじこからのお知らせ</button>
+<button data-target="cheer">💚 ふじこの応援団</button>
+<button data-target="news">📣 新着・セール情報</button>
+<button data-target="guide">📱 投稿・シェアの使い方</button>
+<button data-target="register">📝 店舗登録について</button>
+</div>
+</section>
+
+<section id="shops">
+<h2>志木のお店・活動を探す</h2>
+<label for="search">店名・業種で検索</label>
+<input id="search" placeholder="例：パン、出版、地域活動">
+<p id="syncStatus" class="muted" role="status">3件の操作見本を表示しています。</p>
+<div id="shopList"></div>
+</section>
+
+<section id="detail" class="hidden">
+<button class="secondary" data-target="shops">← 一覧に戻る</button>
+<div id="shopDetail"></div>
+</section>
+
+<section id="fujiko">
+<h2>🎬 ふじこからのお知らせ</h2>
+<label for="media">写真・動画を選んで確認</label>
+<input id="media" type="file" accept="image/*,video/*">
+<div id="mediaPreview"></div>
+<p class="notice">自分の端末でのプレビューです。一般公開するアップロード機能は準備中です。</p>
+</section>
+
+<section id="cheer">
+<h2>💚 ふじこの勝手に応援団</h2>
+<p>ふじこがお店や地域の活動を紹介するコーナーです。応援動画・コメントの公開は準備中です。</p>
+<button data-target="shops">お店・活動を見る</button>
+</section>
+
+<section id="news">
+<h2>📣 新着・セール情報</h2>
+<p>現在、公開できるセール情報はありません。</p>
+</section>
+
+<section id="guide">
+<h2>📱 投稿・シェアの使い方</h2>
+<p>詳細ページの「紹介記事をコピー」で文章とURLをコピーできます。X・Facebook・LINEの共有ボタンも利用できます。</p>
+<p>Instagramでは、写真や動画と一緒に、コピーした紹介文をご自身で投稿してください。</p>
+</section>
+
+<section id="register">
+<h2>📝 店舗登録について</h2>
+<p>店主さんの基本操作は「お店の情報を直す」「写真・動画を載せる」「今日のお知らせを出す」の3つを目指しています。</p>
+<p class="notice">店舗側の保存・申請・承認機能は準備中です。</p>
+</section>
+</main>
+
+<footer>志木なるほど お店めぐりDX｜3件の試用版</footer>
+
+<script>
 "use strict";
-// 登録済みの２画像を実際の縦横比で判別し、横長をバナーにする。
-(async()=>{const names=["IMG_4358.JPG","IMG_4362.JPG"];const candidates=await Promise.all(names.map(name=>new Promise(resolve=>{const im=new Image();im.onload=()=>resolve({name,ratio:im.naturalWidth/im.naturalHeight});im.onerror=()=>resolve(null);im.src=name;})));const landscape=candidates.filter(Boolean).filter(x=>x.ratio>1.15).sort((a,b)=>b.ratio-a.ratio)[0];if(landscape){const el=document.getElementById("official-banner");el.src=landscape.name;el.hidden=false;}})();
 
-let shops=[{"name": "おうちcafeパン工房", "address": "埼玉県志木市本町2-5-46 やまかく館1F", "category": "パン・カフェ", "description": "国産小麦とホシノ天然酵母を使ったパンを中心に販売。2026年に移転したお店です。", "hours": "火〜土 11:00〜18:00（要確認）", "closed": "日曜・月曜（要確認）", "phone": "048-424-3066", "site": "http://www.ouchicafe2010.com", "map": "https://www.google.com/maps/search/?api=1&query=%E3%81%8A%E3%81%86%E3%81%A1cafe%E3%83%91%E3%83%B3%E5%B7%A5%E6%88%BF%20%E5%9F%BC%E7%8E%89%E7%9C%8C%E5%BF%97%E6%9C%A8%E5%B8%82%E6%9C%AC%E7%94%BA2-5-46", "line": "https://line.me/R/ti/p/@581afcew", "status": "下書き・店舗確認待ち", "id": "SHOP-0001"}];
-const base=location.origin+location.pathname;
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const byId=id=>document.getElementById(id);
-function article(s){return `🥐 ${s.name}をご紹介！\n\n${s.description}\n\n住所：${s.address}\n営業時間：${s.hours}\n定休日：${s.closed}\n\n志木なるほど お店めぐりDXで詳しく見る👇\n${base}?shop=${encodeURIComponent(s.id)}`;}
-function mapLink(s){return /^https:\/\//.test(s.map||"") ? s.map : "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.name+" "+s.address)}
-function renderList(){const q=byId("search").value.trim().toLowerCase();const matches=shops.filter(s=>(s.name+" "+s.category+" "+s.address).toLowerCase().includes(q));byId("shopList").innerHTML=matches.map(s=>`<div class="card"><div class="emoji">🥐</div><h3>${esc(s.name)}</h3><span class="pill">${esc(s.category)}</span><p>${esc(s.description)}</p><button data-shop="${esc(s.id)}">お店の情報を見る →</button></div>`).join("")||"<p>該当するお店はありません。</p>";}
-function showDetail(id){const s=shops.find(s=>s.id===id);if(!s)return;const text=article(s),link=base+"?shop="+encodeURIComponent(s.id);
-byId("shopDetail").innerHTML=`<h2>${esc(s.name)}</h2><span class="pill">${esc(s.status)}</span><p>${esc(s.category)}</p><div class="emoji">🥐</div><h3>このお店について</h3><p>${esc(s.description)}</p><h3>店舗情報</h3><p>📍 ${esc(s.address)}<br>🕒 ${esc(s.hours)}<br>定休日：${esc(s.closed)}<br>☎ ${esc(s.phone)}</p><div class="grid"><a class="btn" href="${esc(mapLink(s))}" target="_blank" rel="noopener">📍 道案内</a><a class="btn secondary" href="tel:${esc((s.phone||"").replace(/[^0-9+]/g,""))}">☎ 電話する</a><a class="btn secondary" href="${esc(s.site)}" target="_blank" rel="noopener">公式サイト</a><a class="btn secondary" href="${esc(s.line)}" target="_blank" rel="noopener">お店のLINE</a></div><h3 style="margin-top:24px">📢 自分のお店をSNSで宣伝</h3><p class="muted">紹介記事とこのお店の専用リンクをまとめてコピーできます。</p><textarea id="shareText" rows="9" readonly>${esc(text)}</textarea><button id="copy" class="wide">📋 紹介記事を全部コピー</button><div class="grid" style="margin-top:10px"><a class="btn secondary" id="xshare" target="_blank" rel="noopener">𝕏 に投稿</a><a class="btn secondary" id="lineshare" target="_blank" rel="noopener">LINEで共有</a><a class="btn secondary" href="https://www.facebook.com/" target="_blank" rel="noopener">Facebookを開く</a><a class="btn secondary" href="https://www.instagram.com/" target="_blank" rel="noopener">Instagramを開く</a><a class="btn secondary" href="https://manager.line.biz/" target="_blank" rel="noopener">LINE公式管理画面</a><button id="copyurl" class="secondary">🔗 URLをコピー</button></div><p id="copyStatus" role="status" class="muted"></p><p class="notice small">店舗情報は確認待ちです。公式LINEなど外部リンクは公開前に店主さんと照合してください。LINE公式の一斉配信は店主さん自身が操作します。</p>`;
-byId("xshare").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(text);
-byId("lineshare").href="https://line.me/R/share?text="+encodeURIComponent(text);
-byId("copy").onclick=()=>copy(text);
-byId("copyurl").onclick=()=>copy(link);
-byId("detail").classList.remove("hidden");
-history.replaceState(null,"", "?shop="+encodeURIComponent(s.id)+"#detail");byId("detail").scrollIntoView({behavior:"smooth"});
+const $=id=>document.getElementById(id);
+
+const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+}[c]));
+
+function url(value){
+  if(!value)return "";
+  try{
+    const u=new URL(value,location.href);
+    return /^https?:$/.test(u.protocol)?u.href:"";
+  }catch{
+    return "";
+  }
 }
-async function copy(text){try{await navigator.clipboard.writeText(text);byId("copyStatus").textContent="コピーしました！投稿先に貼り付けてね。"}catch(e){const t=byId("shareText");t.focus();t.select();byId("copyStatus").textContent="文章を選択しました。長押しして「コピー」を選んでください。";}}
-document.addEventListener("click",e=>{const target=e.target.closest("[data-target]");if(target){const id=target.dataset.target;byId(id)?.scrollIntoView({behavior:"smooth"});return;}const s=e.target.closest("[data-shop]");if(s)showDetail(s.dataset.shop);});
 
-byId("search").addEventListener("input",renderList);
-renderList();
-// GASの公開承認済み店舗を読み込む。非公開・下書き店舗はGAS側で除外。
-const SHOP_API = "https://script.google.com/macros/s/AKfycbzMec1R3le4e-cOUyBUl6Eq2dU3OI-5HHtkEyJQT7SWx4IjUHGtW8Z3zatJxoA2GUhn2A/exec";
-let syncDone = false;
-window.shikiShopsLoaded = function(data) {
-  syncDone = true;
-  const status = byId("syncStatus");
-  if (!data || data.ok !== true || !Array.isArray(data.shops)) {
-    status.textContent = "店舗データを取得できません。現在は操作見本を表示しています。";
+const source="https://ichirohns-jpg.github.io/";
+
+const sample=[
+  {
+    id:"SHOP-0001",
+    name:"おうちcafeパン工房",
+    category:"パン・カフェ",
+    address:"埼玉県志木市本町2-5-46 やまかく館1F",
+    description:"国産小麦とホシノ天然酵母を使ったパンや焼き菓子を届ける、志木市本町のパン工房。パンとドリンクを楽しめるイートインと、地域交流スペース「いろはベース」を併設しています。",
+    recommendation:"国産小麦とホシノ天然酵母のパン・焼き菓子／イートイン／地域交流スペース「いろはベース」",
+    hours:"火〜土曜日 11:00〜18:00（臨時変更は公式SNSで確認）",
+    closed:"日曜日・月曜日（その他不定休あり）",
+    phone:"048-424-3066",
+    instagram:"https://www.instagram.com/ouchicafe2010",
+    facebook:"https://www.facebook.com/ouchicafe2010",
+    line:"https://line.me/R/ti/p/@581afcew",
+    photo:source+"ouchicafe-shop-dx/main-banner.jpg",
+    gallery:[
+      {
+        src:source+"ouchicafe-shop-dx/%20%20eat-in-banner.jpg",
+        alt:"イートインの紹介"
+      },
+      {
+        src:source+"ouchicafe-shop-dx/iroha-base-banner.jpg",
+        alt:"地域交流スペース・いろはベースの紹介"
+      }
+    ],
+    status:"下書き・店舗確認待ち"
+  },
+  {
+    id:"SHOP-0002",
+    name:"ハートネット志木",
+    category:"地域活動・情報発信・DX・動画制作",
+    description:"ふじこと一緒に、志木の魅力と地域の情報を発信。地域の人との交流、お店の応援、空き家の情報発信、DX・動画制作に取り組む活動を紹介します。",
+    site:source+"ShikiConcierge-18/app.html",
+    video:"https://www.youtube.com/@shikiconcierge",
+    photo:"IMG_4390.JPG",
+    caption:"ふじこの活動紹介イメージ",
+    status:"活動紹介"
+  },
+  {
+    id:"SHOP-0003",
+    name:"ニュータイムス社",
+    category:"出版・広告代理・地域情報誌",
+    address:"埼玉県志木市本町3-2-27",
+    description:"志木市本町を拠点に、出版物や地域情報誌の定期制作、広告代理業を行う事業者です。地域の情報を紙面や広告で届けます。制作・広告の相談や訪問の際は、事前にお電話でお問い合わせください。",
+    recommendation:"出版物の制作／地域情報誌の定期制作／広告代理",
+    hours:"お問い合わせください",
+    closed:"お問い合わせください",
+    phone:"048-486-6138",
+    site:"http://www.newtimes-net.net/",
+    photo:source+"iwashita-ryu-activity/images/activity/profile-main.jpg",
+    caption:"岩下りゅうさんの活動紹介イメージ",
+    status:"下書き・店舗確認待ち"
+  }
+];
+
+const scenes=[
+  [
+    "IMG_4390.JPG",
+    "地域活動",
+    "ふじこが街の人と花を植え、地域活動で交流するイメージ",
+    "地域の人との交流を大切にしながら、志木の街や身近な活動の魅力を伝えます。"
+  ],
+  [
+    "IMG_4393.JPG",
+    "志木の街とお店を応援",
+    "ふじこが商店街で店主を取材するイメージ",
+    "地域のお店や活動を紹介し、写真・動画や地域情報を通じて、その魅力を届けます。"
+  ],
+  [
+    "IMG_4391.JPG",
+    "空き家の情報発信",
+    "ふじこが住宅を確認し、空き家について調べるイメージ",
+    "空き家に関する話題や地域の住宅問題、活用について考えるきっかけとなる情報を、動画などで発信します。"
+  ],
+  [
+    "IMG_4392.JPG",
+    "DX制作・動画発信",
+    "ふじこがパソコンと撮影機材を使って制作するイメージ",
+    "地域の情報を見つけやすく、伝わりやすくするDXや動画を制作。志木の魅力や活動を届ける仕組みを育てます。"
+  ]
+];
+
+let shops=sample.map(s=>({...s}));
+
+const base=location.origin+location.pathname;
+const shopLink=s=>base+"?shop="+encodeURIComponent(s.id);
+
+function image(src,alt,caption=""){
+  return url(src)
+    ? `<figure>
+         <img src="${esc(url(src))}" alt="${esc(alt)}" loading="lazy">
+         ${caption?`<figcaption>${esc(caption)}</figcaption>`:""}
+       </figure>`
+    : "";
+}
+
+function button(label,href){
+  return url(href)
+    ? `<a class="btn secondary"
+          href="${esc(url(href))}"
+          target="_blank"
+          rel="noopener">${esc(label)}</a>`
+    : "";
+}
+
+function article(s){
+  return `${s.name}をご紹介！
+
+${s.description}${s.address?"\n\n住所："+s.address:""}${s.hours?"\n営業時間："+s.hours:""}${s.closed?"\n定休日："+s.closed:""}
+
+志木なるほど お店めぐりDX
+${shopLink(s)}`;
+}
+
+function render(){
+  const q=$("search").value.trim().toLowerCase();
+
+  $("shopList").innerHTML=shops
+    .filter(s=>[
+      s.name,s.category,s.address,s.description
+    ].join(" ").toLowerCase().includes(q))
+    .map(s=>`
+      <article class="card">
+        ${image(s.photo,s.caption||s.name,s.caption)}
+        <h3>${esc(s.name)}</h3>
+        <span class="pill">${esc(s.category)}</span>
+        <p class="muted">${esc(s.status)}</p>
+        <p>${esc(s.description)}</p>
+        <button data-shop="${esc(s.id)}">
+          ${s.id==="SHOP-0002"?"活動紹介を見る":"お店の情報を見る"} →
+        </button>
+      </article>
+    `).join("")||"<p>該当するお店・活動はありません。</p>";
+}
+
+function show(id,scroll=true){
+  const s=shops.find(s=>s.id===id);
+  if(!s)return;
+
+  const heart=s.id==="SHOP-0002";
+  const map=s.map||
+    "https://www.google.com/maps/search/?api=1&query="+
+    encodeURIComponent(s.name+" "+(s.address||""));
+  const text=article(s);
+  const link=shopLink(s);
+
+  const activities=scenes.map(([src,title,alt,body])=>`
+    <article class="card activity">
+      <img src="${esc(src)}"
+           alt="${esc(alt)}"
+           width="1280"
+           height="1280"
+           loading="lazy">
+      <h3>${esc(title)}</h3>
+      <p>${esc(body)}</p>
+    </article>
+  `).join("");
+
+  const storeContent=
+    image(s.photo,s.caption||s.name,s.caption)+
+    (s.gallery||[]).map(g=>image(g.src,g.alt,g.alt)).join("")+
+    `<h3>おすすめ・サービス</h3>
+     <p>${esc(s.recommendation||s.category)}</p>
+     <h3>店舗情報</h3>
+     <p>
+       📍 ${esc(s.address)}<br>
+       🕒 ${esc(s.hours)}<br>
+       定休日：${esc(s.closed)}<br>
+       ☎ ${esc(s.phone)}
+     </p>`;
+
+  $("shopDetail").innerHTML=`
+    <h2 style="margin-top:20px">${esc(s.name)}</h2>
+    <span class="pill">${esc(s.category)}</span>
+    <p class="muted">${esc(s.status)}</p>
+    <p>${esc(s.description)}</p>
+
+    ${heart
+      ? activities+
+        `<p class="muted">
+           4枚は活動紹介用のイメージです。
+           実際の店舗・人物・物件を撮影した写真ではありません。
+         </p>`
+      : storeContent}
+
+    <div class="grid">
+      ${!heart&&s.address?button("📍 道案内",map):""}
+      ${s.phone
+        ? `<a class="btn secondary"
+              href="tel:${esc(s.phone.replace(/[^0-9+]/g,""))}">
+              ☎ 電話する
+           </a>`
+        : ""}
+      ${button(heart?"志木コンシェルジュを見る":"公式サイト",s.site)}
+      ${button("Instagram",s.instagram)}
+      ${button("Facebook",s.facebook)}
+      ${button("お店のLINE",s.line)}
+      ${button(heart?"空き家のYouTubeを見る":"動画を見る",s.video)}
+    </div>
+
+    <h3>紹介・共有する</h3>
+    <textarea id="shareText" rows="8" readonly>${esc(text)}</textarea>
+    <button id="copy" class="wide">📋 紹介記事をコピー</button>
+
+    <div class="grid" style="margin-top:10px">
+      ${button(
+        "Xで共有",
+        "https://twitter.com/intent/tweet?text="+encodeURIComponent(text)
+      )}
+      ${button(
+        "LINEで共有",
+        "https://line.me/R/share?text="+encodeURIComponent(text)
+      )}
+      ${button(
+        "Facebookで共有",
+        "https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(link)
+      )}
+      ${button("Instagramを開く","https://www.instagram.com/")}
+      <button id="nativeShare" class="secondary">スマホで共有</button>
+      <button id="copyurl" class="secondary">URLをコピー</button>
+    </div>
+
+    <p id="copyStatus" role="status" class="muted"></p>
+
+    ${!heart&&s.status!=="掲載確認済み"
+      ? `<p class="notice">
+           店舗確認待ちの試用紹介です。
+           最新の営業案内は公式SNSや電話でご確認ください。
+         </p>`
+      : ""}
+  `;
+
+  $("copy").onclick=()=>copy(text);
+  $("copyurl").onclick=()=>copy(link);
+
+  $("nativeShare").onclick=async()=>{
+    if(!navigator.share)return copy(text);
+    try{
+      await navigator.share({
+        title:s.name,
+        text:s.description,
+        url:link
+      });
+    }catch(e){
+      if(e.name!=="AbortError")copy(text);
+    }
+  };
+
+  $("detail").classList.remove("hidden");
+  history.replaceState(
+    null,"","?shop="+encodeURIComponent(id)+"#detail"
+  );
+
+  if(scroll){
+    $("detail").scrollIntoView({behavior:"smooth"});
+  }
+}
+
+async function copy(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    $("copyStatus").textContent=
+      "コピーしました。投稿先に貼り付けてください。";
+  }catch{
+    const field=$("shareText");
+    field.value=text;
+    field.focus();
+    field.select();
+    field.setSelectionRange(0,text.length);
+    $("copyStatus").textContent=
+      "文章を選択しました。長押ししてコピーしてください。";
+  }
+}
+
+document.addEventListener("click",e=>{
+  const nav=e.target.closest("[data-target]");
+
+  if(nav){
+    $(nav.dataset.target)?.scrollIntoView({behavior:"smooth"});
     return;
   }
-  shops = data.shops.map(s => ({
-    id:String(s.id||""),
-    name:String(s.name||""),
-    category:String(s.category||""),
-    address:String(s.address||""),
-    description:String(s.description||""),
-    recommendation:String(s.recommendation||""),
-    hours:String(s.hours||""),
-    closed:String(s.closed||""),
-    phone:String(s.phone||""),
-    site:String(s.site||""),
-    map:String(s.map||""),
-    instagram:String(s.instagram||""),
-    facebook:String(s.facebook||""),
-    photo:String(s.photo||""),
-    video:String(s.video||""),
-    message:String(s.message||""),
-    status:"掲載確認済み"
-  }));
-  status.textContent = shops.length ? "掲載中のお店："+shops.length+"件（スプレッドシート連携）" : "現在、掲載承認済みのお店はありません。登録準備中です。";
-  renderList();
-  const requested = new URLSearchParams(location.search).get("shop");
-  if (requested) {
-    if (shops.some(s=>s.id===requested)) showDetail(requested);
-    else byId("detail").classList.add("hidden");
+
+  const card=e.target.closest("[data-shop]");
+  if(card)show(card.dataset.shop);
+});
+
+document.addEventListener("error",e=>{
+  if(e.target.tagName==="IMG"){
+    e.target.hidden=true;
+
+    const caption=document.createElement("p");
+    caption.className="muted";
+    caption.textContent="画像を読み込めませんでした。";
+    e.target.after(caption);
   }
-};
-(function() {
-  const script=document.createElement("script");
-  script.src=SHOP_API+"?callback=shikiShopsLoaded&v="+Date.now();
-  script.onerror=()=>{if(!syncDone)byId("syncStatus").textContent="連携先に接続できません。現在は操作見本です。";};
-  document.head.appendChild(script);
-  setTimeout(()=>{if(!syncDone)byId("syncStatus").textContent="読み込みに時間がかかっています。現在は操作見本です。";},12000);
+},true);
+
+$("search").addEventListener("input",render);
+render();
+
+const requested=new URLSearchParams(location.search).get("shop");
+if(requested)show(requested);
+
+let mediaUrl;
+
+$("media").addEventListener("change",e=>{
+  const f=e.target.files?.[0];
+  if(!f)return;
+
+  if(mediaUrl)URL.revokeObjectURL(mediaUrl);
+  mediaUrl=URL.createObjectURL(f);
+
+  const media=document.createElement(
+    f.type.startsWith("video/")?"video":"img"
+  );
+
+  media.src=mediaUrl;
+
+  if(media.tagName==="VIDEO"){
+    media.controls=true;
+    media.playsInline=true;
+  }else{
+    media.alt="選択した画像";
+  }
+
+  $("mediaPreview").replaceChildren(media);
+});
+
+(async()=>{
+  const candidates=await Promise.all(
+    ["IMG_4358.JPG","IMG_4362.JPG"].map(src=>new Promise(resolve=>{
+      const im=new Image();
+
+      im.onload=()=>resolve({
+        src,
+        ratio:im.naturalWidth/im.naturalHeight
+      });
+
+      im.onerror=()=>resolve(null);
+      im.src=src;
+    }))
+  );
+
+  const best=candidates
+    .filter(Boolean)
+    .filter(x=>x.ratio>1.15)
+    .sort((a,b)=>b.ratio-a.ratio)[0];
+
+  if(best){
+    $("banner").src=best.src;
+    $("banner").hidden=false;
+  }
 })();
 
-let mediaUrl;byId("media").addEventListener("change",e=>{const f=e.target.files?.[0];if(!f)return;if(mediaUrl)URL.revokeObjectURL(mediaUrl);mediaUrl=URL.createObjectURL(f);byId("mediaPreview").replaceChildren();const el=document.createElement(f.type.startsWith("video/")?"video":"img");el.src=mediaUrl;if(el.tagName==="VIDEO"){el.controls=true;el.playsInline=true;}el.alt="選択した画像";byId("mediaPreview").append(el);});
-const requested=new URLSearchParams(location.search).get("shop");if(requested)showDetail(requested);
-</script></body></html>
+let loaded=false;
+
+window.shikiShopsLoaded=data=>{
+  loaded=true;
+
+  if(!data||data.ok!==true||!Array.isArray(data.shops)){
+    $("syncStatus").textContent=
+      "3件の操作見本を表示しています。店舗データとの同期は確認待ちです。";
+    return;
+  }
+
+  const rows=data.shops
+    .filter(s=>
+      s.id&&s.name&&
+      !/トータルリペア\s*いろは屋/.test(s.name)
+    )
+    .map(s=>{
+      const demo=sample.find(d=>d.id===String(s.id))||{};
+
+      return {
+        ...demo,
+        ...s,
+        id:String(s.id),
+        status:"掲載確認済み",
+        line:s.line||demo.line,
+        gallery:demo.gallery,
+        caption:demo.caption,
+        photo:s.photo||demo.photo
+      };
+    });
+
+  for(const demo of sample){
+    if(!rows.some(s=>s.id===demo.id)){
+      rows.push({...demo});
+    }
+  }
+
+  const heart=rows.findIndex(s=>s.id==="SHOP-0002");
+
+  if(heart>=0){
+    rows[heart]={...rows[heart],...sample[1]};
+  }
+
+  shops=rows;
+
+  $("syncStatus").textContent=
+    "お店・活動："+shops.length+
+    "件｜試用版には店舗確認待ちの紹介を含みます。";
+
+  render();
+
+  if(requested){
+    show(requested,false);
+  }
+};
+
+const api=document.createElement("script");
+
+api.src=
+  "https://script.google.com/macros/s/AKfycbzMec1R3le4e-cOUyBUl6Eq2dU3OI-5HHtkEyJQT7SWx4IjUHGtW8Z3zatJxoA2GUhn2A/exec"+
+  "?callback=shikiShopsLoaded&v="+Date.now();
+
+api.onerror=()=>{
+  $("syncStatus").textContent=
+    "3件の操作見本を表示しています。連携先に接続できませんでした。";
+};
+
+document.head.append(api);
+
+setTimeout(()=>{
+  if(!loaded){
+    $("syncStatus").textContent=
+      "3件の操作見本を表示しています。店舗データの読み込みに時間がかかっています。";
+  }
+},12000);
+</script>
+</body>
+</html>
