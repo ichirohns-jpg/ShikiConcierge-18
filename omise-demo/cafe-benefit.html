@@ -29,12 +29,13 @@ header{max-width:440px;margin:0 auto 16px!important}article>h1{font-size:27px}ar
 
 
 
-<div class="actions"><a class="btn" href="./?shop=SHOP-0001#detail">お店の情報・地図・SNSを見る</a></div>
+<div class="actions"><a class="btn secondary" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%8A%E3%81%86%E3%81%A1cafe%E3%83%91%E3%83%B3%E5%B7%A5%E6%88%BF%20%E5%9F%BC%E7%8E%89%E7%9C%8C%E5%BF%97%E6%9C%A8%E5%B8%82%E6%9C%AC%E7%94%BA2-5-46%20%E3%82%84%E3%81%BE%E3%81%8B%E3%81%8F%E9%A4%A81F" target="_blank" rel="noopener">📍 お店の地図を見る</a><a class="btn" href="./?shop=SHOP-0001#detail">お店の情報・地図・SNSを見る</a></div>
 </article><footer><a href="./">志木なるほど お店めぐりDXのトップへ</a></footer></main><script>
 "use strict";
 const base='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit.html';
 const shared=base+'?from=friend';
-const message='【体験版・特典は利用不可】ふじこのおすそわけ特典。おうちcafeパン工房「パン500円以上でミニパン1個」の掲載見本です。特典を友だちに送る仕組みの見本です。\n'+shared;
+const cafeMap="https://www.google.com/maps/search/?api=1&query=%E3%81%8A%E3%81%86%E3%81%A1cafe%E3%83%91%E3%83%B3%E5%B7%A5%E6%88%BF%20%E5%9F%BC%E7%8E%89%E7%9C%8C%E5%BF%97%E6%9C%A8%E5%B8%82%E6%9C%AC%E7%94%BA2-5-46%20%E3%82%84%E3%81%BE%E3%81%8B%E3%81%8F%E9%A4%A81F";
+const message='【体験版・特典は利用不可】ふじこのおすそわけ特典。おうちcafeパン工房「パン500円以上でミニパン1個」の掲載見本です。特典を友だちに送る仕組みの見本です。\n'+shared+"\n\n【お店の場所】\n埼玉県志木市本町2-5-46 やまかく館1F\nhttps://www.google.com/maps/search/?api=1&query=%E3%81%8A%E3%81%86%E3%81%A1cafe%E3%83%91%E3%83%B3%E5%B7%A5%E6%88%BF%20%E5%9F%BC%E7%8E%89%E7%9C%8C%E5%BF%97%E6%9C%A8%E5%B8%82%E6%9C%AC%E7%94%BA2-5-46%20%E3%82%84%E3%81%BE%E3%81%8B%E3%81%8F%E9%A4%A81F";
 const line=document.getElementById('giftLine');
 line.href='https://line.me/R/share?text='+encodeURIComponent(message);
 document.getElementById('articleShareUrl').value=shared;
@@ -44,5 +45,5 @@ document.getElementById('friendGreeting').hidden=new URLSearchParams(location.se
 async function copy(text){const status=document.getElementById('articleShareStatus');try{await navigator.clipboard.writeText(text);status.textContent='コピーしました。LINEやSNSに貼り付けて送れます。';}catch{const field=document.getElementById('articleShareUrl');field.value=text;field.focus();field.select();status.textContent='選択した内容を長押ししてコピーしてください。';}}
 document.querySelector('[data-article-copy]').addEventListener('click',()=>copy(shared));
 document.querySelector('[data-article-text]').addEventListener('click',()=>copy(message));
-document.querySelector('[data-article-native]').addEventListener('click',async()=>{if(!navigator.share){await copy(message);return;}try{await navigator.share({title:'ふじこのおすそわけ特典｜体験版',text:'【掲載見本・利用不可】特典を友だちに送る体験版です。',url:shared});}catch(error){if(error.name!=='AbortError')await copy(message);}});
+document.querySelector('[data-article-native]').addEventListener('click',async()=>{if(!navigator.share){await copy(message);return;}try{await navigator.share({title:'ふじこのおすそわけ特典｜体験版',text:message,url:shared});}catch(error){if(error.name!=='AbortError')await copy(message);}});
 </script></body></html>
