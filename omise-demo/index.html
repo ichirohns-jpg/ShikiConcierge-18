@@ -44,8 +44,9 @@ body{background:linear-gradient(180deg,#eaf4ec 0,#f7f8f3 480px);overflow-wrap:an
 <body>
 <header id="top"><img id="banner" alt="志木なるほど お店めぐりDXの公式バナー" hidden><h1>志木なるほど お店めぐりDX</h1><p class="intro">お店の魅力も、地域の活動も。<br>ふじこと一緒に、志木をめぐろう。</p><span class="tagline">まずは3件から｜お試し公開中</span><nav class="quick" aria-label="3件の紹介を直接開く"><button data-shop="SHOP-0001">おうちcafeパン工房</button><button data-shop="SHOP-0002">ハートネット志木</button><button data-shop="SHOP-0003">ニュータイムス社</button></nav></header>
 <main>
-<section id="news"><h2>📣 新着・セール情報</h2><div id="shopNewsList"></div><article class="offer"><span class="pill">ハートネット志木｜合言葉体験</span><h3>合言葉で、ふじこのありがとうカードを受け取ろう</h3><p>合言葉は<strong class="offer-code">「ふじこ」</strong>。紹介ページで入力すると、カードが表示されます。</p><p class="muted">参加無料・来店不要。スマホで何度でも試せるデジタル特典です。期間：体験版公開中。</p><button data-offer>合言葉を試す →</button></article></section>
-<section><h2>どこを見てみる？</h2><div class="grid"><button data-target="shops">🥐 お店を探す</button><button data-target="fujiko">🎬 ふじこからのお知らせ</button><button data-target="cheer">💚 ふじこの応援団</button><button data-target="news">📣 新着・セール情報</button><button data-target="guide">📱 投稿・シェアの使い方</button><button data-target="register">📝 店舗登録について</button></div></section>
+<section class="deals-entry"><a class="btn" style="display:block;text-align:center;font-size:22px;padding:20px" href="./deals.html">🎁 お得情報を見る</a></section>
+<section id="news" hidden><div id="shopNewsList"></div></section>
+<section><h2>どこを見てみる？</h2><div class="grid"><button data-target="shops">🥐 お店を探す</button><button data-target="fujiko">🎬 ふじこからのお知らせ</button><button data-target="cheer">💚 ふじこの応援団</button><a class="btn" href="./deals.html">🎁 お得情報</a><button data-target="guide">📱 投稿・シェアの使い方</button><button data-target="register">📝 店舗登録について</button></div></section>
 <section id="shops"><h2>志木のお店・活動を探す</h2><label for="search">店名・業種で検索</label><input id="search" placeholder="例：パン、出版、地域活動"><p id="syncStatus" class="muted" role="status">3件の操作見本を表示しています。</p><div id="shopList"></div></section>
 <section id="detail" class="hidden"><button class="secondary" data-target="shops">← 一覧に戻る</button><div id="shopDetail"></div></section>
 <section id="articleView" class="hidden" aria-label="お知らせ記事"></section>
