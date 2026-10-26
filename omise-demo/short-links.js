@@ -1,0 +1,7 @@
+'use strict';
+window.DXShortLinks=Object.freeze({
+  "https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/ouchicafe.html": "https://is.gd/YoNWCb",
+  "https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/heartnet.html": "https://is.gd/hpKXxC",
+  "https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/newtimes.html": "https://is.gd/LIJBx7",
+  "https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit.html": "https://is.gd/DKIuYr"
+});

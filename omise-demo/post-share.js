@@ -2,7 +2,7 @@
 (()=>{
  const base='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/';
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
- const pageURL=p=>p.url||base+'article.html?id='+encodeURIComponent(p.id);
+ const pageURL=p=>(p.url&&window.DXShortLinks?.[p.url])||p.url||base+'article.html?id='+encodeURIComponent(p.id);
  function socialMark(label){const n=el('span',{'Facebook':'f','Instagram':'◎','X':'𝕏','LINE':'L'}[label]||label,'sns-mark');n.setAttribute('aria-hidden','true');return n;}
  let imageMakerPromise=null;
  const imageScriptURL=new URL('./post-image.js?v=20261026-image2',document.currentScript?.src||base+'posts.js').href;
