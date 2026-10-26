@@ -28,72 +28,18 @@
   const mark=el('span',{'コピー':'⧉','Facebook':'f','Instagram':'◎','X':'𝕏','LINE':'L'}[label]||label,'sns-mark');
   mark.setAttribute('aria-hidden','true');return mark;
  }
+ let postSharePromise=null;
+ const postShareURL=new URL('./post-share.js?v=20261026-image2',document.currentScript?.src||base+'posts.js').href;
  function share(box,p){
-  const url=pageURL(p),shop=shopURL(p);
-  // 共有本文は「記事本文＋記事URL」の一組にする。店舗ページや地図まで
-  // 追加すると、Facebook/LINE側でURLが並び、記事の写真・本文が埋もれる。
-  const text=p.name+'\n\n'+p.body+(p.end?'\n\n'+p.end+'まで':'')+'\n\n'+url;
-  const row=el('div',null,'post-share'),message=el('p',null,'post-share-message');
-  row.setAttribute('aria-label','この記事を共有');message.setAttribute('role','status');
-  const fallback=el('textarea',null,'post-fallback');fallback.value=text;fallback.readOnly=true;fallback.hidden=true;fallback.setAttribute('aria-label','紹介文');
-  const preview=el('section',null,'sns-image-preview');preview.hidden=true;
-  preview.style.cssText='margin:12px 16px;padding:16px;border:1px solid #b7d0c1;border-radius:12px;background:#f5faf6';
-  preview.append(el('h3','SNSに投稿する画像'));
-  const picture=el('img');picture.alt='この記事から作成したSNS投稿画像';picture.style.cssText='display:block;width:100%;max-width:432px;height:auto;margin:12px auto';preview.append(picture);
-  const previewNote=el('p','画像の中に記事の内容が入ります。全文と記事リンクは投稿文に添えます。');preview.append(previewNote);
-  const actions=el('div');actions.style.cssText='display:flex;flex-wrap:wrap;gap:10px';
-  const send=el('button','画像と文章を共有'),save=el('a','画像を保存'),close=el('button','閉じる');
-  for(const b of [send,save,close])b.style.cssText='display:inline-block;padding:12px 16px;border:0;border-radius:8px;background:#174f40;color:#fff;font:inherit;cursor:pointer;text-decoration:none';
-  send.type=close.type='button';actions.append(send,save,close);preview.append(actions);close.onclick=()=>{preview.hidden=true;};
-  let readyFile=null,imageURL='';
-  const font='"Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans CJK JP",Meiryo,sans-serif';
-  function lines(ctx,value,width){const result=[];let line='';for(const c of Array.from(String(value))){if(c==='\n'){result.push(line);line='';}else if(line&&ctx.measureText(line+c).width>width){result.push(line);line=c;}else line+=c;}if(line)result.push(line);return result;}
-  function posterFile(src){return new Promise((resolve,reject)=>{
-   const image=new Image();image.onerror=()=>reject(Error('写真を読み込めませんでした。'));
-   image.onload=async()=>{try{
-    await document.fonts.ready;
-    const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');canvas.width=1080;canvas.height=1350;
-    ctx.fillStyle='#f5f3eb';ctx.fillRect(0,0,1080,1350);
-    const scale=Math.min(984/image.naturalWidth,700/image.naturalHeight),w=image.naturalWidth*scale,h=image.naturalHeight*scale;
-    ctx.drawImage(image,(1080-w)/2,32+(700-h)/2,w,h);
-    ctx.fillStyle='#174f40';ctx.fillRect(0,764,1080,8);ctx.fillStyle='#fff';ctx.fillRect(0,772,1080,578);
-    ctx.fillStyle='#174f40';ctx.font='700 34px '+font;ctx.fillText(p.name,52,832,976);
-    const body=String(p.body||'').trim(),first=String(p.title||body.split('\n')[0]||'お店からのお知らせ');
-    let size=56,titleLines;do{ctx.font='700 '+size+'px '+font;titleLines=lines(ctx,first,976);if(titleLines.length<=3)break;size-=2;}while(size>36);
-    if(titleLines.length>3){titleLines=titleLines.slice(0,3);titleLines[2]=titleLines[2].slice(0,-1)+'…';}
-    ctx.fillStyle='#173d33';titleLines.forEach((line,i)=>ctx.fillText(line,52,910+i*(size+12)));
-    const rest=p.title?body:body.slice(first.length).trim(),y=930+titleLines.length*(size+12);
-    ctx.font='500 32px '+font;ctx.fillStyle='#34544b';let excerpt=lines(ctx,rest,976),limit=Math.max(0,Math.floor((1260-y)/44));
-    if(excerpt.length>limit&&limit){excerpt=excerpt.slice(0,limit);excerpt[limit-1]=excerpt[limit-1].slice(0,-1)+'…';}
-    excerpt.slice(0,limit).forEach((line,i)=>ctx.fillText(line,52,y+i*44));
-    ctx.fillStyle='#6b8175';ctx.font='600 25px '+font;ctx.fillText('志木なるほど お店めぐりDX',52,1310,976);
-    canvas.toBlob(blob=>blob?resolve(new File([blob],'shiki-dx-'+p.id+'.jpg',{type:'image/jpeg'})):reject(Error('画像を作成できませんでした。')),'image/jpeg',.92);
-   }catch(e){reject(e);}};
-   image.src=src;
-  });}
-  send.onclick=()=>{if(!readyFile)return;try{
-   if(!navigator.share||!navigator.canShare?.({files:[readyFile]})){message.textContent='このブラウザでは画像付き共有が使えません。「画像を保存」と「コピー」を使えます。';return;}
-   navigator.share({files:[readyFile],text}).then(()=>{message.textContent='共有先で投稿を確定してください。SNSによって文章が渡らない場合は「コピー」を使えます。';}).catch(e=>{if(e.name!=='AbortError')message.textContent='共有できませんでした。画像は保存できます。';});
-  }catch(e){message.textContent=e.message;}};
-  const native=el('button','SNS投稿画像を作る');native.type='button';native.className='native-share';
-  const source=(p.photos||[]).find(v=>/^data:image\/jpeg;base64,/.test(v))||(/^data:image\/jpeg;base64,/.test(p.poster||'')?p.poster:null);
-  native.hidden=!source;native.onclick=async()=>{native.disabled=true;try{
-   if(!readyFile){readyFile=await posterFile(source);imageURL=URL.createObjectURL(readyFile);picture.src=imageURL;save.href=imageURL;save.download=readyFile.name;window.addEventListener('pagehide',()=>URL.revokeObjectURL(imageURL),{once:true});}
-   preview.hidden=false;preview.scrollIntoView({behavior:'smooth',block:'nearest'});message.textContent='投稿画像ができました。確認して「画像と文章を共有」を押してください。';
-  }catch(e){message.textContent=e.message;}finally{native.disabled=false;}};row.append(native);
-  async function copy(){try{await navigator.clipboard.writeText(text);message.textContent='コピーしました。SNSに貼り付けて投稿できます。';}catch{fallback.hidden=false;fallback.focus();fallback.select();message.textContent='文章を長押ししてコピーしてください。';}}
-  const copyButton=el('button');copyButton.type='button';copyButton.append(socialMark('コピー'),el('span','コピー'));copyButton.onclick=copy;row.append(copyButton);
-  const destinations=[
-   ['Facebook','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),'#0866c6'],
-   ['Instagram','https://www.instagram.com/','linear-gradient(115deg,#833ab4,#c52c72,#b94418)'],
-   ['X','https://twitter.com/intent/tweet?text='+encodeURIComponent(p.name+'\n'+p.body.slice(0,100))+'&url='+encodeURIComponent(url),'#111'],
-   ['LINE','https://line.me/R/share?text='+encodeURIComponent(text),'#087f3e']
-  ];
-  for(const [label,href,background] of destinations){
-   const a=el('a');a.href=href;a.style.background=background;a.target='_blank';a.rel='noopener';
-   a.append(socialMark(label),el('span',label));if(label==='Instagram')a.onclick=copy;row.append(a);
-  }
-  box.append(row,preview,message,fallback);
+  const mount=el('div');box.append(mount);
+  if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
+   if(window.DXPostShare){resolve(window.DXPostShare);return;}
+   const script=document.createElement('script');script.src=postShareURL;
+   script.onload=()=>window.DXPostShare?resolve(window.DXPostShare):reject(Error('投稿機能を読み込めませんでした。'));
+   script.onerror=()=>{postSharePromise=null;reject(Error('投稿機能を読み込めませんでした。ページを更新してください。'));};
+   document.head.append(script);
+  });
+  postSharePromise.then(ui=>{if(mount.isConnected)ui.mount(mount,p);}).catch(e=>mount.append(el('p',e.message,'post-share-message')));
  }
  function render(rows){
   list.replaceChildren();

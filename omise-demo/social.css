@@ -56,6 +56,29 @@
 .post-share-message{font-size:12px;margin:0 18px 14px;color:#577461}
 .post-share-message:empty{display:none}
 .post-fallback{width:calc(100% - 36px);margin:0 18px 16px}
+.post-publish{margin:0!important;padding:18px 16px!important;background:#fff;border:0!important;border-radius:0!important;box-shadow:none!important}
+.post-publish h3{font-size:17px;line-height:1.5;margin:0 0 7px;color:#173d33}
+.post-publish-intro{font-size:13px;line-height:1.7;color:#5d7667;margin:0 0 14px}
+.post-image-primary{display:block;width:100%;min-height:50px;padding:12px 16px;border:0;border-radius:9px;background:#146b50;color:#fff;font-family:inherit;font-weight:700;font-size:16px;line-height:1.5;cursor:pointer}
+.post-image-networks{grid-template-columns:repeat(4,minmax(0,1fr));padding:10px 0 0;gap:7px}
+.post-image-networks button{font-size:12px;min-height:54px}
+.post-publish button{font-family:inherit}.post-publish button:disabled{opacity:.55;cursor:wait}
+.post-publish button:focus-visible,.post-publish a:focus-visible{outline:3px solid #e3a700;outline-offset:3px}
+.sns-image-preview{scroll-margin-top:14px;margin:18px 0 8px!important;padding:16px 12px!important;border:1px solid #cbded1!important;border-radius:12px!important;background:#f3f8f4}
+.sns-image-preview[hidden]{display:none!important}
+.sns-image-help{font-size:14px;line-height:1.7;margin:8px 0 16px;color:#345b49}
+.sns-image-gallery figure{margin:0 0 20px}.sns-image-gallery img{display:block;width:100%;max-width:432px;height:auto;max-height:none;margin:0 auto;border-radius:5px;box-shadow:0 2px 10px #173b3212}
+.sns-image-gallery figcaption{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0 0;font-size:13px}
+.sns-image-gallery a,.sns-image-one{display:inline-flex;align-items:center;min-height:42px;padding:8px 12px;border:1px solid #c2d7c8;border-radius:7px;background:white;color:#17513f;font:inherit;text-decoration:none;cursor:pointer}
+.sns-image-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.sns-image-send{flex:1;min-height:50px;padding:12px 16px;border:0;border-radius:8px;background:#146b50;color:white;font:inherit;font-weight:700;cursor:pointer}
+.sns-image-close{min-height:46px;padding:10px 14px;border:1px solid #c2d7c8;border-radius:8px;background:white;color:#345b49;font:inherit;cursor:pointer}
+.sns-image-note{font-size:13px;color:#5d6c62;line-height:1.7}
+.sns-caption-options{margin:14px 0 0;border-top:1px solid #cfdfd4;padding-top:12px;font-size:13px}
+.sns-caption-options summary{min-height:36px;cursor:pointer;color:#426550}
+.sns-caption-options textarea{box-sizing:border-box;width:100%;font:inherit;margin:8px 0;white-space:pre-wrap}
+.sns-caption-options button{min-height:42px;padding:8px 12px;margin:3px 8px 3px 0;border:1px solid #bdd3c4;border-radius:6px;background:white;color:#17513f;font:inherit;cursor:pointer}
+.post-publish>.post-share-message{margin:12px 0 0;white-space:pre-wrap;font-size:13px}
 .feed-paging{display:grid;gap:8px}
 .feed-paging button{font-size:14px;min-height:46px}
 .timeline-hero{padding:2px 2px 10px}
@@ -65,6 +88,6 @@
 .timeline-write{display:flex;align-items:center;justify-content:space-between;gap:12px;background:white;border:1px solid #dce6e0;padding:12px 16px;border-radius:12px;margin:14px 0 20px}
 .timeline-write span{font-size:13px;color:#718279}
 .timeline-write a{font-size:14px;min-height:42px;padding:9px 18px;border-radius:8px;white-space:nowrap}
-.social-view .dx-home{position:static;left:auto;bottom:auto;transform:none;display:block;width:calc(100% - 32px);max-width:360px;min-height:46px;margin:14px auto 18px;font-size:16px}
+.social-view .dx-home{max-width:360px;min-height:46px;font-size:16px}
 @media(max-width:420px){.social-view main{padding:12px}.social-view main>header{max-width:240px;margin-bottom:14px}.social-view .panel{padding:18px}.social-profile #intro h1{font-size:25px}.social-profile #intro .jump{margin:14px -18px -18px}.social-profile #intro .profile-description{font-size:14px}.social-nav a{font-size:13px}.post-header{padding:15px 15px 0;gap:9px}.post-body{margin:13px 15px;font-size:16px}.post-author{font-size:15px}.post-avatar{width:38px;height:38px}.post-kind{font-size:10px;padding:3px 6px}.post-share{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:12px}.post-links{margin:0 15px}.post-video iframe{height:360px}}
 
