@@ -12,6 +12,6 @@
  const fallback=el('input');fallback.type='text';fallback.readOnly=true;fallback.value=shareURL;fallback.hidden=true;fallback.setAttribute('aria-label','コピーするリンク');
  copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(shareURL);status.textContent='リンクをコピーしました。SNSに貼り付けて、文章を書いてください。';}catch(e){fallback.hidden=false;fallback.focus();fallback.select();status.textContent='このリンクを長押ししてコピーしてください。';}});
  const links=el('nav',null,'sns-links');links.setAttribute('aria-label','投稿するSNSを開く');
- [['Facebook','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareURL),'facebook'],['X','https://twitter.com/intent/tweet?url='+encodeURIComponent(shareURL),'x'],['LINE','https://line.me/R/share?text='+encodeURIComponent(shareURL),'line']].forEach(([label,url,name])=>{const a=el('a',label,'sns-destination '+name);a.href=url;a.target='_blank';a.rel='noopener';links.append(a);});
+ [['Facebook','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareURL),'facebook'],['X','https://twitter.com/intent/tweet?url='+encodeURIComponent(shareURL),'x'],['LINE','https://line.me/R/share?text='+encodeURIComponent('https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-composite.html'),'line']].forEach(([label,url,name])=>{const a=el('a',label,'sns-destination '+name);a.href=url;a.target='_blank';a.rel='noopener';links.append(a);});
  section.append(title,preview,copy,status,fallback,links);host.replaceChildren(section);
 })();
