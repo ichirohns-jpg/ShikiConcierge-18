@@ -11,7 +11,7 @@
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
  document.body.classList.add('social-view');if(ids[slug]){document.body.classList.add('social-profile');const description=document.querySelector('#intro .subtitle')?.nextElementSibling;if(description?.tagName==='P')description.classList.add('profile-description');}
  const nav=el('nav',null,'social-nav');nav.setAttribute('aria-label','DXのメニュー');
- for(const [text,path,active] of [['みんなの投稿','timeline.html',timeline],['お店を探す','./#shops',false],['お得情報','deals.html',deals]]){
+ for(const [text,path,active] of [['お店を探す','./#shops',false],['投稿を見る','timeline.html',timeline],['特典を見る','deals.html',deals],['投稿・管理','./#owner',false]]){
   const a=el('a',text);a.href=path;if(active)a.setAttribute('aria-current','page');nav.append(a);
  }
  const main=document.querySelector('main'),header=main.querySelector(':scope > header');
@@ -64,7 +64,7 @@
    if(p.end)card.append(el('p',p.end+'まで','post-end'));
    const links=el('div',null,'post-links');
    if(!article){const detail=el('a','この記事を開く');detail.href=pageURL(p);links.append(detail);}
-   if(shop){const profile=el('a','志木なるほどDXはこちら →');profile.href=shop;profile.setAttribute('aria-label','志木なるほどDXはこちら：'+p.name+'の紹介ページ');links.append(profile);}
+   if(shop){const profile=el('a','お店の紹介・場所を見る →');profile.href=shop;profile.setAttribute('aria-label','志木なるほどDXはこちら：'+p.name+'の紹介ページ');links.append(profile);}
    card.append(links);share(card,p);list.append(card);
   }
  }
