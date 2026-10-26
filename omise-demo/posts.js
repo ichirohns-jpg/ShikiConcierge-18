@@ -4,6 +4,7 @@
  const base='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/';
  const slug=location.pathname.split('/').pop();
  const ids={'ouchicafe.html':'SHOP-0001','heartnet.html':'SHOP-0002','newtimes.html':'SHOP-0003'};
+ const avatarImages={'SHOP-0002':'fujiko-avatar.jpeg'};
  const article=slug==='article.html',deals=slug==='deals.html',timeline=slug==='timeline.html';
  if(!article&&!deals&&!timeline&&!ids[slug])return;
  const id=article?new URLSearchParams(location.search).get('id'):null;
@@ -45,7 +46,8 @@
   list.replaceChildren();
   for(const p of rows){
    const shop=shopURL(p),card=el('article',null,'post-card'),head=el('div',null,'post-header');
-   const avatar=el(shop?'a':'span',p.name.slice(0,1),'post-avatar');
+   const avatarImage=avatarImages[p.shop],avatar=el(shop?'a':'span',avatarImage?'':p.name.slice(0,1),'post-avatar'+(avatarImage?' has-image':''));
+   if(avatarImage){const img=el('img');img.src=base+avatarImage;img.alt='';img.loading='lazy';img.decoding='async';avatar.append(img);}
    if(shop){avatar.href=shop;avatar.setAttribute('aria-label',p.name+'の投稿を見る');}else avatar.setAttribute('aria-hidden','true');
    const identity=el('div',null,'post-identity'),author=el(shop?'a':'span',p.name,'post-author');
    if(shop){author.href=shop;author.setAttribute('aria-label',p.name+'のページと投稿を見る');}
