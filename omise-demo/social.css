@@ -67,3 +67,17 @@
 .timeline-write a{font-size:14px;min-height:42px;padding:9px 18px;border-radius:8px;white-space:nowrap}
 .social-view .dx-home{max-width:360px;min-height:46px;font-size:16px}
 @media(max-width:420px){.social-view main{padding:12px}.social-view main>header{max-width:240px;margin-bottom:14px}.social-view .panel{padding:18px}.social-profile #intro h1{font-size:25px}.social-profile #intro .jump{margin:14px -18px -18px}.social-profile #intro .profile-description{font-size:14px}.social-nav a{font-size:13px}.post-header{padding:15px 15px 0;gap:9px}.post-body{margin:13px 15px;font-size:16px}.post-author{font-size:15px}.post-avatar{width:38px;height:38px}.post-kind{font-size:10px;padding:3px 6px}.post-share{gap:5px;padding:12px}.post-links{margin:0 15px}.post-video iframe{height:360px}}
+
+.social-profile #information .grid{display:block}
+.social-profile #information .grid a{display:inline-flex;padding:9px 14px;min-height:44px}
+.social-profile #offer.gift-compact{padding:0;background:#fff;border:1px solid #dce6e0}
+.social-profile .gift-reveal{margin:0;padding:0;border:0}
+.social-profile .gift-reveal>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px;font-size:15px;list-style:none}
+.social-profile .gift-reveal>summary::-webkit-details-marker{display:none}
+.social-profile .gift-reveal>summary:after{content:'＋';font-size:21px;font-weight:400;flex:none;color:#51725f}
+.social-profile .gift-reveal[open]>summary:after{content:'−'}
+.social-profile .gift-reveal>summary small{font-size:12px;color:#73847b;font-weight:400;margin-left:auto}
+.social-profile .gift-reveal-body{padding:0 18px 18px}
+.social-profile .gift-reveal-body p{font-size:14px}
+.social-profile .gift-reveal-body input{font-size:16px}
+@media(max-width:420px){.social-profile .gift-reveal>summary{gap:8px;font-size:14px;padding:16px}.social-profile .gift-reveal>summary small{font-size:11px}.social-profile .gift-reveal-body{padding:0 16px 16px}}
