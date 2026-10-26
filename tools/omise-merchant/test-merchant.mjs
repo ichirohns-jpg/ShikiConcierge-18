@@ -1,0 +1,18 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+const tables=new Map(),props=new Map();let serial=0;
+class Range{constructor(sheet,r,c,n=1,m=1){Object.assign(this,{sheet,r,c,n,m});}getDisplayValues(){return Array.from({length:this.n},(_,i)=>Array.from({length:this.m},(_,j)=>String(this.sheet.rows[this.r-1+i]?.[this.c-1+j]??'')));}setValue(v){return this.setValues([[v]]);}setValues(rows){rows.forEach((row,i)=>row.forEach((v,j)=>{const target=this.sheet.rows[this.r-1+i]??(this.sheet.rows[this.r-1+i]=[]);target[this.c-1+j]=v;}));return this;}setFontWeight(){return this;}}
+class Sheet{constructor(){this.rows=[];}appendRow(r){this.rows.push(r);return this;}getDataRange(){return new Range(this,1,1,this.rows.length,Math.max(...this.rows.map(r=>r.length),1));}getRange(...a){if(typeof a[0]==='string')return {setFontWeight(){}};return new Range(this,...a);}getLastRow(){return this.rows.length;}setFrozenRows(){}setColumnWidth(){}}
+const master=new Sheet();master.rows=[['店舗ID','店名','公開状態','掲載許可','紹介文','更新日'],['SHOP-0002','ハートネット志木','下書き','未確認','元の紹介','2026-10-25']];tables.set('店舗一覧',master);
+const book={getSheetByName:n=>tables.get(n),insertSheet:n=>{const s=new Sheet();tables.set(n,s);return s;}};
+const ctx=vm.createContext({SpreadsheetApp:{openById:()=>book},PropertiesService:{getScriptProperties:()=>({getProperty:k=>props.get(k),setProperty:(k,v)=>props.set(k,v)})},Utilities:{getUuid:()=>('uuid'+(++serial)).padEnd(32,'0'),formatDate:(_d,_tz,fmt)=>fmt.includes('HH')?'2026-10-26 12:00:00':'2026-10-26'},LockService:{getScriptLock:()=>({waitLock(){},releaseLock(){}})},Date,console});
+vm.runInContext(fs.readFileSync(new URL('./Merchant.gs',import.meta.url),'utf8'),ctx);ctx.setupMerchantEditing();
+const shopCode=props.get('merchant:SHOP-0002'),admin=props.get('merchant:ADMIN');assert.ok(shopCode&&admin&&shopCode!==admin);
+assert.throws(()=>ctx.merchantLogin('SHOP-0002','wrong'));assert.throws(()=>ctx.merchantLogin('SHOP-0001',shopCode));
+assert.equal(ctx.merchantLogin('SHOP-0002',shopCode).shop['店名'],'ハートネット志木');
+const req=ctx.merchantSubmit('SHOP-0002',shopCode,'info',{'店名':'ハートネット志木','紹介文':'変更後の紹介'});assert.equal(master.rows[1][4],'元の紹介');assert.equal(ctx.omPublic_('SHOP-0002').shop,null);
+assert.throws(()=>ctx.merchantDecide(shopCode,req.id,true,true));assert.throws(()=>ctx.merchantDecide(admin,req.id,true,false));ctx.merchantDecide(admin,req.id,true,true);assert.equal(master.rows[1][4],'変更後の紹介');assert.equal(ctx.omPublic_('SHOP-0002').shop['紹介文'],'変更後の紹介');assert.throws(()=>ctx.merchantDecide(admin,req.id,true,true));
+const notice=ctx.merchantSubmit('SHOP-0002',shopCode,'notice',{title:'期限の確認',body:'期限を過ぎた記事',end:'2026-10-25'});ctx.merchantDecide(admin,notice.id,true,true);assert.equal(ctx.omPublic_('SHOP-0002').notice,null);
+const rejected=ctx.merchantSubmit('SHOP-0002',shopCode,'notice',{title:'送信確認',body:'公開しないテスト'});ctx.merchantDecide(admin,rejected.id,false,false);assert.equal(ctx.omRequests_().length,0);assert.equal(ctx.omPublic_('SHOP-0002').notice,null);
+const photo='data:image/jpeg;base64,'+'A'.repeat(40000);const media=ctx.merchantSubmit('SHOP-0002',shopCode,'media',{photos:[photo],video:'https://www.youtube.com/@shiki-model'});assert.equal(ctx.omRequests_()[0].previews[0],photo);assert.equal(ctx.omPublic_('SHOP-0002').photos.length,0);ctx.merchantDecide(admin,media.id,true,true);assert.equal(ctx.omPublic_('SHOP-0002').photos[0],photo);
+assert.throws(()=>ctx.merchantSubmit('SHOP-0002',shopCode,'info',{'店名':'テスト','公式サイトURL':'javascript:alert(1)'}));
+console.log('PASS: store isolation, access codes, pending save, approval, rejection, expiry and image reconstruction');
