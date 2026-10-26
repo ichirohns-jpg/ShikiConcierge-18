@@ -12,6 +12,6 @@
  copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(caption);status.textContent='文章とリンクをコピーしました。SNSに貼り付けてください。';}catch(e){fallback.hidden=false;fallback.focus();fallback.select();status.textContent='この文章を長押ししてコピーしてください。';}});
  const links=document.createElement('nav');links.className='sns-links';links.setAttribute('aria-label','投稿するSNSを開く');
  [['Facebook','https://www.facebook.com/','facebook'],['Instagram','https://www.instagram.com/','instagram'],['X','https://x.com/','x'],['LINE','https://line.me/R/share?text='+encodeURIComponent(caption),'line']].forEach(([label,url,name])=>{const a=document.createElement('a');a.textContent=label;a.href=url;a.className='sns-destination '+name;a.target='_blank';a.rel='noopener';links.append(a);});
- const save=document.createElement('a');save.className='sns-copy sns-composite-save';save.textContent='画像を保存';save.href='./cafe-benefit-sns-composite.jpg';save.download='shiki-dx-benefit.jpg';
+ const save=document.createElement('a');save.className='sns-copy sns-composite-save';save.textContent='SNS用画像を保存';save.href='./cafe-benefit-sns-composite.jpg?v=20261026-brand9';save.download='shiki-dx-benefit.jpg';
  section.append(title,copy,save,status,fallback,links);host.replaceChildren(section);
 })();
