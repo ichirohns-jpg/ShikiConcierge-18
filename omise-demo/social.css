@@ -89,5 +89,14 @@
 .timeline-write span{font-size:13px;color:#718279}
 .timeline-write a{font-size:14px;min-height:42px;padding:9px 18px;border-radius:8px;white-space:nowrap}
 .social-view .dx-home{max-width:360px;min-height:46px;font-size:16px}
+
+/* Clear next-step controls at the end of every shop page. */
+.bottom-actions{margin:18px 0 8px;padding:18px;background:#fff;border:1px solid #d5e3dc;border-radius:16px;box-shadow:0 2px 8px #25483808}
+.bottom-actions-label{margin:0 0 12px;font-size:17px;font-weight:800;color:#173b32}
+.bottom-actions-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.bottom-actions-grid a{display:flex;align-items:center;justify-content:center;min-height:54px;padding:10px 8px;border:1px solid #c9dbd1;border-radius:11px;background:#edf5f0;color:#155b47;text-align:center;text-decoration:none;font-size:14px;font-weight:800;line-height:1.4}
+.bottom-actions-grid a.deal{background:#fff3dc;border-color:#efd8a5;color:#8b570c}
+.bottom-actions-grid a.home{background:#16745c;border-color:#16745c;color:#fff}
+.bottom-actions-grid a:focus-visible{outline:3px solid #e3a700;outline-offset:3px}
 @media(max-width:420px){.social-view main{padding:12px}.social-view main>header{max-width:240px;margin-bottom:14px}.social-view .panel{padding:18px}.social-profile #intro h1{font-size:25px}.social-profile #intro .jump{margin:14px -18px -18px}.social-profile #intro .profile-description{font-size:14px}.social-nav a{font-size:13px}.post-header{padding:15px 15px 0;gap:9px}.post-body{margin:13px 15px;font-size:16px}.post-author{font-size:15px}.post-avatar{width:38px;height:38px}.post-kind{font-size:10px;padding:3px 6px}.post-share{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:12px}.post-links{margin:0 15px}.post-video iframe{height:360px}}
 
