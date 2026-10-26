@@ -23,7 +23,7 @@
  if(article||timeline)main.append(section);else if(deals)document.querySelector('article').prepend(section);else document.querySelector('#photos').before(section);
  const shopURL=p=>{const file=Object.keys(ids).find(f=>ids[f]===p.shop);return file?base+file+'#posts-timeline':null;};
  const pageURL=p=>base+'article.html?id='+encodeURIComponent(p.id);
- const shortDate=value=>{const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);return m?Number(m[2])+'月'+Number(m[3])+'日 '+m[4]+':'+m[5]:String(value||'');};
+ const shortDate=value=>{const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);return m?Number(m[2])+'月'+Number(m[3])+'日 '+m[4]+':'+m[5]:String(value||'');}; const cleanBody=value=>String(value||'').replace(/https?:\/\/\S+/gi,'').replace(/志木なるほどDXはこちら[^\n]*/g,'').replace(/お店の地図[^\n]*/g,'').replace(/DXトップへ戻る[^\n]*/g,'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean).join('\n').replace(/\n{3,}/g,'\n\n').trim();
  function socialMark(label){
   const mark=el('span',{'コピー':'⧉','Facebook':'f','Instagram':'◎','X':'𝕏','LINE':'L'}[label]||label,'sns-mark');
   mark.setAttribute('aria-hidden','true');return mark;
@@ -32,7 +32,8 @@
   const url=pageURL(p),shop=shopURL(p);
   // 共有本文は「記事本文＋記事URL」の一組にする。店舗ページや地図まで
   // 追加すると、Facebook/LINE側でURLが並び、記事の写真・本文が埋もれる。
-  const text=p.name+'\n\n'+p.body+(p.end?'\n\n'+p.end+'まで':'')+'\n\n'+url;
+  const body=cleanBody(p.body)||'投稿を見てください。';
+  const text=p.name+'\n\n'+body+(p.end?'\n\n'+p.end+'まで':'')+'\n\n'+url;
   const row=el('div',null,'post-share'),message=el('p',null,'post-share-message');
   row.setAttribute('aria-label','この記事を共有');message.setAttribute('role','status');
   const fallback=el('textarea',null,'post-fallback');fallback.value=text;fallback.readOnly=true;fallback.hidden=true;fallback.setAttribute('aria-label','紹介文');
@@ -54,7 +55,7 @@
   const destinations=[
    ['Facebook','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),'#0866c6'],
    ['Instagram','https://www.instagram.com/','linear-gradient(115deg,#833ab4,#c52c72,#b94418)'],
-   ['X','https://twitter.com/intent/tweet?text='+encodeURIComponent(p.name+'\n'+p.body.slice(0,100))+'&url='+encodeURIComponent(url),'#111'],
+   ['X','https://twitter.com/intent/tweet?text='+encodeURIComponent(p.name+'\n'+(cleanBody(p.body)||'投稿を見てください。'))+'&url='+encodeURIComponent(url),'#111'],
    ['LINE','https://line.me/R/share?text='+encodeURIComponent(text),'#087f3e']
   ];
   for(const [label,href,background] of destinations){
@@ -73,7 +74,7 @@
    if(shop){author.href=shop;author.setAttribute('aria-label',p.name+'のページと投稿を見る');}
    const date=el('a',shortDate(p.date),'post-date');date.href=pageURL(p);date.setAttribute('aria-label',p.date+'の記事を開く');
    identity.append(author,date);head.append(avatar,identity,el('span',p.kind==='deal'?'お得情報':'お知らせ','post-kind'+(p.kind==='deal'?' deal':'')));
-   card.append(head,el('p',p.body,'post-body'));
+   card.append(head,el('p',cleanBody(p.body)||'投稿を見てください。','post-body'));
    const photos=(p.photos||[]).filter(src=>/^data:image\/jpeg;base64,/.test(src));
    if(photos.length){const media=el('div',null,'post-media');for(const src of photos){const img=el('img');img.src=src;img.alt=p.name+'の投稿写真';img.loading=article?'eager':'lazy';img.decoding='async';media.append(img);}card.append(media);}
    if(p.video&&/^https:\/\/drive\.google\.com\/file\/d\/[A-Za-z0-9_-]+\/preview$/.test(p.video)){
