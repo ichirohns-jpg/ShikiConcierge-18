@@ -22,7 +22,7 @@
  section.id='posts-timeline';bar.append(heading,status);section.append(bar,list,paging);
  if(article||timeline)main.append(section);else if(deals)document.querySelector('article').prepend(section);else document.querySelector('#photos').before(section);
  const shopURL=p=>{const file=Object.keys(ids).find(f=>ids[f]===p.shop);return file?base+file+'#posts-timeline':null;};
- const pageURL=p=>base+'article.html?id='+encodeURIComponent(p.id);
+ const pageURL=p=>base+'article.html?id='+encodeURIComponent(p.id)+'&v=20261026-clean3';
  const shortDate=value=>{const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);return m?Number(m[2])+'月'+Number(m[3])+'日 '+m[4]+':'+m[5]:String(value||'');}; const cleanBody=value=>String(value||'').replace(/https?:\/\/\S+/gi,'').replace(/志木なるほどDXはこちら[^\n]*/g,'').replace(/お店の地図[^\n]*/g,'').replace(/DXトップへ戻る[^\n]*/g,'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean).join('\n').replace(/\n{3,}/g,'\n\n').trim();
  function socialMark(label){
   const mark=el('span',{'コピー':'⧉','Facebook':'f','Instagram':'◎','X':'𝕏','LINE':'L'}[label]||label,'sns-mark');
