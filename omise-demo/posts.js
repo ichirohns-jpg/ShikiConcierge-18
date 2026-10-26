@@ -30,11 +30,25 @@
  }
  function share(box,p){
   const url=pageURL(p),shop=shopURL(p);
-  const map=p.address?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.name+' '+p.address):'';
-  const text=p.name+'\n\n'+p.body+(p.end?'\n\n'+p.end+'まで':'')+'\n\n'+url+(shop?'\n\n志木なるほどDXはこちら\n'+shop:'')+(map?'\n\nお店の地図\n'+map:'');
+  // 共有本文は「記事本文＋記事URL」の一組にする。店舗ページや地図まで
+  // 追加すると、Facebook/LINE側でURLが並び、記事の写真・本文が埋もれる。
+  const text=p.name+'\n\n'+p.body+(p.end?'\n\n'+p.end+'まで':'')+'\n\n'+url;
   const row=el('div',null,'post-share'),message=el('p',null,'post-share-message');
   row.setAttribute('aria-label','この記事を共有');message.setAttribute('role','status');
   const fallback=el('textarea',null,'post-fallback');fallback.value=text;fallback.readOnly=true;fallback.hidden=true;fallback.setAttribute('aria-label','紹介文');
+  async function nativeShare(){
+   if(!navigator.share){message.textContent='この端末の共有機能に対応していません。文章をコピーしてSNSへ貼り付けてください。';return;}
+   const files=[];
+   for(const [i,src] of (p.photos||[]).filter(v=>/^data:image\/jpeg;base64,/.test(v)).entries()){
+    const m=src.match(/^data:([^;]+);base64,(.+)$/);if(!m)continue;
+    const bytes=Uint8Array.from(atob(m[2]),c=>c.charCodeAt(0));files.push(new File([bytes],'dx-'+p.shop+'-'+(i+1)+'.jpg',{type:m[1]}));
+   }
+   const payload={text};
+   if(files.length&&navigator.canShare?.({files}))payload.files=files;
+   try{await navigator.share(payload);message.textContent='写真と本文を共有画面へ渡しました。SNS側で投稿を確定してください。';}
+   catch(e){if(e.name!=='AbortError')message.textContent='共有できませんでした。文章をコピーしてSNSへ貼り付けてください。';}
+  }
+  const native=el('button');native.type='button';native.className='native-share';native.append(socialMark('共有'),el('span',p.photos?.length?'写真つき共有':'共有'));native.onclick=nativeShare;native.hidden=!navigator.share;row.append(native);
   async function copy(){try{await navigator.clipboard.writeText(text);message.textContent='コピーしました。SNSに貼り付けて投稿できます。';}catch{fallback.hidden=false;fallback.focus();fallback.select();message.textContent='文章を長押ししてコピーしてください。';}}
   const copyButton=el('button');copyButton.type='button';copyButton.append(socialMark('コピー'),el('span','コピー'));copyButton.onclick=copy;row.append(copyButton);
   const destinations=[
@@ -98,3 +112,4 @@
  if(article&&!/^POST-[a-f0-9-]+$/i.test(id||'')){status.textContent='記事が指定されていません。';return;}
  load();
 })();
+
