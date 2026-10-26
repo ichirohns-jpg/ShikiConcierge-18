@@ -1,30 +1,15 @@
 'use strict';
 (()=>{
- const host=document.getElementById('benefitImageShare');
- if(!host||!window.DXPostShare)return;
+ const host=document.getElementById('benefitImageShare');if(!host)return;
  const greeting=document.getElementById('friendGreeting');if(greeting)greeting.hidden=new URLSearchParams(location.search).get('from')!=='friend';
- const article={
-  id:'cafe-benefit-sample',name:'おうちcafeパン工房',
-  title:'【掲載見本・利用不可】パン500円以上でミニパン1個',
-  body:'特典の掲載見本です。実際のセールやプレゼントは実施していません。\n\n表示例：パンを500円以上買うと、ミニパン1個プレゼント。\n受け取り方の表示例：お会計前に画面を見せて「ふじこを見たよ」と伝える。\n\n埼玉県志木市本町2-5-46 やまかく館1F',
-  url:'https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit.html',
-  promotion:{condition:'パンを500円以上買うと',reward:'ミニパン1個\nプレゼント',keyword:'ふじこを見たよ',address:'埼玉県志木市本町2-5-46 やまかく館1F'}
- };
- const cardURL='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-card.html';
- const shortURL='https://is.gd/4B4xUO';
- const card=document.createElement('section');card.className='click-card-share';card.setAttribute('aria-label','画像タップで特典ページを開ける共有');
+ const shortURL='https://is.gd/eNI6PL';
+ const section=document.createElement('section');section.className='simple-sns-share';section.setAttribute('aria-label','SNSに投稿する');
  const title=document.createElement('h2');title.textContent='SNSに投稿する';
- const note=document.createElement('p');note.textContent='リンクをコピーして、投稿したいSNSに貼り付けてください。';
- const image=document.createElement('img');image.src='./cafe-benefit-ogp-v1.jpg';image.width=1200;image.height=630;image.alt='特典の掲載見本・実際には利用できません。パン500円以上でミニパン1個。志木なるほど お店めぐりDX';
- const facebook=document.createElement('a');facebook.className='btn';facebook.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(cardURL);facebook.target='_blank';facebook.rel='noopener';facebook.textContent='Facebookの共有画面を使う';
- const line=document.createElement('a');line.className='btn line';line.href='https://line.me/R/share?text='+encodeURIComponent('【掲載見本・利用不可】特典とお店の情報はこちら\n'+shortURL);line.target='_blank';line.rel='noopener';line.textContent='LINEで画像リンクを送る';
- const hint=document.createElement('p');hint.className='muted';hint.textContent='掲載見本です。特典は利用できません.';
- const copy=document.createElement('button');copy.type='button';copy.className='btn copy-link';copy.textContent='リンクをコピー';
- const shortLabel=document.createElement('label');shortLabel.textContent='特典ページの短いリンク';shortLabel.htmlFor='benefitShortURL';
- const shortInput=document.createElement('input');shortInput.id='benefitShortURL';shortInput.type='url';shortInput.readOnly=true;shortInput.value=shortURL;shortInput.style.fontSize='16px';
- const status=document.createElement('p');status.className='muted';status.setAttribute('role','status');
- copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(shortURL);status.textContent='コピーしました。投稿したいSNSに貼り付けてください。';}catch(e){linkOptions.open=true;shortInput.focus();shortInput.select();status.textContent='この短いリンクを長押ししてコピーしてください。';}});
- const linkOptions=document.createElement('details');linkOptions.className='photo-post-options';const linkSummary=document.createElement('summary');linkSummary.textContent='リンクの確認・ほかの共有方法';linkOptions.append(linkSummary,shortLabel,shortInput,facebook);
- card.append(title,note,image,copy,status,line,hint,linkOptions);host.append(card);
- const more=document.createElement('details');more.className='photo-post-options';const summary=document.createElement('summary');summary.textContent='画像を保存・ほかのSNSに投稿';const images=document.createElement('div');more.append(summary,images);host.append(more);window.DXPostShare.mount(images,article);
+ const copy=document.createElement('button');copy.type='button';copy.className='sns-copy';copy.textContent='リンクをコピー';
+ const status=document.createElement('p');status.className='sns-share-status';status.setAttribute('role','status');status.textContent='コピーして、投稿したいSNSに貼り付けてください。';
+ const fallback=document.createElement('input');fallback.type='url';fallback.readOnly=true;fallback.value=shortURL;fallback.hidden=true;fallback.setAttribute('aria-label','コピーするリンク');
+ copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(shortURL);status.textContent='コピーしました。SNSに貼り付けてください。';}catch(e){fallback.hidden=false;fallback.focus();fallback.select();status.textContent='このリンクを長押ししてコピーしてください。';}});
+ const links=document.createElement('nav');links.className='sns-links';links.setAttribute('aria-label','投稿するSNSを開く');
+ [['Facebook','https://www.facebook.com/','facebook'],['Instagram','https://www.instagram.com/','instagram'],['X','https://x.com/','x'],['LINE','https://line.me/R/share?text='+encodeURIComponent(shortURL),'line']].forEach(([label,url,name])=>{const a=document.createElement('a');a.textContent=label;a.href=url;a.className='sns-destination '+name;a.target='_blank';a.rel='noopener';links.append(a);});
+ section.append(title,copy,status,fallback,links);host.replaceChildren(section);
 })();
