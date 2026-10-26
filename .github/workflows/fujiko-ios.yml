@@ -1,0 +1,33 @@
+name: Build Fujiko iOS prototype
+on:
+  push:
+    branches: [codex/fujiko-ios-prototype]
+    paths:
+      - 'native/FujikoShare/**'
+      - '.github/workflows/fujiko-ios.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  simulator-build:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build iPhone simulator app
+        run: xcodebuild -project native/FujikoShare/FujikoShare.xcodeproj -scheme FujikoShare -sdk iphonesimulator -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+      - name: Launch app and capture actual simulator screen
+        run: |
+          fujiko_device_id=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(x["udid"] for k,v in d["devices"].items() if "iOS" in k for x in v if x["name"].startswith("iPhone")))')
+          xcrun simctl boot "$fujiko_device_id"
+          xcrun simctl bootstatus "$fujiko_device_id" -b
+          xcrun simctl install "$fujiko_device_id" build/Build/Products/Debug-iphonesimulator/FujikoShare.app
+          xcrun simctl launch "$fujiko_device_id" jp.shikinaruhodo.FujikoShare
+          sleep 3
+          xcrun simctl io "$fujiko_device_id" screenshot build/fujiko-launch.png
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FujikoShare-simulator-app-not-for-iPhone-install
+          path: |
+            build/Build/Products/Debug-iphonesimulator/FujikoShare.app
+            build/fujiko-launch.png
