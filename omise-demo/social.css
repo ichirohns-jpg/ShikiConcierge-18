@@ -1,0 +1,69 @@
+/* Shared reading layout for shop profiles, articles and the town feed. */
+.social-view{background:#f2f5f4;color:#173b32;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;line-height:1.65}
+.social-view main{max-width:680px;padding:16px}
+.social-view main>header{max-width:300px;margin:4px auto 16px}
+.social-nav{display:flex;gap:4px;border-bottom:1px solid #d8e3de;padding:0 0 12px;margin-bottom:20px}
+.social-nav a{flex:1;display:flex;align-items:center;justify-content:center;min-height:44px;text-decoration:none;border-radius:9px;color:#547166;font-size:14px;font-weight:700;white-space:nowrap}
+.social-nav a[aria-current=page]{color:#11664e;background:#e0eee7}
+.social-view .panel{padding:22px;border-color:#dce6e0;border-radius:16px;box-shadow:0 2px 8px #25483804}
+.social-profile #intro{margin-top:0}
+.social-profile #intro h1{font-size:28px;letter-spacing:.02em;line-height:1.35;margin:8px 0 12px}
+.social-profile #intro .eyebrow{font-size:12px;font-weight:600;color:#728479;margin:0 0 6px}
+.social-profile #intro .subtitle{font-size:17px;font-weight:650;line-height:1.55;margin:10px 0}
+.social-profile #intro .profile-description{font-size:15px;line-height:1.85;font-weight:400;margin:8px 0 18px;color:#486257}
+.profile-social{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:18px}
+.profile-social a{min-height:46px;display:flex;gap:6px;align-items:center;justify-content:center;padding:10px 6px;border-radius:9px;text-decoration:none;font-size:13px;font-weight:700;color:#fff;white-space:nowrap}
+.profile-social .sns-youtube{background:#c90000}.profile-social .sns-facebook{background:#0866c6}.profile-social .sns-instagram{background:linear-gradient(115deg,#833ab4,#c52c72,#b94418)}
+.sns-mark{font-size:19px;line-height:1;font-weight:900;display:inline-flex;align-items:center;justify-content:center;min-width:14px}
+.profile-share{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 0;padding-top:12px;border-top:1px solid #e3ebe6;font-size:13px;color:#718279}
+.profile-share a{display:flex;align-items:center;gap:6px;min-height:44px;text-decoration:none;color:#087f3e;font-weight:700}
+.social-profile #intro .jump{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:14px -22px -22px;border-top:1px solid #e3ebe6;border-radius:0 0 16px 16px;overflow:hidden}
+.social-profile #intro .jump a{background:#fff;border-radius:0;min-height:50px;padding:12px 4px;text-align:center;font-size:14px;white-space:nowrap}
+.social-profile #intro .jump a:first-child{background:#edf5f0;color:#11664e;box-shadow:inset 0 -3px #167454}
+.social-profile #photos figure{margin-bottom:22px}
+.social-profile #photos .scene-body{font-size:14px;line-height:1.75}
+.social-profile #information h2{font-size:21px}
+.social-profile #information .grid .btn{font-size:14px;min-height:46px;padding:10px 8px}
+.social-profile #share>.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.social-profile #share>.grid .btn,.social-profile #share>.grid button{padding:8px 2px;min-height:44px;font-size:11px;border-radius:8px}
+.social-profile #share>.muted{font-size:12px}
+.social-view #posts-timeline{background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;margin:24px 0;scroll-margin-top:16px}
+.feed-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 12px}
+.feed-heading h2{font-size:20px;margin:0;line-height:1.4}
+.feed-status{font-size:12px;color:#73847b;margin:0}
+.post-card{background:white;border:1px solid #dce6e0;border-radius:15px;margin:0 0 16px;overflow:hidden;box-shadow:0 2px 8px #25483804}
+.post-header{display:flex;gap:11px;align-items:center;padding:17px 18px 0}
+.post-avatar{display:flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none;border-radius:50%;background:#e0eee6;color:#187253;font-size:18px;font-weight:800;text-decoration:none}
+.post-identity{flex:1;min-width:0}
+.post-author{display:block;color:#173b32;font-weight:750;text-decoration:none;font-size:16px;line-height:1.5}
+.post-date{display:block;font-size:12px;color:#7b8b82;text-decoration:none;margin-top:1px}
+.post-kind{align-self:flex-start;margin-top:4px;padding:3px 8px;border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap;background:#edf4ef;color:#5b796a}
+.post-kind.deal{background:#fff3df;color:#996314}
+.post-body{white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;font-weight:400;line-height:1.8;margin:16px 18px 14px}
+.post-media{background:#f4f6f4;margin-top:10px}
+.post-media img{display:block;width:100%;height:auto;max-height:720px;object-fit:contain;border-radius:0;margin:0}
+.post-media img+img{margin-top:3px}
+.post-video{position:relative;background:#e8ede9}
+.post-video img{width:100%;height:auto;border-radius:0}
+.post-video button{display:block;min-height:48px;width:100%;border-radius:0;background:#173b32;color:white;font-size:15px}
+.post-video iframe{display:block;border:0;width:100%;height:420px}
+.post-end{margin:12px 18px;color:#996314;font-size:13px}
+.post-links{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 14px;margin:0 18px;padding:10px 0;border-bottom:1px solid #e7ede9}
+.post-links a{display:inline-flex;align-items:center;min-height:36px;font-size:12px;text-decoration:none;color:#447460;font-weight:600}
+.post-share{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;padding:13px 16px 15px}
+.post-share a,.post-share button{display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;min-width:0;min-height:52px;padding:7px 2px;border:0;border-radius:8px;text-decoration:none;color:#fff;font-size:10px;font-weight:650;line-height:1.3;cursor:pointer;background:#60786b}
+.post-share .sns-mark{font-size:20px;min-height:20px}
+.post-share-message{font-size:12px;margin:0 18px 14px;color:#577461}
+.post-share-message:empty{display:none}
+.post-fallback{width:calc(100% - 36px);margin:0 18px 16px}
+.feed-paging{display:grid;gap:8px}
+.feed-paging button{font-size:14px;min-height:46px}
+.timeline-hero{padding:2px 2px 10px}
+.timeline-hero .eyebrow{font-size:12px;margin:0;color:#718279}
+.timeline-hero h1{font-size:30px;line-height:1.3;letter-spacing:.02em;margin:8px 0}
+.timeline-hero p{font-size:14px;color:#687e70;margin:8px 0}
+.timeline-write{display:flex;align-items:center;justify-content:space-between;gap:12px;background:white;border:1px solid #dce6e0;padding:12px 16px;border-radius:12px;margin:14px 0 20px}
+.timeline-write span{font-size:13px;color:#718279}
+.timeline-write a{font-size:14px;min-height:42px;padding:9px 18px;border-radius:8px;white-space:nowrap}
+.social-view .dx-home{max-width:360px;min-height:46px;font-size:16px}
+@media(max-width:420px){.social-view main{padding:12px}.social-view main>header{max-width:240px;margin-bottom:14px}.social-view .panel{padding:18px}.social-profile #intro h1{font-size:25px}.social-profile #intro .jump{margin:14px -18px -18px}.social-profile #intro .profile-description{font-size:14px}.social-nav a{font-size:13px}.post-header{padding:15px 15px 0;gap:9px}.post-body{margin:13px 15px;font-size:16px}.post-author{font-size:15px}.post-avatar{width:38px;height:38px}.post-kind{font-size:10px;padding:3px 6px}.post-share{gap:5px;padding:12px}.post-links{margin:0 15px}.post-video iframe{height:360px}}
