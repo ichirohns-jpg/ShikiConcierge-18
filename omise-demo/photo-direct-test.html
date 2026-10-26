@@ -6,7 +6,7 @@
  const copy=document.getElementById('copy'),send=document.getElementById('send'),status=document.getElementById('status'),fallback=document.getElementById('fallback');
  const caption='【掲載見本・利用不可】おうちcafeパン工房\n\nパンを500円以上買うと、ミニパン1個プレゼント。\nこの特典は実際には利用できません。\n\n志木なるほど お店めぐりDX\nhttps://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-link.html';fallback.value=caption;
  let readyFile=null,busy=false;
- copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(caption);status.textContent='コピーしました。②を押してFacebookを選び、文章を貼り付けてください。';copy.textContent='✓ 文章とDXリンクをコピー済み';}catch(e){fallback.hidden=false;fallback.focus();fallback.select();status.textContent='下の文章をコピーしてから②を押してください。';}});
+ copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(caption);status.textContent=readyFile?'コピーしました。②を押してFacebookを選び、文章を貼り付けてください。':'文章とDXリンクをコピーしました。画像を共有できるかは、下のボタンの表示を確認してください。';copy.textContent='✓ 文章とDXリンクをコピー済み';}catch(e){fallback.hidden=false;fallback.focus();fallback.select();status.textContent='下の文章をコピーしてから②を押してください。';}});
  send.addEventListener('click',()=>{
   if(!readyFile||busy)return;busy=true;send.disabled=true;
   // The File is prepared before the click. Call share immediately, with no URL or text payload that could turn it into a link card.
