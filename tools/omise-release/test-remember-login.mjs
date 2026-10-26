@@ -5,7 +5,7 @@ import {createHash,randomUUID} from 'node:crypto';
 const props=new Map([['merchant:SHOP-0001','test-cafe-code'],['merchant:SHOP-0002','test-heartnet-code'],['merchant:ADMIN','test-admin-code']]);
 let now=Date.now();class Clock extends Date{static now(){return now;}}
 const ctx=vm.createContext({Date:Clock,PropertiesService:{getScriptProperties:()=>({getProperty:k=>props.get(k)||null,setProperty:(k,v)=>props.set(k,v),deleteProperty:k=>props.delete(k),getProperties:()=>Object.fromEntries(props)})},Utilities:{getUuid:randomUUID,computeDigest:(_a,s)=>[...createHash('sha256').update(s).digest()],DigestAlgorithm:{SHA_256:'sha256'},Charset:{UTF_8:'utf8'}},LockService:{getScriptLock:()=>({waitLock(){},releaseLock(){}})}});
-const bundle=fs.readFileSync(new URL('./LiveCode.gs',import.meta.url),'utf8');
+const bundle=fs.readFileSync(process.env.SHIKI_LOGIN_BUNDLE||new URL('./LiveCode.gs',import.meta.url),'utf8');
 vm.runInContext(bundle,ctx);
 // Use the actual bundle auth and postLogin, with only sheet reads replaced.
 vm.runInContext("merchantLogin=(id,code)=>{omAuth_(id,code);return {admin:id==='ADMIN',shop:{'店名':'テスト店'}}};postOwn=(id,code)=>{omAuth_(id,code);return []};omBook_=()=>({getSheetByName:()=>({getDataRange:()=>({getDisplayValues:()=>[['ID','x','name'],['SHOP-0001','','テスト店']]})})});",ctx);

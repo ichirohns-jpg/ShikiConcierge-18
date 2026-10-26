@@ -3,7 +3,7 @@ const fs=require('node:fs');const assert=require('node:assert/strict');const {ch
  const browser=await chromium.launch({executablePath:process.env.SHIKI_BROWSER_EXECUTABLE,args:['--no-sandbox','--single-process','--no-zygote','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader']});
  try{
   const page=await browser.newPage({viewport:{width:390,height:844}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  const html=fs.readFileSync(__dirname+'/PostEditor.html','utf8');
+  const html=fs.readFileSync(process.env.SHIKI_LOGIN_EDITOR||__dirname+'/PostEditor.html','utf8');
   await page.route('https://merchant.test/**',r=>r.fulfill({contentType:'text/html',body:html}));
   await page.addInitScript(()=>{
    window.calls=[];
