@@ -1,0 +1,22 @@
+name: Build Fujiko iOS prototype
+on:
+  push:
+    branches: [codex/fujiko-ios-prototype]
+    paths:
+      - 'native/FujikoShare/**'
+      - '.github/workflows/fujiko-ios.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  simulator-build:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build iPhone simulator app
+        run: xcodebuild -project native/FujikoShare/FujikoShare.xcodeproj -scheme FujikoShare -sdk iphonesimulator -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FujikoShare-simulator-app-not-for-iPhone-install
+          path: build/Build/Products/Debug-iphonesimulator/FujikoShare.app
