@@ -36,21 +36,51 @@
   const row=el('div',null,'post-share'),message=el('p',null,'post-share-message');
   row.setAttribute('aria-label','この記事を共有');message.setAttribute('role','status');
   const fallback=el('textarea',null,'post-fallback');fallback.value=text;fallback.readOnly=true;fallback.hidden=true;fallback.setAttribute('aria-label','紹介文');
-  function posterFile(src){return new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>{const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d'),W=1080,H=1350,photoH=790,margin=54;canvas.width=W;canvas.height=H;ctx.fillStyle='#f5f3eb';ctx.fillRect(0,0,W,H);const scale=Math.min((W-margin*2)/image.naturalWidth,(photoH-64)/image.naturalHeight),w=image.naturalWidth*scale,h=image.naturalHeight*scale;ctx.drawImage(image,(W-w)/2,32+(photoH-64-h)/2,w,h);ctx.fillStyle='#174f40';ctx.fillRect(0,photoH,W,8);ctx.fillStyle='#fff';ctx.fillRect(0,photoH+8,W,H-photoH-8);ctx.fillStyle='#174f40';ctx.font='700 32px sans-serif';ctx.fillText(p.name,margin,photoH+72,W-margin*2);const title=(p.body||'').split('\n')[0]||'お店からのお知らせ';ctx.font='700 56px sans-serif';ctx.fillStyle='#173d33';ctx.fillText(title.slice(0,24),margin,photoH+148,W-margin*2);const excerpt=Array.from(p.body||'').slice(title.length,100).join('');ctx.font='500 30px sans-serif';ctx.fillStyle='#34544b';ctx.fillText(excerpt.slice(0,35),margin,photoH+250,W-margin*2);ctx.font='600 24px sans-serif';ctx.fillStyle='#6b8175';ctx.fillText('志木なるほど お店めぐりDX',margin,H-36,W-margin*2);canvas.toBlob(blob=>blob?resolve(new File([blob],'shiki-dx-post.jpg',{type:'image/jpeg'})):reject(Error('投稿画像を作成できませんでした。')),'image/jpeg',.9);};image.onerror=()=>reject(Error('投稿画像を作成できませんでした。'));image.src=src;});}
-  async function nativeShare(){
-   if(!navigator.share){message.textContent='この端末の共有機能に対応していません。文章をコピーしてSNSへ貼り付けてください。';return;}
-   const files=[];
-   for(const [i,src] of (p.photos||[]).filter(v=>/^data:image\/jpeg;base64,/.test(v)).entries()){
-    const m=src.match(/^data:([^;]+);base64,(.+)$/);if(!m)continue;
-    const bytes=Uint8Array.from(atob(m[2]),c=>c.charCodeAt(0));files.push(new File([bytes],'dx-'+p.shop+'-'+(i+1)+'.jpg',{type:m[1]}));
-   }
-   const payload={text};
-   if(files.length){try{const poster=await posterFile(p.photos.find(v=>/^data:image\/jpeg;base64,/.test(v)));if(navigator.canShare?.({files:[poster]}))payload.files=[poster];}catch{}}
-   if(!payload.files&&files.length&&navigator.canShare?.({files}))payload.files=files;
-   try{await navigator.share(payload);message.textContent='写真と本文を共有画面へ渡しました。SNS側で投稿を確定してください。';}
-   catch(e){if(e.name!=='AbortError')message.textContent='共有できませんでした。文章をコピーしてSNSへ貼り付けてください。';}
-  }
-  const native=el('button');native.type='button';native.className='native-share';native.append(socialMark('共有'),el('span',p.photos?.length?'写真つき共有':'共有'));native.onclick=nativeShare;native.hidden=!navigator.share;row.append(native);
+  const preview=el('section',null,'sns-image-preview');preview.hidden=true;
+  preview.style.cssText='margin:12px 16px;padding:16px;border:1px solid #b7d0c1;border-radius:12px;background:#f5faf6';
+  preview.append(el('h3','SNSに投稿する画像'));
+  const picture=el('img');picture.alt='この記事から作成したSNS投稿画像';picture.style.cssText='display:block;width:100%;max-width:432px;height:auto;margin:12px auto';preview.append(picture);
+  const previewNote=el('p','画像の中に記事の内容が入ります。全文と記事リンクは投稿文に添えます。');preview.append(previewNote);
+  const actions=el('div');actions.style.cssText='display:flex;flex-wrap:wrap;gap:10px';
+  const send=el('button','画像と文章を共有'),save=el('a','画像を保存'),close=el('button','閉じる');
+  for(const b of [send,save,close])b.style.cssText='display:inline-block;padding:12px 16px;border:0;border-radius:8px;background:#174f40;color:#fff;font:inherit;cursor:pointer;text-decoration:none';
+  send.type=close.type='button';actions.append(send,save,close);preview.append(actions);close.onclick=()=>{preview.hidden=true;};
+  let readyFile=null,imageURL='';
+  const font='"Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans CJK JP",Meiryo,sans-serif';
+  function lines(ctx,value,width){const result=[];let line='';for(const c of Array.from(String(value))){if(c==='\n'){result.push(line);line='';}else if(line&&ctx.measureText(line+c).width>width){result.push(line);line=c;}else line+=c;}if(line)result.push(line);return result;}
+  function posterFile(src){return new Promise((resolve,reject)=>{
+   const image=new Image();image.onerror=()=>reject(Error('写真を読み込めませんでした。'));
+   image.onload=async()=>{try{
+    await document.fonts.ready;
+    const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');canvas.width=1080;canvas.height=1350;
+    ctx.fillStyle='#f5f3eb';ctx.fillRect(0,0,1080,1350);
+    const scale=Math.min(984/image.naturalWidth,700/image.naturalHeight),w=image.naturalWidth*scale,h=image.naturalHeight*scale;
+    ctx.drawImage(image,(1080-w)/2,32+(700-h)/2,w,h);
+    ctx.fillStyle='#174f40';ctx.fillRect(0,764,1080,8);ctx.fillStyle='#fff';ctx.fillRect(0,772,1080,578);
+    ctx.fillStyle='#174f40';ctx.font='700 34px '+font;ctx.fillText(p.name,52,832,976);
+    const body=String(p.body||'').trim(),first=String(p.title||body.split('\n')[0]||'お店からのお知らせ');
+    let size=56,titleLines;do{ctx.font='700 '+size+'px '+font;titleLines=lines(ctx,first,976);if(titleLines.length<=3)break;size-=2;}while(size>36);
+    if(titleLines.length>3){titleLines=titleLines.slice(0,3);titleLines[2]=titleLines[2].slice(0,-1)+'…';}
+    ctx.fillStyle='#173d33';titleLines.forEach((line,i)=>ctx.fillText(line,52,910+i*(size+12)));
+    const rest=p.title?body:body.slice(first.length).trim(),y=930+titleLines.length*(size+12);
+    ctx.font='500 32px '+font;ctx.fillStyle='#34544b';let excerpt=lines(ctx,rest,976),limit=Math.max(0,Math.floor((1260-y)/44));
+    if(excerpt.length>limit&&limit){excerpt=excerpt.slice(0,limit);excerpt[limit-1]=excerpt[limit-1].slice(0,-1)+'…';}
+    excerpt.slice(0,limit).forEach((line,i)=>ctx.fillText(line,52,y+i*44));
+    ctx.fillStyle='#6b8175';ctx.font='600 25px '+font;ctx.fillText('志木なるほど お店めぐりDX',52,1310,976);
+    canvas.toBlob(blob=>blob?resolve(new File([blob],'shiki-dx-'+p.id+'.jpg',{type:'image/jpeg'})):reject(Error('画像を作成できませんでした。')),'image/jpeg',.92);
+   }catch(e){reject(e);}};
+   image.src=src;
+  });}
+  send.onclick=()=>{if(!readyFile)return;try{
+   if(!navigator.share||!navigator.canShare?.({files:[readyFile]})){message.textContent='このブラウザでは画像付き共有が使えません。「画像を保存」と「コピー」を使えます。';return;}
+   navigator.share({files:[readyFile],text}).then(()=>{message.textContent='共有先で投稿を確定してください。SNSによって文章が渡らない場合は「コピー」を使えます。';}).catch(e=>{if(e.name!=='AbortError')message.textContent='共有できませんでした。画像は保存できます。';});
+  }catch(e){message.textContent=e.message;}};
+  const native=el('button','SNS投稿画像を作る');native.type='button';native.className='native-share';
+  const source=(p.photos||[]).find(v=>/^data:image\/jpeg;base64,/.test(v))||(/^data:image\/jpeg;base64,/.test(p.poster||'')?p.poster:null);
+  native.hidden=!source;native.onclick=async()=>{native.disabled=true;try{
+   if(!readyFile){readyFile=await posterFile(source);imageURL=URL.createObjectURL(readyFile);picture.src=imageURL;save.href=imageURL;save.download=readyFile.name;window.addEventListener('pagehide',()=>URL.revokeObjectURL(imageURL),{once:true});}
+   preview.hidden=false;preview.scrollIntoView({behavior:'smooth',block:'nearest'});message.textContent='投稿画像ができました。確認して「画像と文章を共有」を押してください。';
+  }catch(e){message.textContent=e.message;}finally{native.disabled=false;}};row.append(native);
   async function copy(){try{await navigator.clipboard.writeText(text);message.textContent='コピーしました。SNSに貼り付けて投稿できます。';}catch{fallback.hidden=false;fallback.focus();fallback.select();message.textContent='文章を長押ししてコピーしてください。';}}
   const copyButton=el('button');copyButton.type='button';copyButton.append(socialMark('コピー'),el('span','コピー'));copyButton.onclick=copy;row.append(copyButton);
   const destinations=[
@@ -63,7 +93,7 @@
    const a=el('a');a.href=href;a.style.background=background;a.target='_blank';a.rel='noopener';
    a.append(socialMark(label),el('span',label));if(label==='Instagram')a.onclick=copy;row.append(a);
   }
-  box.append(row,message,fallback);
+  box.append(row,preview,message,fallback);
  }
  function render(rows){
   list.replaceChildren();
