@@ -76,10 +76,10 @@
 .sns-image-send{flex:1;min-height:50px;padding:12px 16px;border:0;border-radius:8px;background:#146b50;color:white;font:inherit;font-weight:700;cursor:pointer}
 .sns-image-close{min-height:46px;padding:10px 14px;border:1px solid #c2d7c8;border-radius:8px;background:white;color:#345b49;font:inherit;cursor:pointer}
 .sns-image-note{font-size:13px;color:#5d6c62;line-height:1.7}
-.sns-caption-options{margin:14px 0 0;border-top:1px solid #cfdfd4;padding-top:12px;font-size:13px}
+.sns-caption-options{margin:14px 0 0;border:0;border-top:1px solid #cfdfd4;border-radius:0;background:transparent;padding:12px 0 0;font-size:14px}
 .sns-caption-options summary{min-height:36px;cursor:pointer;color:#426550}
-.sns-caption-options textarea{box-sizing:border-box;width:100%;font:inherit;margin:8px 0;white-space:pre-wrap}
-.sns-caption-options button{min-height:42px;padding:8px 12px;margin:3px 8px 3px 0;border:1px solid #bdd3c4;border-radius:6px;background:white;color:#17513f;font:inherit;cursor:pointer}
+.sns-caption-options textarea{box-sizing:border-box;width:100%;font-family:inherit;font-size:16px;line-height:1.6;margin:8px 0;white-space:pre-wrap;min-height:140px}
+.sns-caption-options button{display:block;width:100%;min-height:48px;padding:12px;margin:6px 0;border:1px solid #146b57;border-radius:8px;background:#e4f1e9;color:#17513f;font-family:inherit;font-weight:700;font-size:16px;line-height:1.5;cursor:pointer}
 .post-publish>.post-share-message{margin:12px 0 0;white-space:pre-wrap;font-size:13px}
 .feed-paging{display:grid;gap:8px}
 .feed-paging button{font-size:14px;min-height:46px}
@@ -101,4 +101,5 @@
 .bottom-actions-grid a.home{background:#16745c;border-color:#16745c;color:#fff}
 .bottom-actions-grid a:focus-visible{outline:3px solid #e3a700;outline-offset:3px}
 @media(max-width:420px){.social-view main{padding:12px}.social-view main>header{max-width:240px;margin-bottom:14px}.social-view .panel{padding:18px}.social-profile #intro h1{font-size:25px}.social-profile #intro .jump{margin:14px -18px -18px}.social-profile #intro .profile-description{font-size:14px}.social-nav a{font-size:13px}.post-header{padding:15px 15px 0;gap:9px}.post-body{margin:13px 15px;font-size:16px}.post-author{font-size:15px}.post-avatar{width:38px;height:38px}.post-kind{font-size:10px;padding:3px 6px}.post-share{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:12px}.post-links{margin:0 15px}.post-video iframe{height:360px}}
+
 

@@ -1,6 +1,7 @@
 'use strict';
 (()=>{
  const base='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/';
+ const dxURL='https://is.gd/G6uCmY';
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
  const pageURL=p=>(p.url&&window.DXShortLinks?.[p.url])||p.url||base+'article.html?id='+encodeURIComponent(p.id);
  function socialMark(label){const n=el('span',{'Facebook':'f','Instagram':'◎','X':'𝕏','LINE':'L'}[label]||label,'sns-mark');n.setAttribute('aria-hidden','true');return n;}
@@ -19,6 +20,7 @@
  function share(box,p){
   const url=pageURL(p);
   const caption=p.name+'\n\n'+p.body+(p.end?'\n\n掲載期間：'+p.end+'まで':'');
+  const linkedCaption=caption+'\n\n志木なるほど お店めぐりDX\n'+dxURL;
   const area=el('section',null,'post-publish');
   area.append(el('h3','この記事をSNSに投稿する'),el('p','写真と文章を、SNSに載せる画像にまとめます。','post-publish-intro'));
   const message=el('p',null,'post-share-message');message.setAttribute('role','status');message.setAttribute('aria-live','polite');
@@ -27,20 +29,23 @@
   const preview=el('section',null,'sns-image-preview');preview.hidden=true;preview.setAttribute('aria-label','SNS投稿画像の確認');
   const previewHeading=el('h3','投稿する画像を確認');
   const help=el('p',null,'sns-image-help'),gallery=el('div',null,'sns-image-gallery');
-  const actions=el('div',null,'sns-image-actions'),send=el('button','画像をSNSに渡す','sns-image-send'),close=el('button','閉じる','sns-image-close');
+  const actions=el('div',null,'sns-image-actions'),send=el('button','② 画像をSNSに渡す','sns-image-send'),close=el('button','閉じる','sns-image-close');
   send.type=close.type='button';send.disabled=true;actions.append(send,close);
-  const captionBox=el('details',null,'sns-caption-options');captionBox.append(el('summary','投稿文を添えたいとき'));
-  captionBox.append(el('p','文章は画像に入っています。SNSの本文欄にも載せたいときはコピーして貼り付けられます。'));
-  const captionField=el('textarea');captionField.value=caption;captionField.readOnly=true;captionField.rows=5;captionField.setAttribute('aria-label','SNS用の投稿文');
-  const copyButton=el('button','投稿文をコピー');copyButton.type='button';
+  const captionBox=el('section',null,'sns-caption-options');captionBox.append(el('h3','① 投稿文とDXリンクをコピー'));
+  captionBox.append(el('p','ひと言を書き換えてコピーできます。画像を渡したあと、SNSの本文欄に貼り付けてください。'));
+  const captionField=el('textarea');captionField.value=linkedCaption;captionField.rows=5;captionField.setAttribute('aria-label','SNS用の投稿文とDXリンク');
+  const copyButton=el('button','① 投稿文とDXリンクをコピー');copyButton.type='button';
   const copyLink=el('button','記事リンクをコピー');copyLink.type='button';
-  captionBox.append(captionField,copyButton,copyLink);
-  preview.append(previewHeading,help,gallery,actions,captionBox);
+  captionBox.append(captionField,copyButton);
+  const extra=el('details');extra.append(el('summary','DXの紹介カードを共有・記事リンクをコピー'));
+  const card=el('a','DXの紹介カードをFacebookで共有');card.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(base);card.target='_blank';card.rel='noopener';card.className='btn';
+  extra.append(el('p','リンクとして共有するときの入口です。画像付き投稿とOGPカードの同時表示は、SNS側の表示によって異なります。'),card,copyLink);
+  preview.append(previewHeading,help,gallery,captionBox,actions,extra);
   let readyFiles=[],urls=[],target='',building=null;
   const openButtons=[primary];
   function showHelp(){
    const prefix=target?'共有画面で「'+target+'」を選びます。':'共有画面で投稿先のSNSを選びます。';
-   help.textContent=prefix+'画像が添付されていることを確認し、SNS側で投稿を確定してください。';
+   help.textContent='① 投稿文とDXリンクをコピー → ② 画像をSNSに渡す → SNSの本文欄に貼り付けて投稿します。'+prefix;
   }
   function canSend(files){try{return Boolean(navigator.share&&navigator.canShare?.({files}));}catch{return false;}}
   function sendFiles(files,button){
@@ -62,7 +67,7 @@
     const one=el('button','この1枚を共有');one.type='button';one.className='sns-image-one';one.onclick=()=>sendFiles([file],one);
     caption.append(save);if(readyFiles.length>1)caption.append(one);figure.append(image,caption);gallery.append(figure);
    });
-   send.disabled=false;send.textContent=readyFiles.length>1?readyFiles.length+'枚の画像をSNSに渡す':'画像をSNSに渡す';
+   send.disabled=false;send.textContent=readyFiles.length>1?'② '+readyFiles.length+'枚の画像をSNSに渡す':'② 画像をSNSに渡す';
    if(result.videoCover||p.video)gallery.append(el('p','動画の記事は表紙と文章を画像にしています。動画そのものは、この共有には含まれません。','sns-image-note'));
    if(readyFiles.length>1&&!canSend(readyFiles))gallery.append(el('p','まとめて共有できない場合は、各画像の「この1枚を共有」または「画像を保存」を使えます。','sns-image-note'));
   }
@@ -88,9 +93,9 @@
   close.onclick=()=>{preview.hidden=true;primary.focus();};
   async function copy(value,what){
    try{await navigator.clipboard.writeText(value);message.textContent=what+'をコピーしました。';}
-   catch{captionBox.open=true;captionField.value=value;captionField.focus();captionField.select();message.textContent='文章を選択しました。長押ししてコピーしてください。';}
+   catch{captionField.value=value;captionField.focus();captionField.select();message.textContent='文章を選択しました。長押ししてコピーしてください。';}
   }
-  copyButton.onclick=()=>{captionField.value=caption;copy(caption,'投稿文');};
+  copyButton.onclick=()=>copy(captionField.value,'投稿文とDXリンク');
   copyLink.onclick=()=>copy(url,'記事リンク');
   window.addEventListener('pagehide',()=>urls.forEach(u=>URL.revokeObjectURL(u)),{once:true});
   area.append(row,preview,message);box.append(area);
@@ -98,4 +103,5 @@
 
  window.DXPostShare={mount:share};
 })();
+
 
