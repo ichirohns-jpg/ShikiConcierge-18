@@ -7,7 +7,7 @@
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
  const section=el('section',null,'simple-sns-share');section.setAttribute('aria-label','SNSに投稿する');
  const title=el('h2','SNSに投稿する');
- const preview=el('img',null,'sns-final-preview');preview.src="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-wide-v2.jpg";preview.alt='リンクの表紙：パン500円以上でミニパン1個の掲載見本とDXの案内';preview.width=1200;preview.height=630;
+ const preview=el('img',null,'sns-final-preview');preview.src="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-sns-composite.jpg";preview.alt='SNS投稿用の縦長画像：パン500円以上でミニパン1個の掲載見本とDXの案内';preview.width=1080;preview.height=1350;
  const copy=el('button','リンクをコピー','sns-copy');copy.type='button';
  const status=el('p','リンクをSNSに貼り付けてから、文章を自由に書いてください。','sns-share-status');status.setAttribute('role','status');
  const fallback=el('input');fallback.type='text';fallback.readOnly=true;fallback.value=shareURL;fallback.hidden=true;fallback.setAttribute('aria-label','コピーするリンク');
