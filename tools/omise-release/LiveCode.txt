@@ -112,7 +112,7 @@ function postSend(id,code,input){
  const old=previous?JSON.parse(previous[5]):{};
  if(input.keepVideo&&old.videoFileId){p.videoFileId=old.videoFileId;p.poster=old.poster||'';}
  if(!ogImage&&old.ogImageFileId)p.ogImageFileId=old.ogImageFileId;
- if(ogImage){const match=ogImage.match(/^data:([^;]+);base64,(.+)$/i),file=postSocialFolder_().createFile(Utilities.newBlob(Utilities.base64Decode(match[2]),match[1],pid+'-'+rid+'.jpg'));p.ogImageFileId=file.getId();}
+ if(ogImage){const ogKey=rid+'-ogp',ogParts=[];for(let j=0;j<ogImage.length;j+=35000)ogParts.push([ogKey,ogParts.length,ogImage.slice(j,j+35000)]);chunks.getRange(chunks.getLastRow()+1,1,ogParts.length,3).setValues(ogParts);p.ogImageDataId=ogKey;try{const match=ogImage.match(/^data:([^;]+);base64,(.+)$/i),file=postSocialFolder_().createFile(Utilities.newBlob(Utilities.base64Decode(match[2]),match[1],pid+'-'+rid+'.jpg'));p.ogImageFileId=file.getId();}catch(err){console.log('OGP画像は一時保存しました: '+err);}}
  if(video){const match=video.match(/^data:([^;]+);base64,(.+)$/i),file=postVideoFolder_().createFile(Utilities.newBlob(Utilities.base64Decode(match[2]),match[1],rid+(match[1].toLowerCase()==='video/quicktime'?'.mov':'.mp4')));p.videoFileId=file.getId();p.poster=poster;}
  postSheet_().appendRow([rid,pid,id,postNow_(),'確認待ち',JSON.stringify(p),'']);return {ok:true,id:pid,request:rid,status:'確認待ち',posts:postOwn(id,code)};
  }finally{lock.releaseLock();}
@@ -136,7 +136,7 @@ function postVideoFolder_(){const props=PropertiesService.getScriptProperties(),
 function postSocialFolder_(){const props=PropertiesService.getScriptProperties(),id=props.getProperty('postSocialFolder');if(id)return DriveApp.getFolderById(id);const folder=DriveApp.createFolder('お店めぐりDX 記事OGP画像');props.setProperty('postSocialFolder',folder.getId());return folder;}
 function postEnsureOgImage_(row){
  const p=JSON.parse(row[5]);if(p.ogImageFileId)return p.ogImageFileId;
- const first=(p.photos||[])[0];if(!first)return '';
+ const first=p.ogImageDataId||(p.photos||[])[0];if(!first)return '';
  try{
   const data=(omImageData_([first])||[])[0]||'',match=data.match(/^data:([^;]+);base64,(.+)$/i);if(!match)return '';
   const file=postSocialFolder_().createFile(Utilities.newBlob(Utilities.base64Decode(match[2]),match[1],row[1]+'-ogp.jpg'));
