@@ -8,7 +8,7 @@
 <article class="card"><h1>SNS広告画像を作る</h1><p class="lead">写真と短い言葉を入れるだけで、SNSに載せられる4対5の広告画像が完成します。</p>
 <div class="steps"><span>① 写真</span><span>② 見出し</span><span>③ 保存</span></div>
 <section class="maker"><h2>広告の内容</h2>
-<label for="photo">広告に使う写真</label><input class="file" id="photo" type="file" accept="image/*">
+<label for="photo">広告に使う写真</label><input class="file" id="photo" type="file" accept="image/*"><p class="status" style="text-align:left">縦・横どちらの写真も、切れないように自動で枠へ合わせます。</p>
 <label for="kind">内容</label><select id="kind"><option>お店の紹介</option><option>商品・サービス</option><option>お得情報</option><option>イベント・募集</option></select>
 <label for="headline">一番伝えたいこと</label><input id="headline" maxlength="40" placeholder="例：焼きたてパンができました">
 <label for="subline">短い説明</label><input id="subline" maxlength="70" placeholder="例：本日17時まで販売しています">
@@ -20,11 +20,11 @@
 <script>
 const q=new URLSearchParams(location.search),canvas=document.getElementById('ad'),ctx=canvas.getContext('2d');let photo=null;
 document.getElementById('name').value=q.get('name')||'';
-function cover(img,x,y,w,h){const r=Math.max(w/img.width,h/img.height),iw=img.width*r,ih=img.height*r;ctx.drawImage(img,x+(w-iw)/2,y+(h-ih)/2,iw,ih)}
+function autoPhoto(img,x,y,w,h){ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();const br=Math.max(w/img.width,h/img.height),bw=img.width*br,bh=img.height*br;ctx.filter='blur(30px) brightness(.72)';ctx.drawImage(img,x+(w-bw)/2-35,y+(h-bh)/2-35,bw+70,bh+70);ctx.filter='none';ctx.fillStyle='rgba(255,255,255,.08)';ctx.fillRect(x,y,w,h);const r=Math.min(w/img.width,h/img.height),iw=img.width*r,ih=img.height*r;ctx.drawImage(img,x+(w-iw)/2,y+(h-ih)/2,iw,ih);ctx.restore()}
 function lines(text,max,size){ctx.font='900 '+size+'px sans-serif';const chars=[...text],out=[];let line='';for(const c of chars){if(ctx.measureText(line+c).width>max&&line){out.push(line);line=c}else line+=c}if(line)out.push(line);return out.slice(0,3)}
 function draw(){const headline=document.getElementById('headline').value.trim()||'伝えたい見出しが入ります',sub=document.getElementById('subline').value.trim()||'短い説明が入ります',name=document.getElementById('name').value.trim()||'お店の名前',kind=document.getElementById('kind').value;
 ctx.fillStyle='#f5f0e3';ctx.fillRect(0,0,1080,1350);
-if(photo)cover(photo,0,0,1080,720);else{ctx.fillStyle='#dfe9e3';ctx.fillRect(0,0,1080,720);ctx.fillStyle='#45675b';ctx.textAlign='center';ctx.font='800 48px sans-serif';ctx.fillText('写真を選んでください',540,350);ctx.textAlign='left'}
+if(photo)autoPhoto(photo,0,0,1080,720);else{ctx.fillStyle='#dfe9e3';ctx.fillRect(0,0,1080,720);ctx.fillStyle='#45675b';ctx.textAlign='center';ctx.font='800 48px sans-serif';ctx.fillText('写真を選んでください',540,350);ctx.textAlign='left'}
 const g=ctx.createLinearGradient(0,430,0,750);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.72)');ctx.fillStyle=g;ctx.fillRect(0,400,1080,350);
 ctx.fillStyle='#f0c65a';ctx.fillRect(58,55,260,62);ctx.fillStyle='#2b230f';ctx.font='800 30px sans-serif';ctx.fillText(kind,83,97);
 ctx.fillStyle='#fff';ctx.font='800 34px sans-serif';ctx.fillText(name,58,665);
@@ -32,7 +32,7 @@ ctx.fillStyle='#18251f';let y=815;for(const l of lines(headline,950,62)){ctx.fon
 ctx.fillStyle='#6a4c10';ctx.fillRect(58,y+18,130,8);ctx.fillStyle='#29352f';ctx.font='700 35px sans-serif';let sy=y+95;for(const l of lines(sub,940,35)){ctx.fillText(l,58,sy);sy+=50}
 ctx.fillStyle='#146b57';ctx.fillRect(0,1260,1080,90);ctx.fillStyle='#fff';ctx.font='800 31px sans-serif';ctx.fillText(name+'｜志木なるほど お店めぐりDX',58,1318)}
 draw();
-document.getElementById('photo').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{photo=im;draw()};im.src=rd.result};rd.readAsDataURL(f)};
+document.getElementById('photo').onchange=async e=>{const f=e.target.files[0];if(!f)return;const status=document.getElementById('status');status.textContent='写真を自動調整しています…';try{photo=await createImageBitmap(f,{imageOrientation:'from-image'});draw();status.textContent='写真を広告枠に自動調整しました'}catch{const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{photo=im;draw();status.textContent='写真を広告枠に自動調整しました'};im.src=rd.result};rd.readAsDataURL(f)}};
 document.getElementById('make').onclick=()=>{draw();document.querySelector('.preview').scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('status').textContent='広告画像ができました'};
 document.getElementById('download').onclick=()=>{draw();const a=document.createElement('a');a.download='SNS広告画像.png';a.href=canvas.toDataURL('image/png');a.click();document.getElementById('status').textContent='画像を保存しました'};
 function postText(){const n=document.getElementById('name').value.trim(),h=document.getElementById('headline').value.trim(),s=document.getElementById('subline').value.trim();return [n,h,s].filter(Boolean).join('\n\n')}
