@@ -24,7 +24,7 @@
 <section class="claim" aria-label="ありがとうカードを受け取る">
 <form id="giftForm"><label for="giftCode">合言葉</label><input id="giftCode" placeholder="ふじこ" maxlength="30" autocomplete="off" required><button>カードを受け取る</button></form>
 <p id="giftStatus" class="status" role="status" aria-live="polite"></p>
-<div id="gift" class="gift" hidden><h2>ありがとう！</h2><p>志木の街を、ふじこと一緒に楽しもう。</p><img id="giftImage" src="./icon-512.jpg?v=20261025b" width="512" height="512" alt="ふじこのありがとうカード"><a id="giftDownload" class="btn" href="./icon-512.jpg?v=20261025b" download="ふじこのありがとうカード.jpg">カード画像を保存</a></div>
+<div id="gift" class="gift" hidden><h2>ありがとう！</h2><p>志木の街を、ふじこと一緒に楽しもう。</p><img id="giftImage" src="./icon-512.jpg?v=20261025b" width="512" height="512" alt="ふじこのありがとうカード"><a id="giftDownload" class="btn" href="./icon-512.jpg?v=20261025b" download="ふじこのありがとうカード.jpg">カード画像を保存</a><p id="giftSaveStatus" class="muted" role="status" aria-live="polite"></p><p class="muted">カード画像を長押しして保存することもできます。</p></div>
 </section>
 <section class="share" aria-label="友だちに教える"><h2>友だちに教える</h2><p>送る方法を選んでください</p><nav class="share-grid"><a id="lineShare" class="btn line" target="_blank" rel="noopener">LINEで送る</a><a id="facebookShare" class="btn facebook small" target="_blank" rel="noopener">Facebook</a><a id="xShare" class="btn x small" target="_blank" rel="noopener">X</a><button id="copyShare" class="copy small" type="button">コピー</button></nav><p id="shareStatus" class="status" role="status" aria-live="polite"></p></section>
 <div class="actions"><a class="btn" href="./heartnet.html">ハートネット志木を見る</a></div>
@@ -32,8 +32,41 @@
 <script>
 const shareURL="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/benefit-shop-0002-001-share.html";
 const cardAPI='https://script.google.com/macros/s/AKfycbzMec1R3le4e-cOUyBUl6Eq2dU3OI-5HHtkEyJQT7SWx4IjUHGtW8Z3zatJxoA2GUhn2A/exec?action=thanksCard';
-function loadCurrentCard(){const callback='fujikoThanksCard'+Date.now(),script=document.createElement('script'),cleanup=()=>{delete window[callback];script.remove();};window[callback]=data=>{if(data&&data.ok&&/^data:image\/jpeg;base64,/.test(data.image||'')){document.getElementById('giftImage').src=data.image;document.getElementById('giftDownload').href=data.image;}cleanup();};script.onerror=cleanup;script.src=cardAPI+'&callback='+callback+'&v='+Date.now();document.head.append(script);}
+let cardFile=null,cardObjectURL='',cardRevision=0;
+const saveStatus=document.getElementById('giftSaveStatus');
+function installCardBlob(blob,revision){
+ if(revision!==cardRevision)return;
+ const previous=cardObjectURL;
+ cardFile=new File([blob],'fujiko-thanks-card.jpg',{type:'image/jpeg'});
+ cardObjectURL=URL.createObjectURL(cardFile);
+ document.getElementById('giftImage').src=cardObjectURL;
+ document.getElementById('giftDownload').href=cardObjectURL;
+ if(previous)URL.revokeObjectURL(previous);
+}
+const fallbackRevision=cardRevision;
+fetch(new URL('./icon-512.jpg?v=20261025b',location.href)).then(r=>{if(!r.ok)throw Error('画像を読み込めませんでした');return r.blob();}).then(blob=>installCardBlob(blob,fallbackRevision)).catch(()=>{});
+function loadCurrentCard(){
+ const callback='fujikoThanksCard'+Date.now(),script=document.createElement('script'),cleanup=()=>{delete window[callback];script.remove();};
+ window[callback]=data=>{
+  if(data&&data.ok&&/^data:image\/jpeg;base64,/.test(data.image||'')){
+   try{const bytes=Uint8Array.from(atob(data.image.split(',')[1]),c=>c.charCodeAt(0));installCardBlob(new Blob([bytes],{type:'image/jpeg'}),++cardRevision);}catch{saveStatus.textContent='画像を読み込めませんでした。ページを開き直してください。';}
+  }
+  cleanup();
+ };
+ script.onerror=cleanup;script.src=cardAPI+'&callback='+callback+'&v='+Date.now();document.head.append(script);
+}
 loadCurrentCard();
+window.addEventListener('pageshow',e=>{if(e.persisted)loadCurrentCard();});
+document.getElementById('giftDownload').onclick=async e=>{
+ e.preventDefault();saveStatus.textContent='';
+ if(!cardFile){saveStatus.textContent='画像を読み込んでいます。少し待って、もう一度押してください。';return;}
+ const files=[cardFile];
+ if(navigator.share&&navigator.canShare&&navigator.canShare({files})){
+  try{await navigator.share({files,title:'ふじこのありがとうカード'});saveStatus.textContent='開いたメニューで画像を保存できます。';}catch(error){if(error.name!=='AbortError')saveStatus.textContent='カード画像を長押しして保存してください。';}
+  return;
+ }
+ const download=document.createElement('a');download.href=cardObjectURL;download.download='fujiko-thanks-card.jpg';document.body.append(download);download.click();download.remove();saveStatus.textContent='画像を開いた場合は、長押しして保存してください。';
+};
 const shareText='ハートネット志木\n\n合言葉「ふじこ」で、ふじこのありがとうカードを受け取ってね。無料・来店不要です。\n\n'+shareURL;
 document.getElementById('lineShare').href='https://line.me/R/share?text='+encodeURIComponent(shareText);
 document.getElementById('facebookShare').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareURL);
