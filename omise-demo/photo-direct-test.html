@@ -11,7 +11,7 @@ figure{margin:16px 0}#preview{display:block;width:100%;height:auto;max-height:no
 .note{font-size:13px;color:#60786a}#sharebox .post-publish{padding:0!important;background:transparent}#sharebox nav{margin-top:16px}
 a{color:#146b57}[hidden]{display:none!important}button:focus-visible,a:focus-visible{outline:3px solid #e9a300;outline-offset:3px}
 </style>
-<script src="./post-share.js?v=20261027-nine-sixteen1" defer></script>
+<script src="./post-share.js?v=20261027-nine-sixteen2" defer></script>
 </head><body><main>
 <p class="note">お店めぐりDX・画像共有の動作確認</p>
 <h1>お店の画像を9:16で大きく共有</h1>
@@ -52,7 +52,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     if(saved&&turn===revision){preview.src=saved.href;loading.textContent='この画像を共有します。';observer.disconnect();}
    });
    observer.observe(box,{childList:true,subtree:true});
-   cleanup=window.DXPostShare.mount(box,{id:'IMAGE-TEST',name:'【動作確認用】',body:'画像をそのままSNSへ共有するテストです。',photos:[data]});
+   cleanup=window.DXPostShare.mount(box,{id:'IMAGE-TEST',name:'【動作確認用】',body:'画像をそのままSNSへ共有するテストです。',shareURL:'https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/share-image-test-9x16-v1.html',photos:[data]});
    loading.textContent='SNSに渡す画像を準備しています…';
   }catch(error){if(turn===revision)loading.textContent=error.message||'画像を準備できませんでした。';}
   finally{if(turn===revision)choose.disabled=false;}

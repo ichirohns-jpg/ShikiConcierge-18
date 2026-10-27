@@ -59,35 +59,35 @@ async function setup(options={}){
 
  let releaseCopy,releaseShare;
  const a=await setup({copy:()=>new Promise(r=>{releaseCopy=r;}),share:()=>new Promise(r=>{releaseShare=r;})});
- assert.equal(a.buttons[0].textContent,'① 投稿文とDXリンクをコピー');
- assert.equal(a.buttons[1].textContent,'② 9:16画像をSNSへ');assert.equal(a.buttons[1].disabled,false);
- a.buttons[1].handlers.click();
+ assert.equal(a.buttons[0].textContent,'9:16画像＋投稿文をSNSへ');assert.equal(a.buttons[0].disabled,false);
+ assert.equal(a.buttons[1].textContent,'投稿文だけ再コピー');
+ a.buttons[0].handlers.click();
  assert.equal(a.received.length,1,'Open image sharing immediately; never wait for clipboard permissions');
  assert.deepEqual(Object.keys(a.received[0]),['files']);
  assert.equal(a.received[0].files[0].type,'image/jpeg');
  assert.equal(await a.received[0].files[0].text(),'FINAL-JPEG');
  assert.match(a.copied,/お店の文章/);assert.match(a.copied,/https:\/\/is.gd\//);
- a.buttons[1].handlers.click();assert.equal(a.received.length,1,'Prevent duplicate share sheets');
+ a.buttons[0].handlers.click();assert.equal(a.received.length,1,'Prevent duplicate share sheets');
  releaseShare();await tick();
- assert.equal(a.buttons[1].disabled,false,'Image controls recover even when copying is still pending');
+ assert.equal(a.buttons[0].disabled,false,'Image controls recover even when copying is still pending');
  releaseCopy();await tick();
  assert.doesNotMatch(a.message.textContent,/投稿しました|投稿完了しました/);
 
  const b=await setup({copy:()=>Promise.reject(Error('denied'))});
- b.buttons[1].handlers.click();await tick();
+ b.buttons[0].handlers.click();await tick();
  assert.equal(b.received.length,1,'Clipboard failure must not block the image');
  assert.match(b.message.textContent,/コピーボタン/);
 
  const c=await setup({share:()=>Promise.reject(Object.assign(Error('cancel'),{name:'AbortError'}))});
- c.buttons[1].handlers.click();await tick();
- assert.match(c.message.textContent,/キャンセル/);assert.equal(c.buttons[1].disabled,false);
+ c.buttons[0].handlers.click();await tick();
+ assert.match(c.message.textContent,/キャンセル/);assert.equal(c.buttons[0].disabled,false);
 
  const d=await setup({badBrand:true});
- d.buttons[1].handlers.click();await tick();
+ d.buttons[0].handlers.click();await tick();
  assert.equal(await d.received[0].files[0].text(),'ORIGINAL-JPEG','A failed footer must retain the merchant original');
 
  const e=await setup({noNative:true});
- assert.equal(e.buttons[1].disabled,true);
+ assert.equal(e.buttons[0].disabled,true);
  assert.equal(e.created.length,1,'Saving the complete image stays available without native sharing');
 
  const f=await setup({count:4,singleOnly:true});
@@ -96,7 +96,7 @@ async function setup(options={}){
  assert.equal(saves.children.filter(x=>x.tagName==='BUTTON').length,4,'Allow individual images when batch sharing is unsupported');
 
  const g=await setup({noPhotos:true});
- assert.equal(g.buttons.length,1);assert.equal(g.buttons[0].textContent,'① 投稿文とDXリンクをコピー');
+ assert.equal(g.buttons.length,1);assert.equal(g.buttons[0].textContent,'投稿文とDXリンクをコピー');
  const before=a.revoked.length;a.events.pagehide({persisted:true});assert.equal(a.revoked.length,before);
  a.events.pagehide({persisted:false});assert.equal(a.revoked.length,before+1);
  console.log('PASS: 9:16 output, full original aspect ratio, photo-first handoff, copy failure, duplicate guard, cancellation, original-photo fallback, batch fallback and back-forward cache.');
