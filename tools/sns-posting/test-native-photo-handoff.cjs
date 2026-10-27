@@ -59,14 +59,15 @@ async function setup(options={}){
 
  let releaseCopy,releaseShare;
  const a=await setup({copy:()=>new Promise(r=>{releaseCopy=r;}),share:()=>new Promise(r=>{releaseShare=r;})});
- assert.equal(a.buttons[0].textContent,'9:16画像＋投稿文をSNSへ');assert.equal(a.buttons[0].disabled,false);
- assert.equal(a.buttons[1].textContent,'投稿文だけ再コピー');
+ assert.equal(a.buttons[0].textContent,'画像をSNSへ（投稿文もコピー）');assert.equal(a.buttons[0].disabled,false);
+ assert.equal(a.buttons[1].textContent,'投稿文とDXリンクをコピー');
  a.buttons[0].handlers.click();
  assert.equal(a.received.length,1,'Open image sharing immediately; never wait for clipboard permissions');
  assert.deepEqual(Object.keys(a.received[0]),['files']);
  assert.equal(a.received[0].files[0].type,'image/jpeg');
  assert.equal(await a.received[0].files[0].text(),'FINAL-JPEG');
  assert.match(a.copied,/お店の文章/);assert.match(a.copied,/https:\/\/is.gd\//);
+ assert.match(a.copied,/画像をタップして/);
  a.buttons[0].handlers.click();assert.equal(a.received.length,1,'Prevent duplicate share sheets');
  releaseShare();await tick();
  assert.equal(a.buttons[0].disabled,false,'Image controls recover even when copying is still pending');
