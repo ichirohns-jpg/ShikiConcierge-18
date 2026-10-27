@@ -22,14 +22,14 @@
   <p id="status" class="status" role="status">まだコピーしていません。</p>
   <div class="step"><strong>次にApps Scriptへ戻る</strong>今入っているコードをすべて選び、貼り付けます。</div>
   <div class="step"><strong>最後に新バージョンをデプロイ</strong>「デプロイ」→「デプロイを管理」→鉛筆→「新バージョン」→「デプロイ」です。</div>
-  <p class="small">このコードには、投稿ごとのOGP画像・画像タップで記事へ移動・既存記事の画像対応が入っています。</p>
+  <p class="small">このコードには、各店の操作画面から使えるSNS広告画像作成と、投稿・削除・OGP画像の機能が入っています。</p>
 </section></main>
 <script>
 const button=document.getElementById('copy'),status=document.getElementById('status');
 button.addEventListener('click',async()=>{
   button.disabled=true;status.className='status';status.textContent='最新コードを読み込んでいます…';
   try{
-    const response=await fetch('../tools/omise-release/LiveCode.txt?v=20261027-ogp2',{cache:'no-store'});
+    const response=await fetch('../tools/omise-release/LiveCode.txt?v=20261027-admaker1',{cache:'no-store'});
     if(!response.ok)throw new Error('コードを取得できませんでした。');
     const code=await response.text();
     await navigator.clipboard.writeText(code);
