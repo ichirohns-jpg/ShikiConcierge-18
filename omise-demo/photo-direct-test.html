@@ -1,20 +1,112 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>画像をそのままSNSへ｜お店めぐりDX</title><style>
-*{box-sizing:border-box}body{margin:0;background:#f3f7f3;color:#193f33;font:16px/1.7 -apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN',sans-serif}main{max-width:600px;margin:auto;padding:18px 16px 32px}h1{font-size:26px;line-height:1.4;margin:8px 0 12px}p{margin:10px 0}figure{margin:18px 0}img{display:block;width:100%;height:auto;border-radius:10px}button{display:block;width:100%;min-height:56px;border:0;border-radius:12px;margin:12px 0;padding:14px 12px;background:#146b57;color:white;font:inherit;font-size:18px;font-weight:700;line-height:1.5;cursor:pointer}button:first-of-type{background:#0866c6}button:disabled{background:#748c81;cursor:wait}button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid #e9a300;outline-offset:3px}.note{font-size:13px;color:#60786a}.status{min-height:3.4em;font-size:15px}textarea{width:100%;font:inherit;padding:12px;min-height:180px;border:1px solid #a5c3b2;border-radius:8px}a{color:#146b57}[hidden]{display:none!important}
-</style></head><body><main><p class="note">お店めぐりDX・共有方法のテスト</p><h1>画像をそのままSNSへ</h1><p>写真を保存して選び直す操作を省く方法です。</p><figure><img src="./cafe-benefit-sns-composite.jpg" width="1080" height="1350" alt="おうちcafeパン工房の特典掲載見本とDXバナー。実際には利用できません。"></figure><button id="copy" type="button">① 文章とDXリンクをコピー</button><button id="send" type="button" disabled>画像を準備しています…</button><p id="status" class="status" role="status">画像の準備ができたら、①→②の順に押してください。</p><textarea id="fallback" readonly hidden aria-label="コピーする投稿文"></textarea><p>②で表示される共有先から<strong>Facebook</strong>を選び、投稿欄に文章を<strong>貼り付け</strong>てください。</p><p class="note">これは画像の受け渡しテストです。Facebookでの表示は投稿前に確認してください。この特典は掲載見本で、利用できません。</p><p><a href="./cafe-benefit-link.html">リンクで共有する画面に戻る</a></p></main><script>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>写真と文章をSNSへ｜お店めぐりDX</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f7f3;color:#193f33;font:16px/1.7 -apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN',sans-serif}
+main{max-width:600px;margin:auto;padding:18px 16px 32px}h1{font-size:26px;line-height:1.4;margin:8px 0 12px}p{margin:10px 0}
+figure{margin:18px 0}img{display:block;width:100%;height:auto;border-radius:10px}
+button{display:block;width:100%;min-height:60px;border:0;border-radius:12px;margin:12px 0;padding:14px 12px;background:#0866c6;color:white;font:inherit;font-size:18px;font-weight:700;line-height:1.5;cursor:pointer}
+button:disabled{background:#748c81;cursor:wait}button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid #e9a300;outline-offset:3px}
+.note{font-size:13px;color:#60786a}.status{min-height:3.4em;font-size:15px}textarea{width:100%;font:inherit;padding:12px;min-height:230px;border:1px solid #a5c3b2;border-radius:8px}
+a{color:#146b57}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<p class="note">お店めぐりDX・共有方法のテスト</p>
+<h1>写真と文章をSNSへ</h1>
+<p>写真を渡し、文章とDXリンクをコピーします。</p>
+<button id="send" type="button" disabled>画像を準備しています…</button>
+<p id="status" class="status" role="status">写真を準備しています。</p>
+<textarea id="fallback" readonly hidden aria-label="コピーする投稿文"></textarea>
+<button id="copy" type="button" hidden>文章とDXリンクをコピー</button>
+<p><strong>Facebookを選ぶ → 投稿欄に文章を貼り付ける → 投稿</strong></p>
+<figure>
+<img src="./cafe-benefit-sns-composite.jpg" width="1080" height="1350" alt="おうちcafeパン工房の特典掲載見本とDXバナー。実際には利用できません。">
+</figure>
+<p class="note">動作確認用です。特典は掲載見本で、利用できません。写真のタップはSNSの写真表示になります。DXへの入口は投稿文のリンクです。</p>
+<p><a href="./cafe-benefit-link.html">リンクで共有する画面に戻る</a></p>
+</main>
+<script>
 'use strict';
 (()=>{
- const copy=document.getElementById('copy'),send=document.getElementById('send'),status=document.getElementById('status'),fallback=document.getElementById('fallback');
- const caption='【掲載見本・利用不可】おうちcafeパン工房\n\nパンを500円以上買うと、ミニパン1個プレゼント。\nこの特典は実際には利用できません。\n\n志木なるほど お店めぐりDX\nhttps://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-link.html';fallback.value=caption;
- let readyFile=null,busy=false;
- copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(caption);status.textContent=readyFile?'コピーしました。②を押してFacebookを選び、文章を貼り付けてください。':'文章とDXリンクをコピーしました。画像を共有できるかは、下のボタンの表示を確認してください。';copy.textContent='✓ 文章とDXリンクをコピー済み';}catch(e){fallback.hidden=false;fallback.focus();fallback.select();status.textContent='下の文章をコピーしてから②を押してください。';}});
- send.addEventListener('click',()=>{
-  if(!readyFile||busy)return;busy=true;send.disabled=true;
-  // The File is prepared before the click. Call share immediately, with no URL or text payload that could turn it into a link card.
-  let handoff;try{handoff=navigator.share({files:[readyFile]});}catch(e){finish(e);return;}
-  Promise.resolve(handoff).then(()=>{status.textContent='共有画面で画像を渡しました。Facebookで文章を貼り付け、内容を確認してください。';finish();},finish);
-  function finish(error){busy=false;send.disabled=false;if(error)status.textContent=error.name==='AbortError'?'共有をキャンセルしました。②からもう一度試せます。':'画像を共有できませんでした。このブラウザでは受け渡しが制限されている可能性があります。';}
+ const send=document.getElementById('send'),copy=document.getElementById('copy'),status=document.getElementById('status'),fallback=document.getElementById('fallback');
+ const caption='【掲載見本・利用不可】おうちcafeパン工房\n\nパンを500円以上買うと、ミニパン1個プレゼント。\nこの特典は実際には利用できません。\n\n志木なるほど お店めぐりDX\nhttps://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-link.html';
+ fallback.value=caption;
+ let readyFile=null,busy=false,copyReady=false;
+ const defaultLabel='写真と文章をSNSへ';
+ function manualCopy(){
+  fallback.hidden=false;copy.hidden=false;fallback.focus();fallback.select();
+  status.textContent='選択した文章をコピーしてから「写真を渡す」を押してください。';
+  send.textContent='写真を渡す';
+ }
+ copy.addEventListener('click',async()=>{
+  try{
+   await navigator.clipboard.writeText(caption);copyReady=true;
+   status.textContent='文章とDXリンクをコピーしました。「写真を渡す」を押してください。';
+   send.textContent='写真を渡す';
+  }catch(error){manualCopy();}
  });
- if(typeof navigator.share!=='function'||typeof navigator.canShare!=='function'){send.textContent='画像共有はこのブラウザでは使えません';status.textContent='このブラウザは画像の直接共有に対応していません。iPhoneのSafariで、このページを開いて試してください。';return;}
- fetch('./cafe-benefit-sns-composite.jpg').then(r=>{if(!r.ok)throw Error('image');return r.blob();}).then(blob=>{if(blob.type!=='image/jpeg'||!blob.size)throw Error('image');const file=new File([blob],'shiki-dx-photo.jpg',{type:'image/jpeg'});if(!navigator.canShare({files:[file]})){send.textContent='このブラウザでは画像を渡せません';status.textContent='画像ファイルの共有に対応していません。リンク共有の画面は下から開けます。';return;}readyFile=file;send.disabled=false;send.textContent='② 画像を共有';}).catch(()=>{send.textContent='画像を準備できませんでした';status.textContent='画像を読み込めませんでした。ページを開き直して試してください。';});
+ send.addEventListener('click',async()=>{
+  if(!readyFile||busy)return;
+  busy=true;send.disabled=true;
+  try{
+   if(!copyReady){
+    try{
+     await navigator.clipboard.writeText(caption);
+     copyReady=true;
+    }catch(error){
+     // A manual copy must finish before another explicit click shares the photo.
+     copyReady=true;manualCopy();return;
+    }
+   }
+   // Slow permission prompts can expire a gesture; retry with a fresh click.
+   if(navigator.userActivation&&navigator.userActivation.isActive===false){
+    status.textContent='文章とDXリンクをコピーしました。続けて「写真を渡す」を押してください。';
+    send.textContent='写真を渡す';return;
+   }
+   // Keep the preloaded File as a photo; never pass a webpage URL as the photo.
+   await navigator.share({files:[readyFile]});
+   copyReady=false;send.textContent=defaultLabel;
+   status.textContent='写真の共有先で、投稿欄に文章を貼り付けてください。SNSでの投稿完了は確認していません。';
+  }catch(error){
+   if(error.name==='AbortError'){
+    copyReady=false;send.textContent=defaultLabel;
+    status.textContent='共有をキャンセルしました。ボタンからもう一度試せます。';
+   }else if(error.name==='NotAllowedError'&&copyReady){
+    send.textContent='写真を渡す';
+    status.textContent='文章とDXリンクをコピーしました。もう一度「写真を渡す」を押してください。';
+   }else{
+    send.textContent='写真をもう一度渡す';
+    status.textContent='写真を共有できませんでした。このブラウザでは受け渡しが制限されている可能性があります。';
+   }
+  }finally{busy=false;send.disabled=false;}
+ });
+ if(typeof navigator.share!=='function'||typeof navigator.canShare!=='function'){
+  send.textContent='このブラウザは写真の共有に対応していません';
+  status.textContent='iPhoneのSafariでこのページを開いて試してください。';
+  return;
+ }
+ fetch('./cafe-benefit-sns-composite.jpg')
+ .then(response=>{if(!response.ok)throw Error('image');return response.blob();})
+ .then(blob=>{
+  if(blob.type!=='image/jpeg'||!blob.size)throw Error('image');
+  const file=new File([blob],'shiki-dx-photo.jpg',{type:'image/jpeg'});
+  if(!navigator.canShare({files:[file]})){
+   send.textContent='このブラウザでは写真を渡せません';
+   status.textContent='写真ファイルの共有に対応していません。';return;
+  }
+  readyFile=file;send.disabled=false;send.textContent=defaultLabel;
+  status.textContent='ボタンを押してFacebookを選び、投稿欄に文章を貼り付けてください。';
+ }).catch(()=>{
+  send.textContent='写真を準備できませんでした';
+  status.textContent='写真を読み込めませんでした。ページを開き直してください。';
+ });
 })();
-</script></body></html>
+</script>
+</body>
+</html>
