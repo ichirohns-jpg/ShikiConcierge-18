@@ -11,7 +11,6 @@
   'deals.html':{back:'./',backText:'← DXトップ',current:'お得情報・特典',active:'deals'},
   'benefit-shop-0001-002.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'},
   'benefit-shop-0002-001.html':{back:'./heartnet.html',backText:'← 活動紹介へ戻る',current:'ありがとうカード',active:'deals'},
-  'benefit-shop-0003-001.html':{back:'./newtimes.html',backText:'← お店へ戻る',current:'地域広告づくり',active:'deals'},
   'cafe-benefit.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'},
   'cafe-benefit-link.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'}
  };
