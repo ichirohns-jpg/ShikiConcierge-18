@@ -15,7 +15,7 @@
   let link=dynamic?'':(/^https:\/\//.test(p.shareURL||'')?p.shareURL:dxURL);
   const ownText=[p.title,p.body].filter(Boolean).join('\n\n');
   const area=el('section',null,'post-publish post-simple-share');
-  area.append(el('h3','文章とリンクをコピーして、各SNSに貼り付けて投稿してください'));
+  area.append(el('h3','投稿をSNSで共有する'));
   const message=el('p','', 'post-share-message');
   message.setAttribute('role','status');message.setAttribute('aria-live','polite');
   const fallback=el('textarea');fallback.value=link;fallback.readOnly=true;fallback.hidden=true;fallback.rows=7;
@@ -32,24 +32,29 @@
     message.textContent='ここを長押ししてコピーしてください。';
    }
   }
-  const copy=el('button','① 文章とリンクをコピー','post-share-copy');copy.type='button';copy.disabled=dynamic;
-  copy.addEventListener('click',()=>{if(link)copyValue((ownText?ownText+'\n\n':'')+link);});area.append(copy);
-  area.append(el('p','② 投稿するSNSを開く','post-share-guide'));
+  const copy=el('button','文章とリンクをコピー','post-share-copy');copy.type='button';copy.disabled=dynamic;
+  copy.addEventListener('click',()=>{if(link)copyValue((ownText?ownText+'\n\n':'')+link);});
+  area.append(el('p','Facebookはボタンを押すと投稿画面が開きます。','post-share-guide'));
   const networks=el('div',null,'post-share post-simple-networks');
+  const facebook=el('a','Facebookで共有');facebook.target='_blank';facebook.rel='noopener';facebook.style.background='#0866c6';networks.append(facebook);
+  function ready(){
+   if(link){facebook.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(link);facebook.removeAttribute('aria-disabled');}
+   else{facebook.removeAttribute('href');facebook.setAttribute('aria-disabled','true');}
+  }
+  ready();
   for(const [label,href,color] of [
-   ['Facebookを開く','https://www.facebook.com/','#0866c6'],
    ['LINEを開く','https://line.me/R/','#087f3e'],
    ['Xを開く','https://x.com/','#111']
   ]){const a=el('a',label);a.href=href;a.target='_blank';a.rel='noopener';a.style.background=color;networks.append(a);}
-  area.append(networks,message,fallback);box.append(area);
+  area.append(networks,copy,message,fallback);box.append(area);
   async function prepare(){
    if(disposed||!area.isConnected)return;
    try{
     const data=await sharePages(),entry=data.version===1&&data.posts?.[p.id];
     if(entry&&entry.date===p.date&&entry.shareURL.startsWith(dxURL+'post-shares/'+encodeURIComponent(p.id)+'/?v=')){
-     link=entry.shareURL;copy.disabled=false;message.textContent='';return;
+     link=entry.shareURL;copy.disabled=false;ready();message.textContent='';return;
     }
-    message.textContent='写真付きの共有リンクを準備しています。準備ができるとコピーボタンが使えます。';
+    message.textContent='写真付きの共有リンクを準備しています。準備ができると共有できます。';
    }catch{message.textContent='共有リンクを読み込み直しています。';}
    if(!disposed&&area.isConnected)timer=setTimeout(prepare,30000);
   }
