@@ -42,8 +42,22 @@
   });
   postSharePromise.then(ui=>{if(mount.isConnected)ui.mount(mount,p);}).catch(e=>mount.append(el('p',e.message,'post-share-message')));
  }
+ function cafeAdCard(){
+  const card=el('article',null,'post-card cafe-ad-card'),head=el('div',null,'post-header');
+  const avatar=el('a','お','post-avatar');avatar.href=base+'ouchicafe.html';avatar.setAttribute('aria-label','おうちcafeパン工房のページを見る');
+  const identity=el('div',null,'post-identity'),author=el('a','おうちcafeパン工房','post-author');author.href=base+'ouchicafe.html';
+  identity.append(author,el('span','広告イメージの見本','post-date'));
+  head.append(avatar,identity,el('span','お知らせ','post-kind'));
+  const body=el('p','焼きたてパンとコーヒーで、ほっとひと息。\n志木市本町のパン工房です。','post-body');
+  const media=el('a',null,'post-media');media.href=base+'ouchicafe.html#information';media.setAttribute('aria-label','おうちcafeパン工房の店舗情報を見る');
+  const image=el('img');image.src=base+'ouchicafe-ad-post-v1.jpg';image.alt='おうちcafeパン工房の広告見本。焼きたてパンとコーヒーで、ほっとひと息。';image.loading='eager';image.decoding='async';media.append(image);
+  const links=el('div',null,'post-links'),profile=el('a','お店の紹介・場所を見る →');profile.href=base+'ouchicafe.html#information';links.append(profile);
+  const note=el('p','実際の写真をもとに作った広告イメージです。','post-ad-note');
+  card.append(head,body,media,links,note);return card;
+ }
  function render(rows){
   list.replaceChildren();
+  if(slug==='ouchicafe.html'&&offset===0)list.append(cafeAdCard());
   for(const p of rows){
    const shop=shopURL(p),card=el('article',null,'post-card'),head=el('div',null,'post-header');
    const avatarImage=avatarImages[p.shop],avatar=el(shop?'a':'span',avatarImage?'':p.name.slice(0,1),'post-avatar'+(avatarImage?' has-image':''));
