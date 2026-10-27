@@ -34,7 +34,7 @@
   }
   const copy=el('button','文章だけコピー','post-share-copy');copy.type='button';
   copy.addEventListener('click',()=>copyValue(ownText));
-  area.append(el('p','文章をコピーして「Facebookで共有」を押し、投稿欄に貼り付けてください。','post-share-guide'));
+  area.append(el('p','コピーして、SNSに貼り付けてください。','post-share-guide'));
   const networks=el('div',null,'post-share post-simple-networks');
   const facebook=el('a','Facebookで共有');facebook.target='_blank';facebook.rel='noopener';facebook.style.background='#0866c6';networks.append(facebook);
   const line=el('a','LINEで共有');line.style.background='#087f3e';
@@ -60,7 +60,7 @@
     if(entry&&entry.date===p.date&&entry.shareURL.startsWith(dxURL+'post-shares/'+encodeURIComponent(p.id)+'/?v=')){
      link=entry.shareURL;ready();message.textContent='';return;
     }
-    message.textContent='Facebookの共有カードを準備しています。';
+    message.textContent='共有リンクを準備しています。';
    }catch{message.textContent='共有カードを読み込み直しています。';}
    if(!disposed&&area.isConnected)timer=setTimeout(prepare,30000);
   }

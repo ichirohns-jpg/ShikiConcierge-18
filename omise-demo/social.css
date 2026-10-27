@@ -139,3 +139,7 @@
 .social-profile #information .grid .btn{font-size:15px;min-height:48px}
 .social-profile .scene-body{font-size:15px}
 @media(max-width:420px){.social-view main{padding:12px}.social-view .panel{padding:16px}.social-profile #intro h1{font-size:25px}.social-view .post-media img{max-height:280px}.social-profile #photos img{max-height:360px}}
+
+.social-view .panel{background:#fff;border:1px solid #d4e5db;margin:16px 0}
+.social-view .post-card{padding:0}
+.social-view .post-simple-share .post-share-copy{margin:0 0 8px}
