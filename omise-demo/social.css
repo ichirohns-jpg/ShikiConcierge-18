@@ -108,3 +108,23 @@
 
 /* The saved merchant composition stays visible; SNS links only open the destination. */
 .simple-sns-share .sns-final-preview{display:block;width:100%;height:auto;max-height:none;object-fit:contain;border-radius:6px;margin:0 0 16px}.simple-sns-share .sns-share-next{font-size:15px;font-weight:700;margin:14px 0 8px}.simple-sns-share textarea{box-sizing:border-box;width:100%;font:inherit;font-size:16px;white-space:pre-wrap}.simple-sns-share [hidden]{display:none!important}
+
+/* Compact mobile reading and sharing, 2026-10-27. */
+.social-view{-webkit-text-size-adjust:100%;font-weight:400}
+.social-view .post-card{border-radius:12px;box-shadow:none}
+.social-view .post-media{padding:12px;background:#f7f8f7}
+.social-view .post-media img{width:100%;height:auto;max-height:420px;object-fit:contain}
+.social-view .post-body{font-size:15px;line-height:1.8}
+.social-view .post-author{font-weight:600}
+.social-view .post-links{padding:8px 0}
+.social-view .post-publish.post-simple-share{padding:14px 16px 16px!important}
+.social-view .post-simple-share h3{font-size:15px;font-weight:600;margin:0 0 6px}
+.social-view .post-simple-share .post-share-guide{font-size:12px;font-weight:400;line-height:1.6;margin:0 0 10px;color:#65776e}
+.social-view .post-simple-share .post-simple-networks{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:0}
+.social-view .post-simple-share .post-simple-networks a{box-sizing:border-box;min-height:44px;padding:8px 3px;border:1px solid #dce5df;border-radius:8px;background:#fff!important;font-size:12px;font-weight:600}
+.social-view .post-simple-share .post-simple-networks a:nth-child(1){color:#0866c6}
+.social-view .post-simple-share .post-simple-networks a:nth-child(2){color:#087f3e}
+.social-view .post-simple-share .post-simple-networks a:nth-child(3){color:#273b33}
+.social-view .post-simple-share .post-share-copy{box-sizing:border-box;min-height:44px;margin-top:8px;padding:10px 12px;background:#edf4f0;color:#245c48;border:1px solid #dce5df;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;line-height:1.5}
+.social-view .post-simple-share .post-share-message{font-size:12px;margin:8px 0 0}
+@media(max-width:420px){.social-view .post-media img{max-height:360px}.social-view .post-header{padding-top:12px}.social-view .post-body{margin-top:10px;margin-bottom:10px}}
