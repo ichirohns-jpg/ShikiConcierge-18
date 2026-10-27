@@ -30,7 +30,7 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261027-simple5',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261027-linked1',document.currentScript?.src||base+'posts.js').href;
  function share(box,p){
   const mount=el('div');box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
@@ -55,7 +55,7 @@
    identity.append(author,date);head.append(avatar,identity,el('span',p.kind==='deal'?'お得情報':'お知らせ','post-kind'+(p.kind==='deal'?' deal':'')));
    card.append(head,el('p',p.body,'post-body'));
    const photos=(p.photos||[]).filter(src=>/^data:image\/jpeg;base64,/.test(src));
-   if(photos.length){const media=el('div',null,'post-media');for(const src of photos){const img=el('img');img.src=src;img.alt=p.name+'の投稿写真';img.loading=article?'eager':'lazy';img.decoding='async';media.append(img);}card.append(media);}
+   if(photos.length){const media=el(article?'div':'a',null,'post-media');if(!article){media.href=pageURL(p);media.setAttribute('aria-label',p.name+'の投稿記事を開く');}for(const src of photos){const img=el('img');img.src=src;img.alt=p.name+'の投稿写真';img.loading=article?'eager':'lazy';img.decoding='async';media.append(img);}card.append(media);}
    if(p.video&&/^https:\/\/drive\.google\.com\/file\/d\/[A-Za-z0-9_-]+\/preview$/.test(p.video)){
     const video=el('div',null,'post-video');
     if(p.poster&&/^data:image\/jpeg;base64,/.test(p.poster)){const poster=el('img');poster.src=p.poster;poster.alt='動画の表紙';video.append(poster);}
