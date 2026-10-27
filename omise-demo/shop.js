@@ -14,10 +14,9 @@ if(shareSection){
  const row=document.createElement('div');row.className='grid';row.setAttribute('aria-label','この記事をSNSで紹介する');
  const canonical=shopShareURL;
  const copy=document.createElement('button');copy.className='secondary';copy.textContent='コピー';copy.type='button';copy.onclick=()=>copyText(shareField.value);row.append(copy);
- const destinations=[['Facebook','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(canonical)],['Instagram','https://www.instagram.com/'],['X','https://twitter.com/intent/tweet?text='+encodeURIComponent(document.querySelector('h1').textContent+'をご紹介！')+'&url='+encodeURIComponent(canonical)],['LINE','https://line.me/R/share?text='+encodeURIComponent(shareField.value)]];
- for(const [label,href] of destinations){const a=document.createElement('a');a.className='btn '+(label==='LINE'?'line':'secondary');a.textContent=label;a.href=href;a.target='_blank';a.rel='noopener';if(label==='Instagram')a.onclick=()=>copyText(shareField.value);row.append(a);}
+ const destinations=[['Facebook','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(canonical)],['X','https://twitter.com/intent/tweet?text='+encodeURIComponent(document.querySelector('h1').textContent+'をご紹介！')+'&url='+encodeURIComponent(canonical)],['LINE','https://line.me/R/share?text='+encodeURIComponent(shareField.value)]];
+ for(const [label,href] of destinations){const a=document.createElement('a');a.className='btn '+(label==='LINE'?'line':'secondary');a.textContent=label;a.href=href;a.target='_blank';a.rel='noopener';row.append(a);}
  const oldLine=shareSection.querySelector(':scope > a[href*="line.me/R/share"]');if(oldLine)oldLine.replaceWith(row);else shareSection.querySelector('h2').after(row);
- const note=document.createElement('p');note.className='muted';note.textContent='Instagramは紹介文をコピーして開きます。ご自身の写真・動画と一緒に貼り付けて投稿してください。';row.after(note);
 }
 function colourSNSButtons(){for(const a of document.querySelectorAll('a.btn')){let host;try{host=new URL(a.href).hostname.toLowerCase();}catch{continue;}let colour='';if(/(^|\.)youtube\.com$|(^|\.)youtu\.be$/.test(host))colour='#c90000';else if(/(^|\.)facebook\.com$/.test(host))colour='#0866c6';else if(/(^|\.)instagram\.com$/.test(host))colour='linear-gradient(115deg,#833ab4,#c52c72,#b94418)';else if(/(^|\.)twitter\.com$|(^|\.)x\.com$/.test(host))colour='#111111';else if(/(^|\.)line\.me$/.test(host))colour='#087f3e';if(colour){a.style.setProperty('background',colour,'important');a.style.setProperty('color','#ffffff','important');}}}
 colourSNSButtons();
