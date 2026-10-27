@@ -7,7 +7,7 @@
   const link=/^https:\/\//.test(p.shareURL||'')?p.shareURL:(/^POST-[a-f0-9-]+$/i.test(p.id||'')?articleBase+encodeURIComponent(p.id):dxURL);
   const ownText=[p.title,p.body].filter(Boolean).join('\n\n');
   const area=el('section',null,'post-publish post-simple-share');
-  area.append(el('h3','SNSで紹介する'));
+  area.append(el('h3','SNSに投稿する'));
   const message=el('p','', 'post-share-message');
   message.setAttribute('role','status');message.setAttribute('aria-live','polite');
   const fallback=el('textarea');fallback.value=link;fallback.readOnly=true;fallback.hidden=true;fallback.rows=7;
@@ -17,13 +17,16 @@
   async function copyValue(value){
    try{
     await navigator.clipboard.writeText(value);
-    if(!disposed)message.textContent='コピーしました。SNSに貼り付けてください。';
+    if(!disposed)message.textContent='コピーしました。次にSNSを押してください。';
    }catch{
     if(disposed)return;
     fallback.value=value;fallback.hidden=false;fallback.focus();fallback.select();
     message.textContent='ここを長押ししてコピーしてください。';
    }
   }
+  const copy=el('button','① 文章とリンクをコピー','post-share-copy');copy.type='button';
+  copy.addEventListener('click',()=>copyValue((ownText?ownText+'\n\n':'')+link));area.append(copy);
+  area.append(el('p','② 投稿するSNSを押してシェアしてください','post-share-guide'));
   const networks=el('div',null,'post-share post-simple-networks');
   const items=[
    ['Facebook','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(link),'#0866c6'],
@@ -32,8 +35,6 @@
    ['Instagram','https://www.instagram.com/','linear-gradient(115deg,#833ab4,#c52c72,#b94418)']
   ];
   for(const [label,href,color] of items){const a=el('a',label);a.href=href;a.target='_blank';a.rel='noopener';a.style.background=color;if(label==='Instagram')a.addEventListener('click',()=>copyValue(ownText+'\n\n'+link));networks.append(a);}
-  const copy=el('button','文章とリンクをコピー','post-share-copy');copy.type='button';
-  copy.addEventListener('click',()=>copyValue((ownText?ownText+'\n\n':'')+link));networks.append(copy);
   area.append(networks);
   area.append(message,fallback);box.append(area);
   return ()=>{disposed=true;};
