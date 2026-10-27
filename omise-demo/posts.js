@@ -30,7 +30,7 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261027-linked1',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261027-dynamic-og1',document.currentScript?.src||base+'posts.js').href;
  function share(box,p){
   const mount=el('div');box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
