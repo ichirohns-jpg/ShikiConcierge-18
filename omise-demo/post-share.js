@@ -34,18 +34,23 @@
   }
   const copy=el('button','文章とリンクをコピー','post-share-copy');copy.type='button';copy.disabled=dynamic;
   copy.addEventListener('click',()=>{if(link)copyValue((ownText?ownText+'\n\n':'')+link);});
-  area.append(el('p','Facebookはボタンを押すと投稿画面が開きます。','post-share-guide'));
   const networks=el('div',null,'post-share post-simple-networks');
   const facebook=el('a','Facebookで共有');facebook.target='_blank';facebook.rel='noopener';facebook.style.background='#0866c6';networks.append(facebook);
+  const line=el('a','LINEで共有');line.style.background='#087f3e';
+  const x=el('a','Xで共有');x.style.background='#111';
+  for(const a of [line,x]){a.target='_blank';a.rel='noopener';networks.append(a);}
   function ready(){
-   if(link){facebook.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(link);facebook.removeAttribute('aria-disabled');}
-   else{facebook.removeAttribute('href');facebook.setAttribute('aria-disabled','true');}
+   const buttons=[facebook,line,x];
+   if(link){
+    facebook.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(link);
+    line.href='https://line.me/R/share?text='+encodeURIComponent((ownText?ownText+'\n\n':'')+link);
+    x.href='https://x.com/intent/tweet?text='+encodeURIComponent(ownText)+'&url='+encodeURIComponent(link);
+    for(const a of buttons)a.removeAttribute('aria-disabled');
+   }else{
+    for(const a of buttons){a.removeAttribute('href');a.setAttribute('aria-disabled','true');}
+   }
   }
   ready();
-  for(const [label,href,color] of [
-   ['LINEを開く','https://line.me/R/','#087f3e'],
-   ['Xを開く','https://x.com/','#111']
-  ]){const a=el('a',label);a.href=href;a.target='_blank';a.rel='noopener';a.style.background=color;networks.append(a);}
   area.append(networks,copy,message,fallback);box.append(area);
   async function prepare(){
    if(disposed||!area.isConnected)return;
