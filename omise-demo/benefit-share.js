@@ -3,7 +3,7 @@
  const host=document.getElementById('benefitImageShare');if(!host)return;
  const greeting=document.getElementById('friendGreeting');if(greeting)greeting.hidden=new URLSearchParams(location.search).get('from')!=='friend';
  const shareURL="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-link.html";
- const facebookURL="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-facebook-v2.html";
+ const facebookURL="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-facebook-v3.html";
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
  const section=el('section',null,'simple-sns-share');section.setAttribute('aria-label','SNSに投稿する');
  const title=el('h2','SNSに投稿する');
