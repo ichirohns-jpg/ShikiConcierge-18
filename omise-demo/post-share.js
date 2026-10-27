@@ -4,7 +4,7 @@
  const articleBase=dxURL+'article.html?id=';
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
  function mount(box,p){
-  const link=/^POST-[a-f0-9-]+$/i.test(p.id||'')?articleBase+encodeURIComponent(p.id):(/^https:\/\//.test(p.shareURL||'')?p.shareURL:dxURL);
+  const link=/^https:\/\//.test(p.shareURL||'')?p.shareURL:(/^POST-[a-f0-9-]+$/i.test(p.id||'')?articleBase+encodeURIComponent(p.id):dxURL);
   const ownText=[p.title,p.body].filter(Boolean).join('\n\n');
   const area=el('section',null,'post-publish post-simple-share');
   const copy=el('button','リンクをコピー','post-copy-primary');copy.type='button';
