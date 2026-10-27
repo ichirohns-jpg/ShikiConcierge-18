@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 
 export const BASE='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/';
+export const SHORT_BASE=new URL('../p/',BASE).href;
 const ENDPOINT='https://script.google.com/macros/s/AKfycbzMec1R3le4e-cOUyBUl6Eq2dU3OI-5HHtkEyJQT7SWx4IjUHGtW8Z3zatJxoA2GUhn2A/exec';
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -24,8 +25,19 @@ export async function fetchPosts(request=fetch){
  return posts;
 }
 
-export function compilePosts(posts){
- const files=new Map(),manifest={version:1,posts:{}};
+function shortLinksState(input){
+ const state=input??{version:1,next:1,posts:{}};
+ if(state.version!==1||!Number.isSafeInteger(state.next)||state.next<1||!state.posts||typeof state.posts!=='object'||Array.isArray(state.posts))throw Error('Invalid short-link registry');
+ const used=new Set(),entries={};
+ for(const [id,entry] of Object.entries(state.posts)){
+  if(!/^POST-[a-f0-9-]+$/i.test(id)||!entry||!Number.isSafeInteger(entry.number)||entry.number<1||entry.number>=state.next||used.has(entry.number)||!Number.isSafeInteger(entry.version)||entry.version<1||!/^[a-f0-9]{16}$/.test(entry.revision||''))throw Error('Invalid short-link registry entry');
+  used.add(entry.number);entries[id]={...entry};
+ }
+ return {version:1,next:state.next,posts:entries};
+}
+
+export function compilePosts(posts,knownLinks){
+ const files=new Map(),shortFiles=new Map(),links=shortLinksState(knownLinks),manifest={version:1,posts:{}};
  for(const p of posts){
   if(!/^POST-[a-f0-9-]+$/i.test(p.id||'')||p.status!=='公開'||p.ended)throw Error('Only public active posts can be published');
   const photo=(p.photos||[])[0]||p.poster||'';
@@ -33,6 +45,10 @@ export function compilePosts(posts){
   const bytes=photo?Buffer.from(photo.split(',')[1],'base64'):null;
   if(bytes&&(bytes.length>5000000||bytes[0]!==255||bytes[1]!==216||bytes[2]!==255))throw Error('Invalid public JPEG bytes');
   const revision=createHash('sha256').update(JSON.stringify([p.id,p.name,p.body,p.date,p.end||''])).update(bytes||'').digest('hex').slice(0,16);
+  let short=links.posts[p.id];
+  if(!short)short=links.posts[p.id]={number:links.next++,revision,version:1};
+  else if(short.revision!==revision){short.revision=revision;short.version++;}
+  const shortURL=SHORT_BASE+short.number+'/'+(short.version>1?'?v='+short.version:'');
   const shareURL=BASE+'post-shares/'+encodeURIComponent(p.id)+'/?v='+revision;
   const articleURL=BASE+'article.html?id='+encodeURIComponent(p.id);
   const imageURL=bytes?BASE+'post-shares/'+encodeURIComponent(p.id)+'/photo-'+revision+'.jpg':BASE+'dx-share-ogp-v1.jpg';
@@ -52,16 +68,26 @@ export function compilePosts(posts){
    '<p><a href="'+escape(articleURL)+'">この記事を開く</a></p></main><script>location.replace('+JSON.stringify(articleURL).replace(/</g,'\\u003c')+');</script></body></html>\n';
   files.set(p.id+'/index.html',Buffer.from(html));
   if(bytes)files.set(p.id+'/photo-'+revision+'.jpg',bytes);
-  manifest.posts[p.id]={date:p.date,shareURL,imageURL};
+  const freshArticleURL=articleURL+'&via=short';
+  const shortHtml=html.replace('property="og:url" content="'+escape(shareURL)+'"','property="og:url" content="'+escape(shortURL)+'"').replace('rel="canonical" href="'+escape(shareURL)+'"','rel="canonical" href="'+escape(shortURL)+'"');
+  shortFiles.set(short.number+'/index.html',Buffer.from(shortHtml.replace('<p><a href="'+escape(articleURL)+'">','<p><a href="'+escape(freshArticleURL)+'">').replace('location.replace('+JSON.stringify(articleURL),'location.replace('+JSON.stringify(freshArticleURL))));
+  manifest.posts[p.id]={date:p.date,shareURL,shortURL,imageURL};
  }
  files.set('manifest.json',Buffer.from(JSON.stringify(manifest,null,2)+'\n'));
- return {files,manifest};
+ files.set('short-links.json',Buffer.from(JSON.stringify(links,null,2)+'\n'));
+ return {files,shortFiles,manifest,links};
 }
 
-export async function writePosts(posts,destination){
- const result=compilePosts(posts); // Validate the complete feed before changing any files.
+export async function writePosts(posts,destination,shortDestination=path.resolve(destination,'../../p')){
+ let previous;
+ try{previous=JSON.parse(await fs.readFile(path.join(destination,'short-links.json'),'utf8'));}
+ catch(error){if(error.code!=='ENOENT')throw error;}
+ const result=compilePosts(posts,previous); // Validate everything before changing public files.
  await fs.rm(destination,{recursive:true,force:true});
  for(const [relative,bytes] of result.files){const file=path.join(destination,relative);await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,bytes);}
+ const active=new Set(posts.map(p=>result.links.posts[p.id].number));
+ for(const entry of Object.values(previous?.posts||{}))if(!active.has(entry.number))await fs.rm(path.join(shortDestination,String(entry.number)),{recursive:true,force:true});
+ for(const [relative,bytes] of result.shortFiles){const file=path.join(shortDestination,relative);await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,bytes);}
  return result.manifest;
 }
 

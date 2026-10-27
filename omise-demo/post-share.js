@@ -58,7 +58,8 @@
    try{
     const data=await sharePages(),entry=data.version===1&&data.posts?.[p.id];
     if(entry&&entry.date===p.date&&entry.shareURL.startsWith(dxURL+'post-shares/'+encodeURIComponent(p.id)+'/?v=')){
-     link=entry.shareURL;ready();message.textContent='';return;
+     const shortBase=dxURL.replace(/omise-demo\/$/,'p/'),short=String(entry.shortURL||'');
+     link=short.startsWith(shortBase)&&/^[1-9]\d*\/(?:\?v=[1-9]\d*)?$/.test(short.slice(shortBase.length))?short:entry.shareURL;ready();message.textContent='';return;
     }
     message.textContent='共有リンクを準備しています。';
    }catch{message.textContent='共有カードを読み込み直しています。';}

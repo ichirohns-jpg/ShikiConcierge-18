@@ -32,7 +32,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git add -- omise-demo/post-shares
+          git add -- omise-demo/post-shares p
           if git diff --cached --quiet; then
             exit 0
           fi

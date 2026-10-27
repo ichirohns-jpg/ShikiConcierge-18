@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {compilePosts,fetchPosts,BASE} from './build-post-shares.mjs';
+import {compilePosts,fetchPosts,writePosts,BASE,SHORT_BASE} from './build-post-shares.mjs';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
 
 const id='POST-56783934-e23c-4233-90fe-ce46e4fedd61';
 const photo='data:image/jpeg;base64,'+Buffer.from([255,216,255,224,0,2,255,217]).toString('base64');
@@ -33,4 +36,49 @@ test('Fetch every page and reject partial, changing, or malformed responses',asy
  const posts=await fetchPosts(async url=>({ok:true,json:async()=>{const offset=Number(url.searchParams.get('offset'));calls++;return {ok:true,total:2,offset,posts:[{...fixture,id:offset?'POST-a':id}]};}}));
  assert.equal(calls,2);assert.equal(posts.length,2);
  for(const page of [{ok:false},{ok:true,total:1,offset:0,posts:[]},{ok:true,total:1,offset:1,posts:[fixture]}])await assert.rejects(fetchPosts(async()=>({ok:true,json:async()=>page})));
+});
+
+test('Short URLs contain only a small number and preserve the same image metadata',()=>{
+ const result=compilePosts([fixture]),entry=result.manifest.posts[id],short=result.shortFiles.get('1/index.html').toString();
+ assert.equal(entry.shortURL,SHORT_BASE+'1/');
+ assert.ok(short.includes('property="og:url" content="'+entry.shortURL+'"'));
+ assert.ok(short.includes('rel="canonical" href="'+entry.shortURL+'"'));
+ assert.ok(short.includes('property="og:image" content="'+entry.imageURL+'"'));
+ assert.ok(short.includes('via=short'));
+ assert.ok(result.files.get(id+'/index.html').toString().includes(entry.shareURL));
+ assert.ok(entry.shortURL.length<entry.shareURL.length/2);
+});
+test('Numbers persist across reordering and edits get a short numeric cache version',()=>{
+ const first=compilePosts([fixture]),another={...fixture,id:'POST-b',body:'別の記事'};
+ const second=compilePosts([another,fixture],first.links);
+ assert.equal(second.manifest.posts[id].shortURL,SHORT_BASE+'1/');
+ assert.equal(second.manifest.posts['POST-b'].shortURL,SHORT_BASE+'2/');
+ assert.equal(first.links.next,2);
+ const changed=compilePosts([{...fixture,body:'更新後'}],second.links);
+ assert.equal(changed.manifest.posts[id].shortURL,SHORT_BASE+'1/?v=2');
+ assert.equal(compilePosts([{...fixture,body:'更新後'}],changed.links).manifest.posts[id].shortURL,SHORT_BASE+'1/?v=2');
+});
+test('Expired numbers are retained and never reused for another post',()=>{
+ const first=compilePosts([fixture]),empty=compilePosts([],first.links);
+ const next=compilePosts([{...fixture,id:'POST-c'}],empty.links);
+ assert.equal(next.manifest.posts['POST-c'].shortURL,SHORT_BASE+'2/');
+ assert.equal(next.links.posts[id].number,1);
+});
+test('Malformed registries cannot overwrite another short page',()=>{
+ const first=compilePosts([fixture]);
+ assert.throws(()=>compilePosts([fixture],{...first.links,next:1}));
+ assert.throws(()=>compilePosts([fixture],{...first.links,posts:{...first.links.posts,'POST-b':{...first.links.posts[id]}}}));
+});
+test('Writer preserves the registry across refreshes and removes expired public aliases',async()=>{
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'omise-short-'));
+ try{
+  const destination=path.join(root,'post-shares'),shortRoot=path.join(root,'p');
+  await writePosts([fixture],destination,shortRoot);
+  assert.ok((await fs.readFile(path.join(shortRoot,'1/index.html'),'utf8')).includes(SHORT_BASE+'1/'));
+  await writePosts([],destination,shortRoot);
+  await assert.rejects(fs.access(path.join(shortRoot,'1/index.html')));
+  const result=await writePosts([{...fixture,id:'POST-d'}],destination,shortRoot);
+  assert.equal(result.posts['POST-d'].shortURL,SHORT_BASE+'2/');
+  assert.ok(await fs.readFile(path.join(shortRoot,'2/index.html'),'utf8'));
+ }finally{await fs.rm(root,{recursive:true,force:true});}
 });
