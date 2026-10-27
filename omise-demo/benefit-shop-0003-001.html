@@ -19,7 +19,7 @@
 <section class="maker"><h2>広告の内容</h2>
 <label for="photo">写真を選ぶ</label><input class="file" id="photo" type="file" accept="image/*">
 <label for="kind">広告の種類</label><select id="kind"><option>お店の紹介</option><option>商品・サービス</option><option>イベント・募集</option></select>
-<label for="headline">一番伝えたいこと</label><input id="headline" value="志木のお店を、もっと元気に。">
+<label for="headline">一番伝えたいこと</label><input id="headline" value="志木のお店をもっと元気に">
 <label for="subline">短い説明</label><input id="subline" value="写真1枚から、伝わる地域広告を作ります。">
 <label for="name">店名・活動名</label><input id="name" value="ニュータイムス社">
 <button id="make" class="make" type="button">この内容で広告を作る</button></section>
@@ -37,7 +37,7 @@ ctx.fillStyle='#f5f0e3';ctx.fillRect(0,0,1080,1350);if(photo.complete&&photo.nat
 const g=ctx.createLinearGradient(0,430,0,750);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.72)');ctx.fillStyle=g;ctx.fillRect(0,400,1080,350);
 ctx.fillStyle='#f0c65a';ctx.fillRect(58,55,240,62);ctx.fillStyle='#2b230f';ctx.font='800 30px sans-serif';ctx.fillText(kind,83,97);
 ctx.fillStyle='#fff';ctx.font='800 34px sans-serif';ctx.fillText(name,58,665);
-ctx.fillStyle='#18251f';let y=815;for(const l of lines(headline,950,70)){ctx.font='900 70px sans-serif';ctx.fillText(l,58,y);y+=88}
+ctx.fillStyle='#18251f';let y=815;for(const l of lines(headline,950,62)){ctx.font='900 62px sans-serif';ctx.fillText(l,58,y);y+=78}
 ctx.fillStyle='#6a4c10';ctx.fillRect(58,y+18,130,8);ctx.fillStyle='#29352f';ctx.font='700 35px sans-serif';let sy=y+95;for(const l of lines(sub,940,35)){ctx.fillText(l,58,sy);sy+=50}
 ctx.fillStyle='#18251f';ctx.fillRect(0,1260,1080,90);ctx.fillStyle='#fff';ctx.font='800 31px sans-serif';ctx.fillText('ニュータイムス社｜地域の広告を、もっと身近に。',58,1318)}
 photo.onload=draw;photo.src='https://ichirohns-jpg.github.io/iwashita-ryu-activity/images/activity/profile-main.jpg';
