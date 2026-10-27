@@ -5,20 +5,21 @@
  const shareURL="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-link.html";
  const shareText='おうちcafeパン工房\n\n【掲載見本・利用不可】パンを500円以上買うとミニパン1個プレゼント\n\n'+shareURL;
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
- const section=el('section',null,'simple-sns-share');section.setAttribute('aria-label','この特典を友だちに教える');
- const title=el('h2','この特典を友だちに教える');
- const note=el('p','ボタンを押すと、送る相手や投稿先を選べます。','sns-share-guide');
+ const section=el('section',null,'simple-sns-share');section.setAttribute('aria-label','友だちに教える');
+ section.style.cssText='margin:16px 0;padding:16px;border:1px solid #c5dfcf;border-radius:14px;background:#f4f8f3';
+ const title=el('h2','友だちに教える');title.style.cssText='margin:0 0 4px;font-size:20px;line-height:1.4;text-align:center';
+ const note=el('p','送る方法を選んでください','sns-share-guide');note.style.cssText='margin:0 0 12px;font-size:14px;text-align:center;color:#466555';
  const links=el('nav',null,'sns-links');links.setAttribute('aria-label','友だちに教える方法');
- const destinations=[
-  ['LINEで友だちに送る','https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareURL),'line'],
-  ['Facebookで教える','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareURL),'facebook'],
-  ['Xで教える','https://twitter.com/intent/tweet?text='+encodeURIComponent(shareText),'x']
- ];
- destinations.forEach(([label,url,name])=>{const a=el('a',label,'sns-destination '+name);a.href=url;a.target='_blank';a.rel='noopener';if(name==='line'){a.style.gridColumn='1 / -1';a.style.fontSize='19px';a.style.minHeight='60px';}links.append(a);});
- const copy=el('button','リンクをコピー','sns-copy');copy.type='button';
- const status=el('p','', 'sns-share-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+ links.style.cssText='display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px';
+ const makeLink=(label,url,name,style)=>{const a=el('a',label,'sns-destination '+name);a.href=url;a.target='_blank';a.rel='noopener';a.style.cssText=style;return a;};
+ const common='display:flex;align-items:center;justify-content:center;min-width:0;min-height:48px;padding:10px 4px;border-radius:10px;color:#fff;text-decoration:none;font-size:14px;font-weight:700;line-height:1.2;white-space:nowrap';
+ const line=makeLink('LINEで送る','https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareURL),'line',common+';grid-column:1 / -1;min-height:56px;background:#087f3e;font-size:18px');
+ const facebook=makeLink('Facebook','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareURL),'facebook',common+';background:#0866c6');
+ const x=makeLink('X','https://twitter.com/intent/tweet?text='+encodeURIComponent(shareText),'x',common+';background:#151515');
+ const copy=el('button','コピー','sns-copy');copy.type='button';copy.style.cssText=common+';width:100%;border:0;background:#146b57;cursor:pointer';
+ const status=el('p','', 'sns-share-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.style.cssText='min-height:0;margin:8px 0 0;font-size:13px;color:#466555;text-align:center';
  const fallback=el('textarea');fallback.readOnly=true;fallback.value=shareText;fallback.hidden=true;fallback.rows=6;fallback.setAttribute('aria-label','コピーする文章とリンク');
  fallback.style.cssText='width:100%;box-sizing:border-box;font:inherit;line-height:1.6;padding:12px';
- copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(shareText);status.textContent='コピーしました。送りたい相手のトークやSNSに貼り付けてください。';}catch(e){fallback.hidden=false;fallback.focus();fallback.select();status.textContent='ここを長押ししてコピーしてください。';}});
- section.append(title,note,links,copy,status,fallback);host.replaceChildren(section);
+ copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(shareText);status.textContent='コピーしました';}catch(e){fallback.hidden=false;fallback.focus();fallback.select();status.textContent='ここを長押ししてコピーしてください';}});
+ links.append(line,facebook,x,copy);section.append(title,note,links,status,fallback);host.replaceChildren(section);
 })();
