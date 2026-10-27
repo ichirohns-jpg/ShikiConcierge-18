@@ -25,40 +25,42 @@
   const message=el('p',photos.length?'9:16画像を準備しています…':'文章とDXリンクをコピーしてSNSに貼り付けられます。','post-share-message');
   message.setAttribute('role','status');message.setAttribute('aria-live','polite');
   const send=el('button','9:16画像を準備しています…','post-copy-primary');send.type='button';send.disabled=true;
-  const copy=el('button','投稿文とDXリンクをコピー','post-save-photo');copy.type='button';
+  const copy=el('button',photos.length?'① 投稿文をコピー':'投稿文とDXリンクをコピー','post-copy-primary');copy.type='button';
+  let textCopied=false;
   const fallback=el('textarea');fallback.value=caption;fallback.readOnly=true;fallback.hidden=true;fallback.rows=6;fallback.setAttribute('aria-label','コピーする投稿文');
   async function copyText(){try{await navigator.clipboard.writeText(caption);return true;}catch{return false;}}
   copy.addEventListener('click',async()=>{
-   if(await copyText())message.textContent='コピーしました。Facebookなどの本文欄を長押しして「貼り付け」を押してください。';
+   textCopied=await copyText();
+   if(textCopied){copy.textContent='① コピー済み（もう一度コピー）';message.textContent='次は「② 画像をSNSへ」を押してFacebookを選び、本文欄に貼り付けてください。';}
    else{fallback.hidden=false;fallback.focus();fallback.select();message.textContent='この文章を長押ししてコピーしてください。';}
   });
   let readyFiles=[],busy=false,disposed=false,shareTurn=0;
+  area.append(copy);
   if(photos.length)area.append(send);
-  const instructions=el('p',photos.length?'① 下の投稿文を確認 → ② 画像をSNSへ → ③ SNSの本文欄に貼り付け。画像だけでは文章は入りません。':'投稿文をコピーして、SNSの本文欄に貼り付けてください。');
+  const instructions=el('p',photos.length?'① 投稿文をコピー → ② 画像をSNSへ → Facebookの本文欄に貼り付け。共有画面では画像のプレビューが出ていることを確認してください。':'投稿文をコピーして、SNSの本文欄に貼り付けてください。');
   const captionLabel=el('label','コピーされる投稿文');
   const captionPreview=el('textarea');captionPreview.value=caption;captionPreview.readOnly=true;captionPreview.rows=7;captionPreview.setAttribute('aria-label','投稿文の確認');captionPreview.style.cssText='display:block;width:100%;box-sizing:border-box;font:inherit;line-height:1.6;padding:12px;border:1px solid #94b7a6;border-radius:10px;background:#fff;color:#193f33;margin:8px 0 16px';
   captionLabel.append(captionPreview);
-  area.append(instructions,message,captionLabel,copy,fallback);
+  area.append(instructions,message,captionLabel,fallback);
   const saves=el('div',null,'post-photo-saves'),savedURLs=[];
   if(photos.length)area.append(saves);
   function sendFiles(files,button){
    if(busy||!files.length)return;
    if(!canSend(files)){message.textContent='この端末では画像を直接渡せません。下の「画像を保存」を使えます。';return;}
    busy=true;button.disabled=true;const turn=++shareTurn;
-   // Copy is best-effort: it must never delay the image's user-initiated share.
-   const copied=copyText();
+   // Keep this click exclusively for file sharing; clipboard access is a separate click.
+   message.textContent='画像'+files.length+'枚の共有画面を開いています。画像が表示されたらFacebookを選んでください。';
    let handoff;
    try{handoff=navigator.share({files});}
    catch(error){finish(error);return;}
    Promise.resolve(handoff).then(()=>finish(),finish);
-   async function finish(error){
+   function finish(error){
     busy=false;button.disabled=false;
-    const didCopy=await copied;
     if(disposed||turn!==shareTurn)return;
     if(error){
-     message.textContent=error.name==='AbortError'?'共有をキャンセルしました。':(didCopy?'画像を渡せませんでした。投稿文とDXリンクはコピーされています。':'画像を渡せませんでした。画像の保存も使えます。');
+     message.textContent=error.name==='AbortError'?'共有がキャンセルされました。画像が出なかった場合は、Safariでこのページを開いてもう一度お試しください。':'画像を共有できませんでした（'+(error.name||'Error')+'）。Safariでこのページを開いてお試しください。';
     }else{
-     message.textContent=didCopy?'画像の共有画面を閉じました。Facebookなどの本文欄を長押しして「貼り付け」を押してください。投稿完了はSNS側で確認してください。':'文章をコピーできませんでした。下のコピーボタンを押して、SNSの本文欄に貼り付けてください。';
+     message.textContent=textCopied?'共有画面を閉じました。Facebookに画像が添付されていることを確認し、本文欄に貼り付けてください。':'共有画面を閉じました。文章を付けるには「① 投稿文をコピー」を押し、SNSの本文欄に貼り付けてください。';
     }
    }
   }
@@ -87,8 +89,8 @@
     }
    }
    if(canSend(readyFiles)){
-    send.disabled=false;send.textContent=readyFiles.length>1?'画像'+readyFiles.length+'枚をSNSへ（投稿文もコピー）':'画像をSNSへ（投稿文もコピー）';
-    message.textContent='Facebookなどを選ぶと画像が添付されます。投稿文はコピーするので、移動先の本文欄を長押しして「貼り付け」を押してください。';
+    send.disabled=false;send.textContent=readyFiles.length>1?'② 画像'+readyFiles.length+'枚をSNSへ':'② 画像をSNSへ';
+    message.textContent='画像の準備ができました。①で投稿文をコピーしてから、②で画像を共有してください。';
    }else{
     send.textContent='この端末では画像の保存を使ってください';
     message.textContent='画像を直接共有する機能に対応していません。下の「画像を保存」を使えます。';
