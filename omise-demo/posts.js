@@ -54,7 +54,7 @@
   const links=el('div',null,'post-links'),profile=el('a','お店の紹介・場所を見る →');profile.href=base+'ouchicafe.html#information';links.append(profile);
   const note=el('p','実際の写真をもとに作った広告イメージです。','post-ad-note');
   card.append(head,body,media,links,note);
-  share(card,{title:'おうちcafeパン工房',body:'焼きたてパンとコーヒーで、ほっとひと息。\n志木市本町のパン工房です。',shareURL:base+'ouchicafe-ad-share-v1.html'});
+  share(card,{title:'おうちcafeパン工房',body:'焼きたてパンとコーヒーで、ほっとひと息。\n志木市本町のパン工房です。',shareURL:base+'ouchicafe-ad-share-v2.html'});
   return card;
  }
  function render(rows){
