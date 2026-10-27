@@ -31,8 +31,7 @@
   const items=[
    ['Facebookを開く','https://www.facebook.com/','#0866c6'],
    ['LINEを開く','https://line.me/R/','#087f3e'],
-   ['Xを開く','https://x.com/','#111'],
-   ['Instagramを開く','https://www.instagram.com/','linear-gradient(115deg,#833ab4,#c52c72,#b94418)']
+   ['Xを開く','https://x.com/','#111']
   ];
   for(const [label,href,color] of items){const a=el('a',label);a.href=href;a.target='_blank';a.rel='noopener';a.style.background=color;networks.append(a);}
   area.append(networks);
