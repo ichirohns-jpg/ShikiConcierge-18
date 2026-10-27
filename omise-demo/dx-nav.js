@@ -10,7 +10,7 @@
   'article.html':{back:'./timeline.html',backText:'← 投稿一覧',current:'投稿記事',active:'posts'},
   'cafe-benefit-card.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'},
   'ad-maker.html':{back:'./timeline.html',backText:'← 投稿一覧',current:'SNS用の画像作成',active:'posts'},
-  'deals.html':{back:'./',backText:'← DXトップ',current:'お得情報・特典',active:'deals'},
+  'deals.html':{back:'./',backText:'← DXトップ',current:'お得情報',active:'deals'},
   'benefit-shop-0001-002.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'},
   'benefit-shop-0002-001.html':{back:'./heartnet.html',backText:'← 活動紹介へ戻る',current:'ありがとうカード',active:'deals'},
   'cafe-benefit.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'},
@@ -31,7 +31,7 @@
   ['home','⌂ トップ','./'],
   ['shops','お店を探す','./#shops'],
   ['posts','投稿を見る','./timeline.html'],
-  ['deals','特典を見る','./deals.html']
+  ['deals','お得情報','./deals.html']
  ];
  for(const [key,label,href] of items){
   const link=document.createElement('a');link.href=href;link.textContent=label;

@@ -11,17 +11,17 @@
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
  document.body.classList.add('social-view');if(ids[slug]){document.body.classList.add('social-profile');const description=document.querySelector('#intro .subtitle')?.nextElementSibling;if(description?.tagName==='P')description.classList.add('profile-description');}
  const nav=el('nav',null,'social-nav');nav.setAttribute('aria-label','DXのメニュー');
- for(const [text,path,active] of [['お店を探す','./#shops',false],['投稿を見る','timeline.html',timeline],['特典を見る','deals.html',deals],['投稿・管理','./#owner',false]]){
+ for(const [text,path,active] of [['お店を探す','./#shops',false],['投稿を見る','timeline.html',timeline],['お得情報','deals.html',deals],['投稿・管理','./#owner',false]]){
   const a=el('a',text);a.href=path;if(active)a.setAttribute('aria-current','page');nav.append(a);
  }
  const main=document.querySelector('main'),header=main.querySelector(':scope > header');
  if(header)header.after(nav);else main.prepend(nav);
  let offset=0;
  const section=el('section'),bar=el('div',null,'feed-heading');
- const heading=el('h2',article?'投稿記事':deals?'お店からのお得情報':ids[slug]?'投稿':'新着の投稿');
+ const heading=el('h2',article?'投稿記事':deals?'各店のお得な投稿':ids[slug]?'投稿':'新着の投稿');
  const status=el('p','読み込み中…','feed-status'),list=el('div'),paging=el('div',null,'feed-paging');
  section.id='posts-timeline';bar.append(heading,status);section.append(bar,list,paging);
- if(article||timeline||deals)main.append(section);else document.querySelector('#photos').before(section);
+ if(deals)(document.querySelector('#deals-feed')||main).append(section);else if(article||timeline)main.append(section);else document.querySelector('#photos').before(section);
  const shopURL=p=>{const file=Object.keys(ids).find(f=>ids[f]===p.shop);return file?base+file+'#posts-timeline':null;};
  const pageURL=p=>base+'article.html?id='+encodeURIComponent(p.id);
  const shortDate=value=>{const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);return m?Number(m[2])+'月'+Number(m[3])+'日 '+m[4]+':'+m[5]:String(value||'');};
@@ -91,7 +91,7 @@
   window[callback]=data=>{
    settled=true;cleanup();if(!data?.ok){status.textContent='読み込めませんでした。';return;}
    const rows=data.posts||[],total=data.total||0;render(rows);
-   status.textContent=article?(rows.length?'':'掲載が終了しているか、公開前です。'):!total?'公開された投稿はまだありません。':offset?'過去の投稿 '+(offset+1)+'〜'+Math.min(offset+10,total)+'件':'最新'+Math.min(10,total)+'件';
+   status.textContent=article?(rows.length?'':'掲載が終了しているか、公開前です。'):!total?(deals?'公開中のお得情報はまだありません。':'公開された投稿はまだありません。'):offset?'過去の投稿 '+(offset+1)+'〜'+Math.min(offset+10,total)+'件':'最新'+Math.min(10,total)+'件';
    if(article&&rows[0])document.title=rows[0].body.split('\n')[0].slice(0,60)+'｜お店めぐりDX';
    if(location.hash==='#posts-timeline')section.scrollIntoView();
    if(!article){
