@@ -1,10 +1,17 @@
-/* Article revisions: all public reads exclude pending/rejected records. */
+/* Article revisions: an authenticated shop publishes immediately. */
 function postSheet_(){return omSheet_('投稿記事',['受付ID','記事ID','店舗ID','日時','状態','内容JSON','処理日時']);}
 function postRows_(){return postSheet_().getDataRange().getDisplayValues().slice(1).filter(r=>r[0]);}
 function postNow_(){return Utilities.formatDate(new Date(),'Asia/Tokyo','yyyy-MM-dd HH:mm:ss');}
-function postPayload_(r,images){const p=JSON.parse(r[5]);return {request:r[0],id:r[1],shop:r[2],date:r[3],status:r[4],...p,photos:images?omImageData_(p.photos||[]):p.photos||[]};}
-function postOwn(id,code){omAuth_(id,code);const rows=postRows_();if(id==='ADMIN')return rows.filter(r=>r[4]==='確認待ち').map(r=>postPayload_(r,true));const latest={};rows.filter(r=>r[2]===id).forEach(r=>latest[r[1]]=r);return Object.values(latest).reverse().filter(r=>!JSON.parse(r[5]).ended).map(r=>postPayload_(r,true));}
-function postLogin(id,code,remember){const login=merchantLogin(id,code),result={...login,posts:postOwn(id,code),shops:omBook_().getSheetByName('店舗一覧').getDataRange().getDisplayValues().slice(1).filter(r=>r[0]&&r[2]).map(r=>({id:r[0],name:r[2]}))};if(remember===true){const existing=omSessionRead_(id,code);result.auth=existing?{id:String(id),token:code,expiresAt:existing.expiresAt}:omSessionIssue_(id);}return result;}
+function postShareFile_(id){if(!id)return;try{DriveApp.getFileById(id).setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);}catch(err){console.log('投稿ファイルの公開設定に失敗: '+err);}}
+function postPublishPending_(){
+ const lock=LockService.getScriptLock();lock.waitLock(20000);try{
+  const s=postSheet_(),rows=s.getDataRange().getDisplayValues(),now=postNow_();
+  rows.slice(1).forEach((r,index)=>{if(r[4]!=='確認待ち')return;try{const p=JSON.parse(r[5]);postShareFile_(p.videoFileId);postShareFile_(p.ogImageFileId);}catch(err){console.log('旧投稿の公開移行に失敗: '+err);}s.getRange(index+2,5).setValue('公開');s.getRange(index+2,7).setValue(now);});
+ }finally{lock.releaseLock();}
+}
+function postPayload_(r,images){const p=JSON.parse(r[5]);return {request:r[0],id:r[1],shop:r[2],date:r[3],status:r[4]==='確認待ち'?'公開':r[4],...p,photos:images?omImageData_(p.photos||[]):p.photos||[]};}
+function postOwn(id,code){omAuth_(id,code);const rows=postRows_();if(id==='ADMIN')return [];const latest={};rows.filter(r=>r[2]===id).forEach(r=>latest[r[1]]=r);return Object.values(latest).reverse().filter(r=>!JSON.parse(r[5]).ended).map(r=>postPayload_(r,true));}
+function postLogin(id,code,remember){const login=merchantLogin(id,code);postPublishPending_();const result={...login,posts:postOwn(id,code),shops:omBook_().getSheetByName('店舗一覧').getDataRange().getDisplayValues().slice(1).filter(r=>r[0]&&r[2]).map(r=>({id:r[0],name:r[2]}))};if(remember===true){const existing=omSessionRead_(id,code);result.auth=existing?{id:String(id),token:code,expiresAt:existing.expiresAt}:omSessionIssue_(id);}return result;}
 function postSend(id,code,input){
  omAuth_(id,code);if(id==='ADMIN')throw Error('お店を選んで投稿してください。');omShop_(id);
  const body=omText_(input.body,1500),kind=input.kind,end=omText_(input.end,10),ended=input.ended===true;
@@ -23,7 +30,7 @@ function postSend(id,code,input){
  if(!ogImage&&old.ogImageFileId)p.ogImageFileId=old.ogImageFileId;
  if(ogImage){const match=ogImage.match(/^data:([^;]+);base64,(.+)$/i),file=postSocialFolder_().createFile(Utilities.newBlob(Utilities.base64Decode(match[2]),match[1],pid+'-'+rid+'.jpg'));p.ogImageFileId=file.getId();}
  if(video){const match=video.match(/^data:([^;]+);base64,(.+)$/i),file=postVideoFolder_().createFile(Utilities.newBlob(Utilities.base64Decode(match[2]),match[1],rid+(match[1].toLowerCase()==='video/quicktime'?'.mov':'.mp4')));p.videoFileId=file.getId();p.poster=poster;}
- postSheet_().appendRow([rid,pid,id,postNow_(),'確認待ち',JSON.stringify(p),'']);return {ok:true,id:pid,request:rid,status:'確認待ち',posts:postOwn(id,code)};
+ postShareFile_(p.videoFileId);postShareFile_(p.ogImageFileId);const now=postNow_();postSheet_().appendRow([rid,pid,id,now,'公開',JSON.stringify(p),now]);return {ok:true,id:pid,request:rid,status:'公開',posts:postOwn(id,code)};
  }finally{lock.releaseLock();}
 }
 function postDelete(id,code,pid,revision){
@@ -44,7 +51,7 @@ function postDelete(id,code,pid,revision){
 function postVideoFolder_(){const props=PropertiesService.getScriptProperties(),id=props.getProperty('postVideoFolder');if(id)return DriveApp.getFolderById(id);const folder=DriveApp.createFolder('お店めぐりDX 投稿動画');props.setProperty('postVideoFolder',folder.getId());return folder;}
 function postSocialFolder_(){const props=PropertiesService.getScriptProperties(),id=props.getProperty('postSocialFolder');if(id)return DriveApp.getFolderById(id);const folder=DriveApp.createFolder('お店めぐりDX 記事OGP画像');props.setProperty('postSocialFolder',folder.getId());return folder;}
 function postEnsureOgImage_(row){
- const p=JSON.parse(row[5]);if(p.ogImageFileId)return p.ogImageFileId;
+ const p=JSON.parse(row[5]);if(p.ogImageFileId){postShareFile_(p.ogImageFileId);return p.ogImageFileId;}
  const first=(p.photos||[])[0];if(!first)return '';
  try{
   const data=(omImageData_([first])||[])[0]||'',match=data.match(/^data:([^;]+);base64,(.+)$/i);if(!match)return '';
@@ -55,14 +62,14 @@ function postEnsureOgImage_(row){
  }catch(err){console.log('既存記事のOGP画像作成失敗: '+err);return '';}
 }
 function postApprove(code,rid,approve){omAuth_('ADMIN',code);const lock=LockService.getScriptLock();lock.waitLock(20000);try{const s=postSheet_(),rows=s.getDataRange().getDisplayValues(),i=rows.findIndex(r=>r[0]===rid);if(i<1||rows[i][4]!=='確認待ち')throw Error('処理済みです。');const r=rows[i],p=JSON.parse(r[5]);if(approve){const newer=rows.slice(i+1).some(x=>x[1]===r[1]);if(newer)throw Error('新しい申請があります。新しい内容を確認してください。');['videoFileId','ogImageFileId'].forEach(k=>{if(p[k])DriveApp.getFileById(p[k]).setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);});}s.getRange(i+1,5).setValue(approve?'公開':'見送り');s.getRange(i+1,7).setValue(postNow_());return {ok:true,posts:postOwn('ADMIN',code)};}finally{lock.releaseLock();}}
-function postFeed_(params){const latest={};postRows_().filter(r=>r[4]==='公開').forEach(r=>latest[r[1]]=r);const today=postNow_().slice(0,10);let rows=Object.values(latest).filter(r=>{const p=JSON.parse(r[5]);return !p.ended&&(!p.end||p.end>=today)&&(!params.shop||r[2]===params.shop)&&(!params.kind||p.kind===params.kind)&&(!params.id||r[1]===params.id);}).sort((a,b)=>b[3].localeCompare(a[3])||b[0].localeCompare(a[0]));const offset=Math.max(0,Math.min(10000,parseInt(params.offset||'0',10)||0));const total=rows.length;rows=rows.slice(offset,offset+10);return {ok:true,total,offset,posts:rows.map(r=>{const raw=JSON.parse(r[5]),p=postPayload_(r,true);delete p.request;const shop=omShop_(r[2]);p.name=shop['店名'];p.address=shop['住所'];delete p.videoFileId;delete p.ogImageFileId;if(raw.videoFileId)p.video='https://drive.google.com/file/d/'+encodeURIComponent(raw.videoFileId)+'/preview';p.shareURL=ScriptApp.getService().getUrl()+'?mode=postShare&id='+encodeURIComponent(r[1]);return p;})};}
+function postFeed_(params){const latest={};postRows_().filter(r=>r[4]==='公開'||r[4]==='確認待ち').forEach(r=>latest[r[1]]=r);const today=postNow_().slice(0,10);let rows=Object.values(latest).filter(r=>{const p=JSON.parse(r[5]);return !p.ended&&(!p.end||p.end>=today)&&(!params.shop||r[2]===params.shop)&&(!params.kind||p.kind===params.kind)&&(!params.id||r[1]===params.id);}).sort((a,b)=>b[3].localeCompare(a[3])||b[0].localeCompare(a[0]));const offset=Math.max(0,Math.min(10000,parseInt(params.offset||'0',10)||0));const total=rows.length;rows=rows.slice(offset,offset+10);return {ok:true,total,offset,posts:rows.map(r=>{const raw=JSON.parse(r[5]),p=postPayload_(r,true);delete p.request;const shop=omShop_(r[2]);p.name=shop['店名'];p.address=shop['住所'];delete p.videoFileId;delete p.ogImageFileId;if(raw.videoFileId)p.video='https://drive.google.com/file/d/'+encodeURIComponent(raw.videoFileId)+'/preview';p.shareURL=ScriptApp.getService().getUrl()+'?mode=postShare&id='+encodeURIComponent(r[1]);return p;})};}
 function postEsc_(value){return String(value||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function postShareHtml_(id){
  if(!/^POST-[a-f0-9-]+$/i.test(String(id||'')))return HtmlService.createHtmlOutput('記事が指定されていません。');
  const feed=postFeed_({id:String(id),offset:'0'}),p=feed.posts&&feed.posts[0];if(!p)return HtmlService.createHtmlOutput('この記事は公開されていないか、掲載が終了しています。');
- const row=postRows_().filter(r=>r[1]===id&&r[4]==='公開').pop(),ogImageFileId=row?postEnsureOgImage_(row):'',target='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/article.html?id='+encodeURIComponent(id),title=(p.body.split('\n')[0]||'お店からのお知らせ').slice(0,70)+'｜'+p.name,description=(p.body||'').replace(/\s+/g,' ').slice(0,160),image=ogImageFileId?'https://drive.google.com/thumbnail?id='+encodeURIComponent(ogImageFileId)+'&sz=w1200':'https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/IMG_4358.JPG';
+ const row=postRows_().filter(r=>r[1]===id&&(r[4]==='公開'||r[4]==='確認待ち')).pop(),ogImageFileId=row?postEnsureOgImage_(row):'',target='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/article.html?id='+encodeURIComponent(id),title=(p.body.split('\n')[0]||'お店からのお知らせ').slice(0,70)+'｜'+p.name,description=(p.body||'').replace(/\s+/g,' ').slice(0,160),image=ogImageFileId?'https://drive.google.com/thumbnail?id='+encodeURIComponent(ogImageFileId)+'&sz=w1200':'https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/IMG_4358.JPG';
  const h='<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+postEsc_(title)+'</title><meta name="description" content="'+postEsc_(description)+'"><meta property="og:type" content="article"><meta property="og:site_name" content="志木なるほど お店めぐりDX"><meta property="og:title" content="'+postEsc_(title)+'"><meta property="og:description" content="'+postEsc_(description)+'"><meta property="og:url" content="'+postEsc_(ScriptApp.getService().getUrl()+'?mode=postShare&id='+encodeURIComponent(id))+'"><meta property="og:image" content="'+postEsc_(image)+'"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="'+postEsc_(title)+'"><meta name="twitter:description" content="'+postEsc_(description)+'"><meta name="twitter:image" content="'+postEsc_(image)+'"><link rel="canonical" href="'+postEsc_(target)+'"><meta http-equiv="refresh" content="0;url='+postEsc_(target)+'"></head><body><p><a href="'+postEsc_(target)+'">DXの記事を開く</a></p><script>location.replace('+JSON.stringify(target)+');<\/script></body></html>';
  return HtmlService.createHtmlOutput(h).setTitle(title).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
-function setupPosts(){postSheet_();postVideoFolder_();console.log('投稿記事と動画保存先の準備完了');}
+function setupPosts(){postSheet_();postVideoFolder_();postPublishPending_();console.log('投稿記事と動画保存先の準備完了');}
 

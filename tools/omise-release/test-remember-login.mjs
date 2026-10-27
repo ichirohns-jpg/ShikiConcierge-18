@@ -8,7 +8,7 @@ const ctx=vm.createContext({Date:Clock,PropertiesService:{getScriptProperties:()
 const bundle=fs.readFileSync(process.env.SHIKI_LOGIN_BUNDLE||new URL('./LiveCode.gs',import.meta.url),'utf8');
 vm.runInContext(bundle,ctx);
 // Use the actual bundle auth and postLogin, with only sheet reads replaced.
-vm.runInContext("merchantLogin=(id,code)=>{omAuth_(id,code);return {admin:id==='ADMIN',shop:{'店名':'テスト店'}}};postOwn=(id,code)=>{omAuth_(id,code);return []};omBook_=()=>({getSheetByName:()=>({getDataRange:()=>({getDisplayValues:()=>[['ID','x','name'],['SHOP-0001','','テスト店']]})})});",ctx);
+vm.runInContext("merchantLogin=(id,code)=>{omAuth_(id,code);return {admin:id==='ADMIN',shop:{'店名':'テスト店'}}};postPublishPending_=()=>{};postOwn=(id,code)=>{omAuth_(id,code);return []};omBook_=()=>({getSheetByName:()=>({getDataRange:()=>({getDisplayValues:()=>[['ID','x','name'],['SHOP-0001','','テスト店']]})})});",ctx);
 assert.throws(()=>ctx.postLogin('SHOP-0001','wrong',true));
 assert.equal(ctx.postLogin('SHOP-0001','test-cafe-code',false).auth,undefined);
 const a=ctx.postLogin('SHOP-0001','test-cafe-code',true).auth;

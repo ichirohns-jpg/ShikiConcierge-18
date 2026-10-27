@@ -4,8 +4,8 @@ class Range{constructor(sheet,r,c,n=1,m=1){Object.assign(this,{sheet,r,c,n,m});}
 class Sheet{constructor(){this.rows=[];}appendRow(r){this.rows.push(r);return this;}getDataRange(){return new Range(this,1,1,this.rows.length,Math.max(...this.rows.map(r=>r.length),1));}getRange(...a){if(typeof a[0]==='string')return {setFontWeight(){}};return new Range(this,...a);}getLastRow(){return this.rows.length;}setFrozenRows(){}setColumnWidth(){}}
 const master=new Sheet();master.rows=[['店舗ID','店名','公開状態','掲載許可','紹介文','更新日'],['SHOP-0002','ハートネット志木','下書き','未確認','元の紹介','2026-10-25']];tables.set('店舗一覧',master);
 const book={getSheetByName:n=>tables.get(n),insertSheet:n=>{const s=new Sheet();tables.set(n,s);return s;}};
-const ctx=vm.createContext({SpreadsheetApp:{openById:()=>book},PropertiesService:{getScriptProperties:()=>({getProperty:k=>props.get(k),setProperty:(k,v)=>props.set(k,v)})},Utilities:{getUuid:()=>('uuid'+(++serial)).padEnd(32,'0'),formatDate:(_d,_tz,fmt)=>fmt.includes('HH')?'2026-10-26 12:00:00':'2026-10-26'},LockService:{getScriptLock:()=>({waitLock(){},releaseLock(){}})},Date,console});
-vm.runInContext(fs.readFileSync(new URL('./Merchant.gs',import.meta.url),'utf8'),ctx);ctx.setupMerchantEditing();
+const ctx=vm.createContext({SpreadsheetApp:{openById:()=>book},PropertiesService:{getScriptProperties:()=>({getProperty:k=>props.get(k),setProperty:(k,v)=>props.set(k,v),deleteProperty:k=>props.delete(k),getProperties:()=>Object.fromEntries(props)})},Utilities:{getUuid:()=>String(++serial).padStart(8,'0')+'-0000-4000-8000-000000000000',formatDate:(_d,_tz,fmt)=>fmt.includes('HH')?'2026-10-26 12:00:00':'2026-10-26'},LockService:{getScriptLock:()=>({waitLock(){},releaseLock(){}})},ScriptApp:{getService:()=>({getUrl:()=>'https://example.test/exec'})},Date,console});
+vm.runInContext(fs.readFileSync(new URL('./LiveCode.gs',import.meta.url),'utf8'),ctx);ctx.setupMerchantEditing();
 const shopCode=props.get('merchant:SHOP-0002'),admin=props.get('merchant:ADMIN');assert.ok(shopCode&&admin&&shopCode!==admin);
 assert.throws(()=>ctx.merchantLogin('SHOP-0002','wrong'));assert.throws(()=>ctx.merchantLogin('SHOP-0001',shopCode));
 assert.equal(ctx.merchantLogin('SHOP-0002',shopCode).shop['店名'],'ハートネット志木');
@@ -16,17 +16,15 @@ const rejected=ctx.merchantSubmit('SHOP-0002',shopCode,'notice',{title:'送信�
 const photo='data:image/jpeg;base64,'+'A'.repeat(40000);const media=ctx.merchantSubmit('SHOP-0002',shopCode,'media',{photos:[photo],video:'https://www.youtube.com/@shiki-model'});assert.equal(ctx.omRequests_()[0].previews[0],photo);assert.equal(ctx.omPublic_('SHOP-0002').photos.length,0);ctx.merchantDecide(admin,media.id,true,true);assert.equal(ctx.omPublic_('SHOP-0002').photos[0],photo);
 assert.throws(()=>ctx.merchantSubmit('SHOP-0002',shopCode,'info',{'店名':'テスト','公式サイトURL':'javascript:alert(1)'}));
 console.log('PASS: store isolation, access codes, pending save, approval, rejection, expiry and image reconstruction');
-vm.runInContext(fs.readFileSync(new URL('./Posts.gs',import.meta.url),'utf8'),ctx);
-const first=ctx.postSend('SHOP-0002',shopCode,{kind:'deal',body:'非公開の投稿',photos:[]});
-assert.equal(ctx.postFeed_({}).total,0);assert.equal(ctx.postOwn('SHOP-0002',shopCode).length,1);
+const first=ctx.postSend('SHOP-0002',shopCode,{kind:'deal',body:'すぐ公開される投稿',photos:[]});
+assert.equal(first.status,'公開');assert.equal(ctx.postFeed_({kind:'deal'}).posts[0].body,'すぐ公開される投稿');assert.equal(ctx.postOwn('SHOP-0002',shopCode)[0].status,'公開');
 assert.throws(()=>ctx.postOwn('SHOP-0001',shopCode));assert.throws(()=>ctx.postApprove(shopCode,first.request,true));
-ctx.postApprove(admin,first.request,true);assert.equal(ctx.postFeed_({kind:'deal'}).posts[0].body,'非公開の投稿');
 const editPost=ctx.postSend('SHOP-0002',shopCode,{id:first.id,revision:first.request,kind:'deal',body:'修正した投稿',photos:[]});
-assert.equal(ctx.postFeed_({}).posts[0].body,'非公開の投稿');assert.throws(()=>ctx.postSend('SHOP-0002',shopCode,{id:first.id,revision:first.request,kind:'notice',body:'古い編集',photos:[]}));
-ctx.postApprove(admin,editPost.request,true);assert.equal(ctx.postFeed_({}).total,1);assert.equal(ctx.postFeed_({}).posts[0].body,'修正した投稿');
-for(let i=0;i<11;i++){const r=ctx.postSend('SHOP-0002',shopCode,{kind:'notice',body:'記事'+i,photos:[]});ctx.postApprove(admin,r.request,true);}
+assert.equal(ctx.postFeed_({}).posts[0].body,'修正した投稿');assert.throws(()=>ctx.postSend('SHOP-0002',shopCode,{id:first.id,revision:first.request,kind:'notice',body:'古い編集',photos:[]}));
+assert.equal(ctx.postFeed_({}).total,1);
+for(let i=0;i<11;i++)ctx.postSend('SHOP-0002',shopCode,{kind:'notice',body:'記事'+i,photos:[]});
 assert.equal(ctx.postFeed_({}).total,12);assert.equal(ctx.postFeed_({}).posts.length,10);assert.equal(ctx.postFeed_({offset:'10'}).posts.length,2);assert.equal(ctx.postFeed_({kind:'deal'}).total,1);
-const endedPost=ctx.postSend('SHOP-0002',shopCode,{id:first.id,revision:editPost.request,kind:'deal',body:'修正した投稿',photos:[],ended:true});ctx.postApprove(admin,endedPost.request,true);assert.equal(ctx.postFeed_({kind:'deal'}).total,0);
-const expiry=ctx.postSend('SHOP-0002',shopCode,{kind:'deal',body:'終了した特典',end:'2026-10-25',photos:[]});ctx.postApprove(admin,expiry.request,true);assert.equal(ctx.postFeed_({kind:'deal'}).total,0);
-const photoPost=ctx.postSend('SHOP-0002',shopCode,{kind:'notice',body:'写真つき',photos:[photo]});assert.equal(ctx.postFeed_({id:photoPost.id}).total,0);ctx.postApprove(admin,photoPost.request,true);assert.equal(ctx.postFeed_({id:photoPost.id}).posts[0].photos[0],photo);
-console.log('PASS: article revisions, owner isolation, pending privacy, approval, ten-item archive, deal filter, expiry and photos');
+ctx.postDelete('SHOP-0002',shopCode,first.id,editPost.request);assert.equal(ctx.postFeed_({kind:'deal'}).total,0);
+ctx.postSend('SHOP-0002',shopCode,{kind:'deal',body:'終了した特典',end:'2026-10-25',photos:[]});assert.equal(ctx.postFeed_({kind:'deal'}).total,0);
+const photoPost=ctx.postSend('SHOP-0002',shopCode,{kind:'notice',body:'写真つき',photos:[photo]});assert.equal(ctx.postFeed_({id:photoPost.id}).posts[0].photos[0],photo);
+console.log('PASS: immediate publication, article revisions, owner isolation, ten-item archive, deal filter, expiry and photos');
