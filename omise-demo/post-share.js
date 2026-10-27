@@ -25,7 +25,7 @@
   async function copyValue(value){
    try{
     await navigator.clipboard.writeText(value);
-    if(!disposed)message.textContent='コピーしました。自分のSNSを開いて、投稿欄に貼り付けてください。';
+    if(!disposed)message.textContent='コピーしました。';
    }catch{
     if(disposed)return;
     fallback.value=value;fallback.hidden=false;fallback.focus();fallback.select();
@@ -34,6 +34,7 @@
   }
   const copy=el('button','文章とリンクをコピー','post-share-copy');copy.type='button';copy.disabled=dynamic;
   copy.addEventListener('click',()=>{if(link)copyValue((ownText?ownText+'\n\n':'')+link);});
+  area.append(el('p','コピーして、SNSに貼り付けてください。','post-share-guide'));
   const networks=el('div',null,'post-share post-simple-networks');
   const facebook=el('a','Facebookで共有');facebook.target='_blank';facebook.rel='noopener';facebook.style.background='#0866c6';networks.append(facebook);
   const line=el('a','LINEで共有');line.style.background='#087f3e';
