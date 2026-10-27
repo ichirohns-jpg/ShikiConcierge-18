@@ -24,13 +24,16 @@
 <section class="claim" aria-label="ありがとうカードを受け取る">
 <form id="giftForm"><label for="giftCode">合言葉</label><input id="giftCode" placeholder="ふじこ" maxlength="30" autocomplete="off" required><button>カードを受け取る</button></form>
 <p id="giftStatus" class="status" role="status" aria-live="polite"></p>
-<div id="gift" class="gift" hidden><h2>ありがとう！</h2><p>志木の街を、ふじこと一緒に楽しもう。</p><img src="./icon-512.jpg?v=20261025b" width="512" height="512" alt="ふじこのありがとうカード"><a class="btn" href="./icon-512.jpg?v=20261025b" download="ふじこのありがとうカード.jpg">カード画像を保存</a></div>
+<div id="gift" class="gift" hidden><h2>ありがとう！</h2><p>志木の街を、ふじこと一緒に楽しもう。</p><img id="giftImage" src="./icon-512.jpg?v=20261025b" width="512" height="512" alt="ふじこのありがとうカード"><a id="giftDownload" class="btn" href="./icon-512.jpg?v=20261025b" download="ふじこのありがとうカード.jpg">カード画像を保存</a></div>
 </section>
 <section class="share" aria-label="友だちに教える"><h2>友だちに教える</h2><p>送る方法を選んでください</p><nav class="share-grid"><a id="lineShare" class="btn line" target="_blank" rel="noopener">LINEで送る</a><a id="facebookShare" class="btn facebook small" target="_blank" rel="noopener">Facebook</a><a id="xShare" class="btn x small" target="_blank" rel="noopener">X</a><button id="copyShare" class="copy small" type="button">コピー</button></nav><p id="shareStatus" class="status" role="status" aria-live="polite"></p></section>
 <div class="actions"><a class="btn" href="./heartnet.html">ハートネット志木を見る</a></div>
 </article></main><a class="dx-home" href="./">⌂ DXトップへ戻る</a>
 <script>
 const shareURL="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/benefit-shop-0002-001-share.html";
+const cardAPI='https://script.google.com/macros/s/AKfycbzMec1R3le4e-cOUyBUl6Eq2dU3OI-5HHtkEyJQT7SWx4IjUHGtW8Z3zatJxoA2GUhn2A/exec?action=thanksCard';
+function loadCurrentCard(){const callback='fujikoThanksCard'+Date.now(),script=document.createElement('script'),cleanup=()=>{delete window[callback];script.remove();};window[callback]=data=>{if(data&&data.ok&&/^data:image\/jpeg;base64,/.test(data.image||'')){document.getElementById('giftImage').src=data.image;document.getElementById('giftDownload').href=data.image;}cleanup();};script.onerror=cleanup;script.src=cardAPI+'&callback='+callback+'&v='+Date.now();document.head.append(script);}
+loadCurrentCard();
 const shareText='ハートネット志木\n\n合言葉「ふじこ」で、ふじこのありがとうカードを受け取ってね。無料・来店不要です。\n\n'+shareURL;
 document.getElementById('lineShare').href='https://line.me/R/share?text='+encodeURIComponent(shareText);
 document.getElementById('facebookShare').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareURL);
