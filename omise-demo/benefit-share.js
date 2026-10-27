@@ -14,7 +14,7 @@
   ['Facebookで教える','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareURL),'facebook'],
   ['Xで教える','https://twitter.com/intent/tweet?text='+encodeURIComponent(shareText),'x']
  ];
- destinations.forEach(([label,url,name])=>{const a=el('a',label,'sns-destination '+name);a.href=url;a.target='_blank';a.rel='noopener';links.append(a);});
+ destinations.forEach(([label,url,name])=>{const a=el('a',label,'sns-destination '+name);a.href=url;a.target='_blank';a.rel='noopener';if(name==='line'){a.style.gridColumn='1 / -1';a.style.fontSize='19px';a.style.minHeight='60px';}links.append(a);});
  const copy=el('button','リンクをコピー','sns-copy');copy.type='button';
  const status=el('p','', 'sns-share-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
  const fallback=el('textarea');fallback.readOnly=true;fallback.value=shareText;fallback.hidden=true;fallback.rows=6;fallback.setAttribute('aria-label','コピーする文章とリンク');
