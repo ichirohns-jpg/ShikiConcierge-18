@@ -8,13 +8,15 @@
   'newtimes.html':{back:'./#shops',backText:'← お店一覧',current:'ニュータイムス社',active:'shops'},
   'timeline.html':{back:'./',backText:'← DXトップ',current:'みんなの投稿',active:'posts'},
   'article.html':{back:'./timeline.html',backText:'← 投稿一覧',current:'投稿記事',active:'posts'},
+  'cafe-benefit-card.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'},
+  'ad-maker.html':{back:'./timeline.html',backText:'← 投稿一覧',current:'SNS用の画像作成',active:'posts'},
   'deals.html':{back:'./',backText:'← DXトップ',current:'お得情報・特典',active:'deals'},
   'benefit-shop-0001-002.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'},
   'benefit-shop-0002-001.html':{back:'./heartnet.html',backText:'← 活動紹介へ戻る',current:'ありがとうカード',active:'deals'},
   'cafe-benefit.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'},
   'cafe-benefit-link.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'}
  };
- const route=routes[file]||{active:'home'};
+ const route=routes[file]||{active:location.hash==='#shops'?'shops':'home'};
  const main=document.querySelector('main')||document.body;
  if(route.back){
   const locationBar=document.createElement('nav');
@@ -37,4 +39,5 @@
   nav.append(link);
  }
  document.body.append(nav);
+ if(file==='index.html')window.addEventListener('hashchange',()=>{const active=location.hash==='#shops'?'shops':'home';for(const [i,a] of Array.from(nav.children).entries()){if(items[i][0]===active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');}});
 })();

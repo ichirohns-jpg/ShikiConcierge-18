@@ -109,22 +109,33 @@
 /* The saved merchant composition stays visible; SNS links only open the destination. */
 .simple-sns-share .sns-final-preview{display:block;width:100%;height:auto;max-height:none;object-fit:contain;border-radius:6px;margin:0 0 16px}.simple-sns-share .sns-share-next{font-size:15px;font-weight:700;margin:14px 0 8px}.simple-sns-share textarea{box-sizing:border-box;width:100%;font:inherit;font-size:16px;white-space:pre-wrap}.simple-sns-share [hidden]{display:none!important}
 
-/* Compact mobile reading and sharing, 2026-10-27. */
-.social-view{-webkit-text-size-adjust:100%;font-weight:400}
+
+/* Consistent readable controls across profiles, feeds and article pages. */
+.social-view{-webkit-text-size-adjust:100%;font-size:16px;color:#193f33}
+.social-view main{max-width:680px}
 .social-view .post-card{border-radius:12px;box-shadow:none}
-.social-view .post-media{padding:12px;background:#f7f8f7}
-.social-view .post-media img{width:100%;height:auto;max-height:420px;object-fit:contain}
-.social-view .post-body{font-size:15px;line-height:1.8}
-.social-view .post-author{font-weight:600}
-.social-view .post-links{padding:8px 0}
-.social-view .post-publish.post-simple-share{padding:14px 16px 16px!important}
-.social-view .post-simple-share h3{font-size:15px;font-weight:600;margin:0 0 6px}
-.social-view .post-simple-share .post-share-guide{font-size:12px;font-weight:400;line-height:1.6;margin:0 0 10px;color:#65776e}
-.social-view .post-simple-share .post-simple-networks{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:0}
-.social-view .post-simple-share .post-simple-networks a{box-sizing:border-box;min-height:44px;padding:8px 3px;border:1px solid #dce5df;border-radius:8px;background:#fff!important;font-size:12px;font-weight:600}
-.social-view .post-simple-share .post-simple-networks a:nth-child(1){color:#0866c6}
-.social-view .post-simple-share .post-simple-networks a:nth-child(2){color:#087f3e}
-.social-view .post-simple-share .post-simple-networks a:nth-child(3){color:#273b33}
-.social-view .post-simple-share .post-share-copy{box-sizing:border-box;min-height:44px;margin-top:8px;padding:10px 12px;background:#edf4f0;color:#245c48;border:1px solid #dce5df;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;line-height:1.5}
-.social-view .post-simple-share .post-share-message{font-size:12px;margin:8px 0 0}
-@media(max-width:420px){.social-view .post-media img{max-height:360px}.social-view .post-header{padding-top:12px}.social-view .post-body{margin-top:10px;margin-bottom:10px}}
+.social-view .post-body{font-size:16px;line-height:1.8;color:#193f33}
+.social-view .post-media{padding:10px;background:#f5f7f5}
+.social-view .post-media img{width:100%;height:auto;max-height:320px;object-fit:contain}
+.social-view .post-links a{min-height:44px;font-size:14px;color:#14533e;text-decoration:underline;text-underline-offset:3px}
+.social-view .post-publish.post-simple-share{padding:16px!important}
+.social-view .post-simple-share h3{font-size:18px;font-weight:700;line-height:1.5;margin:0 0 8px}
+.social-view .post-simple-share .post-share-guide{font-size:14px;font-weight:400;color:#354b40;line-height:1.6;margin:8px 0 12px}
+.social-view .post-simple-share .post-simple-networks{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:0}
+.social-view .post-simple-share .post-simple-networks a{min-height:48px;padding:10px 8px;font-size:16px;font-weight:700;color:#fff;border:0;line-height:1.4;border-radius:10px}
+.social-view .post-simple-networks a:first-child{grid-column:1/-1}
+.social-view .post-simple-share .post-share-copy{box-sizing:border-box;display:block;width:100%;min-height:48px;margin-top:8px;padding:10px 12px;background:#fff;color:#174b3a;border:2px solid #174b3a;border-radius:10px;font-family:inherit;font-size:16px;font-weight:700;line-height:1.5}
+.social-view .post-share-message{font-size:14px;line-height:1.6}
+.social-profile #intro .jump{display:flex;flex-wrap:wrap;gap:4px;margin:16px 0 0;border:0;border-radius:0;overflow:visible}
+.social-profile #intro .jump a,.social-profile #intro .jump a:first-child{flex:1 1 40%;display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px;background:#edf4f0;color:#14533e;border:1px solid #d4e5db;border-radius:8px;box-shadow:none;font-size:14px;white-space:normal}
+.social-profile #intro .profile-description{font-size:16px}
+.social-profile #share>.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.social-profile #share>.grid .btn,.social-profile #share>.grid button{min-height:48px;padding:10px 8px;font-size:15px;border-radius:10px}
+.social-profile #share>.grid .share-copy{grid-column:1/-1}
+.social-profile #share>.muted{font-size:14px}
+.social-profile #share details{margin-top:12px}
+.social-profile #photos img{max-height:440px;object-fit:contain;background:#f5f7f5}
+.social-profile .profile-social a{font-size:14px;min-height:48px;white-space:normal}
+.social-profile #information .grid .btn{font-size:15px;min-height:48px}
+.social-profile .scene-body{font-size:15px}
+@media(max-width:420px){.social-view main{padding:12px}.social-view .panel{padding:16px}.social-profile #intro h1{font-size:25px}.social-view .post-media img{max-height:280px}.social-profile #photos img{max-height:360px}}

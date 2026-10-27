@@ -21,7 +21,7 @@
  const heading=el('h2',article?'投稿記事':deals?'お店からのお得情報':ids[slug]?'投稿':'新着の投稿');
  const status=el('p','読み込み中…','feed-status'),list=el('div'),paging=el('div',null,'feed-paging');
  section.id='posts-timeline';bar.append(heading,status);section.append(bar,list,paging);
- if(article||timeline)main.append(section);else if(deals)document.querySelector('article').prepend(section);else document.querySelector('#photos').before(section);
+ if(article||timeline||deals)main.append(section);else document.querySelector('#photos').before(section);
  const shopURL=p=>{const file=Object.keys(ids).find(f=>ids[f]===p.shop);return file?base+file+'#posts-timeline':null;};
  const pageURL=p=>base+'article.html?id='+encodeURIComponent(p.id);
  const shortDate=value=>{const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);return m?Number(m[2])+'月'+Number(m[3])+'日 '+m[4]+':'+m[5]:String(value||'');};
