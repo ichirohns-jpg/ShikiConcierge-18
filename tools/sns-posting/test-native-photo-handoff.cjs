@@ -43,47 +43,51 @@ async function setup(options={}){
  vm.runInNewContext(brandSource,context);
  const layout=context.window.DXPhotoBrand.layout;
  for(const [w,h]of [[1080,1350],[1080,1920],[1080,1080],[1920,1080],[100,10000]]){
-  const result=layout({naturalWidth:w,naturalHeight:h},{naturalWidth:1280,naturalHeight:456});
-  assert.equal(result.main.x,0);assert.equal(result.main.width,result.width,'Portrait must fill the entire canvas width');
-  assert.ok(Math.abs(result.main.height/result.main.width-h/w)<=1/result.width,'Never stretch or crop the original aspect ratio');
-  assert.equal(result.footer.x,0);assert.equal(result.footer.width,result.width);
-  assert.equal(result.height,result.main.height+result.footer.height);
-  assert.ok(result.height<=4096);
+  const result=layout({naturalWidth:w,naturalHeight:h});
+  assert.equal(result.width,1080);assert.equal(result.height,1920,'Every finished image must be 9:16');
+  assert.ok(result.main.x>=0&&result.main.y>=0);
+  assert.ok(result.main.x+result.main.width<=result.width&&result.main.y+result.main.height<=result.height);
+  assert.ok(Math.abs(result.main.width*h-result.main.height*w)<=Math.max(w,h),'Never stretch or crop the original aspect ratio');
+  assert.ok(result.background.x<=0&&result.background.y<=0);
+  assert.ok(result.background.x+result.background.width>=result.width&&result.background.y+result.background.height>=result.height);
  }
- assert.throws(()=>layout({naturalWidth:0,naturalHeight:1},{naturalWidth:1280,naturalHeight:456}));
- const portrait=layout({naturalWidth:1080,naturalHeight:1920},{naturalWidth:1280,naturalHeight:456});
- assert.equal(portrait.main.width,1080);assert.equal(portrait.main.height,1920);
+ assert.throws(()=>layout({naturalWidth:0,naturalHeight:1}));
+ const portrait=layout({naturalWidth:1080,naturalHeight:1920});
+ assert.equal(JSON.stringify(portrait.main),JSON.stringify({x:0,y:0,width:1080,height:1920}));
+ const square=layout({naturalWidth:1080,naturalHeight:1080});
+ assert.equal(JSON.stringify(square.main),JSON.stringify({x:0,y:420,width:1080,height:1080}));
 
  let releaseCopy,releaseShare;
  const a=await setup({copy:()=>new Promise(r=>{releaseCopy=r;}),share:()=>new Promise(r=>{releaseShare=r;})});
- assert.equal(a.buttons[0].textContent,'画像をSNSへ');assert.equal(a.buttons[0].disabled,false);
- a.buttons[0].handlers.click();
+ assert.equal(a.buttons[0].textContent,'① 投稿文とDXリンクをコピー');
+ assert.equal(a.buttons[1].textContent,'② 9:16画像をSNSへ');assert.equal(a.buttons[1].disabled,false);
+ a.buttons[1].handlers.click();
  assert.equal(a.received.length,1,'Open image sharing immediately; never wait for clipboard permissions');
  assert.deepEqual(Object.keys(a.received[0]),['files']);
  assert.equal(a.received[0].files[0].type,'image/jpeg');
  assert.equal(await a.received[0].files[0].text(),'FINAL-JPEG');
  assert.match(a.copied,/お店の文章/);assert.match(a.copied,/https:\/\/is.gd\//);
- a.buttons[0].handlers.click();assert.equal(a.received.length,1,'Prevent duplicate share sheets');
+ a.buttons[1].handlers.click();assert.equal(a.received.length,1,'Prevent duplicate share sheets');
  releaseShare();await tick();
- assert.equal(a.buttons[0].disabled,false,'Image controls recover even when copying is still pending');
+ assert.equal(a.buttons[1].disabled,false,'Image controls recover even when copying is still pending');
  releaseCopy();await tick();
  assert.doesNotMatch(a.message.textContent,/投稿しました|投稿完了しました/);
 
  const b=await setup({copy:()=>Promise.reject(Error('denied'))});
- b.buttons[0].handlers.click();await tick();
+ b.buttons[1].handlers.click();await tick();
  assert.equal(b.received.length,1,'Clipboard failure must not block the image');
  assert.match(b.message.textContent,/コピーボタン/);
 
  const c=await setup({share:()=>Promise.reject(Object.assign(Error('cancel'),{name:'AbortError'}))});
- c.buttons[0].handlers.click();await tick();
- assert.match(c.message.textContent,/キャンセル/);assert.equal(c.buttons[0].disabled,false);
+ c.buttons[1].handlers.click();await tick();
+ assert.match(c.message.textContent,/キャンセル/);assert.equal(c.buttons[1].disabled,false);
 
  const d=await setup({badBrand:true});
- d.buttons[0].handlers.click();await tick();
+ d.buttons[1].handlers.click();await tick();
  assert.equal(await d.received[0].files[0].text(),'ORIGINAL-JPEG','A failed footer must retain the merchant original');
 
  const e=await setup({noNative:true});
- assert.equal(e.buttons[0].disabled,true);
+ assert.equal(e.buttons[1].disabled,true);
  assert.equal(e.created.length,1,'Saving the complete image stays available without native sharing');
 
  const f=await setup({count:4,singleOnly:true});
@@ -92,9 +96,9 @@ async function setup(options={}){
  assert.equal(saves.children.filter(x=>x.tagName==='BUTTON').length,4,'Allow individual images when batch sharing is unsupported');
 
  const g=await setup({noPhotos:true});
- assert.equal(g.buttons.length,1);assert.equal(g.buttons[0].textContent,'投稿文とDXリンクをコピー');
+ assert.equal(g.buttons.length,1);assert.equal(g.buttons[0].textContent,'① 投稿文とDXリンクをコピー');
  const before=a.revoked.length;a.events.pagehide({persisted:true});assert.equal(a.revoked.length,before);
  a.events.pagehide({persisted:false});assert.equal(a.revoked.length,before+1);
- console.log('PASS: full-width portrait, aspect ratio, bounded canvas, photo-first handoff, copy failure, duplicate guard, cancellation, original-photo fallback, batch fallback and back-forward cache.');
+ console.log('PASS: 9:16 output, full original aspect ratio, photo-first handoff, copy failure, duplicate guard, cancellation, original-photo fallback, batch fallback and back-forward cache.');
  console.log('JavaScript and layout checks only; real iPhone/Facebook receipt and feed display are untested.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
