@@ -13,7 +13,7 @@
  links.style.cssText='display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px';
  const makeLink=(label,url,name,style)=>{const a=el('a',label,'sns-destination '+name);a.href=url;a.target='_blank';a.rel='noopener';a.style.cssText=style;return a;};
  const common='display:flex;align-items:center;justify-content:center;min-width:0;min-height:48px;padding:10px 4px;border-radius:10px;color:#fff;text-decoration:none;font-size:14px;font-weight:700;line-height:1.2;white-space:nowrap';
- const line=makeLink('LINEで送る','https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareURL),'line',common+';grid-column:1 / -1;min-height:56px;background:#087f3e;font-size:18px');
+ const line=makeLink('LINEで送る','https://line.me/R/share?text='+encodeURIComponent(shareText),'line',common+';grid-column:1 / -1;min-height:56px;background:#087f3e;font-size:18px');
  const facebook=makeLink('Facebook','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareURL),'facebook',common+';background:#0866c6');
  const x=makeLink('X','https://twitter.com/intent/tweet?text='+encodeURIComponent(shareText),'x',common+';background:#151515');
  const copy=el('button','コピー','sns-copy');copy.type='button';copy.style.cssText=common+';width:100%;border:0;background:#146b57;cursor:pointer';
