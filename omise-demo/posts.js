@@ -16,13 +16,17 @@
  }
  const main=document.querySelector('main'),header=main.querySelector(':scope > header');
  if(header)header.after(nav);else main.prepend(nav);
- let offset=0;
+ const continuous=deals||timeline;
+ let offset=0,loading=false,moreObserver=null;
+ const shown=new Map(),seen=new Set();
+ const ended=p=>p.ended===true||(/^\d{4}-\d{2}-\d{2}$/.test(p.end||'')&&p.end<new Date(Date.now()+32400000).toISOString().slice(0,10));
  const section=el('section'),bar=el('div',null,'feed-heading');
- const heading=el('h2',article?'投稿記事':deals?'各店のお得な投稿':ids[slug]?'投稿':'新着の投稿');
+ const heading=el('h2',article?'投稿記事':deals?'お得情報の投稿':ids[slug]?'投稿':'新着の投稿');
  const status=el('p','読み込み中…','feed-status'),list=el('div'),paging=el('div',null,'feed-paging');
+ status.setAttribute('role','status');status.setAttribute('aria-live','polite');
  section.id='posts-timeline';bar.append(heading,status);section.append(bar,list,paging);
  if(deals)(document.querySelector('#deals-feed')||main).append(section);else if(article||timeline)main.append(section);else document.querySelector('#photos').before(section);
- const shopURL=p=>{const file=Object.keys(ids).find(f=>ids[f]===p.shop);return file?base+file+'#posts-timeline':null;};
+ const shopURL=p=>{const file=Object.keys(ids).find(f=>ids[f]===p.shop);return file?base+file+'#posts-timeline':/^SHOP-[\w-]+$/.test(p.shop||'')?base+'?shop='+encodeURIComponent(p.shop)+'#detail':null;};
  const pageURL=p=>base+'article.html?id='+encodeURIComponent(p.id);
  const shortDate=value=>{const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);return m?Number(m[2])+'月'+Number(m[3])+'日 '+m[4]+':'+m[5]:String(value||'');};
  function socialMark(label){
@@ -30,7 +34,7 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261027-copyshort1',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261027-stream1',document.currentScript?.src||base+'posts.js').href;
  function share(box,p){
   const mount=el('div');box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
@@ -57,10 +61,12 @@
   share(card,{title:'おうちcafeパン工房',body:'焼きたてパンとコーヒーで、ほっとひと息。\n志木市本町のパン工房です。',shareURL:base+'ouchicafe-ad-share-v2.html'});
   return card;
  }
- function render(rows){
-  list.replaceChildren();
-  if(slug==='ouchicafe.html'&&offset===0)list.append(cafeAdCard());
+ function render(rows,append=false){
+  if(!append){list.replaceChildren();shown.clear();seen.clear();}
+  if(!append&&slug==='ouchicafe.html'&&offset===0)list.append(cafeAdCard());
   for(const p of rows){
+   if(ended(p)||seen.has(p.id))continue;
+   seen.add(p.id);
    const shop=shopURL(p),card=el('article',null,'post-card'),head=el('div',null,'post-header');
    const avatarImage=avatarImages[p.shop],avatar=el(shop?'a':'span',avatarImage?'':p.name.slice(0,1),'post-avatar'+(avatarImage?' has-image':''));
    if(avatarImage){const img=el('img');img.src=base+avatarImage;img.alt='';img.loading='lazy';img.decoding='async';avatar.append(img);}
@@ -81,30 +87,53 @@
    const links=el('div',null,'post-links');
    if(!article){const detail=el('a','この記事を開く');detail.href=pageURL(p);links.append(detail);}
    if(shop){const profile=el('a','お店の紹介・場所を見る →');profile.href=shop;profile.setAttribute('aria-label','志木なるほどDXはこちら：'+p.name+'の紹介ページ');links.append(profile);}
-   card.append(links);share(card,p);list.append(card);
+   card.append(links);share(card,p);list.append(card);shown.set(p.id,{p,card});
   }
  }
- function load(){
+ function pruneEnded(){
+  let removed=false;
+  for(const [key,{p,card}] of shown)if(ended(p)){card.remove();shown.delete(key);removed=true;}
+  if(removed)status.textContent=article?'掲載が終了しました。':shown.size?shown.size+'件表示中':deals?'公開中のお得情報はまだありません。':'公開された投稿はまだありません。';
+ }
+ function load({append=false,nextOffset=offset}={}){
+  if(loading)return;
+  loading=true;
+  if(moreObserver){moreObserver.disconnect();moreObserver=null;}
   paging.replaceChildren();status.textContent='読み込み中…';
   const callback='omPosts'+Math.random().toString(36).slice(2),script=document.createElement('script');
-  let settled=false;const cleanup=()=>{script.remove();delete window[callback];};
+  let settled=false,timer;
+  const cleanup=()=>{clearTimeout(timer);script.remove();delete window[callback];};
+  const fail=message=>{
+   if(settled)return;settled=true;cleanup();loading=false;status.textContent=message;
+   const retry=el('button','もう一度読み込む','btn secondary');retry.type='button';retry.onclick=()=>load({append,nextOffset});paging.append(retry);
+  };
   window[callback]=data=>{
-   settled=true;cleanup();if(!data?.ok){status.textContent='読み込めませんでした。';return;}
-   const rows=data.posts||[],total=data.total||0;render(rows);
-   status.textContent=article?(rows.length?'':'掲載が終了しているか、公開前です。'):!total?(deals?'公開中のお得情報はまだありません。':'公開された投稿はまだありません。'):offset?'過去の投稿 '+(offset+1)+'〜'+Math.min(offset+10,total)+'件':'最新'+Math.min(10,total)+'件';
+   if(settled)return;
+   if(data?.ok!==true||!Array.isArray(data.posts)||!Number.isInteger(data.total)||data.total<0||(!data.posts.length&&nextOffset<data.total)){fail('読み込めませんでした。もう一度お試しください。');return;}
+   settled=true;cleanup();loading=false;offset=nextOffset;
+   const rows=data.posts,total=data.total;render(rows,append);
+   status.textContent=article?(shown.size?'':'掲載が終了しているか、公開前です。'):!shown.size?(deals?'公開中のお得情報はまだありません。':'公開された投稿はまだありません。'):continuous?shown.size+'件表示中':offset?'過去の投稿 '+(offset+1)+'〜'+Math.min(offset+10,total)+'件':'最新'+Math.min(10,total)+'件';
    if(article&&rows[0])document.title=rows[0].body.split('\n')[0].slice(0,60)+'｜お店めぐりDX';
-   if(location.hash==='#posts-timeline')section.scrollIntoView();
+   if(!append&&location.hash==='#posts-timeline')section.scrollIntoView();
    if(!article){
-    if(offset){const back=el('button','最新の投稿に戻る','btn secondary');back.onclick=()=>{offset=0;load();};paging.append(back);}
-    if(offset+10<total){const older=el('button','過去の投稿を見る','btn secondary');older.onclick=()=>{offset+=10;load();section.scrollIntoView();};paging.append(older);}
+    if(!continuous&&offset){const back=el('button','最新の投稿に戻る','btn secondary');back.onclick=()=>load({nextOffset:0});paging.append(back);}
+    if(rows.length&&offset+rows.length<total){
+     const older=el('button',continuous?'続きを見る':'過去の投稿を見る','btn secondary');older.type='button';
+     const next=()=>{load({append:continuous,nextOffset:offset+rows.length});if(!continuous)section.scrollIntoView();};
+     older.onclick=next;paging.append(older);
+     if(continuous&&'IntersectionObserver' in window){moreObserver=new IntersectionObserver(entries=>{if(older.isConnected&&entries.some(entry=>entry.isIntersecting)&&!loading)next();},{rootMargin:'300px 0px'});moreObserver.observe(older);}
+    }
    }
   };
-  script.onerror=()=>{settled=true;cleanup();status.textContent='読み込めませんでした。';};
-  const params=new URLSearchParams({action:'posts',callback,offset:String(offset)});
+  script.onerror=()=>fail('読み込めませんでした。もう一度お試しください。');
+  const params=new URLSearchParams({action:'posts',callback,offset:String(nextOffset)});
   if(ids[slug])params.set('shop',ids[slug]);if(deals)params.set('kind','deal');if(id)params.set('id',id);
   script.src=endpoint+'?'+params;document.head.append(script);
-  setTimeout(()=>{if(!settled){cleanup();status.textContent='読み込みに時間がかかっています。ページを更新してください。';}},20000);
+  timer=setTimeout(()=>fail('読み込みに時間がかかっています。もう一度お試しください。'),20000);
  }
  if(article&&!/^POST-[a-f0-9-]+$/i.test(id||'')){status.textContent='記事が指定されていません。';return;}
  load();
+ setInterval(pruneEnded,30000);
+ window.addEventListener('focus',pruneEnded);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)pruneEnded();});
 })();
