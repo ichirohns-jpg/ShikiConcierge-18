@@ -18,22 +18,22 @@
   area.append(el('h3','投稿をSNSで共有する'));
   const message=el('p','', 'post-share-message');
   message.setAttribute('role','status');message.setAttribute('aria-live','polite');
-  const fallback=el('textarea');fallback.value=ownText;fallback.readOnly=true;fallback.hidden=true;fallback.rows=7;
-  fallback.setAttribute('aria-label','コピーする文章');
+  const fallback=el('textarea');fallback.value=(ownText?ownText+'\n\n':'')+link;fallback.readOnly=true;fallback.hidden=true;fallback.rows=7;
+  fallback.setAttribute('aria-label','コピーする文章と短いURL');
   fallback.style.cssText='width:100%;box-sizing:border-box;font:inherit;line-height:1.6;padding:12px';
   let disposed=false,timer=null;
   async function copyValue(value){
    try{
     await navigator.clipboard.writeText(value);
-    if(!disposed)message.textContent='文章をコピーしました。';
+    if(!disposed)message.textContent='コピーしました。';
    }catch{
     if(disposed)return;
     fallback.value=value;fallback.hidden=false;fallback.focus();fallback.select();
-    message.textContent='ここを長押しして文章をコピーしてください。';
+    message.textContent='ここを長押ししてコピーしてください。';
    }
   }
-  const copy=el('button','文章だけコピー','post-share-copy');copy.type='button';
-  copy.addEventListener('click',()=>copyValue(ownText));
+  const copy=el('button','文章と短いURLをコピー','post-share-copy');copy.type='button';
+  copy.addEventListener('click',()=>{if(link)return copyValue((ownText?ownText+'\n\n':'')+link);});
   area.append(el('p','コピーして、SNSに貼り付けてください。','post-share-guide'));
   const networks=el('div',null,'post-share post-simple-networks');
   const facebook=el('a','Facebookで共有');facebook.target='_blank';facebook.rel='noopener';facebook.style.background='#0866c6';networks.append(facebook);
@@ -41,6 +41,7 @@
   const x=el('a','Xで共有');x.style.background='#111';
   for(const a of [line,x]){a.target='_blank';a.rel='noopener';networks.append(a);}
   function ready(){
+   copy.disabled=!link;
    const buttons=[facebook,line,x];
    if(link){
     facebook.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(link);
