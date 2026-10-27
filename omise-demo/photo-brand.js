@@ -1,18 +1,22 @@
 'use strict';
 (()=>{
  const bannerURL=new URL('./sns-dx-footer.jpg',document.currentScript?.src||location.href).href;
- const WIDTH=1080,MAX_MAIN_HEIGHT=1080;
+ const WIDTH=1080,MAX_SIDE=4096;
  let bannerPromise=null;
  function image(src){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('画像を読み込めませんでした。'));img.src=src;});}
  function banner(){if(!bannerPromise)bannerPromise=image(bannerURL).catch(e=>{bannerPromise=null;throw e;});return bannerPromise;}
  function sourceURL(src){if(/^data:image\/(?:jpeg|png|webp);base64,/i.test(src))return src;const u=new URL(src,location.href);if(u.origin!==location.origin||!/^https?:$/.test(u.protocol))throw Error('画像の形式を確認してください。');return u.href;}
  function layout(photo,badge){
-  const scale=Math.min(WIDTH/photo.naturalWidth,MAX_MAIN_HEIGHT/photo.naturalHeight);
-  const mainWidth=Math.max(1,Math.round(photo.naturalWidth*scale)),mainHeight=Math.max(1,Math.round(photo.naturalHeight*scale));
-  const footerHeight=Math.min(270,Math.max(48,Math.round(mainHeight*.33))),padding=Math.min(12,Math.floor(footerHeight/8));
-  const badgeScale=Math.min((WIDTH-48)/badge.naturalWidth,(footerHeight-padding*2)/badge.naturalHeight);
-  const badgeWidth=Math.round(badge.naturalWidth*badgeScale),badgeHeight=Math.round(badge.naturalHeight*badgeScale);
-  return {width:WIDTH,height:mainHeight+footerHeight,main:{x:(WIDTH-mainWidth)/2,y:0,width:mainWidth,height:mainHeight},footer:{x:(WIDTH-badgeWidth)/2,y:mainHeight+(footerHeight-badgeHeight)/2,width:badgeWidth,height:badgeHeight},mainHeight,footerHeight};
+  const pw=photo.naturalWidth,ph=photo.naturalHeight,bw=badge.naturalWidth,bh=badge.naturalHeight;
+  if(![pw,ph,bw,bh].every(n=>Number.isFinite(n)&&n>0))throw Error('画像の大きさを確認してください。');
+  // Size the canvas around the original aspect ratios. Portrait photos fill its
+  // width instead of being shrunk inside a fixed square with side margins.
+  const aspect=ph/pw+bh/bw;
+  if(aspect>MAX_SIDE-2)throw Error('画像が縦長すぎるため、元の写真を使います。');
+  const width=Math.max(1,Math.min(WIDTH,Math.floor((MAX_SIDE-2)/aspect)));
+  const mainHeight=Math.max(1,Math.round(width*ph/pw));
+  const footerHeight=Math.max(1,Math.round(width*bh/bw));
+  return {width,height:mainHeight+footerHeight,main:{x:0,y:0,width,height:mainHeight},footer:{x:0,y:mainHeight,width,height:footerHeight},mainHeight,footerHeight};
  }
  async function create(src){
   const [photo,badge]=await Promise.all([image(sourceURL(src)),banner()]);

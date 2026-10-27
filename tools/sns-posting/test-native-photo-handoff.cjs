@@ -1,83 +1,100 @@
-const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const vm = require('node:vm');
-const { File } = require('node:buffer');
-const path = require('node:path');
-const htmlPath = process.argv[2] || path.resolve(__dirname,'../../omise-demo/photo-direct-test.html');
-const source = fs.readFileSync(htmlPath,'utf8').match(/<script>([\s\S]*?)<\/script>/)[1];
-const bytes = new Uint8Array([255,216,255,219,0,255,217]);
-const tick = () => new Promise(resolve=>setImmediate(resolve));
-async function setup(options={}) {
- const nodes={};const log=[];
- for(const id of ['send','copy','status','fallback']){
-  nodes[id]={disabled:id==='send',hidden:id==='copy'||id==='fallback',textContent:'',value:'',handlers:{},
-   addEventListener(name,handler){this.handlers[name]=handler;},focus(){},select(){}};
- }
- let payload=null;
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const path=require('node:path');
+const {File}=require('node:buffer');
+const root=path.resolve(__dirname,'../../omise-demo');
+const brandSource=fs.readFileSync(path.join(root,'photo-brand.js'),'utf8');
+const shareSource=fs.readFileSync(path.join(root,'post-share.js'),'utf8');
+const tick=()=>new Promise(resolve=>setImmediate(resolve));
+const original='data:image/jpeg;base64,/9j/2wD/2Q==';
+class Element{
+ constructor(tag){this.tagName=tag.toUpperCase();this.children=[];this.attrs={};this.handlers={};this.style={};this.disabled=false;}
+ append(...items){this.children.push(...items);}
+ setAttribute(k,v){this.attrs[k]=v;}
+ addEventListener(k,v){this.handlers[k]=v;}
+ focus(){}select(){}remove(){}
+}
+async function setup(options={}){
+ const log=[],revoked=[],created=[],events={};let copied=null,received=[],inFlight=0,maxInFlight=0;
+ const brand={create:async src=>{inFlight++;maxInFlight=Math.max(maxInFlight,inFlight);await tick();inFlight--;
+  if(options.badBrand)throw Error('brand');return {blob:new Blob(['FINAL-JPEG'],{type:'image/jpeg'})};}};
  const nav={
-  userActivation:{isActive:options.active!==false},
-  clipboard:{writeText:async text=>{log.push(['copy',text]);if(options.copy)return options.copy(text);}},
-  canShare:()=>options.supported!==false,
-  share:async data=>{log.push(['share']);payload=data;if(options.share)return options.share(data);}
+ clipboard:{writeText:text=>{log.push('copy');copied=text;return options.copy?options.copy(text):Promise.resolve();}},
+ canShare:({files})=>!options.unsupported&&(!options.singleOnly||files.length===1),
+ share:data=>{log.push('share');received.push(data);return options.share?options.share(data):Promise.resolve();}
  };
- if(options.unsupported)delete nav.share;
- vm.runInNewContext(source,{
-  document:{getElementById:id=>nodes[id]},navigator:nav,File,Error,Promise,
-  fetch:async()=>{log.push(['fetch']);return {ok:!options.badImage,blob:async()=>new Blob([bytes],{type:'image/jpeg'})};}
+ if(options.noNative)delete nav.share;
+ const w={DXPhotoBrand:brand,addEventListener:(name,fn)=>{events[name]=fn;},removeEventListener:(name,fn)=>{if(events[name]===fn)delete events[name];}};
+ class FakeURL extends URL{}
+ FakeURL.createObjectURL=file=>{created.push(file);return 'blob:test-'+created.length;};
+ FakeURL.revokeObjectURL=url=>revoked.push(url);
+ vm.runInNewContext(shareSource,{window:w,navigator:nav,document:{currentScript:{src:'https://dx.example/omise-demo/post-share.js'},createElement:tag=>new Element(tag)},location:{href:'https://dx.example/omise-demo/'},URL:FakeURL,File,Promise,Error,
+ fetch:async()=>({ok:true,blob:async()=>new Blob(['ORIGINAL-JPEG'],{type:'image/jpeg'})})
  });
- await tick();
- return {nodes,log,nav,get payload(){return payload;},click:id=>nodes[id].handlers.click()};
+ const box=new Element('div');
+ w.DXPostShare.mount(box,{id:'POST-123',name:'お店の名前',body:'お店の文章',photos:options.noPhotos?[]:Array(options.count||1).fill(original),poster:options.video?original:undefined});
+ for(let i=0;i<12;i++)await tick();
+ const area=box.children[0],buttons=area.children.filter(x=>x.tagName==='BUTTON'),message=area.children.find(x=>x.attrs?.role==='status');
+ return {box,area,buttons,message,log,revoked,created,events,w,get received(){return received;},get copied(){return copied;},get maxInFlight(){return maxInFlight;}};
 }
 (async()=>{
- let release;
- const slow = setup({copy:()=>new Promise(resolve=>{release=resolve;})});
- const a=await slow;
- assert.equal(a.nodes.send.disabled,false);
- const first=a.click('send');await tick();
- await a.click('send');
- assert.equal(a.log.filter(x=>x[0]==='copy').length,1);
- assert.equal(a.payload,null,'Never open the share sheet before the caption copy finishes');
- release();await first;
- assert.deepEqual(a.log.map(x=>x[0]),['fetch','copy','share']);
- assert.deepEqual(Object.keys(a.payload),['files'],'Share a real photo without a link-card payload');
- assert.equal(a.payload.files[0].type,'image/jpeg');
- assert.deepEqual(new Uint8Array(await a.payload.files[0].arrayBuffer()),bytes);
- assert.match(a.log[1][1],/掲載見本・利用不可/);
- assert.match(a.log[1][1],/https:\/\/ichirohns-jpg.github.io\/ShikiConcierge-18\//);
- assert.equal(a.nodes.send.disabled,false);
+ const context={window:{},URL,document:{currentScript:{src:'https://dx.example/photo-brand.js'}},location:{href:'https://dx.example/'}};
+ vm.runInNewContext(brandSource,context);
+ const layout=context.window.DXPhotoBrand.layout;
+ for(const [w,h]of [[1080,1350],[1080,1920],[1080,1080],[1920,1080],[100,10000]]){
+  const result=layout({naturalWidth:w,naturalHeight:h},{naturalWidth:1280,naturalHeight:456});
+  assert.equal(result.main.x,0);assert.equal(result.main.width,result.width,'Portrait must fill the entire canvas width');
+  assert.ok(Math.abs(result.main.height/result.main.width-h/w)<=1/result.width,'Never stretch or crop the original aspect ratio');
+  assert.equal(result.footer.x,0);assert.equal(result.footer.width,result.width);
+  assert.equal(result.height,result.main.height+result.footer.height);
+  assert.ok(result.height<=4096);
+ }
+ assert.throws(()=>layout({naturalWidth:0,naturalHeight:1},{naturalWidth:1280,naturalHeight:456}));
+ const portrait=layout({naturalWidth:1080,naturalHeight:1920},{naturalWidth:1280,naturalHeight:456});
+ assert.equal(portrait.main.width,1080);assert.equal(portrait.main.height,1920);
 
- const b=await setup({copy:async()=>{throw Error('denied');}});
- await b.click('send');
- assert.equal(b.payload,null,'A denied copy needs visible manual instructions before sharing');
- assert.equal(b.nodes.fallback.hidden,false);
- assert.match(b.nodes.status.textContent,/コピーしてから/);
- await b.click('send');
- assert.ok(b.payload.files.length===1);
+ let releaseCopy,releaseShare;
+ const a=await setup({copy:()=>new Promise(r=>{releaseCopy=r;}),share:()=>new Promise(r=>{releaseShare=r;})});
+ assert.equal(a.buttons[0].textContent,'画像をSNSへ');assert.equal(a.buttons[0].disabled,false);
+ a.buttons[0].handlers.click();
+ assert.equal(a.received.length,1,'Open image sharing immediately; never wait for clipboard permissions');
+ assert.deepEqual(Object.keys(a.received[0]),['files']);
+ assert.equal(a.received[0].files[0].type,'image/jpeg');
+ assert.equal(await a.received[0].files[0].text(),'FINAL-JPEG');
+ assert.match(a.copied,/お店の文章/);assert.match(a.copied,/https:\/\/is.gd\//);
+ a.buttons[0].handlers.click();assert.equal(a.received.length,1,'Prevent duplicate share sheets');
+ releaseShare();await tick();
+ assert.equal(a.buttons[0].disabled,false,'Image controls recover even when copying is still pending');
+ releaseCopy();await tick();
+ assert.doesNotMatch(a.message.textContent,/投稿しました|投稿完了しました/);
 
- const c=await setup({active:false});
- await c.click('send');
- assert.equal(c.payload,null,'An expired gesture must wait for a fresh button click');
- assert.match(c.nodes.send.textContent,/写真を渡す/);
- c.nav.userActivation.isActive=true;
- await c.click('send');
- assert.equal(c.log.filter(x=>x[0]==='copy').length,1);
- assert.ok(c.payload);
+ const b=await setup({copy:()=>Promise.reject(Error('denied'))});
+ b.buttons[0].handlers.click();await tick();
+ assert.equal(b.received.length,1,'Clipboard failure must not block the image');
+ assert.match(b.message.textContent,/コピーボタン/);
 
- const d=await setup({share:async()=>{throw Object.assign(Error('cancel'),{name:'AbortError'});}});
- await d.click('send');
- assert.match(d.nodes.status.textContent,/キャンセル/);
- assert.doesNotMatch(d.nodes.status.textContent,/投稿しました|投稿完了しました/);
- assert.equal(d.nodes.send.disabled,false);
+ const c=await setup({share:()=>Promise.reject(Object.assign(Error('cancel'),{name:'AbortError'}))});
+ c.buttons[0].handlers.click();await tick();
+ assert.match(c.message.textContent,/キャンセル/);assert.equal(c.buttons[0].disabled,false);
 
- const e=await setup({unsupported:true});
- assert.equal(e.nodes.send.disabled,true);
- assert.equal(e.log.length,0);
- assert.match(e.nodes.status.textContent,/Safari/);
+ const d=await setup({badBrand:true});
+ d.buttons[0].handlers.click();await tick();
+ assert.equal(await d.received[0].files[0].text(),'ORIGINAL-JPEG','A failed footer must retain the merchant original');
 
- const f=await setup({badImage:true});
- assert.equal(f.nodes.send.disabled,true);
- assert.match(f.nodes.status.textContent,/読み込めません/);
+ const e=await setup({noNative:true});
+ assert.equal(e.buttons[0].disabled,true);
+ assert.equal(e.created.length,1,'Saving the complete image stays available without native sharing');
 
- console.log('PASS: copy-before-photo, exact image bytes, duplicate guard, manual-copy fallback, gesture retry, cancellation, unsupported browser, image failure');
- console.log('These are JavaScript checks only; iPhone/Facebook receiving and publishing remain untested.');
-})().catch(error=>{console.error(error);process.exitCode=1;});
+ const f=await setup({count:4,singleOnly:true});
+ assert.equal(f.created.length,4);assert.equal(f.maxInFlight,1);
+ const saves=f.area.children.find(x=>x.className==='post-photo-saves');
+ assert.equal(saves.children.filter(x=>x.tagName==='BUTTON').length,4,'Allow individual images when batch sharing is unsupported');
+
+ const g=await setup({noPhotos:true});
+ assert.equal(g.buttons.length,1);assert.equal(g.buttons[0].textContent,'投稿文とDXリンクをコピー');
+ const before=a.revoked.length;a.events.pagehide({persisted:true});assert.equal(a.revoked.length,before);
+ a.events.pagehide({persisted:false});assert.equal(a.revoked.length,before+1);
+ console.log('PASS: full-width portrait, aspect ratio, bounded canvas, photo-first handoff, copy failure, duplicate guard, cancellation, original-photo fallback, batch fallback and back-forward cache.');
+ console.log('JavaScript and layout checks only; real iPhone/Facebook receipt and feed display are untested.');
+})().catch(e=>{console.error(e);process.exitCode=1;});

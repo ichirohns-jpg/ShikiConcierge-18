@@ -2,38 +2,109 @@
 (()=>{
  const dxURL='https://is.gd/G6uCmY';
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
- let brandPromise=null;
- const brandScriptURL=new URL('./photo-brand.js?v=20261026-brand9',document.currentScript?.src||location.href).href;
- function photoBrand(){if(window.DXPhotoBrand)return Promise.resolve(window.DXPhotoBrand);if(!brandPromise)brandPromise=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=brandScriptURL;script.onload=()=>window.DXPhotoBrand?resolve(window.DXPhotoBrand):reject(Error('画像の準備に失敗しました。'));script.onerror=()=>{script.remove();brandPromise=null;reject(Error('画像の準備に失敗しました。'));};document.head.append(script);});return brandPromise;}
+ let brandPromise=null,preparationQueue=Promise.resolve();
+ const brandScriptURL=new URL('./photo-brand.js?v=20261027-imagefirst1',document.currentScript?.src||location.href).href;
+ function photoBrand(){
+  if(window.DXPhotoBrand)return Promise.resolve(window.DXPhotoBrand);
+  if(!brandPromise)brandPromise=new Promise((resolve,reject)=>{
+   const script=document.createElement('script');script.src=brandScriptURL;
+   script.onload=()=>window.DXPhotoBrand?resolve(window.DXPhotoBrand):reject(Error('画像を準備できませんでした。'));
+   script.onerror=()=>{script.remove();brandPromise=null;reject(Error('画像を準備できませんでした。'));};document.head.append(script);
+  });
+  return brandPromise;
+ }
+ function canSend(files){try{return !!(navigator.share&&navigator.canShare&&navigator.canShare({files}));}catch{return false;}}
  function share(box,p){
   const caption=[p.name,p.title,p.body,p.end?'掲載期間：'+p.end+'まで':'','志木なるほど お店めぐりDX\n'+dxURL].filter(Boolean).join('\n\n');
-  const area=el('section',null,'post-publish post-simple-share');area.append(el('h3','SNSに投稿する'));
-  const copy=el('button','① 文章とDXリンクをコピー','post-copy-primary');copy.type='button';
-  const message=el('p','①文章をコピー → ②画像を保存 → ③SNSで貼り付け、保存した画像を添付。','post-share-message');message.setAttribute('role','status');
+  const area=el('section',null,'post-publish post-simple-share');
+  area.append(el('h3','画像をSNSへ'));
+  const photos=(p.photos||[]).filter(src=>/^data:image\/jpeg;base64,/i.test(src)).slice(0,4);
+  const videoCover=!photos.length&&/^data:image\/jpeg;base64,/i.test(p.poster||'');if(videoCover)photos.push(p.poster);
+  const message=el('p',photos.length?'画像を準備しています…':'文章とDXリンクをコピーしてSNSに貼り付けられます。','post-share-message');
+  message.setAttribute('role','status');message.setAttribute('aria-live','polite');
+  const send=el('button','画像を準備しています…','post-copy-primary');send.type='button';send.disabled=true;
+  const copy=el('button','投稿文とDXリンクをコピー','post-save-photo');copy.type='button';
   const fallback=el('textarea');fallback.value=caption;fallback.readOnly=true;fallback.hidden=true;fallback.rows=6;fallback.setAttribute('aria-label','コピーする投稿文');
-  copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(caption);message.textContent='コピーしました。次に画像を保存し、SNSで文章を貼り付けて画像を添付してください。';}catch(e){fallback.hidden=false;fallback.focus();fallback.select();message.textContent='この文章を長押ししてコピーしてください。';}});
-  area.append(copy);
-  const photos=(p.photos||[]).filter(src=>/^data:image\/jpeg;base64,/.test(src)).slice(0,4);
-  const videoCover=!photos.length&&/^data:image\/jpeg;base64,/.test(p.poster||'');if(videoCover)photos.push(p.poster);
-  const saves=el('div',null,'post-photo-saves');
-  const savedURLs=[];
-  photos.forEach((src,i)=>{
-   const label=(videoCover?'② 表紙画像を保存':'② 合成画像を保存')+(photos.length>1?'（'+(i+1)+'枚目）':'');
-   const a=el('a',label,'post-save-photo');a.href=src;a.download='shiki-dx-photo-'+String(p.id||'post').replace(/[^a-z0-9-]/ig,'')+'-'+(i+1)+'.jpg';
-   let ready=false,building=false;
-   a.addEventListener('click',async event=>{
-    if(ready)return;event.preventDefault();if(building)return;building=true;a.setAttribute('aria-busy','true');a.textContent='画像を準備しています…';
-    try{const maker=await photoBrand(),result=await maker.create(src),url=URL.createObjectURL(result.blob);savedURLs.push(url);a.href=url;ready=true;message.textContent='保存した画像をSNSに添付してください。文章はコピーできます。';a.click();}
-    catch(e){a.href=src;ready=true;a.textContent='元の写真を保存';message.textContent='DX画像を合成できませんでした。このボタンから元の写真を保存できます。';}
-    finally{building=false;a.removeAttribute('aria-busy');if(a.textContent!=='元の写真を保存')a.textContent=label;}
-   });saves.append(a);
+  async function copyText(){try{await navigator.clipboard.writeText(caption);return true;}catch{return false;}}
+  copy.addEventListener('click',async()=>{
+   if(await copyText())message.textContent='投稿文とDXリンクをコピーしました。SNSの投稿欄に貼り付けてください。';
+   else{fallback.hidden=false;fallback.focus();fallback.select();message.textContent='この文章を長押ししてコピーしてください。';}
   });
-  window.addEventListener('pagehide',()=>savedURLs.forEach(url=>URL.revokeObjectURL(url)),{once:true});
-  if(photos.length)area.append(saves);else message.textContent='コピーした文章をSNSに貼り付けてください。';
-  if(videoCover)area.append(el('p','保存できるのは表紙画像です。動画本体は含まれません。','post-share-message'));
+  let readyFiles=[],busy=false,disposed=false,shareTurn=0;
+  if(photos.length)area.append(send);
+  area.append(copy,message,fallback);
+  const saves=el('div',null,'post-photo-saves'),savedURLs=[];
+  if(photos.length)area.append(saves);
+  function sendFiles(files,button){
+   if(busy||!files.length)return;
+   if(!canSend(files)){message.textContent='この端末では画像を直接渡せません。下の「画像を保存」を使えます。';return;}
+   busy=true;button.disabled=true;const turn=++shareTurn;
+   // Copy is best-effort: it must never delay the image's user-initiated share.
+   const copied=copyText();
+   let handoff;
+   try{handoff=navigator.share({files});}
+   catch(error){finish(error);return;}
+   Promise.resolve(handoff).then(()=>finish(),finish);
+   async function finish(error){
+    busy=false;button.disabled=false;
+    const didCopy=await copied;
+    if(disposed||turn!==shareTurn)return;
+    if(error){
+     message.textContent=error.name==='AbortError'?'共有をキャンセルしました。':(didCopy?'画像を渡せませんでした。投稿文とDXリンクはコピーされています。':'画像を渡せませんでした。画像の保存も使えます。');
+    }else{
+     message.textContent=didCopy?'投稿文とDXリンクをコピーしました。SNSの投稿欄に貼り付けてください。投稿完了はSNS側で確認してください。':'投稿文とDXリンクは下のコピーボタンからコピーできます。投稿完了はSNS側で確認してください。';
+    }
+   }
+  }
+  send.addEventListener('click',()=>sendFiles(readyFiles,send));
+  async function prepare(){
+   let originalFallback=false;
+   for(let i=0;i<photos.length;i++){
+    if(disposed)return;
+    let blob;
+    try{const maker=await photoBrand();blob=(await maker.create(photos[i])).blob;}
+    catch{
+     originalFallback=true;
+     const response=await fetch(photos[i]);if(!response.ok)throw Error('写真を読み込めませんでした。');blob=await response.blob();
+    }
+    if(!blob||!blob.size||blob.type!=='image/jpeg')throw Error('画像を準備できませんでした。');
+    const name='shiki-dx-photo-'+String(p.id||'post').replace(/[^a-z0-9-]/ig,'')+'-'+(i+1)+'.jpg';
+    readyFiles.push(new File([blob],name,{type:'image/jpeg'}));
+   }
+   if(disposed)return;
+   for(let i=0;i<readyFiles.length;i++){
+    const file=readyFiles[i],url=URL.createObjectURL(file);savedURLs.push(url);
+    const save=el('a',(videoCover?'表紙画像を保存':'画像を保存')+(readyFiles.length>1?'（'+(i+1)+'枚目）':''),'post-save-photo');
+    save.href=url;save.download=file.name;saves.append(save);
+    if(readyFiles.length>1&&!canSend(readyFiles)&&canSend([file])){
+     const one=el('button',(i+1)+'枚目をSNSへ','post-save-photo');one.type='button';one.addEventListener('click',()=>sendFiles([file],one));saves.append(one);
+    }
+   }
+   if(canSend(readyFiles)){
+    send.disabled=false;send.textContent=readyFiles.length>1?'画像'+readyFiles.length+'枚をSNSへ':'画像をSNSへ';
+    message.textContent='共有先のSNSを選んでください。文章は投稿欄に貼り付けられます。';
+   }else{
+    send.textContent='この端末では画像の保存を使ってください';
+    message.textContent='画像を直接共有する機能に対応していません。下の「画像を保存」を使えます。';
+   }
+   if(originalFallback)message.textContent+=' DX画像を合成できなかった写真は、元の画像を使います。';
+   if(videoCover)message.textContent+=' 共有するのは表紙画像です。動画本体は含みません。';
+  }
+  if(photos.length){
+   // Only one canvas is built at a time, including when a feed has many posts.
+   preparationQueue=preparationQueue.catch(()=>{}).then(prepare).catch(()=>{
+    if(!disposed){send.textContent='画像を準備できませんでした';message.textContent='ページを開き直して試してください。';}
+   });
+  }
   const row=el('nav',null,'post-share post-simple-networks');row.setAttribute('aria-label','投稿するSNSを開く');
-  [['Facebook','https://www.facebook.com/','#0866c6'],['Instagram','https://www.instagram.com/','#a32b87'],['X','https://x.com/','#151515'],['LINE','https://line.me/','#087f3e']].forEach(([label,href,color])=>{const a=el('a',label);a.href=href;a.target='_blank';a.rel='noopener';a.style.background=color;row.append(a);});
-  area.append(message,fallback,el('p','③ 投稿するSNSを開く','post-share-message'),row);box.append(area);
+  [['Facebook','https://www.facebook.com/','#0866c6'],['Instagram','https://www.instagram.com/','#a32b87'],['X','https://x.com/','#151515'],['LINE','https://line.me/','#087f3e']].forEach(([label,href,color])=>{
+   const a=el('a',label);a.href=href;a.target='_blank';a.rel='noopener';a.style.background=color;row.append(a);
+  });
+  area.append(row);box.append(area);
+  function dispose(){disposed=true;readyFiles=[];savedURLs.splice(0).forEach(url=>URL.revokeObjectURL(url));window.removeEventListener('pagehide',onPageHide);}
+  function onPageHide(event){if(!event.persisted)dispose();}
+  window.addEventListener('pagehide',onPageHide);
+  return dispose;
  }
  window.DXPostShare={mount:share};
 })();
