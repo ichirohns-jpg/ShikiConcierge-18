@@ -1,64 +1,20 @@
 <!doctype html>
 <html lang="ja"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><title>画像を大きく共有｜お店めぐりDX</title>
+<meta name="robots" content="noindex,nofollow"><title>SNSに投稿｜お店めぐりDX</title>
 <link rel="stylesheet" href="./social.css?v=20261027-imagefirst1">
-<style>
-*{box-sizing:border-box}body{margin:0;background:#f3f7f3;color:#193f33;font:16px/1.7 -apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN',sans-serif}
-main{max-width:600px;margin:auto;padding:18px 12px 32px}h1{font-size:26px;line-height:1.4;margin:8px 0 12px}p{margin:10px 0}
-figure{margin:16px 0}#preview{display:block;width:100%;height:auto;max-height:none;border-radius:8px}button{font-family:inherit}
-.choose{width:100%;min-height:48px;background:white;border:1px solid #94b7a6;border-radius:10px;color:#17513f;font-size:16px;font-weight:700}
-.note{font-size:13px;color:#60786a}#sharebox .post-publish{padding:0!important;background:transparent}#sharebox nav{margin-top:16px}
-a{color:#146b57}[hidden]{display:none!important}button:focus-visible,a:focus-visible{outline:3px solid #e9a300;outline-offset:3px}
-</style>
-<script src="./post-share.js?v=20261027-steps4" defer></script>
+<style>*{box-sizing:border-box}body{margin:0;background:#f3f7f3;color:#193f33;font:16px/1.7 -apple-system,BlinkMacSystemFont,sans-serif}main{max-width:600px;margin:auto;padding:18px 12px 32px}h1{font-size:26px}#preview{display:block;width:100%;height:auto;border-radius:8px}a{color:#146b57}[hidden]{display:none!important}</style>
+<script src="./post-share.js?v=20261027-simple5" defer></script>
 </head><body><main>
-<p class="note">お店めぐりDX・画像共有の動作確認</p>
-<h1>お店の画像を9:16で大きく共有</h1>
-<button id="choose" class="choose" type="button">自分の画像で試す</button>
-<input id="file" type="file" accept="image/*" hidden>
-<p id="loading" role="status">画像を準備しています…</p>
-<figure><img id="preview" src="./IMG_4390.JPG" width="1280" height="1280" alt="共有する画像のプレビュー"></figure>
+<h1>SNSに投稿</h1>
+<img id="preview" src="./IMG_4390.JPG" alt="お店の掲載見本">
 <div id="sharebox"></div>
-<p class="note">元画像を切らず、1080×1920の9:16画像へ自動変換します。この確認画面から画像をサーバーには保存しません。DXへの入口はコピーする投稿文のリンクです。</p>
 <p><a href="./">DXトップへ戻る</a></p>
 </main><script>
 window.addEventListener('DOMContentLoaded',()=>{
- const choose=document.getElementById('choose'),input=document.getElementById('file'),preview=document.getElementById('preview'),loading=document.getElementById('loading'),box=document.getElementById('sharebox');
- let revision=0,observer=null,sourceURL=null,userSelected=false,cleanup=null;
- const readData=blob=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('画像を読み込めませんでした。'));reader.readAsDataURL(blob);});
- const loadImage=url=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('この画像の形式は読み込めませんでした。'));img.src=url;});
- async function show(blob){
-  const turn=++revision;choose.disabled=true;loading.textContent='画像を準備しています…';
-  try{
-   if(!blob.size||blob.size>25*1024*1024)throw Error('25MB以内の画像を選んでください。');
-   if(sourceURL)URL.revokeObjectURL(sourceURL);sourceURL=URL.createObjectURL(blob);
-   const img=await loadImage(sourceURL);if(turn!==revision)return;
-   let data;
-   if(blob.type==='image/jpeg')data=await readData(blob);
-   else{
-   const scale=Math.min(1,4096/Math.max(img.naturalWidth,img.naturalHeight));
-   const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
-   const ctx=canvas.getContext('2d');if(!ctx)throw Error('画像を準備できませんでした。');
-   ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);
-   data=canvas.toDataURL('image/jpeg',.96);canvas.width=canvas.height=0;
-   }
-   if(turn!==revision)return;
-   preview.src=sourceURL;preview.removeAttribute('width');preview.removeAttribute('height');
-   if(observer)observer.disconnect();if(cleanup)cleanup();box.replaceChildren();
-   // Show the exact Blob URL prepared by the article's real sharing module.
-   observer=new MutationObserver(()=>{
-    const saved=box.querySelector('a[download]');
-    if(saved&&turn===revision){preview.src=saved.href;loading.textContent='この画像を共有します。';observer.disconnect();}
-   });
-   observer.observe(box,{childList:true,subtree:true});
-   cleanup=window.DXPostShare.mount(box,{id:'IMAGE-TEST',name:'【掲載見本・利用不可】おうちcafeパン工房',body:'パンを500円以上買うと、ミニパン1個プレゼント。\n合言葉は「ふじこを見たよ」。\nこの特典は掲載見本です。実際には利用できません。',photos:[data]});
-   loading.textContent='SNSに渡す画像を準備しています…';
-  }catch(error){if(turn===revision)loading.textContent=error.message||'画像を準備できませんでした。';}
-  finally{if(turn===revision)choose.disabled=false;}
- }
- choose.addEventListener('click',()=>input.click());
- input.addEventListener('change',()=>{const file=input.files[0];if(file){userSelected=true;show(file);}input.value='';});
- fetch('./IMG_4390.JPG').then(r=>{if(!r.ok)throw Error('画像を読み込めませんでした。');return r.blob();}).then(blob=>{if(!userSelected)return show(blob);}).catch(()=>{if(!userSelected)loading.textContent='「自分の画像で試す」から画像を選んでください。';});
+ window.DXPostShare.mount(document.getElementById('sharebox'),{
+  id:'IMAGE-TEST',name:'【掲載見本・利用不可】おうちcafeパン工房',shareURL:'https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/share-image-test-9x16-v1.html',
+  body:'パンを500円以上買うと、ミニパン1個プレゼント。\n合言葉は「ふじこを見たよ」。\nこの特典は掲載見本です。実際には利用できません。'
+ });
 });
 </script></body></html>
