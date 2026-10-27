@@ -3,7 +3,7 @@ function postSheet_(){return omSheet_('投稿記事',['受付ID','記事ID','店
 function postRows_(){return postSheet_().getDataRange().getDisplayValues().slice(1).filter(r=>r[0]);}
 function postNow_(){return Utilities.formatDate(new Date(),'Asia/Tokyo','yyyy-MM-dd HH:mm:ss');}
 function postPayload_(r,images){const p=JSON.parse(r[5]);return {request:r[0],id:r[1],shop:r[2],date:r[3],status:r[4],...p,photos:images?omImageData_(p.photos||[]):p.photos||[]};}
-function postOwn(id,code){omAuth_(id,code);const rows=postRows_();if(id==='ADMIN')return rows.filter(r=>r[4]==='確認待ち').map(r=>postPayload_(r,true));const latest={};rows.filter(r=>r[2]===id).forEach(r=>latest[r[1]]=r);return Object.values(latest).reverse().map(r=>postPayload_(r,true));}
+function postOwn(id,code){omAuth_(id,code);const rows=postRows_();if(id==='ADMIN')return rows.filter(r=>r[4]==='確認待ち').map(r=>postPayload_(r,true));const latest={};rows.filter(r=>r[2]===id).forEach(r=>latest[r[1]]=r);return Object.values(latest).reverse().filter(r=>!JSON.parse(r[5]).ended).map(r=>postPayload_(r,true));}
 function postLogin(id,code,remember){const login=merchantLogin(id,code),result={...login,posts:postOwn(id,code),shops:omBook_().getSheetByName('店舗一覧').getDataRange().getDisplayValues().slice(1).filter(r=>r[0]&&r[2]).map(r=>({id:r[0],name:r[2]}))};if(remember===true){const existing=omSessionRead_(id,code);result.auth=existing?{id:String(id),token:code,expiresAt:existing.expiresAt}:omSessionIssue_(id);}return result;}
 function postSend(id,code,input){
  omAuth_(id,code);if(id==='ADMIN')throw Error('お店を選んで投稿してください。');omShop_(id);
@@ -24,6 +24,21 @@ function postSend(id,code,input){
  if(ogImage){const match=ogImage.match(/^data:([^;]+);base64,(.+)$/i),file=postSocialFolder_().createFile(Utilities.newBlob(Utilities.base64Decode(match[2]),match[1],pid+'-'+rid+'.jpg'));p.ogImageFileId=file.getId();}
  if(video){const match=video.match(/^data:([^;]+);base64,(.+)$/i),file=postVideoFolder_().createFile(Utilities.newBlob(Utilities.base64Decode(match[2]),match[1],rid+(match[1].toLowerCase()==='video/quicktime'?'.mov':'.mp4')));p.videoFileId=file.getId();p.poster=poster;}
  postSheet_().appendRow([rid,pid,id,postNow_(),'確認待ち',JSON.stringify(p),'']);return {ok:true,id:pid,request:rid,status:'確認待ち',posts:postOwn(id,code)};
+ }finally{lock.releaseLock();}
+}
+function postDelete(id,code,pid,revision){
+ omAuth_(id,code);if(id==='ADMIN')throw Error('お店の画面から掲載を終了してください。');omShop_(id);
+ if(!/^POST-[a-f0-9-]+$/i.test(String(pid||'')))throw Error('記事を確認できません。');
+ const lock=LockService.getScriptLock();lock.waitLock(20000);try{
+  const s=postSheet_(),all=s.getDataRange().getDisplayValues(),rows=all.slice(1).filter(r=>r[0]),previous=rows.filter(r=>r[1]===pid).pop();
+  if(!previous||previous[2]!==id)throw Error('この記事は操作できません。');
+  if(previous[0]!==revision)throw Error('記事が更新されています。一覧を開き直してください。');
+  const old=JSON.parse(previous[5]);if(old.ended)return {ok:true,posts:postOwn(id,code)};
+  const now=postNow_(),rid='REV-'+Utilities.getUuid(),p={...old,ended:true};
+  const previousRow=all.findIndex(r=>r[0]===previous[0]);
+  if(previous[4]==='確認待ち'&&previousRow>0){s.getRange(previousRow+1,5).setValue('見送り');s.getRange(previousRow+1,7).setValue(now);}
+  s.appendRow([rid,pid,id,now,'公開',JSON.stringify(p),now]);
+  return {ok:true,posts:postOwn(id,code)};
  }finally{lock.releaseLock();}
 }
 function postVideoFolder_(){const props=PropertiesService.getScriptProperties(),id=props.getProperty('postVideoFolder');if(id)return DriveApp.getFolderById(id);const folder=DriveApp.createFolder('お店めぐりDX 投稿動画');props.setProperty('postVideoFolder',folder.getId());return folder;}
