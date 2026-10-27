@@ -49,7 +49,7 @@ function respond_(data, callback) {
   return ContentService.createTextOutput(json)
     .setMimeType(ContentService.MimeType.JSON);
 }
-function doGet(e){const p=(e&&e.parameter)||{};if(p.mode==='edit')return HtmlService.createHtmlOutput(POST_EDITOR_HTML).setTitle('お店の情報を更新').addMetaTag('viewport','width=device-width,initial-scale=1');if(p.mode==='postShare')return postShareHtml_(p.id||'');if(p.action==='posts')return respond_(postFeed_(p),p.callback||'');if(p.action==='thanksCard')return respond_(thanksCardPublic_(),p.callback||'');if(p.action==='merchantPublic'){if(!/^SHOP-[0-9]{4}$/.test(p.shop||''))return respond_({ok:false},p.callback||'');return respond_(omPublic_(p.shop),p.callback||'');}return publicShopsGet_(e);}
+function doGet(e){const p=(e&&e.parameter)||{};if(p.mode==='edit')return HtmlService.createHtmlOutput(POST_EDITOR_HTML).setTitle('お店から投稿する').addMetaTag('viewport','width=device-width,initial-scale=1');if(p.mode==='info')return HtmlService.createHtmlOutput(MERCHANT_HTML).setTitle('お店の基本情報を直す').addMetaTag('viewport','width=device-width,initial-scale=1');if(p.mode==='postShare')return postShareHtml_(p.id||'');if(p.action==='posts')return respond_(postFeed_(p),p.callback||'');if(p.action==='thanksCard')return respond_(thanksCardPublic_(),p.callback||'');if(p.action==='merchantPublic'){if(!/^SHOP-[0-9]{4}$/.test(p.shop||''))return respond_({ok:false},p.callback||'');return respond_(omPublic_(p.shop),p.callback||'');}return publicShopsGet_(e);}
 const OM_BOOK='1u9JGrQkqml6qoNqIk-nuLxdcFXAPQ_COkCX3vA7cSX8';
 function omBook_(){return SpreadsheetApp.openById(OM_BOOK);}
 function omSheet_(name,headers){const b=omBook_();let s=b.getSheetByName(name);if(!s){s=b.insertSheet(name);s.appendRow(headers);s.setFrozenRows(1);}return s;}
