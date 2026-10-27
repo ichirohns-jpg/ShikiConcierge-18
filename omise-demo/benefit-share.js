@@ -2,7 +2,7 @@
 (()=>{
  const host=document.getElementById('benefitImageShare');if(!host)return;
  const greeting=document.getElementById('friendGreeting');if(greeting)greeting.hidden=new URLSearchParams(location.search).get('from')!=='friend';
- const shareURL="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-link.html";
+ const shareURL=host.dataset.shareUrl||"https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/cafe-benefit-link.html";
  const shareText='おうちcafeパン工房\n\n【掲載見本・利用不可】パンを500円以上買うとミニパン1個プレゼント\n\n'+shareURL;
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
  const section=el('section',null,'simple-sns-share');section.setAttribute('aria-label','友だちに教える');
