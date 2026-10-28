@@ -1,7 +1,14 @@
 "use strict";
+// A fresh shared shop visit starts at the banner. Back/forward browsing keeps its position.
+if((!location.hash||location.hash==='#top')&&performance.getEntriesByType('navigation')[0]?.type!=='back_forward'){
+ let interacted=false;
+ for(const name of ['pointerdown','touchstart','wheel','keydown'])window.addEventListener(name,()=>{interacted=true;},{passive:true,once:true});
+ const showTop=()=>{if(!interacted)window.scrollTo({top:0,left:0,behavior:'instant'});};
+ requestAnimationFrame(showTop);window.addEventListener('load',showTop,{once:true});window.addEventListener('pageshow',event=>{if(!event.persisted)showTop();});
+}
 const shareField=document.getElementById('shareText');
 const shopCanonical=document.querySelector('link[rel="canonical"]').href;
-const shopShareURL=window.DXShortLinks?.[shopCanonical]||shopCanonical;
+const shopShareURL=window.DXShortLinks?.[shopCanonical]||shopCanonical.split('#')[0]+'#top';
 if(shareField){shareField.value=shareField.value.split(/\n\n【詳しい紹介】|\n\n【お店の地図】/)[0]+'\n\n【詳しい紹介】\n'+shopShareURL;document.querySelectorAll('#intro a[href*="line.me/R/share"],#share a[href*="line.me/R/share"]').forEach(a=>a.href='https://line.me/R/share?text='+encodeURIComponent(shareField.value));}
 function currentShareText(){
  try{const saved=JSON.parse(localStorage.getItem('shiki-merchant-session-v1')||'null');const fujiko=['ADMIN','SHOP-0002'].includes(saved?.id)&&/^DXS1\.[a-f0-9]{64}$/.test(saved?.token)&&saved.expiresAt>Date.now();
