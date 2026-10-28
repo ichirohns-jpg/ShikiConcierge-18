@@ -1,6 +1,7 @@
 'use strict';
 (()=>{
  const dxURL='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/';
+ const style=document.createElement('style');style.textContent=`.post-fujiko-button{display:block!important;width:100%;margin:12px 0;background:#e7f1df!important;color:#194c3c!important;border:1px solid #b8ceb2!important;font-size:18px!important;min-height:50px}.post-fujiko-editor{padding:18px;margin:12px 0 20px;background:#f3f7ee;border:1px solid #c9d9c0;border-radius:14px}.post-fujiko-editor[hidden]{display:none}.post-fujiko-editor label{display:block;font-size:17px;font-weight:700}.post-fujiko-editor select,.post-fujiko-editor textarea{display:block;width:100%;box-sizing:border-box;font:400 18px/1.7 -apple-system,BlinkMacSystemFont,sans-serif;color:#193f33;background:#fff;border:1px solid #afc6b5;border-radius:10px;padding:12px;margin:8px 0 16px}.post-fujiko-preview{display:flex;align-items:center;gap:10px;margin:18px 0;font-size:22px}.post-fujiko-preview img{width:48px;height:48px;object-fit:cover;border-radius:50%}.post-fujiko-note{font-size:16px;line-height:1.7;color:#506352}`;document.head.append(style);
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
  let manifestPromise=null,manifestTime=0;
  function sharePages(){
@@ -16,8 +17,29 @@
   const ended=()=>p.ended===true||Date.now()>=expiresAt;
   let link=dynamic?'':(/^https:\/\//.test(p.shareURL||'')?p.shareURL:dxURL);
   const ownText=[p.title,p.body].filter(Boolean).join('\n\n');
+  const makeText=name=>name==='original'?ownText:(name==='fujiko'?'ふじこからの'+(p.kind==='deal'?'お得情報🥒':'街のお知らせ🥒'):'ハートネット志木からのお知らせ')+'\n'+(p.name?p.name+'さんの投稿をご紹介します。':'志木のお店・活動をご紹介します。')+'\n\n'+ownText+(p.end?'\n\n掲載期限：'+p.end+'まで':'')+'\n\n詳しくは元の投稿をご覧ください。';
+  let shareText=ownText;
   const area=el('section',null,'post-publish post-simple-share');
   area.append(el('h3','投稿をSNSで共有する'));
+  const fujiko=el('button','🥒 ふじことして紹介・シェア','post-fujiko-button');fujiko.type='button';fujiko.setAttribute('aria-expanded','false');
+  const editor=el('div',null,'post-fujiko-editor');editor.hidden=true;
+  const identity=el('label','紹介する名義');
+  const sender=el('select');sender.setAttribute('aria-label','紹介する名義');
+  for(const [value,label] of [['fujiko','ふじこ'],['heartnet','ハートネット志木'],['original','元の投稿の文章']]){const option=el('option',label);option.value=value;sender.append(option);}
+  identity.append(sender);
+  const preview=el('div',null,'post-fujiko-preview');
+  const avatar=el('img');avatar.src=dxURL+'fujiko-avatar.jpeg';avatar.alt='';avatar.width=48;avatar.height=48;
+  const byline=el('strong','ふじこ');preview.append(avatar,byline);
+  const textLabel=el('label','SNSに載せる紹介文（変更できます）');
+  const draft=el('textarea');draft.rows=9;draft.setAttribute('aria-label','SNSに載せる紹介文');textLabel.append(draft);
+  const note=el('p','下のボタンでコピー・共有できます。SNSでは投稿するアカウントを選んでください。Facebookは紹介文をコピーして、共有画面に貼り付けてください。','post-fujiko-note');
+  editor.append(identity,preview,textLabel,note);
+  const currentText=()=>editor.hidden?ownText:shareText;
+  function chooseSender(){shareText=makeText(sender.value);draft.value=shareText;byline.textContent=sender.value==='fujiko'?'ふじこ':sender.value==='heartnet'?'ハートネット志木':p.name||'元の投稿';avatar.hidden=sender.value!=='fujiko';ready();}
+  sender.addEventListener('change',chooseSender);
+  draft.addEventListener('input',()=>{shareText=draft.value;ready();});
+  fujiko.addEventListener('click',()=>{if(expire())return;editor.hidden=!editor.hidden;fujiko.setAttribute('aria-expanded',String(!editor.hidden));if(!editor.hidden){if(!draft.value){sender.value='fujiko';chooseSender();}draft.focus();}ready();});
+  area.append(fujiko,editor);
   const message=el('p','', 'post-share-message');
   message.setAttribute('role','status');message.setAttribute('aria-live','polite');
   const fallback=el('textarea');fallback.value=(ownText?ownText+'\n\n':'')+link;fallback.readOnly=true;fallback.hidden=true;fallback.rows=7;
@@ -36,7 +58,7 @@
    }
   }
   const copy=el('button','文章と短いURLをコピー','post-share-copy');copy.type='button';
-  copy.addEventListener('click',()=>{if(!expire()&&link)return copyValue((ownText?ownText+'\n\n':'')+link);});
+  copy.addEventListener('click',()=>{if(!expire()&&link)return copyValue((currentText()?currentText()+'\n\n':'')+link);});
   area.append(el('p','コピーして、SNSに貼り付けてください。','post-share-guide'));
   const networks=el('div',null,'post-share post-simple-networks');
   const facebook=el('a','Facebookで共有');facebook.target='_blank';facebook.rel='noopener';facebook.style.background='#0866c6';networks.append(facebook);
@@ -49,8 +71,8 @@
    const buttons=[facebook,line,x];
    if(link&&!ended()){
     facebook.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(link);
-    line.href='https://line.me/R/share?text='+encodeURIComponent((ownText?ownText+'\n\n':'')+link);
-    x.href='https://x.com/intent/tweet?text='+encodeURIComponent(ownText)+'&url='+encodeURIComponent(link);
+    line.href='https://line.me/R/share?text='+encodeURIComponent((currentText()?currentText()+'\n\n':'')+link);
+    x.href='https://x.com/intent/tweet?text='+encodeURIComponent(currentText())+'&url='+encodeURIComponent(link);
     for(const a of buttons)a.removeAttribute('aria-disabled');
    }else{
     for(const a of buttons){a.removeAttribute('href');a.setAttribute('aria-disabled','true');}
@@ -58,7 +80,7 @@
   }
   function expire(){
    if(!ended())return false;
-   link='';clearTimeout(timer);clearTimeout(expiryTimer);ready();fallback.value='';fallback.hidden=true;
+   link='';clearTimeout(timer);clearTimeout(expiryTimer);ready();fallback.value='';fallback.hidden=true;fujiko.disabled=true;
    message.textContent='掲載が終了したため共有できません。';return true;
   }
   function watchExpiry(){
@@ -88,3 +110,4 @@
  }
  window.DXPostShare={mount};
 })();
+
