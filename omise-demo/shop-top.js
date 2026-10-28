@@ -17,7 +17,7 @@
   const backdrop=element('img');backdrop.src=scenes[0].src;backdrop.alt='';backdrop.className='shop-hero-backdrop';backdrop.setAttribute('aria-hidden','true');
   const image=element('img');image.src=scenes[0].src;image.alt=scenes[0].alt||scenes[0].title;image.className='shop-hero-picture';image.loading='eager';image.decoding='async';
   main.append(backdrop,image);
-  const caption=element('div',null,'shop-hero-caption');caption.append(element('span','01','shop-hero-number'),element('span',scenes[0].title),element('span','紹介を見る →','shop-hero-more'));
+  const caption=element('a',null,'shop-hero-caption');caption.href=scenes[0].target;caption.append(element('span','01','shop-hero-number'),element('span',scenes[0].title),element('span','紹介を見る →','shop-hero-more'));
   const grid=element('div',null,'shop-hero-thumbnails');
   for(const [i,scene] of scenes.slice(1).entries()){const link=element('a',null,'shop-hero-thumb');link.href=scene.target;link.setAttribute('aria-label',scene.title+'の紹介を見る');const img=element('img');img.src=scene.src;img.alt=scene.alt||scene.title;img.loading='eager';img.decoding='async';const label=element('span',scene.title);link.append(img,label);grid.append(link);}
   const note=element('p',scenes.some(s=>s.illustration)?'画像は活動紹介用のイメージです。気になる画像を押すと詳しく見られます。':'気になる画像を押すと、詳しい紹介が見られます。','shop-hero-note');
