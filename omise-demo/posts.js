@@ -4,7 +4,7 @@
  const base='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/';
  const slug=location.pathname.split('/').pop();
  const ids={'ouchicafe.html':'SHOP-0001','heartnet.html':'SHOP-0002','newtimes.html':'SHOP-0003'};
- const avatarImages={'SHOP-0002':'fujiko-avatar.jpeg'};
+ const avatarImages={'SHOP-0001':'logos/ouchicafe.jpg','SHOP-0002':'fujiko-avatar.jpeg','SHOP-0003':'logos/kappy.png'};
  const article=slug==='article.html',deals=slug==='deals.html',timeline=slug==='timeline.html';
  if(!article&&!deals&&!timeline&&!ids[slug])return;
  const id=article?new URLSearchParams(location.search).get('id'):null;
@@ -82,7 +82,7 @@
  }
  function cafeAdCard(){
   const card=el('article',null,'post-card cafe-ad-card'),head=el('div',null,'post-header');
-  const avatar=el('a','お','post-avatar');avatar.href=base+'ouchicafe.html';avatar.setAttribute('aria-label','おうちcafeパン工房のページを見る');
+  const avatar=el('a',null,'post-avatar has-image shop-mark');const mark=el('img');mark.src=base+avatarImages['SHOP-0001'];mark.alt='おうちcafeパン工房のマーク';mark.decoding='async';avatar.append(mark);avatar.href=base+'ouchicafe.html';avatar.setAttribute('aria-label','おうちcafeパン工房のページを見る');
   const identity=el('div',null,'post-identity'),author=el('a','おうちcafeパン工房','post-author');author.href=base+'ouchicafe.html';
   identity.append(author,el('span','広告イメージの見本','post-date'));
   head.append(avatar,identity,el('span','お知らせ','post-kind'));
@@ -102,8 +102,8 @@
    if(ended(p)||seen.has(p.id))continue;
    seen.add(p.id);
    const shop=shopURL(p),card=el('article',null,'post-card'),head=el('div',null,'post-header');
-   const avatarImage=avatarImages[p.shop],avatar=el(shop?'a':'span',avatarImage?'':p.name.slice(0,1),'post-avatar'+(avatarImage?' has-image':''));
-   if(avatarImage){const img=el('img');img.src=base+avatarImage;img.alt='';img.loading='lazy';img.decoding='async';avatar.append(img);}
+   const avatarImage=avatarImages[p.shop],avatar=el(shop?'a':'span',avatarImage?'':p.name.slice(0,1),'post-avatar'+(avatarImage?' has-image':'')+(p.shop==='SHOP-0001'||p.shop==='SHOP-0003'?' shop-mark':''));
+   if(avatarImage){const img=el('img');img.src=base+avatarImage;img.alt=p.shop==='SHOP-0003'?'カッピー（©志木いろは商店会／おぐまこうじ）':p.name+'のマーク';img.loading='lazy';img.decoding='async';avatar.append(img);}
    if(shop){avatar.href=shop;avatar.setAttribute('aria-label',p.name+'のトップページを見る');}else avatar.setAttribute('aria-hidden','true');
    const identity=el('div',null,'post-identity'),author=el(shop?'a':'span',p.name,'post-author');
    if(shop){author.href=shop;author.setAttribute('aria-label',p.name+'のトップページを見る');}

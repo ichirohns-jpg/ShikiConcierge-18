@@ -143,3 +143,6 @@
 .social-view .panel{background:#fff;border:1px solid #d4e5db;margin:16px 0}
 .social-view .post-card{padding:0}
 .social-view .post-simple-share .post-share-copy{margin:0 0 8px}
+
+/* Store marks belong to the circular author avatar, without cutting off artwork. */
+.post-avatar.shop-mark img{object-fit:contain;object-position:center;border-radius:0;background:#fff}
