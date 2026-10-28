@@ -58,9 +58,9 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261028-identity9',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261028-allshare11',document.currentScript?.src||base+'posts.js').href;
  function share(box,p,options){
-  const mount=el('div');box.append(mount);
+  const mount=options?.replaceExisting?box:el('div');if(mount!==box)box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
    if(window.DXPostShare){resolve(window.DXPostShare);return;}
    const existing=[...document.scripts].find(s=>s.src===postShareURL);if(existing){existing.addEventListener('load',()=>window.DXPostShare?resolve(window.DXPostShare):reject(Error('共有機能を読み込めませんでした。')),{once:true});existing.addEventListener('error',()=>{existing.remove();postSharePromise=null;reject(Error('共有機能を読み込めませんでした。'));},{once:true});return;}
@@ -75,7 +75,7 @@
  if(ids[slug]&&document.querySelector('#share')){
   const readProfile=()=>{const name=document.querySelector('#intro h1')?.textContent||document.querySelector('h1')?.textContent||'';let body=document.querySelector('#shareText')?.value||document.querySelector('#intro .profile-description')?.textContent||'';body=body.split('\n\n【詳しい紹介】')[0];if(body.startsWith(name+'をご紹介！'))body=body.slice((name+'をご紹介！').length).trim();return {name,body};};
   const p={...readProfile(),shareURL:window.DXShortLinks?.[base+slug]||base+slug+'#top'};
-  share(document.querySelector('#share'),p,{privateOnly:true,profile:true,readProfile});
+  share(document.querySelector('#share'),p,{privateOnly:true,profile:true,replaceExisting:true,readProfile});
  }
  function cafeAdCard(){
   const card=el('article',null,'post-card cafe-ad-card'),head=el('div',null,'post-header');
@@ -173,5 +173,6 @@
  window.addEventListener('focus',pruneEnded);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)pruneEnded();});
 })();
+
 
 

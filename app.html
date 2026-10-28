@@ -253,7 +253,7 @@ body{
   .name{font-size:24px}
 }
 </style>
-</head>
+<script src="./omise-demo/fujiko-share-locations.js?v=20261028-allshare11" defer></script></head>
 
 <body>
 <div class="wrap">
@@ -480,7 +480,7 @@ function shareHtml(d){
     'https://line.me/R/msg/text/?'+encodeURIComponent(shareText);
 
   return `
-<div class="share">
+<div class="share" data-dx-share data-share-kind="notice" data-share-name="志木お助け隊 回覧板" data-share-text="${escAttr(title+'\n\n'+detail)}" data-share-url="${escAttr(shareUrl)}">
 <div class="share-title">この記事をシェアする</div>
 <div class="share-grid">
 <button class="fb" onclick="${escAttr('shareToFacebook('+JSON.stringify(shareText)+','+JSON.stringify(shareUrl)+')')}">Facebook</button>
@@ -666,4 +666,5 @@ loadSheet();
 
 </body>
 </html>
+
 

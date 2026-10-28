@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
- const fujikoSharing=document.createElement('script');fujikoSharing.src='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/fujiko-share-locations.js?v=20261028-identity9';document.head.append(fujikoSharing);
+ const fujikoSharing=document.createElement('script');fujikoSharing.src='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/fujiko-share-locations.js?v=20261028-allshare11';document.head.append(fujikoSharing);
  if(document.querySelector('.dx-global-nav'))return;
  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
  const routes={
@@ -42,3 +42,4 @@
  document.body.append(nav);
  if(file==='index.html')window.addEventListener('hashchange',()=>{const active=location.hash==='#shops'?'shops':'home';for(const [i,a] of Array.from(nav.children).entries()){if(items[i][0]===active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');}});
 })();
+
