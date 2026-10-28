@@ -58,11 +58,12 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261028-fujiko-login3',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261028-fujiko-copy4',document.currentScript?.src||base+'posts.js').href;
  function share(box,p,options){
   const mount=el('div');box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
    if(window.DXPostShare){resolve(window.DXPostShare);return;}
+   const existing=[...document.scripts].find(s=>s.src===postShareURL);if(existing){existing.addEventListener('load',()=>window.DXPostShare?resolve(window.DXPostShare):reject(Error('共有機能を読み込めませんでした。')),{once:true});existing.addEventListener('error',()=>{existing.remove();postSharePromise=null;reject(Error('共有機能を読み込めませんでした。'));},{once:true});return;}
    const script=document.createElement('script');script.src=postShareURL;
    script.onload=()=>window.DXPostShare?resolve(window.DXPostShare):reject(Error('投稿機能を読み込めませんでした。'));
    script.onerror=()=>{postSharePromise=null;reject(Error('投稿機能を読み込めませんでした。ページを更新してください。'));};
@@ -72,7 +73,7 @@
  }
  // The extra profile sharing area stays hidden unless ADMIN authentication succeeds.
  if(ids[slug]&&document.querySelector('#share')){
-  const readProfile=()=>({name:document.querySelector('#intro h1')?.textContent||document.querySelector('h1')?.textContent||'',body:document.querySelector('#intro .profile-description')?.textContent||document.querySelector('#intro .subtitle')?.nextElementSibling?.textContent||''});
+  const readProfile=()=>{const name=document.querySelector('#intro h1')?.textContent||document.querySelector('h1')?.textContent||'';let body=document.querySelector('#shareText')?.value||document.querySelector('#intro .profile-description')?.textContent||'';body=body.split('\n\n【詳しい紹介】')[0];if(body.startsWith(name+'をご紹介！'))body=body.slice((name+'をご紹介！').length).trim();return {name,body};};
   const p={...readProfile(),shareURL:base+slug};
   share(document.querySelector('#share'),p,{privateOnly:true,profile:true,readProfile});
  }

@@ -24,6 +24,7 @@
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkAdminAccess();});
  setInterval(()=>{if(verifiedToken&&!hasAdminAccess()){verifiedToken='';notifyAccess();}},1000);
  const privacyStyle=document.createElement('style');privacyStyle.textContent='.post-fujiko-button[hidden],.post-simple-share[hidden]{display:none!important}';document.head.append(privacyStyle);
+ let profileState=null,profileReveal=null;
  let manifestPromise=null,manifestTime=0;
  function sharePages(){
   if(!manifestPromise||Date.now()-manifestTime>15000){
@@ -39,10 +40,10 @@
   let link=dynamic?'':(/^https:\/\//.test(p.shareURL||'')?p.shareURL:dxURL);
   let ownText=[p.title,p.body].filter(Boolean).join('\n\n');
   const makeText=name=>name==='original'?ownText:(name==='fujiko'?'ふじこからの'+(options.profile?'お店・活動紹介🥒':p.kind==='deal'?'お得情報🥒':'街のお知らせ🥒'):'ハートネット志木からのお知らせ')+'\n'+(p.name?p.name+'さん'+(options.profile?'をご紹介します。':'の投稿をご紹介します。'):'志木のお店・活動をご紹介します。')+'\n\n'+ownText+(p.end?'\n\n掲載期限：'+p.end+'まで':'')+'\n\n詳しくは'+(options.profile?'紹介ページ':'元の投稿')+'をご覧ください。';
-  let shareText=ownText;
+  let shareText=ownText,userEdited=false;
   const area=el('section',null,'post-publish post-simple-share');
   area.hidden=!!options.privateOnly;
-  area.append(el('h3','投稿をSNSで共有する'));
+  area.append(el('h3',options.privateOnly?'ふじこの紹介文で共有する':'投稿をSNSで共有する'));
   const fujiko=el('button','🥒 ふじことして紹介・シェア','post-fujiko-button');fujiko.type='button';fujiko.hidden=true;fujiko.setAttribute('aria-expanded','false');
   const editor=el('div',null,'post-fujiko-editor');editor.hidden=true;
   const identity=el('label','紹介する名義');
@@ -56,10 +57,10 @@
   const draft=el('textarea');draft.rows=9;draft.setAttribute('aria-label','SNSに載せる紹介文');textLabel.append(draft);
   const note=el('p','下のボタンでコピー・共有できます。SNSでは投稿するアカウントを選んでください。Facebookは紹介文をコピーして、共有画面に貼り付けてください。','post-fujiko-note');
   editor.append(identity,preview,textLabel,note);
-  const currentText=()=>!hasAdminAccess()||editor.hidden?ownText:shareText;
+  const currentText=()=>!hasAdminAccess()?ownText:shareText;
   function chooseSender(){shareText=makeText(sender.value);draft.value=shareText;byline.textContent=sender.value==='fujiko'?'ふじこ':sender.value==='heartnet'?'ハートネット志木':p.name||'元の投稿';avatar.hidden=sender.value!=='fujiko';ready();}
   sender.addEventListener('change',chooseSender);
-  draft.addEventListener('input',()=>{shareText=draft.value;ready();});
+  draft.addEventListener('input',()=>{userEdited=true;shareText=draft.value;ready();});
   fujiko.addEventListener('click',()=>{if(!hasAdminAccess()||expire())return;editor.hidden=!editor.hidden;fujiko.setAttribute('aria-expanded',String(!editor.hidden));if(!editor.hidden){if(!draft.value){if(options.profile&&options.readProfile){const current=options.readProfile();p={...p,...current};ownText=[p.title,p.body].filter(Boolean).join('\n\n');}sender.value='fujiko';chooseSender();}draft.focus();}ready();});
   area.append(fujiko,editor);
   const message=el('p','', 'post-share-message');
@@ -109,10 +110,11 @@
    if(disposed||!area.isConnected||expire())return;
    if(Number.isFinite(expiresAt))expiryTimer=setTimeout(watchExpiry,Math.min(60000,expiresAt-Date.now()));
   }
-  const updateAccess=allowed=>{if(options.privateOnly)area.hidden=!allowed;fujiko.hidden=!allowed;if(!allowed){editor.hidden=true;draft.value='';shareText=ownText;fallback.hidden=true;fallback.value='';fujiko.setAttribute('aria-expanded','false');}ready();};
+  const updateAccess=allowed=>{if(options.privateOnly)area.hidden=!allowed;fujiko.hidden=!allowed;if(allowed&&!draft.value){if(options.profile&&options.readProfile){p={...p,...options.readProfile()};ownText=[p.title,p.body].filter(Boolean).join('\n\n');}sender.value='fujiko';editor.hidden=false;fujiko.setAttribute('aria-expanded','true');chooseSender();}if(!allowed){editor.hidden=true;draft.value='';shareText=ownText;fallback.hidden=true;fallback.value='';fujiko.setAttribute('aria-expanded','false');}copy.textContent=allowed?'紹介文とURLをコピー':'文章と短いURLをコピー';ready();};
   accessListeners.add(updateAccess);
   ready();
   area.append(copy,networks,message,fallback);box.append(area);
+  if(options.profile){profileState=()=>{if(!userEdited&&hasAdminAccess()&&options.readProfile){p={...p,...options.readProfile()};ownText=[p.title,p.body].filter(Boolean).join('\n\n');shareText=makeText(sender.value);draft.value=shareText;ready();}return {text:currentText(),link};};profileReveal=()=>{if(!hasAdminAccess())return;editor.hidden=false;fujiko.setAttribute('aria-expanded','true');area.scrollIntoView({behavior:'smooth',block:'start'});draft.focus({preventScroll:true});};}
   updateAccess(hasAdminAccess());
   if(!verification&&!hasAdminAccess())checkAdminAccess();
   async function prepare(){
@@ -134,8 +136,15 @@
   if(dynamic)prepare();
   return ()=>{disposed=true;accessListeners.delete(updateAccess);clearTimeout(timer);clearTimeout(expiryTimer);};
  }
- window.DXPostShare={mount};
+ window.DXPostShare={mount,shortcut(box){const button=el('button','🥒 ふじことして紹介・シェア','post-fujiko-button');button.type='button';button.hidden=true;box.append(button);const update=allowed=>{button.hidden=!allowed;};accessListeners.add(update);button.addEventListener('click',()=>{if(hasAdminAccess())profileReveal?.();});update(hasAdminAccess());if(!verification&&!hasAdminAccess())checkAdminAccess();return()=>accessListeners.delete(update);},profileText(original,name,url){
+  if(!adminSession())return original;
+  if(!hasAdminAccess())throw Error('ふじこのログインを確認しています。少し待ってから、もう一度押してください。');
+  const profile=profileState?.();
+  if(profile)return profile.text+'\n\n'+(url||profile.link);
+  return 'ふじこからのお店・活動紹介🥒\n'+name+'さんをご紹介します。\n\n'+original;
+ },isFujiko:hasAdminAccess};
 })();
+
 
 
 
