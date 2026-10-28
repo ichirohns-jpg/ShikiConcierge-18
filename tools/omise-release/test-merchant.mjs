@@ -132,3 +132,15 @@ test('the deployment text and editor source match the complete bundle and preser
  assert.ok(editor.includes('内容は残っています'));assert.ok(editor.includes("$('end').required=$('kind').value==='deal'"));
  new Function(gs);new Function(editor.match(/<script>([\s\S]*)<\/script>/)[1]);
 });
+
+test('photo posts and retries work when every Drive operation is denied',()=>{
+ const f=fixture(),{ctx}=f;let driveCalls=0;
+ ctx.DriveApp=new Proxy({}, {get(){driveCalls++;throw Error('DriveApp.getFolderById を呼び出す権限がありません。');}});
+ const photo='data:image/jpeg;base64,/9j/2Q==';
+ const draft={clientRequestId:'d'.repeat(32),kind:'deal',body:'缶バッジの写真付き投稿',end:'2026-10-31',photos:[photo]};
+ const result=ctx.postSend('SHOP-0001',f.code('SHOP-0001'),draft);
+ const repeated=ctx.postSend('SHOP-0001',f.code('SHOP-0001'),draft);
+ assert.equal(result.ok,true);assert.equal(repeated.id,result.id);assert.equal(result.posts[0].photos[0],photo);
+ assert.equal(ctx.postFeed_({shop:'SHOP-0001'}).posts[0].photos[0],photo);
+ assert.equal(ctx.postRows_().length,1);assert.equal(driveCalls,0,'photo publishing must not depend on Drive OGP uploads');
+});

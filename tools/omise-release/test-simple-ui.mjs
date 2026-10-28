@@ -95,7 +95,7 @@ test('deal entry is preselected, expiry is visible, and a failed submission keep
  let failSend=true;const h=harness(post,{rpcFail:name=>name==='postSend'&&failSend});h.boot();h.get('code').value='fixture-code';await h.get('loginForm').onsubmit(h.event);await flush();
  assert.equal(h.get('kind').value,'deal');assert.equal(h.get('end').required,true);h.get('body').value='残しておきたい文章';
  await h.get('postForm').onsubmit(h.event);assert.ok(h.get('status').textContent.includes('終了日'));assert.equal(h.get('body').value,'残しておきたい文章');
- h.get('end').value=new Date(Date.now()+32400000+86400000).toISOString().slice(0,10);h.run("ogImage=async()=>'';");
+ h.get('end').value=new Date(Date.now()+32400000+86400000).toISOString().slice(0,10);
  await h.get('postForm').onsubmit(h.event);await h.get('send').onclick();await flush();assert.equal(h.get('body').value,'残しておきたい文章');assert.ok(h.get('status').textContent.includes('内容は残っています'));
  const first=h.calls.find(x=>x.name==='postSend').args[2].clientRequestId;failSend=false;await h.get('send').onclick();await flush();
  const ids=h.calls.filter(x=>x.name==='postSend').map(x=>x.args[2].clientRequestId);assert.equal(ids.length,2);assert.equal(ids[0],first);assert.equal(ids[1],first);assert.equal(h.get('body').value,'');assert.ok(h.get('status').textContent.includes('投稿しました'));
@@ -106,4 +106,19 @@ test('back navigation restores the loaded feed pages and the article position wi
  const first=harness(html,{session,pathname:'/ShikiConcierge-18/omise-demo/deals.html'});first.run(src);first.respond({ok:true,total:25,posts:all.slice(0,10)});first.observers.at(-1).fn([{isIntersecting:true}]);first.respond({ok:true,total:25,posts:all.slice(10,20)});await flush();first.window.scrollY=9500;first.window.events.pagehide[0]();
  const returned=harness(html,{session,navigation:'back_forward',state:{...first.history.state},pathname:'/ShikiConcierge-18/omise-demo/deals.html'});returned.run(src);returned.respond({ok:true,total:25,posts:all.slice(0,10)});
  const q=returned.respond({ok:true,total:25,posts:all.slice(10,20)});assert.equal(q.get('offset'),'10');await flush();assert.equal(returned.cards().length,20);assert.equal(returned.window.scrollY,9500);assert.equal(returned.context.location.search,'');
+});
+
+test('photo preview sends the photo without the obsolete Drive OGP payload',async()=>{
+ const photo='data:image/jpeg;base64,/9j/2Q==',h=harness(post);
+ h.boot();h.get('code').value='fixture-code';await h.get('loginForm').onsubmit(h.event);await flush();
+ h.get('body').value='写真付きの投稿';h.get('end').value=new Date(Date.now()+32400000+86400000).toISOString().slice(0,10);
+ h.get('files').files=[{type:'image/jpeg',name:'badge.jpg'}];
+ h.run("photo=async()=>"+JSON.stringify(photo)+";");
+ await h.get('postForm').onsubmit(h.event);await h.get('send').onclick();await flush();
+ const payload=h.calls.find(x=>x.name==='postSend').args[2];
+ assert.equal(payload.photos[0],photo);assert.equal('ogImage' in payload,false);
+ assert.equal(h.get('reviewTitle').textContent,'投稿しました');
+ for(const file of ['omise-demo/owner.html','tools/omise-release/PostEditor.html']){
+  const editor=load(file);assert.ok(!editor.includes('draft.ogImage='));assert.ok(editor.includes('overflow-wrap:anywhere'));assert.ok(editor.includes('動画の保存に必要な設定'));
+ }
 });
