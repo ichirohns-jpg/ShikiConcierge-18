@@ -1,0 +1,12 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';import {createHash,randomUUID} from 'node:crypto';
+const props=new Map([['merchant:SHOP-0001','fixture-code'],['merchant:SHOP-0002','other-code']]);
+const ctx=vm.createContext({PropertiesService:{getScriptProperties:()=>({getProperty:k=>props.get(k)||null,setProperty:(k,v)=>props.set(k,v),deleteProperty:k=>props.delete(k),getProperties:()=>Object.fromEntries(props)})},Utilities:{getUuid:randomUUID,computeDigest:(_a,s)=>[...createHash('sha256').update(s).digest()],DigestAlgorithm:{SHA_256:'sha256'},Charset:{UTF_8:'utf8'}},LockService:{getScriptLock:()=>({waitLock(){},releaseLock(){}})}});
+vm.runInContext(fs.readFileSync(new URL('./LiveCode.gs',import.meta.url),'utf8'),ctx);
+vm.runInContext("respond_=(data)=>JSON.stringify(data);merchantLogin=(id,code)=>{omAuth_(id,code);return {admin:false,shop:{'店名':'テスト店'}}};postPublishPending_=()=>{};postOwn=(id,code)=>{omAuth_(id,code);return []};omBook_=()=>({getSheetByName:()=>({getDataRange:()=>({getDisplayValues:()=>[['店舗ID','x','店名'],['SHOP-0001','','テスト店']]})})});",ctx);
+const call=(method,args)=>JSON.parse(ctx.doPost({postData:{contents:JSON.stringify({api:'owner-v1',method,args})}}));
+const login=call('postLoginByCode',['fixture-code',true]);assert.equal(login.ok,true);assert.equal(login.result.loginId,'SHOP-0001');const token=login.result.auth.token;
+assert.equal(call('postLogin',['SHOP-0001',token,true]).result.auth.token,token);assert.equal(call('postOwn',['SHOP-0002',token]).ok,false);assert.equal(call('postOwn',['SHOP-0001','bad']).ok,false);
+for(const name of ['setupMerchantEditing','omBook_','omSessionIssue_','toString','__proto__'])assert.equal(call(name,[]).ok,false,name);
+assert.equal(JSON.parse(ctx.doPost({postData:{contents:'not json'}})).ok,false);assert.equal(JSON.parse(ctx.doPost({postData:{contents:JSON.stringify({api:'owner-v1',method:'postOwn',args:{}})}})).ok,false);
+assert.equal(call('postLogout',['SHOP-0001',token]).ok,true);assert.equal(call('postOwn',['SHOP-0001',token]).ok,false);
+assert.equal(ctx.ownerVersion_().version,'firstparty-owner-v1');console.log('PASS: POST login/restore, store isolation, invalid credentials, private dispatch denial, malformed requests and logout revocation');
