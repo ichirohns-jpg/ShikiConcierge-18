@@ -17,7 +17,7 @@
   const backdrop=element('img');backdrop.src=scenes[0].src;backdrop.alt='';backdrop.className='shop-hero-backdrop';backdrop.setAttribute('aria-hidden','true');
   const image=element('img');image.src=scenes[0].src;image.alt=scenes[0].alt||scenes[0].title;image.className='shop-hero-picture';image.loading='eager';image.decoding='async';
   main.append(backdrop,image);
-  const caption=element('div',null,'shop-hero-caption');caption.append(element('span','01','shop-hero-number'),element('span',scenes[0].title));
+  const caption=element('div',null,'shop-hero-caption');caption.append(element('span',scenes[0].title));
   const grid=element('div',null,'shop-hero-thumbnails');
   for(const [i,scene] of scenes.slice(1).entries()){const link=element('div',null,'shop-hero-thumb');const img=element('img');img.src=scene.src;img.alt=scene.alt||scene.title;img.loading='eager';img.decoding='async';const label=element('span',scene.title);link.append(img,label);grid.append(link);}
   const note=element('p','画像は活動紹介用のイメージです。','shop-hero-note');note.hidden=!scenes.some(s=>s.illustration);
@@ -27,3 +27,4 @@
  new MutationObserver(schedule).observe(photos,{childList:true,subtree:true,attributes:true,attributeFilter:['src','alt']});
  render();
 })();
+
