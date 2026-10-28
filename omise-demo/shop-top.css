@@ -35,3 +35,21 @@ body.shop-top-designed #intro .profile-social .sns-mark{display:inline-flex;alig
 body.shop-top-designed #intro .profile-social a::after{content:'↗';margin-left:auto;font-size:24px;color:inherit}
 body.shop-top-designed #intro .profile-social a:hover{filter:brightness(.95)}
 @media(max-width:560px){body.shop-top-designed #intro .profile-social a{min-height:64px;padding:13px 14px;font-size:23px;gap:12px}}
+
+
+/* A single clear action, followed by sharing for the card itself. */
+body.shop-top-designed #information>.grid{grid-template-columns:minmax(0,1fr)}
+body.shop-top-designed #information>.grid>a{justify-content:flex-start;min-height:56px;padding:12px 16px;font-size:21px;border-radius:10px;white-space:normal;word-break:normal;overflow-wrap:normal}
+body.shop-top-designed #offer{background:#fffaf0;border-color:#eadcb3}
+body.shop-top-designed #offer .gift-eyebrow{font-size:16px;font-weight:700;color:#81641e;margin:0 0 8px}
+body.shop-top-designed #offer h2{font-size:27px;line-height:1.5;margin-bottom:12px}
+body.shop-top-designed #offer .gift-receive{display:flex;align-items:center;justify-content:flex-start;gap:12px;min-height:62px;padding:14px 16px;margin-top:20px;border:2px solid #1a6955;border-radius:10px;background:#fff;color:#175640;font-size:22px;line-height:1.5;text-decoration:none}
+body.shop-top-designed #offer .gift-receive span{white-space:nowrap}
+body.shop-top-designed #offer .gift-receive span:last-child{margin-left:auto}
+body.shop-top-designed #thanks-card-sharing{margin-top:24px}
+body.shop-top-designed #thanks-card-sharing .post-simple-share{padding:20px 0 0!important;margin:0;border-top:1px solid #e5d9b6;background:transparent}
+body.shop-top-designed #thanks-card-sharing .post-simple-share h3{font-size:21px;line-height:1.6}
+body.shop-top-designed #thanks-card-sharing .post-simple-networks{display:flex;flex-direction:column;gap:10px}
+body.shop-top-designed #thanks-card-sharing .post-simple-networks a{font-size:21px;min-height:56px;padding:12px 16px;border-radius:10px;justify-content:center}
+body.shop-top-designed #thanks-card-sharing .post-share-copy{font-size:20px;min-height:54px}
+@media(max-width:360px){body.shop-top-designed #offer .gift-receive{font-size:20px;padding:12px;gap:8px}}

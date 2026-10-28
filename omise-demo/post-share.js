@@ -50,7 +50,7 @@
   let shareText=ownText,userEdited=false;
   const area=el('section',null,'post-publish post-simple-share');
   area.hidden=!!options.privateOnly;
-  const shareHeading=el('h3',options.privateOnly?'選んだ名義で共有する':'投稿をSNSで共有する');area.append(shareHeading);
+  const shareHeading=el('h3',options.privateOnly?'選んだ名義で共有する':options.heading||'投稿をSNSで共有する');area.append(shareHeading);
   const fujiko=el('button','🥒 ふじことして紹介・シェア','post-fujiko-button');fujiko.type='button';fujiko.hidden=true;fujiko.setAttribute('aria-expanded','false');
   const editor=el('div',null,'post-fujiko-editor');editor.hidden=true;
   const identity=el('label','紹介する名義');
@@ -153,6 +153,7 @@
   return selectedIdentity==='original'?original:(selectedIdentity==='fujiko'?'ふじこからのお店・活動紹介🥒':'ハートネット志木からのお店・活動紹介')+'\n'+name+'さんをご紹介します。\n\n'+original;
  },isFujiko:hasAdminAccess};
 })();
+
 
 
 

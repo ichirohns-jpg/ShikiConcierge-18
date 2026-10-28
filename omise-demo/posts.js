@@ -58,7 +58,7 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261028-allshare11',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261028-card14',document.currentScript?.src||base+'posts.js').href;
  function share(box,p,options){
   const mount=options?.replaceExisting?box:el('div');if(mount!==box)box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
@@ -71,6 +71,9 @@
   });
   postSharePromise.then(ui=>{if(mount.isConnected)ui.mount(mount,p,options);}).catch(e=>mount.append(el('p',e.message,'post-share-message')));
  }
+ // The card invitation has its own share target, separate from the shop profile.
+ const cardShare=document.querySelector('#thanks-card-sharing');
+ if(cardShare)share(cardShare,{name:cardShare.dataset.cardShareName,body:cardShare.dataset.cardShareText,shareURL:cardShare.dataset.cardShareUrl,kind:'notice'},{heading:'ありがとうカードを友だちに教える'});
  // The extra profile sharing area stays hidden unless ADMIN authentication succeeds.
  if(ids[slug]&&document.querySelector('#share')){
   const readProfile=()=>{const name=document.querySelector('#intro h1')?.textContent||document.querySelector('h1')?.textContent||'';let body=document.querySelector('#shareText')?.value||document.querySelector('#intro .profile-description')?.textContent||'';body=body.split('\n\n【詳しい紹介】')[0];if(body.startsWith(name+'をご紹介！'))body=body.slice((name+'をご紹介！').length).trim();return {name,body};};
@@ -173,6 +176,7 @@
  window.addEventListener('focus',pruneEnded);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)pruneEnded();});
 })();
+
 
 
 
