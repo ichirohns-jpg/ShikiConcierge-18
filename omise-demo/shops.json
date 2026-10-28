@@ -23,25 +23,29 @@
           "src": "https://ichirohns-jpg.github.io/ouchicafe-shop-dx/main-banner.jpg",
           "title": "パン工房のご紹介",
           "alt": "おうちcafeパン工房",
-          "illustration": false
+          "illustration": false,
+          "body": "国産小麦とホシノ天然酵母を使ったパンや焼き菓子をお届けしています。"
         },
         {
           "src": "https://ichirohns-jpg.github.io/ouchicafe-shop-dx/%20%20eat-in-banner.jpg",
           "alt": "イートインの紹介",
           "title": "イートインの紹介",
-          "illustration": false
+          "illustration": false,
+          "body": "焼きたてパンとドリンクを、店内でゆっくりお楽しみいただけます。"
         },
         {
           "src": "https://ichirohns-jpg.github.io/ouchicafe-shop-dx/iroha-base-banner.jpg",
           "alt": "地域交流スペース・いろはベースの紹介",
           "title": "地域交流スペース・いろはベースの紹介",
-          "illustration": false
+          "illustration": false,
+          "body": "パンを通じて、人と人がつながる場所。ワークショップやイベント、地域交流のスペースです。"
         },
         {
           "src": "https://ichirohns-jpg.github.io/ouchicafe-shop-dx/food.jpg",
           "alt": "パンとドリンクの紹介写真",
           "title": "パンとドリンクの紹介写真",
-          "illustration": false
+          "illustration": false,
+          "body": "パンとドリンクを楽しむひとときを、写真でご紹介します。"
         }
       ],
       "shareURL": "https://is.gd/YoNWCb"
@@ -115,25 +119,29 @@
           "src": "https://ichirohns-jpg.github.io/iwashita-ryu-activity/images/activity/profile-main.jpg",
           "title": "岩下りゅうさん",
           "alt": "岩下りゅうさんの活動紹介イメージ",
-          "illustration": true
+          "illustration": true,
+          "body": "岩下りゅうさんの活動を紹介するイメージです。"
         },
         {
           "src": "https://ichirohns-jpg.github.io/iwashita-ryu-activity/images/activity/hero-main.jpg",
           "alt": "岩下りゅうさんと地域の人との交流イメージ",
           "title": "岩下りゅうさんと地域の人との交流イメージ",
-          "illustration": true
+          "illustration": true,
+          "body": "地域の人との交流を紹介するイメージです。"
         },
         {
           "src": "https://ichirohns-jpg.github.io/iwashita-ryu-activity/images/activity/voice-report.jpg",
           "alt": "岩下りゅうさんの地域情報発信イメージ",
           "title": "岩下りゅうさんの地域情報発信イメージ",
-          "illustration": true
+          "illustration": true,
+          "body": "地域の情報を発信する活動の紹介イメージです。"
         },
         {
           "src": "https://ichirohns-jpg.github.io/iwashita-ryu-activity/images/activity/hero-video.jpg",
           "alt": "岩下りゅうさんの動画発信紹介イメージ（静止画）",
           "title": "岩下りゅうさんの動画発信紹介イメージ（静止画）",
-          "illustration": true
+          "illustration": true,
+          "body": "動画で情報を届ける活動の紹介イメージです。"
         }
       ],
       "shareURL": "https://is.gd/LIJBx7"
