@@ -74,7 +74,7 @@
  // The extra profile sharing area stays hidden unless ADMIN authentication succeeds.
  if(ids[slug]&&document.querySelector('#share')){
   const readProfile=()=>{const name=document.querySelector('#intro h1')?.textContent||document.querySelector('h1')?.textContent||'';let body=document.querySelector('#shareText')?.value||document.querySelector('#intro .profile-description')?.textContent||'';body=body.split('\n\n【詳しい紹介】')[0];if(body.startsWith(name+'をご紹介！'))body=body.slice((name+'をご紹介！').length).trim();return {name,body};};
-  const p={...readProfile(),shareURL:base+slug+'#top'};
+  const p={...readProfile(),shareURL:window.DXShortLinks?.[base+slug]||base+slug+'#top'};
   share(document.querySelector('#share'),p,{privateOnly:true,profile:true,readProfile});
  }
  function cafeAdCard(){
@@ -173,4 +173,5 @@
  window.addEventListener('focus',pruneEnded);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)pruneEnded();});
 })();
+
 

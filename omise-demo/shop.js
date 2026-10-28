@@ -17,6 +17,8 @@ function currentShareText(){
  return window.DXPostShare.profileText(shareField.value,document.querySelector('h1').textContent,shopShareURL);
  }catch(e){document.getElementById('copyStatus').textContent=e.message;return null;}
 }
+// Use the fresh shop-specific share card for Facebook as well as text sharing.
+for(const a of document.querySelectorAll('#share a[href*="facebook.com/sharer"]'))a.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shopShareURL);
 async function copyText(text){const status=document.getElementById('copyStatus');try{await navigator.clipboard.writeText(text);status.textContent='コピーしました。LINEやSNSに貼り付けて送れます。';}catch{shareField.value=text;const details=shareField.closest('details');if(details)details.open=true;shareField.focus();shareField.select();status.textContent='選択した文章を長押ししてコピーしてください。';}}
 document.querySelector('[data-copy-text]').addEventListener('click',()=>{const text=currentShareText();if(text!==null)return copyText(text);});
 document.querySelector('[data-copy-url]').addEventListener('click',()=>copyText(shopShareURL));
@@ -34,4 +36,5 @@ function colourSNSButtons(){for(const a of document.querySelectorAll('a.btn')){l
 colourSNSButtons();
 new MutationObserver(colourSNSButtons).observe(document.querySelector('main'),{childList:true,subtree:true});
 if(form)form.addEventListener('submit',e=>{e.preventDefault();const input=document.getElementById('giftCode');const status=document.getElementById('giftStatus');if(input.value.normalize('NFKC').replace(/\s/g,'')!=='ふじこ'){status.textContent='合言葉は「ふじこ」です。もう一度入力してね。';input.focus();return;}document.getElementById('gift').hidden=false;status.textContent='合言葉、正解！ありがとうカードを受け取れました。';document.getElementById('giftTitle').focus();});
+
 

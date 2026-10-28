@@ -48,7 +48,13 @@
           "body": "パンとドリンクを楽しむひとときを、写真でご紹介します。"
         }
       ],
-      "shareURL": "https://is.gd/YoNWCb"
+      "shareURL": "https://ichirohns-jpg.github.io/ShikiConcierge-18/s/1/0bee87d200ae/",
+      "shareImage": {
+        "src": "https://ichirohns-jpg.github.io/ouchicafe-shop-dx/main-banner.jpg?v=35dd124150e5",
+        "alt": "おうちcafeパン工房",
+        "height": 640,
+        "width": 1280
+      }
     },
     {
       "id": "SHOP-0002",
@@ -95,7 +101,13 @@
           "illustration": true
         }
       ],
-      "shareURL": "https://is.gd/hpKXxC"
+      "shareURL": "https://ichirohns-jpg.github.io/ShikiConcierge-18/s/2/aceda6b8bc2b/",
+      "shareImage": {
+        "src": "https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/IMG_4390.JPG?v=f1017b6e06ce",
+        "alt": "ふじこが街の人と花を植え、地域活動で交流するイメージ",
+        "height": 1280,
+        "width": 1280
+      }
     },
     {
       "id": "SHOP-0003",
@@ -144,7 +156,13 @@
           "body": "動画で情報を届ける活動の紹介イメージです。"
         }
       ],
-      "shareURL": "https://is.gd/LIJBx7"
+      "shareURL": "https://ichirohns-jpg.github.io/ShikiConcierge-18/s/3/12fe71b6b833/",
+      "shareImage": {
+        "src": "https://ichirohns-jpg.github.io/iwashita-ryu-activity/images/activity/profile-main.jpg?v=147be171c9bb",
+        "alt": "岩下りゅうさんの活動紹介イメージ",
+        "height": 720,
+        "width": 1280
+      }
     }
   ]
 }

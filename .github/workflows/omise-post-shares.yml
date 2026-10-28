@@ -7,6 +7,8 @@ on:
     branches: [main]
     paths:
       - 'tools/omise-release/build-post-shares.mjs'
+      - 'tools/omise-release/build-shop-share-pages.mjs'
+      - 'tools/omise-release/test-shop-share-pages.mjs'
       - 'tools/omise-release/test-post-share-pages.mjs'
       - '.github/workflows/omise-post-shares.yml'
 permissions:
@@ -28,11 +30,15 @@ jobs:
           node-version: '22'
       - run: node --test tools/omise-release/test-post-share-pages.mjs
       - run: node tools/omise-release/build-post-shares.mjs
+      - run: node --test tools/omise-release/test-shop-share-pages.mjs
+      - name: Update shop profile share cards
+        continue-on-error: true
+        run: node tools/omise-release/build-shop-share-pages.mjs
       - name: Publish updated share pages
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git add -- omise-demo/post-shares p
+          git add -- omise-demo/post-shares p s omise-demo/short-links.js omise-demo/shop-share-links.json omise-demo/shops.json omise-demo/ouchicafe.html omise-demo/heartnet.html omise-demo/newtimes.html
           if git diff --cached --quiet; then
             exit 0
           fi

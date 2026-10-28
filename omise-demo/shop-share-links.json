@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "shops": {
+    "SHOP-0001": {
+      "shareURL": "https://ichirohns-jpg.github.io/ShikiConcierge-18/s/1/0bee87d200ae/",
+      "image": "https://ichirohns-jpg.github.io/ouchicafe-shop-dx/main-banner.jpg?v=35dd124150e5"
+    },
+    "SHOP-0002": {
+      "shareURL": "https://ichirohns-jpg.github.io/ShikiConcierge-18/s/2/aceda6b8bc2b/",
+      "image": "https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/IMG_4390.JPG?v=f1017b6e06ce"
+    },
+    "SHOP-0003": {
+      "shareURL": "https://ichirohns-jpg.github.io/ShikiConcierge-18/s/3/12fe71b6b833/",
+      "image": "https://ichirohns-jpg.github.io/iwashita-ryu-activity/images/activity/profile-main.jpg?v=147be171c9bb"
+    }
+  }
+}
