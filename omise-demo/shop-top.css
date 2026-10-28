@@ -26,19 +26,19 @@ body.shop-top-designed #intro .primary{margin-top:20px}
 
 
 /* Compact official SNS links: recognizable icons above intact labels. */
-body.shop-top-designed #intro .profile-social{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0 4px;padding:0}
-body.shop-top-designed #intro .profile-social a{--sns-color:#24543e;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:11px;box-sizing:border-box;min-width:0;min-height:104px;padding:8px 0;border:0;border-radius:12px;background:transparent;color:#253e33;font-family:inherit;font-size:18px;font-weight:700;line-height:1.4;text-align:center;text-decoration:none;white-space:nowrap;overflow-wrap:normal;word-break:normal;box-shadow:none}
-body.shop-top-designed #intro .profile-social a.sns-youtube{--sns-color:#e22222}
-body.shop-top-designed #intro .profile-social a.sns-facebook{--sns-color:#146adb}
-body.shop-top-designed #intro .profile-social a.sns-instagram{--sns-color:#ba2e7a}
-body.shop-top-designed #intro .profile-social .sns-mark{display:flex;align-items:center;justify-content:center;flex:none;width:58px;height:58px;min-width:58px;border-radius:17px;background:var(--sns-color);color:var(--sns-color);line-height:1;box-shadow:0 4px 10px #203c3110}
-body.shop-top-designed #intro .profile-social a.sns-instagram .sns-mark{background:linear-gradient(145deg,#7940b5,#cc2c7d 58%,#ec7545)}
-body.shop-top-designed #intro .profile-social .sns-mark svg{display:block;width:32px;height:32px}
-body.shop-top-designed #intro .profile-social .sns-label{display:block;white-space:nowrap}
-body.shop-top-designed #intro .profile-social a::after{content:none}
-body.shop-top-designed #intro .profile-social a:hover .sns-label{text-decoration:underline;text-underline-offset:4px}
-body.shop-top-designed #intro .profile-social a:focus-visible{outline:3px solid #d5a32d;outline-offset:4px}
-@media(max-width:360px){body.shop-top-designed #intro .profile-social{gap:8px}body.shop-top-designed #intro .profile-social a{font-size:17px}}
+body.shop-top-designed .profile-social{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0 4px;padding:0}
+body.shop-top-designed .profile-social a{--sns-color:#24543e;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:11px;box-sizing:border-box;min-width:0;min-height:104px;padding:8px 0;border:0;border-radius:12px;background:transparent;color:#253e33;font-family:inherit;font-size:18px;font-weight:700;line-height:1.4;text-align:center;text-decoration:none;white-space:nowrap;overflow-wrap:normal;word-break:normal;box-shadow:none}
+body.shop-top-designed .profile-social a.sns-youtube{--sns-color:#e22222}
+body.shop-top-designed .profile-social a.sns-facebook{--sns-color:#146adb}
+body.shop-top-designed .profile-social a.sns-instagram{--sns-color:#ba2e7a}
+body.shop-top-designed .profile-social .sns-mark{display:flex;align-items:center;justify-content:center;flex:none;width:58px;height:58px;min-width:58px;border-radius:17px;background:var(--sns-color);color:var(--sns-color);line-height:1;box-shadow:0 4px 10px #203c3110}
+body.shop-top-designed .profile-social a.sns-instagram .sns-mark{background:linear-gradient(145deg,#7940b5,#cc2c7d 58%,#ec7545)}
+body.shop-top-designed .profile-social .sns-mark svg{display:block;width:32px;height:32px}
+body.shop-top-designed .profile-social .sns-label{display:block;white-space:nowrap}
+body.shop-top-designed .profile-social a::after{content:none}
+body.shop-top-designed .profile-social a:hover .sns-label{text-decoration:underline;text-underline-offset:4px}
+body.shop-top-designed .profile-social a:focus-visible{outline:3px solid #d5a32d;outline-offset:4px}
+@media(max-width:360px){body.shop-top-designed .profile-social{gap:8px}body.shop-top-designed .profile-social a{font-size:17px}}
 
 /* A single clear action, followed by sharing for the card itself. */
 body.shop-top-designed #information>.grid{grid-template-columns:minmax(0,1fr)}
@@ -56,3 +56,10 @@ body.shop-top-designed #thanks-card-sharing .post-simple-networks{display:flex;f
 body.shop-top-designed #thanks-card-sharing .post-simple-networks a{font-size:21px;min-height:56px;padding:12px 16px;border-radius:10px;justify-content:center}
 body.shop-top-designed #thanks-card-sharing .post-share-copy{font-size:20px;min-height:54px}
 @media(max-width:360px){body.shop-top-designed #offer .gift-receive{font-size:20px;padding:12px;gap:8px}}
+
+
+body.shop-top-designed .profile-social a.sns-line{--sns-color:#079b45}
+body.shop-top-designed .profile-social-information{margin:12px 0 4px;grid-column:1/-1}
+body.shop-top-designed .profile-social:has(>a:nth-child(4)){grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:560px){body.shop-top-designed .profile-social:has(>a:nth-child(4)){grid-template-columns:repeat(2,minmax(0,1fr))}}
+body.shop-top-designed .profile-social:has(>a:last-child:nth-child(2)){grid-template-columns:repeat(2,minmax(0,1fr))}
