@@ -3,10 +3,10 @@
  const dxURL='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/';
  const style=document.createElement('style');style.textContent=`.post-fujiko-button{display:block!important;width:100%;margin:12px 0;background:#e7f1df!important;color:#194c3c!important;border:1px solid #b8ceb2!important;font-size:18px!important;min-height:50px}.post-fujiko-editor{padding:18px;margin:12px 0 20px;background:#f3f7ee;border:1px solid #c9d9c0;border-radius:14px}.post-fujiko-editor[hidden]{display:none}.post-fujiko-editor label{display:block;font-size:17px;font-weight:700}.post-fujiko-editor select,.post-fujiko-editor textarea{display:block;width:100%;box-sizing:border-box;font:400 18px/1.7 -apple-system,BlinkMacSystemFont,sans-serif;color:#193f33;background:#fff;border:1px solid #afc6b5;border-radius:10px;padding:12px;margin:8px 0 16px}.post-fujiko-preview{display:flex;align-items:center;gap:10px;margin:18px 0;font-size:22px}.post-fujiko-preview img{width:48px;height:48px;object-fit:cover;border-radius:50%}.post-fujiko-note{font-size:16px;line-height:1.7;color:#506352}`;document.head.append(style);
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
- // Private controls are opt-in only after the saved ADMIN session passes server authentication.
+ // Private controls are opt-in only after the saved Fujiko owner session passes server authentication.
  const sessionKey='shiki-merchant-session-v1',accessListeners=new Set();
  let verifiedToken='',checkingToken='',verification=null,runtimePromise=null;
- function adminSession(){try{const a=JSON.parse(localStorage.getItem(sessionKey)||'null');return a?.id==='ADMIN'&&/^DXS1\.[a-f0-9]{64}$/.test(a.token)&&Number.isFinite(a.expiresAt)&&a.expiresAt>Date.now()?a:null;}catch{return null;}}
+ function adminSession(){try{const a=JSON.parse(localStorage.getItem(sessionKey)||'null');return ['ADMIN','SHOP-0002'].includes(a?.id)&&/^DXS1\.[a-f0-9]{64}$/.test(a.token)&&Number.isFinite(a.expiresAt)&&a.expiresAt>Date.now()?a:null;}catch{return null;}}
  function hasAdminAccess(){return !!verifiedToken&&adminSession()?.token===verifiedToken;}
  function notifyAccess(){for(const callback of accessListeners)callback(hasAdminAccess());}
  function ownerRuntime(){if(window.omiseOwnerCall)return Promise.resolve();if(!runtimePromise)runtimePromise=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=dxURL+'owner-runtime.js?v=20261028-firstparty1';script.onload=()=>window.omiseOwnerCall?resolve():reject(Error('Unavailable'));script.onerror=()=>reject(Error('Unavailable'));document.head.append(script);}).catch(e=>{runtimePromise=null;throw e;});return runtimePromise;}
@@ -16,7 +16,7 @@
   if(verification&&checkingToken===a.token)return verification;
   // Hide while checking; failed or expired authentication never shows these controls.
   if(verifiedToken!==a.token){verifiedToken='';notifyAccess();}checkingToken=a.token;
-  const attempt=ownerRuntime().then(()=>window.omiseOwnerCall('postOwn',['ADMIN',a.token])).then(result=>{if(checkingToken===a.token&&adminSession()?.token===a.token&&Array.isArray(result))verifiedToken=a.token;else if(checkingToken===a.token)verifiedToken='';}).catch(()=>{if(checkingToken===a.token)verifiedToken='';}).finally(()=>{if(checkingToken===a.token){verification=null;checkingToken='';notifyAccess();}});
+  const attempt=ownerRuntime().then(()=>window.omiseOwnerCall('postOwn',[a.id,a.token])).then(result=>{if(checkingToken===a.token&&adminSession()?.token===a.token&&Array.isArray(result))verifiedToken=a.token;else if(checkingToken===a.token)verifiedToken='';}).catch(()=>{if(checkingToken===a.token)verifiedToken='';}).finally(()=>{if(checkingToken===a.token){verification=null;checkingToken='';notifyAccess();}});
   verification=attempt;return attempt;
  }
  window.addEventListener('storage',event=>{if(event.key===sessionKey||event.key===null)checkAdminAccess();});
@@ -136,5 +136,6 @@
  }
  window.DXPostShare={mount};
 })();
+
 
 
