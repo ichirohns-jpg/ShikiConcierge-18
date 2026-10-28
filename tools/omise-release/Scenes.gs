@@ -27,6 +27,13 @@ function merchantScenesSave(id,code,target,p){
  const lock=LockService.getScriptLock();lock.waitLock(20000);try{
  const current=omScenesRead_(shopId);if(p.revision!==current.revision)throw Error('別の画面で更新されています。画面を開き直して最新内容を確認してください。');
  const revision=Utilities.getUuid(),blobs=omSheet_('店主画像データ',['画像ID','分割番号','データ']);
+ const master=omBook_().getSheetByName('店舗一覧'),shopRows=master.getDataRange().getDisplayValues(),headers=shopRows[0],row=shopRows.findIndex(r=>r[headers.indexOf('店舗ID')]===shopId),photoCol=headers.indexOf('写真URL');
+ let coverURL=null;
+ if(row>0&&photoCol>=0&&scenes[0].src!==current.scenes[0].src){
+  coverURL=scenes[0].src;
+  if(coverURL.startsWith('data:')){const match=coverURL.match(/^data:([^;]+);base64,(.+)$/),file=postSocialFolder_().createFile(Utilities.newBlob(Utilities.base64Decode(match[2]),match[1],'COVER-'+shopId+'-'+revision+'.jpg'));postShareFile_(file.getId());coverURL='https://lh3.googleusercontent.com/d/'+encodeURIComponent(file.getId())+'=w600';}
+ }
+
  const stored=scenes.map((s,i)=>{if(!s.src.startsWith('data:'))return s;
  const imageId='SCENE-'+revision+'-'+i,parts=[];for(let j=0;j<s.src.length;j+=35000)parts.push([imageId,parts.length,s.src.slice(j,j+35000)]);
  blobs.getRange(blobs.getLastRow()+1,1,parts.length,3).setValues(parts);
@@ -34,6 +41,8 @@ function merchantScenesSave(id,code,target,p){
  const sheet=omSheet_('店舗紹介4枠',['店舗ID','改訂ID','内容JSON','更新日時']);const rows=sheet.getDataRange().getDisplayValues();const index=rows.findIndex(r=>r[0]===shopId);
  const values=[shopId,revision,JSON.stringify(stored),Utilities.formatDate(new Date(),'Asia/Tokyo','yyyy-MM-dd HH:mm:ss')];
  if(index>0)sheet.getRange(index+1,1,1,4).setValues([values]);else sheet.appendRow(values);
- return {ok:true,revision:revision,scenes:scenes,message:'保存しました。お店の紹介ページに反映されます。'};
+
+ if(row>0){if(coverURL!==null)master.getRange(row+1,photoCol+1).setValue(coverURL);[['公開状態','公開'],['掲載許可','確認済み']].forEach(([key,value])=>{const col=headers.indexOf(key);if(col>=0)master.getRange(row+1,col+1).setValue(value);});}
+ return {ok:true,revision:revision,scenes:scenes,message:'保存しました。お店の紹介ページと一覧に反映しました。'};
  }finally{lock.releaseLock();}
 }

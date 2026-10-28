@@ -19,6 +19,30 @@
  const continuous=deals||timeline;
  let offset=0,loading=false,moreObserver=null;
  const shown=new Map(),seen=new Set();
+ let returnState=null,returnKey='',loadedThrough=0;
+ if(continuous)try{
+  const state=window.history.state&&typeof window.history.state==='object'?window.history.state:{};
+  returnKey=state.dxFeedKey||'dx-feed-'+Date.now()+'-'+Math.random().toString(36).slice(2);
+  if(!state.dxFeedKey)window.history.replaceState({...state,dxFeedKey:returnKey},'');
+  if(window.performance?.getEntriesByType('navigation')[0]?.type==='back_forward'){
+   const saved=JSON.parse(sessionStorage.getItem(returnKey)||'null');
+   if(saved&&saved.url===location.pathname+location.search&&Number.isInteger(saved.count)&&saved.count>0&&saved.count<=10000&&Number.isFinite(saved.y)&&Number.isFinite(saved.time)&&Date.now()-saved.time<7200000)returnState=saved;
+  }
+  window.addEventListener('pagehide',()=>{
+   let anchor='',top=0;
+   for(const [key,{card}] of shown){const rect=card.getBoundingClientRect();if(rect.bottom>0){anchor=key;top=rect.top;break;}}
+   try{sessionStorage.setItem(returnKey,JSON.stringify({url:location.pathname+location.search,count:loadedThrough,y:window.scrollY,anchor,top,time:Date.now()}));}catch{}
+  });
+ }catch{}
+ async function restorePosition(saved){
+  const images=[...list.querySelectorAll('img')];
+  await Promise.race([Promise.all(images.map(img=>typeof img.decode==='function'?img.decode().catch(()=>{}):Promise.resolve())),new Promise(resolve=>setTimeout(resolve,2000))]);
+  if(postSharePromise)await postSharePromise.catch(()=>{});
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  const anchor=shown.get(saved.anchor)?.card;
+  const y=anchor?window.scrollY+anchor.getBoundingClientRect().top-(Number(saved.top)||0):saved.y;
+  window.scrollTo({top:Math.max(0,y),behavior:'auto'});
+ }
  const ended=p=>p.ended===true||(/^\d{4}-\d{2}-\d{2}$/.test(p.end||'')&&p.end<new Date(Date.now()+32400000).toISOString().slice(0,10));
  const section=el('section'),bar=el('div',null,'feed-heading');
  const heading=el('h2',article?'投稿記事':deals?'お得情報の投稿':ids[slug]?'投稿':'新着の投稿');
@@ -77,7 +101,7 @@
    identity.append(author,date);head.append(avatar,identity,el('span',p.kind==='deal'?'お得情報':'お知らせ','post-kind'+(p.kind==='deal'?' deal':'')));
    card.append(head,el('p',p.body,'post-body'));
    const photos=(p.photos||[]).filter(src=>/^data:image\/jpeg;base64,/.test(src));
-   if(photos.length){const media=el(article?'div':'a',null,'post-media');if(!article){media.href=pageURL(p);media.setAttribute('aria-label',p.name+'の投稿記事を開く');}for(const src of photos){const img=el('img');img.src=src;img.alt=p.name+'の投稿写真';img.loading=article?'eager':'lazy';img.decoding='async';media.append(img);}card.append(media);}
+   if(photos.length){const media=el(article?'div':'a',null,'post-media');if(!article){media.href=pageURL(p);media.setAttribute('aria-label',p.name+'の投稿記事を開く');}for(const src of photos){const img=el('img');img.src=src;img.alt=p.name+'の投稿写真';img.loading=article||returnState?'eager':'lazy';img.decoding='async';media.append(img);}card.append(media);}
    if(p.video&&/^https:\/\/drive\.google\.com\/file\/d\/[A-Za-z0-9_-]+\/preview$/.test(p.video)){
     const video=el('div',null,'post-video');
     if(p.poster&&/^data:image\/jpeg;base64,/.test(p.poster)){const poster=el('img');poster.src=p.poster;poster.alt='動画の表紙';video.append(poster);}
@@ -111,11 +135,11 @@
    if(settled)return;
    if(data?.ok!==true||!Array.isArray(data.posts)||!Number.isInteger(data.total)||data.total<0||(!data.posts.length&&nextOffset<data.total)){fail('読み込めませんでした。もう一度お試しください。');return;}
    settled=true;cleanup();loading=false;offset=nextOffset;
-   const rows=data.posts,total=data.total;render(rows,append);
+   const rows=data.posts,total=data.total;loadedThrough=offset+rows.length;render(rows,append);
    status.textContent=article?(shown.size?'':'掲載が終了しているか、公開前です。'):!shown.size?(deals?'公開中のお得情報はまだありません。':'公開された投稿はまだありません。'):continuous?shown.size+'件表示中':offset?'過去の投稿 '+(offset+1)+'〜'+Math.min(offset+10,total)+'件':'最新'+Math.min(10,total)+'件';
    if(article&&rows[0])document.title=rows[0].body.split('\n')[0].slice(0,60)+'｜お店めぐりDX';
    if(!append&&location.hash==='#posts-timeline')section.scrollIntoView();
-   if(!article){
+   const finishPaging=()=>{if(!article){
     if(!continuous&&offset){const back=el('button','最新の投稿に戻る','btn secondary');back.onclick=()=>load({nextOffset:0});paging.append(back);}
     if(rows.length&&offset+rows.length<total){
      const older=el('button',continuous?'続きを見る':'過去の投稿を見る','btn secondary');older.type='button';
@@ -123,7 +147,12 @@
      older.onclick=next;paging.append(older);
      if(continuous&&'IntersectionObserver' in window){moreObserver=new IntersectionObserver(entries=>{if(older.isConnected&&entries.some(entry=>entry.isIntersecting)&&!loading)next();},{rootMargin:'300px 0px'});moreObserver.observe(older);}
     }
-   }
+   }};
+   if(returnState){
+    if(rows.length&&loadedThrough<Math.min(returnState.count,total)){load({append:true,nextOffset:loadedThrough});return;}
+    const saved=returnState;returnState=null;
+    restorePosition(saved).catch(()=>{}).finally(finishPaging);
+   }else finishPaging();
   };
   script.onerror=()=>fail('読み込めませんでした。もう一度お試しください。');
   const params=new URLSearchParams({action:'posts',callback,offset:String(nextOffset)});
