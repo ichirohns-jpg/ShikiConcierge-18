@@ -13,7 +13,7 @@ if(shareField){shareField.value=shareField.value.split(/\n\n【詳しい紹介�
 function currentShareText(){
  try{const saved=JSON.parse(localStorage.getItem('shiki-merchant-session-v1')||'null');const fujiko=['ADMIN','SHOP-0002'].includes(saved?.id)&&/^DXS1\.[a-f0-9]{64}$/.test(saved?.token)&&saved.expiresAt>Date.now();
  if(!fujiko)return shareField.value;
- if(!window.DXPostShare?.profileText)throw Error('ふじこのログインを確認しています。少し待ってから、もう一度押してください。');
+ if(!window.DXPostShare?.profileText)throw Error('共有用のログインを確認しています。少し待ってから、もう一度押してください。');
  return window.DXPostShare.profileText(shareField.value,document.querySelector('h1').textContent,shopShareURL);
  }catch(e){document.getElementById('copyStatus').textContent=e.message;return null;}
 }

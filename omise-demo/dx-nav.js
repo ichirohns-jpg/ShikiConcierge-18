@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
- const fujikoSharing=document.createElement('script');fujikoSharing.src='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/fujiko-share-locations.js?v=20261028-fujiko-copy4';document.head.append(fujikoSharing);
+ const fujikoSharing=document.createElement('script');fujikoSharing.src='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/fujiko-share-locations.js?v=20261028-identity9';document.head.append(fujikoSharing);
  if(document.querySelector('.dx-global-nav'))return;
  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
  const routes={
