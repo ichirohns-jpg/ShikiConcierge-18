@@ -58,8 +58,8 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261028-fujiko1',document.currentScript?.src||base+'posts.js').href;
- function share(box,p){
+ const postShareURL=new URL('./post-share.js?v=20261028-private2',document.currentScript?.src||base+'posts.js').href;
+ function share(box,p,options){
   const mount=el('div');box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
    if(window.DXPostShare){resolve(window.DXPostShare);return;}
@@ -68,7 +68,13 @@
    script.onerror=()=>{postSharePromise=null;reject(Error('投稿機能を読み込めませんでした。ページを更新してください。'));};
    document.head.append(script);
   });
-  postSharePromise.then(ui=>{if(mount.isConnected)ui.mount(mount,p);}).catch(e=>mount.append(el('p',e.message,'post-share-message')));
+  postSharePromise.then(ui=>{if(mount.isConnected)ui.mount(mount,p,options);}).catch(e=>mount.append(el('p',e.message,'post-share-message')));
+ }
+ // The extra profile sharing area stays hidden unless ADMIN authentication succeeds.
+ if(ids[slug]&&document.querySelector('#share')){
+  const readProfile=()=>({name:document.querySelector('#intro h1')?.textContent||document.querySelector('h1')?.textContent||'',body:document.querySelector('#intro .profile-description')?.textContent||document.querySelector('#intro .subtitle')?.nextElementSibling?.textContent||''});
+  const p={...readProfile(),shareURL:base+slug};
+  share(document.querySelector('#share'),p,{privateOnly:true,profile:true,readProfile});
  }
  function cafeAdCard(){
   const card=el('article',null,'post-card cafe-ad-card'),head=el('div',null,'post-header');
@@ -166,3 +172,4 @@
  window.addEventListener('focus',pruneEnded);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)pruneEnded();});
 })();
+
