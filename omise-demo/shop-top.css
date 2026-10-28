@@ -63,3 +63,9 @@ body.shop-top-designed .profile-social-information{margin:12px 0 4px;grid-column
 body.shop-top-designed .profile-social:has(>a:nth-child(4)){grid-template-columns:repeat(4,minmax(0,1fr))}
 @media(max-width:560px){body.shop-top-designed .profile-social:has(>a:nth-child(4)){grid-template-columns:repeat(2,minmax(0,1fr))}}
 body.shop-top-designed .profile-social:has(>a:last-child:nth-child(2)){grid-template-columns:repeat(2,minmax(0,1fr))}
+
+/* Official shop logos keep their original proportions beside the introduction. */
+#intro .shop-brand{display:flex;align-items:center;margin:0 0 12px;min-width:0}
+#intro .shop-brand img{display:block;max-width:100%;height:auto;object-fit:contain;border-radius:0;box-shadow:none}
+#intro .shop-brand-ouchicafe img{width:72px;height:72px}
+#intro .shop-brand-newtimes img{width:200px;height:auto}
