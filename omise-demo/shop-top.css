@@ -1,0 +1,27 @@
+body.shop-top-designed{background:radial-gradient(ellipse at 0 160px,#fff0c2aa,transparent 520px),radial-gradient(ellipse at 100% 450px,#dcedd7aa,transparent 540px),#f7f9f2}
+body.shop-top-designed main>.dx-route{border:0;margin-bottom:12px;font-size:16px}
+body.shop-top-designed main>header{max-width:210px;margin:4px auto 18px}
+body.shop-top-designed main>header img{box-shadow:0 3px 14px #173f3312}
+body.shop-top-designed #intro{padding:26px;border:1px solid #d1dfc9;border-top:5px solid #edc55a;border-radius:24px;box-shadow:0 8px 30px #3554340d;overflow:hidden}
+body.shop-top-designed #intro .eyebrow{display:inline-block;background:#e8f1de;color:#47663b;padding:5px 12px;border-radius:8px;font-size:15px;margin:0 0 14px;letter-spacing:.03em}
+body.shop-top-designed #intro h1{font-size:38px;line-height:1.35;letter-spacing:.02em;margin-bottom:12px}
+body.shop-top-designed #intro .subtitle{font-size:20px;line-height:1.65;color:#36593f;margin-bottom:18px}
+body.shop-top-designed .shop-top-visual{margin:20px -26px 24px;background:#f5f7ec;border-top:1px solid #e7eddc;border-bottom:1px solid #e1e9d6}
+body.shop-top-designed .shop-hero-guide{display:flex;align-items:center;gap:10px;padding:10px 20px;background:#fff1bb;color:#385331;font-size:16px;font-weight:750}
+body.shop-top-designed .shop-hero-guide img{width:38px;height:38px;flex:none;object-fit:cover;border-radius:50%;border:2px solid white}
+body.shop-top-designed .shop-hero-spark{margin-left:auto;color:#c38a20;font-size:24px}
+body.shop-top-designed .shop-hero-main{display:grid;place-items:center;position:relative;isolation:isolate;width:100%;height:300px;overflow:hidden;background:#e6edda}
+body.shop-top-designed .shop-hero-main img.shop-hero-backdrop{position:absolute;inset:-20px;width:calc(100% + 40px);height:calc(100% + 40px);object-fit:cover;filter:blur(18px);opacity:.22;z-index:-1;border-radius:0}
+body.shop-top-designed .shop-hero-main img.shop-hero-picture{width:100%;height:100%;object-fit:contain;border-radius:0}
+body.shop-top-designed .shop-hero-caption{display:flex;align-items:center;gap:10px;padding:12px 20px;background:#194f3b;color:white;font-size:17px;font-weight:700;line-height:1.5}
+body.shop-top-designed .shop-hero-number{font-size:13px;color:#f9db83;border:1px solid #d9e7bf88;border-radius:6px;padding:2px 6px}
+body.shop-top-designed .shop-hero-more{margin-left:auto;white-space:nowrap;color:#f6e6a6;font-size:14px}
+body.shop-top-designed .shop-hero-thumbnails{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:16px 16px 10px}
+body.shop-top-designed .shop-hero-thumb{display:flex;flex-direction:column;overflow:hidden;background:#fff;border:1px solid #d5dfc9;border-radius:12px;text-decoration:none;color:#294e37;box-shadow:0 2px 8px #345e3010;min-width:0}
+body.shop-top-designed .shop-hero-thumb img{width:100%;height:92px;object-fit:contain;border-radius:0;background:#edf1e4}
+body.shop-top-designed .shop-hero-thumb span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:15px;line-height:1.5;font-weight:700;padding:8px 9px;min-height:58px}
+body.shop-top-designed .shop-hero-note{font-size:14px;line-height:1.7;color:#5c7254;padding:0 18px;margin:0 0 14px}
+body.shop-top-designed #intro .profile-description{font-size:18px;line-height:1.9}
+body.shop-top-designed #intro .primary{margin-top:20px}
+@media(max-width:560px){body.shop-top-designed main>header{max-width:180px;margin-bottom:16px}body.shop-top-designed #intro{padding:20px;border-radius:21px}body.shop-top-designed #intro h1{font-size:31px}body.shop-top-designed #intro .subtitle{font-size:19px}body.shop-top-designed .shop-top-visual{margin-left:-20px;margin-right:-20px}body.shop-top-designed .shop-hero-main{height:220px}body.shop-top-designed .shop-hero-guide{padding:9px 14px;gap:8px;font-size:15px}body.shop-top-designed .shop-hero-guide img{width:32px;height:32px}body.shop-top-designed .shop-hero-caption{padding:10px 13px;font-size:16px;flex-wrap:wrap;gap:8px}body.shop-top-designed .shop-hero-more{font-size:13px}body.shop-top-designed .shop-hero-thumbnails{gap:7px;padding:12px 10px 8px}body.shop-top-designed .shop-hero-thumb img{height:72px}body.shop-top-designed .shop-hero-thumb span{font-size:14px;padding:7px 6px;min-height:56px}body.shop-top-designed .shop-hero-note{padding:0 13px;font-size:14px}}
+@media(prefers-reduced-motion:no-preference){body.shop-top-designed .shop-hero-thumb{transition:transform .18s,box-shadow .18s}body.shop-top-designed .shop-hero-thumb:hover{transform:translateY(-3px);box-shadow:0 6px 16px #345e3020}}

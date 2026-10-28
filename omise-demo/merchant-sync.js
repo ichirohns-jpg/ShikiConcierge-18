@@ -7,7 +7,7 @@
  const safeURL=v=>{try{const u=new URL(v);return /^https?:$/.test(u.protocol)?u.href:'';}catch{return '';}};
  window.omiseApprovedLoaded=data=>{
  if(!data||!data.ok)return;const s=data.shop;
- if(s){const name=s['店名'];if(name){document.querySelector('h1').textContent=name;document.title=name+'｜志木なるほど お店めぐりDX';}const intro=document.querySelector('#intro .subtitle');if(Object.prototype.hasOwnProperty.call(s,'紹介文')&&intro?.nextElementSibling)intro.nextElementSibling.textContent=s['紹介文']||'';
+ if(s){const name=s['店名'];if(name){document.querySelector('h1').textContent=name;document.title=name+'｜志木なるほど お店めぐりDX';}const description=document.querySelector('#intro .profile-description')||document.querySelector('#intro .subtitle')?.nextElementSibling;if(Object.prototype.hasOwnProperty.call(s,'紹介文')&&description)description.textContent=s['紹介文']||'';
  const category=document.querySelector('#intro .eyebrow');if(category&&Object.prototype.hasOwnProperty.call(s,'業種'))category.textContent=s['業種']||'';
  const recommendation=document.querySelector('#information h3 + p');if(recommendation&&Object.prototype.hasOwnProperty.call(s,'おすすめ商品・サービス'))recommendation.textContent=s['おすすめ商品・サービス']||'';
  const about=document.querySelector('#information > h2 + p');if(id==='SHOP-0002'&&about&&Object.prototype.hasOwnProperty.call(s,'紹介文'))about.textContent=s['紹介文']||'';

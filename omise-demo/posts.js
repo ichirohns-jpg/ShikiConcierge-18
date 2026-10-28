@@ -9,7 +9,7 @@
  if(!article&&!deals&&!timeline&&!ids[slug])return;
  const id=article?new URLSearchParams(location.search).get('id'):null;
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
- document.body.classList.add('social-view');if(ids[slug]){document.body.classList.add('social-profile');const description=document.querySelector('#intro .subtitle')?.nextElementSibling;if(description?.tagName==='P')description.classList.add('profile-description');}
+ document.body.classList.add('social-view');if(ids[slug]){document.body.classList.add('social-profile');const description=document.querySelector('#intro .profile-description')||document.querySelector('#intro .subtitle')?.nextElementSibling;if(description?.tagName==='P')description.classList.add('profile-description');}
  const nav=el('nav',null,'social-nav');nav.setAttribute('aria-label','DXのメニュー');
  for(const [text,path,active] of [['お店を探す','./#shops',false],['投稿を見る','timeline.html',timeline],['お得情報','deals.html',deals],['投稿・管理','./#owner',false]]){
   const a=el('a',text);a.href=path;if(active)a.setAttribute('aria-current','page');nav.append(a);
