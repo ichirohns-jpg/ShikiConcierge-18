@@ -9,12 +9,14 @@
  function source(a){try{const u=new URL(a.href);return u.origin===new URL(endpoint).origin&&u.pathname===new URL(endpoint).pathname&&Object.prototype.hasOwnProperty.call(modes,u.searchParams.get('mode'))?u:null;}catch{return null;}}
  function destination(u){const link=new URL(modes[u.searchParams.get('mode')],root);if(u.searchParams.get('kind')==='deal')link.searchParams.set('kind','deal');link.hash='top';return link.href;}
  function rewrite(){if(!active)return;document.querySelectorAll('a[href]').forEach(a=>{const u=source(a);if(u){a.href=destination(u);a.target='_self';}});}
- function complete(value){if(resolved)return;resolved=true;active=value;settle(value);rewrite();if(active)new MutationObserver(rewrite).observe(document.body,{childList:true,subtree:true});}
+ function complete(value){if(resolved)return;resolved=true;active=value;settle(value);if(active)try{localStorage.setItem('shiki-owner-api-ready-v1','firstparty-owner-v1');}catch{}rewrite();if(active)new MutationObserver(rewrite).observe(document.body,{childList:true,subtree:true});}
  window.omiseOwnerVersionLoaded=data=>complete(data?.ok===true&&data.version==='firstparty-owner-v1');
  document.addEventListener('click',async e=>{
   if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
   const a=e.target.closest('a[href]'),u=a&&source(a);if(!u||resolved&&!active)return;
   e.preventDefault();a.setAttribute('aria-busy','true');const useSite=await ready;a.removeAttribute('aria-busy');location.assign(useSite?destination(u):u.href);
  });
- const script=document.createElement('script');script.src=endpoint+'?action=ownerVersion&callback=omiseOwnerVersionLoaded';script.onerror=()=>complete(false);document.head.append(script);setTimeout(()=>complete(false),12000);
+ // Once the compatible API or a saved site login has been seen, entry is immediate.
+ try{const a=JSON.parse(localStorage.getItem('shiki-merchant-session-v1')||'null');if(localStorage.getItem('shiki-owner-api-ready-v1')==='firstparty-owner-v1'||(a&&/^(SHOP-[0-9]{4}|ADMIN)$/.test(a.id)&&/^DXS1\.[a-f0-9]{64}$/.test(a.token)&&a.expiresAt>Date.now()))complete(true);}catch{}
+ const script=document.createElement('script');script.src=endpoint+'?action=ownerVersion&callback=omiseOwnerVersionLoaded';script.onerror=()=>complete(false);document.head.append(script);setTimeout(()=>complete(false),30000);
 })();
