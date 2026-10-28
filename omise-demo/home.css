@@ -55,3 +55,34 @@ body.home-page .owner-entry{display:grid;grid-template-columns:1fr auto;gap:8px 
 @media(max-width:820px){body.home-page #shopList{grid-template-columns:repeat(2,minmax(0,1fr))}body.home-page>header{gap:24px}body.home-page header h1>strong{font-size:33px}}
 @media(max-width:560px){body.home-page>header,body.home-page main{padding-left:18px;padding-right:18px}body.home-page>header{display:block;padding-top:18px;padding-bottom:20px}.home-page .hero-visual{max-width:420px;margin:0 auto 16px}.home-page #banner{border-radius:13px}.home-page .home-kicker{display:none}.home-page .home-brand{text-align:center}.home-page header h1{display:flex;align-items:baseline;justify-content:center;gap:7px;flex-wrap:wrap}.home-page header h1>span{font-size:17px;margin:0;white-space:nowrap}body.home-page header h1>strong{font-size:28px;letter-spacing:0}.home-page .dx-word{font-size:.65em;margin-left:4px}.home-page header .intro{font-size:16px;margin:9px 0 0}.home-page header .intro br{display:none}.home-page .home-owner-link{font-size:15px;min-height:36px}body.home-page .home-menu{gap:7px;margin-bottom:26px}body.home-page .home-menu a{align-items:center;text-align:center;min-height:66px;padding:10px 4px}body.home-page .home-menu strong{font-size:18px}body.home-page .home-menu span{font-size:14px}.home-page .directory-heading{gap:4px;margin-bottom:12px}.home-page .directory-heading h2{font-size:24px}.home-page .directory-heading p{font-size:15px}.home-page .search-box{display:block;padding:9px 12px}.home-page .search-box label{display:block;font-size:15px}.home-page .search-box input{width:100%;padding:5px 0;min-height:40px}.home-page #syncStatus{margin-bottom:12px}body.home-page #shopList{grid-template-columns:1fr;gap:20px}body.home-page .home-shop>a{aspect-ratio:4/3}.home-page .home-shop-body{padding:20px}.home-page .home-shop-body p{-webkit-line-clamp:3}.home-page .home-secondary{grid-template-columns:1fr;gap:14px}.home-page .home-secondary>section{padding:20px}body.home-page .owner-entry{display:block;padding:20px}.home-page .owner-entry>.btn{width:100%;margin:14px 0 10px}.home-page .owner-entry>.muted{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.home-page *{transition:none!important;scroll-behavior:auto!important}}
+
+
+/* Two editorial roles: compact operating news and photographic shop introductions. */
+body.home-page .home-secondary{display:block;margin:0 0 32px}
+body.home-page .home-secondary>#fujiko{background:#fffdf5;border:1px solid #e5dec8;border-radius:16px;padding:24px;margin:0 0 32px}
+.home-page .editorial-heading{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.home-page .editorial-heading img{width:44px;height:44px;flex:none;border-radius:50%;object-fit:cover}
+body.home-page .editorial-kicker{font-size:15px;font-weight:700;letter-spacing:.04em;color:#7b6b3f;line-height:1.5;margin:0 0 5px}
+body.home-page .editorial-heading h2{font-size:24px;line-height:1.5;margin:0}
+.home-page .home-announcement{display:grid;grid-template-columns:76px minmax(0,1fr);gap:18px;border-top:1px solid #e9e3d3;padding-top:18px}
+.home-page .home-announcement time{font-size:16px;line-height:1.7;color:#786d52;white-space:nowrap}
+.home-page .home-announcement h3{font-size:21px;line-height:1.6;margin:0 0 6px}
+body.home-page .home-announcement p{font-size:18px;line-height:1.8;margin:0 0 10px;color:#536957}
+.home-page .editorial-link{display:inline-flex;align-items:center;gap:12px;min-height:44px;font-size:18px;font-weight:700;color:var(--forest);text-decoration:underline;text-underline-offset:4px}
+body.home-page .home-secondary>#cheer{padding:0;border:0;border-radius:0;background:transparent;margin:0}
+.home-page .cheer-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+body.home-page #cheer h2{font-size:27px;line-height:1.5;margin:0}
+body.home-page #cheer .cheer-intro{font-size:18px;line-height:1.8;margin:10px 0 20px}
+.home-page .cheer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.home-page .cheer-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);text-decoration:none}
+.home-page .cheer-photo{position:relative;display:grid;place-items:center;aspect-ratio:4/3;overflow:hidden;background:#ecf1e5}
+.home-page .cheer-photo img{position:absolute;inset:0;display:block;width:100%;height:100%;min-height:0;object-fit:contain;border-radius:0}
+.home-page .cheer-image-note{position:absolute;bottom:7px;left:7px;padding:2px 7px;background:#ffffffeb;border-radius:4px;font-size:13px;line-height:1.5;color:#506352}
+.home-page .cheer-card-body{display:flex;flex-direction:column;align-items:flex-start;flex:1;padding:18px}
+.home-page .cheer-category{font-size:15px;line-height:1.6;color:#64745d}
+body.home-page #cheer .cheer-card h3{font-size:22px;line-height:1.5;margin:7px 0 8px}
+body.home-page #cheer .cheer-card p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-size:18px;line-height:1.75;color:#536957;margin:0 0 14px}
+.home-page .cheer-visit{display:flex;align-items:center;justify-content:space-between;gap:10px;align-self:stretch;margin:auto 0 0;padding-top:10px;border-top:1px solid #e7ecdf;font-size:18px;font-weight:700;color:var(--forest)}
+@media(hover:hover){.home-page .cheer-card:hover{border-color:#8aa57d}.home-page .cheer-card:hover .cheer-visit{text-decoration:underline}}
+@media(max-width:820px){.home-page .cheer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){body.home-page .home-secondary>#fujiko{padding:20px;margin-bottom:28px}.home-page .home-announcement{grid-template-columns:1fr;gap:6px}.home-page .editorial-heading{gap:10px}.home-page .editorial-heading h2{font-size:23px}.home-page .cheer-heading{gap:4px}body.home-page #cheer h2{font-size:25px}.home-page .cheer-grid{grid-template-columns:1fr;gap:14px}.home-page .cheer-card{display:grid;grid-template-columns:104px minmax(0,1fr);align-items:stretch}.home-page .cheer-photo{aspect-ratio:auto;min-height:130px;height:100%;border-right:1px solid #e2e8db}.home-page .cheer-photo img{height:100%;max-height:none;object-fit:contain}.home-page .cheer-image-note{left:4px;bottom:5px;padding:2px 4px;font-size:12px}.home-page .cheer-card-body{padding:14px}body.home-page #cheer .cheer-card h3{font-size:21px;margin-top:5px}body.home-page #cheer .cheer-card p{-webkit-line-clamp:2;margin-bottom:12px}.home-page .cheer-visit{font-size:17px}.home-page .cheer-category{font-size:14px}}
