@@ -51,7 +51,7 @@ function respond_(data, callback) {
   return ContentService.createTextOutput(json)
     .setMimeType(ContentService.MimeType.JSON);
 }
-function doGet(e){const p=(e&&e.parameter)||{};if(p.action==='ownerVersion')return respond_(ownerVersion_(),p.callback||'');if(p.mode==='edit')return HtmlService.createHtmlOutput(POST_EDITOR_HTML.replace(/__OMISE_INITIAL_KIND__/g,p.kind==='deal'?'deal':'notice')).setTitle('お店の情報を更新').addMetaTag('viewport','width=device-width,initial-scale=1');if(p.mode==='scenes')return HtmlService.createHtmlOutput(SCENES_HTML).setTitle('お店の紹介を直す').addMetaTag('viewport','width=device-width,initial-scale=1');if(p.mode==='info')return HtmlService.createHtmlOutput(MERCHANT_HTML).setTitle('お店の基本情報を更新').addMetaTag('viewport','width=device-width,initial-scale=1');if(p.mode==='postShare')return postShareHtml_(p.id||'');if(p.action==='posts')return respond_(postFeed_(p),p.callback||'');if(p.action==='thanksCard')return respond_(thanksCardPublic_(),p.callback||'');if(p.action==='merchantPublic'){if(!/^SHOP-[0-9]{4}$/.test(p.shop||''))return respond_({ok:false},p.callback||'');return respond_(omPublic_(p.shop),p.callback||'');}return publicShopsGet_(e);}
+function doGet(e){const p=(e&&e.parameter)||{};if(p.action==='facebookResolve')return respond_(facebookResolve_(p.url),p.callback||'');if(p.action==='ownerVersion')return respond_(ownerVersion_(),p.callback||'');if(p.mode==='edit')return HtmlService.createHtmlOutput(POST_EDITOR_HTML.replace(/__OMISE_INITIAL_KIND__/g,p.kind==='deal'?'deal':'notice')).setTitle('お店の情報を更新').addMetaTag('viewport','width=device-width,initial-scale=1');if(p.mode==='scenes')return HtmlService.createHtmlOutput(SCENES_HTML).setTitle('お店の紹介を直す').addMetaTag('viewport','width=device-width,initial-scale=1');if(p.mode==='info')return HtmlService.createHtmlOutput(MERCHANT_HTML).setTitle('お店の基本情報を更新').addMetaTag('viewport','width=device-width,initial-scale=1');if(p.mode==='postShare')return postShareHtml_(p.id||'');if(p.action==='posts')return respond_(postFeed_(p),p.callback||'');if(p.action==='thanksCard')return respond_(thanksCardPublic_(),p.callback||'');if(p.action==='merchantPublic'){if(!/^SHOP-[0-9]{4}$/.test(p.shop||''))return respond_({ok:false},p.callback||'');return respond_(omPublic_(p.shop),p.callback||'');}return publicShopsGet_(e);}
 const OM_BOOK='1u9JGrQkqml6qoNqIk-nuLxdcFXAPQ_COkCX3vA7cSX8';
 function omBook_(){return SpreadsheetApp.openById(OM_BOOK);}
 function omSheet_(name,headers){const b=omBook_();let s=b.getSheetByName(name);if(!s){s=b.insertSheet(name);s.appendRow(headers);s.setFrozenRows(1);}return s;}
@@ -341,3 +341,30 @@ function doPost(e){
  }catch(e){return respond_({ok:false,error:e instanceof SyntaxError?'送信形式を確認してください。':String(e&&e.message||'処理を完了できませんでした。')},'');}
 }
 
+
+
+/** Resolve only public Facebook share redirects; never fetch arbitrary destinations. */
+function facebookResolve_(value){
+ const valid=u=>/^https:\/\/(?:(?:www|m|web)\.)?facebook\.com\/[A-Za-z0-9_/?=&%.:\-]+$/.test(u)&&u.length<=2000;
+ const direct=u=>/^https:\/\/(?:(?:www|m|web)\.)?facebook\.com\/(?:[^/?]+\/posts\/[^/?]+|permalink\.php\?|story\.php\?|photo(?:\.php)?[/?]|reel\/[^/?]+)/.test(u);
+ let current=String(value||'').trim();
+ try{
+  if(!valid(current))throw Error();
+  const cache=CacheService.getScriptCache(),key='fbresolve:'+Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,current)).slice(0,48),saved=cache.get(key);
+  if(saved)return {ok:true,url:saved};
+  for(let i=0;i<6;i++){
+   if(direct(current)){cache.put(key,current,21600);return {ok:true,url:current};}
+   const r=UrlFetchApp.fetch(current,{followRedirects:false,muteHttpExceptions:true}),status=r.getResponseCode();
+   if(status>=300&&status<400){
+    const headers=r.getAllHeaders(),location=String(headers.Location||headers.location||'');
+    const next=location.startsWith('/')?'https://www.facebook.com'+location:location;
+    if(!valid(next))throw Error();current=next;continue;
+   }
+   if(status!==200)throw Error();
+   const html=r.getContentText(),match=html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)/i)||html.match(/<meta[^>]+property=["']og:url["'][^>]+content=["']([^"']+)/i);
+   const next=match?match[1].replace(/&amp;/g,'&'):'';
+   if(!valid(next)||!direct(next))throw Error();current=next;
+  }
+ }catch(e){}
+ return {ok:false,error:'元投稿の正式リンクを確認できませんでした。'};
+}
