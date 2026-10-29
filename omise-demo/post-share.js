@@ -52,7 +52,7 @@
   const ended=()=>p.ended===true||Date.now()>=expiresAt;
   const articleLink=dynamic?dxURL+'article.html?id='+encodeURIComponent(p.id):'';
   let link=dynamic?articleLink:(/^https:\/\//.test(p.shareURL||'')?p.shareURL:dxURL);
-  let ownText=[p.title,p.body].filter(Boolean).join('\n\n');
+  let ownText=[p.title,p.body].filter(Boolean).join('\n\n').replace(/[\u200B\u2060\uFEFF]/g,'');
   const makeText=name=>name==='original'?ownText:(name==='fujiko'?'ふじこからの'+(options.profile?'お店・活動紹介🥒':p.kind==='deal'?'お得情報🥒':'街のお知らせ🥒'):'ハートネット志木からの'+(options.profile?'お店・活動紹介':p.kind==='deal'?'お得情報':'お知らせ'))+'\n'+(p.name?p.name+'さん'+(options.profile?'をご紹介します。':'の投稿をご紹介します。'):'志木のお店・活動をご紹介します。')+'\n\n'+ownText+(p.end?'\n\n掲載期限：'+p.end+'まで':'')+'\n\n詳しくは'+(options.profile?'紹介ページ':'元の投稿')+'をご覧ください。';
   let shareText=ownText,userEdited=false;
   const area=el('section',null,'post-publish post-simple-share');

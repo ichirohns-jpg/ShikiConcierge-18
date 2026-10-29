@@ -63,7 +63,7 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261029-facebookcard29',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261029-maplinks',document.currentScript?.src||base+'posts.js').href;
  function share(box,p,options){
   const mount=options?.replaceExisting?box:el('div');if(mount!==box)box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
@@ -100,6 +100,28 @@
   share(card,{title:'おうちcafeパン工房',body:'焼きたてパンとコーヒーで、ほっとひと息。\n志木市本町のパン工房です。',shareURL:base+'ouchicafe-ad-share-v2.html'});
   return card;
  }
+
+ // Render user text as DOM nodes; map URLs become a separate action below the article.
+ function postText(text,cls){
+  const body=el('p',null,cls),maps=[],raw=String(text||'');
+  const re=/https?:\/\/[^\s<>"\u200B\u200C\u200D\u2060\uFEFF]+/gi;
+  let cursor=0;
+  for(const match of raw.matchAll(re)){
+   body.append(document.createTextNode(raw.slice(cursor,match.index).replace(/[\u200B\u2060\uFEFF]/g,'')));
+   const urlText=match[0].replace(/[。、，,！!？?）)\]】]+$/u,'');
+   let url;try{url=new URL(urlText);}catch{}
+   const isMap=url&&(url.hostname==='maps.app.goo.gl'||url.hostname==='maps.google.com'||url.hostname==='goo.gl'&&url.pathname.startsWith('/maps')||/^(www\.)?google\.(com|co\.jp)$/.test(url.hostname)&&/^\/maps(?:\/|$)/.test(url.pathname));
+   if(isMap){if(!maps.includes(url.href))maps.push(url.href);}
+   else if(url){const a=el('a',urlText);a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';a.style.overflowWrap='anywhere';body.append(a);}
+   else body.append(document.createTextNode(urlText));
+   body.append(document.createTextNode(match[0].slice(urlText.length)));
+   cursor=match.index+match[0].length;
+  }
+  body.append(document.createTextNode(raw.slice(cursor).replace(/[\u200B\u2060\uFEFF]/g,'')));
+  const actions=maps.map(href=>{const a=el('a','📍 Googleマップで場所・行き方を見る ↗','post-map-action');a.href=href;a.target='_blank';a.rel='noopener noreferrer';a.style.cssText='display:block;margin:16px;padding:16px;border-radius:12px;background:#531a65;color:#fff;text-align:center;text-decoration:none;font-weight:700;line-height:1.6;overflow-wrap:anywhere';return a;});
+  return {body,actions};
+ }
+
  function buildCard(p){
    const rec=p.shop==='SHOP-0002'?window.DXSNSRecommend?.parse(p.body):null;
    const shop=shopURL(p),card=el('article',null,'post-card'),head=el('div',null,'post-header');
@@ -110,7 +132,7 @@
    if(shop){author.href=shop;author.setAttribute('aria-label',p.name+'のトップページを見る');}
    const date=el('a',shortDate(p.date),'post-date');date.href=pageURL(p);date.setAttribute('aria-label',p.date+'の記事を開く');
    identity.append(author,date);head.append(avatar,identity,el('span',rec?'応援紹介':p.kind==='deal'?'お得情報':'お知らせ','post-kind'+(p.kind==='deal'?' deal':'')));
-   card.append(head,el('p',rec?rec.comment:p.body,'post-body'));if(rec)window.DXSNSRecommend.mount(card,rec);
+   const text=postText(rec?rec.comment:p.body,'post-body');card.append(head,text.body);if(rec)window.DXSNSRecommend.mount(card,rec);
    const photos=(p.photos||[]).filter(src=>/^data:image\/jpeg;base64,/.test(src));
    if(photos.length){const media=el(article?'div':'a',null,'post-media');if(!article){media.href=pageURL(p);media.setAttribute('aria-label',p.name+'の投稿記事を開く');}for(const src of photos){const img=el('img');img.src=src;img.alt=p.name+'の投稿写真';img.loading=article||returnState?'eager':'lazy';img.decoding='async';media.append(img);}card.append(media);}
    if(p.video&&/^https:\/\/drive\.google\.com\/file\/d\/[A-Za-z0-9_-]+\/preview$/.test(p.video)){
@@ -118,6 +140,7 @@
     if(p.poster&&/^data:image\/jpeg;base64,/.test(p.poster)){const poster=el('img');poster.src=p.poster;poster.alt='動画の表紙';video.append(poster);}
     const play=el('button','▶ 動画を見る');play.type='button';play.onclick=()=>{const frame=el('iframe');frame.src=p.video;frame.title=p.name+'の投稿動画';frame.allowFullscreen=true;video.replaceChildren(frame);};video.append(play);card.append(video);
    }
+   card.append(...text.actions);
    if(p.end)card.append(el('p',p.end+'まで','post-end'));
    const links=el('div',null,'post-links');
    if(!article){const detail=el('a',rec?'DXで紹介を読む・シェアする →':'この記事を開く');detail.href=pageURL(p);links.append(detail);}
