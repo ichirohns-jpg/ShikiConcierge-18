@@ -1,5 +1,5 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
-const script=fs.readFileSync(new URL('./owner-runtime.js',import.meta.url),'utf8');const map=new Map();let clock=Date.now();class Clock extends Date{static now(){return clock;}}
+const script=fs.readFileSync(new URL('../../omise-demo/owner-runtime.js',import.meta.url),'utf8');const map=new Map();let clock=Date.now();class Clock extends Date{static now(){return clock;}}
 const storage={getItem:k=>map.get(k)||null,setItem:(k,v)=>map.set(k,v),removeItem:k=>map.delete(k)};
 let requests=[];let response=async()=>({ok:true,json:async()=>({ok:true,result:{ok:true}})});
 function page(){const ctx=vm.createContext({window:{},Date:Clock,localStorage:storage,fetch:async(u,o)=>{requests.push({u,o});return response();},AbortController,setTimeout:()=>1,clearTimeout(){},TypeError});vm.runInContext(script,ctx);return ctx.window;}
@@ -12,5 +12,6 @@ response=async()=>({ok:true,json:async()=>({ok:false,error:'ログインの有�
 assert.equal(info.omiseOwnerSession.authError(new Error('Failed to fetch')),false);assert.equal(info.omiseOwnerSession.authError(new Error('ログインの有効期限が切れました。')),true);
 await assert.rejects(()=>info.omiseOwnerCall('setupMerchantEditing',[]));info.omiseOwnerSession.forget();assert.equal(post.omiseOwnerSession.read(),null);
 assert.equal(post.omiseOwnerSession.save(auth),true);clock=auth.expiresAt;assert.equal(page().omiseOwnerSession.read(),null);assert.equal(map.size,0);
-for(const file of ['owner.html','owner-scenes.html','owner-info.html']){const s=fs.readFileSync(new URL('./'+file,import.meta.url),'utf8');assert.ok(s.includes('const sessionMemory=window.omiseOwnerSession;'));assert.ok(s.includes('owner-runtime.js'));assert.ok(!s.includes('google.script.run'));assert.ok(!s.includes('exec?mode='));for(const m of s.matchAll(/<script>([\s\S]*?)<\/script>/g))new vm.Script(m[1],{filename:file});}
+for(const file of ['owner.html','owner-scenes.html','owner-info.html']){const s=fs.readFileSync(new URL('../../omise-demo/'+file,import.meta.url),'utf8');assert.ok(s.includes('const sessionMemory=window.omiseOwnerSession;'));assert.ok(s.includes('owner-runtime.js'));assert.ok(!s.includes('google.script.run'));assert.ok(!s.includes('exec?mode='));for(const m of s.matchAll(/<script>([\s\S]*?)<\/script>/g))new vm.Script(m[1],{filename:file});}
 console.log('PASS: one login shared across three first-party pages, token-only storage, credential-free URLs, POST transport, preserved login on network failure, logout and expiry');
+
