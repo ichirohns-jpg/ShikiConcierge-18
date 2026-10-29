@@ -44,7 +44,8 @@
   const dynamic=/^POST-[a-f0-9-]+$/i.test(p.id||'');
   const expiresAt=/^\d{4}-\d{2}-\d{2}$/.test(p.end||'')?Date.parse(p.end+'T00:00:00+09:00')+86400000:Infinity;
   const ended=()=>p.ended===true||Date.now()>=expiresAt;
-  let link=dynamic?'':(/^https:\/\//.test(p.shareURL||'')?p.shareURL:dxURL);
+  const articleLink=dynamic?dxURL+'article.html?id='+encodeURIComponent(p.id):'';
+  let link=dynamic?articleLink:(/^https:\/\//.test(p.shareURL||'')?p.shareURL:dxURL);
   let ownText=[p.title,p.body].filter(Boolean).join('\n\n');
   const makeText=name=>name==='original'?ownText:(name==='fujiko'?'ふじこからの'+(options.profile?'お店・活動紹介🥒':p.kind==='deal'?'お得情報🥒':'街のお知らせ🥒'):'ハートネット志木からの'+(options.profile?'お店・活動紹介':p.kind==='deal'?'お得情報':'お知らせ'))+'\n'+(p.name?p.name+'さん'+(options.profile?'をご紹介します。':'の投稿をご紹介します。'):'志木のお店・活動をご紹介します。')+'\n\n'+ownText+(p.end?'\n\n掲載期限：'+p.end+'まで':'')+'\n\n詳しくは'+(options.profile?'紹介ページ':'元の投稿')+'をご覧ください。';
   let shareText=ownText,userEdited=false;
@@ -135,10 +136,10 @@
      const shortBase=dxURL.replace(/omise-demo\/$/,'p/'),short=String(entry.shortURL||'');
      link=short.startsWith(shortBase)&&/^[1-9]\d*\/(?:\?v=[1-9]\d*)?$/.test(short.slice(shortBase.length))?short:entry.shareURL;ready();message.textContent='';
     }else{
-     link='';ready();fallback.value='';fallback.hidden=true;
-     message.textContent='共有リンクを準備しています。';
+     link=articleLink;ready();
+     message.textContent='';
     }
-   }catch{message.textContent='共有カードを読み込み直しています。';}
+   }catch{if(!disposed&&area.isConnected&&!expire()){link=articleLink;ready();message.textContent='';}}
    if(!disposed&&area.isConnected)timer=setTimeout(prepare,30000);
   }
   watchExpiry();
