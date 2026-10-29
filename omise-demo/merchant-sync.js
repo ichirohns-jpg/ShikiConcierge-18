@@ -3,7 +3,7 @@
  const endpoint='https://script.google.com/macros/s/AKfycbzMec1R3le4e-cOUyBUl6Eq2dU3OI-5HHtkEyJQT7SWx4IjUHGtW8Z3zatJxoA2GUhn2A/exec';
  const ids={'ouchicafe.html':'SHOP-0001','heartnet.html':'SHOP-0002','newtimes.html':'SHOP-0003'};
  const id=ids[location.pathname.split('/').pop()];if(!id)return;
- const entry=document.createElement('p');entry.className='muted';const edit=document.createElement('a');edit.textContent='お店の方：情報・写真・お知らせを更新';edit.href=endpoint+'?mode=edit';edit.target='_blank';edit.rel='noopener';entry.append(edit);document.querySelector('footer').before(entry);
+ const entry=document.createElement('p');entry.className='muted';const edit=document.createElement('a');edit.textContent='自分の管理';edit.href='./owner.html#top';edit.target='_self';entry.append(edit);document.querySelector('footer').before(entry);
  const safeURL=v=>{try{const u=new URL(v);return /^https?:$/.test(u.protocol)?u.href:'';}catch{return '';}};
  window.omiseApprovedLoaded=data=>{
  if(!data||!data.ok)return;const s=data.shop;
