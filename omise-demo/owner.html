@@ -68,8 +68,8 @@ function enterOwnPage(id,credential,r,keep){
  $('login').hidden=true;$('retryLogin').hidden=true;restoreFailures=0;$('code').value='';$('status').hidden=true;$('account').hidden=false;
  $('accountName').textContent=id==='ADMIN'?'管理者':r.shop['店名'];$('locationName').textContent='現在：投稿・編集（'+$('accountName').textContent+'）';
  $('ownerMenu').hidden=false;$('menuCompose').hidden=id==='ADMIN';$('menuArticles').hidden=id==='ADMIN';$('menuThanks').hidden=!(id==='ADMIN'||id==='SHOP-0002');
- const publicPages={'SHOP-0001':'ouchicafe.html','SHOP-0002':'heartnet.html','SHOP-0003':'newtimes.html'};$('ownerPublicPage').href=publicPages[id]?base+publicPages[id]:base+'#shops';
- $('fujikoShare').hidden=!(id==='ADMIN'||id==='SHOP-0002');
+ const publicPages={'SHOP-0001':'ouchicafe.html','SHOP-0002':'heartnet.html','SHOP-0003':'newtimes.html'};$('ownerPublicPage').href=publicPages[id]?base+publicPages[id]:/^SHOP-[0-9]{4}$/.test(id)?base+'?shop='+encodeURIComponent(id)+'#detail':base+'#shops';
+ $('fujikoShare').hidden=!(id==='ADMIN'||id==='SHOP-0002');$('thanksManager').hidden=!(id==='ADMIN'||id==='SHOP-0002');
  if(id==='ADMIN'||id==='SHOP-0002'){$('thanksManager').hidden=false;renderThanksCard(r.thanksCard||'');}if(id!=='ADMIN'){own=r.posts;$('shopName').textContent=r.shop['店名'];$('owner').hidden=false;renderOwn();}
  if(keep&&!saved)status('このブラウザではログインを保持できませんでした。この画面では引き続き使えます。');
  requestAnimationFrame(showManagementTop);
