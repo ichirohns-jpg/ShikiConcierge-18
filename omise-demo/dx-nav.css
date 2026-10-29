@@ -95,3 +95,9 @@ body .timeline-write span,body .timeline-hero p{font-size:17px}
 body .offer small,body .gift .muted{font-size:16px}
 @media(max-width:560px){body .dx-global-nav a{font-size:16px;min-height:58px;padding:10px 2px}body .dx-route{font-size:15px}body.social-profile #information dl{grid-template-columns:90px minmax(0,1fr)}}
 
+
+/* A persistent publisher entry, separate from the four visitor menu items. */
+.dx-editor-toolbar{box-sizing:border-box;position:sticky;top:0;z-index:30;display:flex;justify-content:flex-end;align-items:center;width:100%;max-width:680px;margin:0 auto;padding:6px 12px;background:#fff;border-bottom:1px solid #e1d8e4;box-shadow:0 2px 8px #34223a09;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif}
+.dx-editor-toolbar a{box-sizing:border-box;display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 18px;border:1px solid #d7c9db;border-radius:10px;background:#f0e8f3;color:#461a53!important;text-decoration:none!important;font-size:18px;font-weight:700;line-height:1.5}
+.dx-editor-toolbar a:focus-visible{outline:3px solid #ed9c22;outline-offset:2px}
+body section,body #top{scroll-margin-top:80px}

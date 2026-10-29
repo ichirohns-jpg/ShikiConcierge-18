@@ -2,6 +2,12 @@
 (()=>{
  const fujikoSharing=document.createElement('script');fujikoSharing.src='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/fujiko-share-locations.js?v=20261028-card14';document.head.append(fujikoSharing);
  if(document.querySelector('.dx-global-nav'))return;
+ // Keep the publisher entrance reachable while reading any public page.
+ if(!document.querySelector('.dx-editor-toolbar')){
+  const toolbar=document.createElement('nav');toolbar.className='dx-editor-toolbar';toolbar.setAttribute('aria-label','投稿・編集への入口');
+  const editor=document.createElement('a');editor.href=new URL('./owner.html#top',document.currentScript.src).href;editor.textContent='投稿・編集';editor.setAttribute('aria-label','お店・活動の投稿と編集を開く');
+  toolbar.append(editor);document.body.prepend(toolbar);
+ }
  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
  const routes={
   'ouchicafe.html':{back:'./#shops',backText:'← お店一覧',current:'おうちcafeパン工房',active:'shops'},

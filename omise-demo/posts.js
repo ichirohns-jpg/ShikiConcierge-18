@@ -13,7 +13,7 @@
  const footerStyle=el('style');footerStyle.textContent='.post-dx-footer{padding:18px;border-top:1px solid #e0d5e4}.post-dx-footer p{margin:0 0 12px!important;font-size:17px!important;line-height:1.7!important;color:#635567}.post-dx-home{display:block;box-sizing:border-box;width:100%;min-height:52px;padding:14px 16px;background:#531a65;color:#fff!important;border-radius:12px;text-align:center;text-decoration:none;font-size:19px;font-weight:800;line-height:1.5}.post-dx-home:focus-visible{outline:3px solid #e6a02f;outline-offset:3px}';document.head.append(footerStyle);
  document.body.classList.add('social-view');if(ids[slug]){document.body.classList.add('social-profile');const description=document.querySelector('#intro .profile-description')||document.querySelector('#intro .subtitle')?.nextElementSibling;if(description?.tagName==='P')description.classList.add('profile-description');}
  const nav=el('nav',null,'social-nav');nav.setAttribute('aria-label','DXのメニュー');
- for(const [text,path,active] of [['お店を探す','./#shops',false],['投稿を見る','timeline.html',timeline],['お得情報','deals.html',deals],['自分の管理','./owner.html#top',false]]){
+ for(const [text,path,active] of [['お店を探す','./#shops',false],['投稿を見る','timeline.html',timeline],['お得情報','deals.html',deals],['投稿・編集','./owner.html#top',false]]){
   const a=el('a',text);a.href=path;if(active)a.setAttribute('aria-current','page');nav.append(a);
  }
  const main=document.querySelector('main'),header=main.querySelector(':scope > header');
