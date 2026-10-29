@@ -64,3 +64,18 @@ body.shop-top-designed .profile-social:has(>a:nth-child(4)){grid-template-column
 @media(max-width:560px){body.shop-top-designed .profile-social:has(>a:nth-child(4)){grid-template-columns:repeat(2,minmax(0,1fr))}}
 body.shop-top-designed .profile-social:has(>a:last-child:nth-child(2)){grid-template-columns:repeat(2,minmax(0,1fr))}
 
+
+/* The same palette across every public shop introduction. */
+body.shop-top-designed #intro{background:#fffdf9;border-color:#d9ccde;border-top-color:#c6a05a;box-shadow:0 8px 30px #4822520c}
+body.shop-top-designed #intro .eyebrow{background:#eee3f1;color:#61396d}
+body.shop-top-designed .shop-top-visual{background:#f2eaf4;border-color:#dfd0e5}
+body.shop-top-designed .shop-hero-guide{background:#f8edcf;color:#5b4322}
+body.shop-top-designed .shop-hero-spark{color:#886624}
+body.shop-top-designed .shop-hero-main,body.shop-top-designed .shop-hero-thumb img{background:#eee3f1}
+body.shop-top-designed .shop-hero-caption{background:#482252;color:#fffaf0}
+body.shop-top-designed .shop-hero-thumb{background:#fffdf9;border-color:#d9ccde;box-shadow:0 3px 12px #48225209}
+body.shop-top-designed #offer{background:#fcf3de;border-color:#dec798}
+body.shop-top-designed #offer .gift-eyebrow{color:#7a591e}
+body.shop-top-designed #offer .gift-receive{background:#fffdf9;border-color:#684174;color:#482252}
+
+body.shop-top-designed{background:radial-gradient(ellipse at 0 0,#eee2f1 0,transparent 700px),radial-gradient(ellipse at 100% 600px,#faf0d9 0,transparent 650px),#faf7f2}
