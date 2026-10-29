@@ -35,7 +35,9 @@
  function sharePages(){
   if(!manifestPromise||Date.now()-manifestTime>15000){
    manifestTime=Date.now();
-   manifestPromise=fetch(dxURL+'post-shares/manifest.json?check='+Math.floor(Date.now()/15000),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Share links unavailable');return r.json();}).catch(e=>{manifestPromise=null;throw e;});
+   let timeout;
+   const request=fetch(dxURL+'post-shares/manifest.json?check='+Math.floor(Date.now()/15000),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Share links unavailable');return r.json();});
+   manifestPromise=Promise.race([request,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Share links timed out')),10000);})]).finally(()=>clearTimeout(timeout)).catch(e=>{manifestPromise=null;throw e;});
   }
   return manifestPromise;
  }
@@ -51,7 +53,7 @@
   const expiresAt=/^\d{4}-\d{2}-\d{2}$/.test(p.end||'')?Date.parse(p.end+'T00:00:00+09:00')+86400000:Infinity;
   const ended=()=>p.ended===true||Date.now()>=expiresAt;
   const articleLink=dynamic?dxURL+'article.html?id='+encodeURIComponent(p.id):'';
-  let link=dynamic?articleLink:(/^https:\/\//.test(p.shareURL||'')?p.shareURL:dxURL);
+  let link=dynamic?'':(/^https:\/\//.test(p.shareURL||'')?p.shareURL:dxURL);
   let ownText=[p.title,p.body].filter(Boolean).join('\n\n').replace(/[\u200B\u2060\uFEFF]/g,'');
   const makeText=name=>name==='original'?ownText:(name==='fujiko'?'ふじこからの'+(options.profile?'お店・活動紹介🥒':p.kind==='deal'?'お得情報🥒':'街のお知らせ🥒'):'ハートネット志木からの'+(options.profile?'お店・活動紹介':p.kind==='deal'?'お得情報':'お知らせ'))+'\n'+(p.name?p.name+'さん'+(options.profile?'をご紹介します。':'の投稿をご紹介します。'):'志木のお店・活動をご紹介します。')+'\n\n'+ownText+(p.end?'\n\n掲載期限：'+p.end+'まで':'')+'\n\n詳しくは'+(options.profile?'紹介ページ':'元の投稿')+'をご覧ください。';
   let shareText=ownText,userEdited=false;
@@ -79,12 +81,13 @@
   draft.addEventListener('input',()=>{userEdited=true;shareText=draft.value;ready();});
   fujiko.addEventListener('click',()=>{if(!hasAdminAccess()||expire())return;editor.hidden=!editor.hidden;fujiko.setAttribute('aria-expanded',String(!editor.hidden));if(!editor.hidden){if(!draft.value){if(options.profile&&options.readProfile){const current=options.readProfile();p={...p,...current};ownText=[p.title,p.body].filter(Boolean).join('\n\n');}applyIdentity(selectedIdentity);}draft.focus();}ready();});
   area.append(fujiko,editor);
-  const message=el('p','', 'post-share-message');
+  const message=el('p',dynamic?'投稿写真付きの共有リンクを準備しています。':'', 'post-share-message');
   message.setAttribute('role','status');message.setAttribute('aria-live','polite');
   const fallback=el('textarea');fallback.value=(ownText?ownText+'\n\n':'')+link;fallback.readOnly=true;fallback.hidden=true;fallback.rows=7;
   fallback.setAttribute('aria-label','コピーする文章と短いURL');
   fallback.style.cssText='width:100%;box-sizing:border-box;font:inherit;line-height:1.6;padding:12px';
   let disposed=false,timer=null,expiryTimer=null;
+  const pendingNotice=dynamic?setTimeout(()=>{if(!disposed&&area.isConnected&&!link&&!ended())message.textContent='投稿写真付きの共有リンクがまだ公開されていません。準備できると共有ボタンが使えます。';},10000):null;
   async function copyValue(value){
    if(expire())return;
    try{
@@ -140,17 +143,17 @@
     if(disposed||!area.isConnected||expire())return;
     if(entry&&entry.date===p.date&&entry.shareURL.startsWith(dxURL+'post-shares/'+encodeURIComponent(p.id)+'/?v=')){
      const shortBase=dxURL.replace(/omise-demo\/$/,'p/'),short=String(entry.shortURL||'');
-     link=short.startsWith(shortBase)&&/^[1-9]\d*\/(?:\?v=[1-9]\d*)?$/.test(short.slice(shortBase.length))?short:entry.shareURL;ready();message.textContent='';
+     link=short.startsWith(shortBase)&&/^[1-9]\d*\/(?:\?v=[1-9]\d*)?$/.test(short.slice(shortBase.length))?short:'';ready();message.textContent=link?'':'投稿写真付きの短い共有リンクを準備しています。';
     }else{
-     link=articleLink;ready();
-     message.textContent='';
+     link='';ready();
+     message.textContent='投稿写真付きの共有リンクを準備しています。準備できると共有ボタンが使えます。';
     }
-   }catch{if(!disposed&&area.isConnected&&!expire()){link=articleLink;ready();message.textContent='';}}
+   }catch{if(!disposed&&area.isConnected&&!expire()){link='';ready();message.textContent='共有リンクを確認できませんでした。通信が戻ると自動で再確認します。';}}
    if(!disposed&&area.isConnected)timer=setTimeout(prepare,30000);
   }
   watchExpiry();
   if(dynamic)prepare();
-  return ()=>{disposed=true;for(const {node,hidden} of legacy)node.hidden=hidden;identityListeners.delete(applyIdentity);accessListeners.delete(updateAccess);clearTimeout(timer);clearTimeout(expiryTimer);};
+  return ()=>{disposed=true;for(const {node,hidden} of legacy)node.hidden=hidden;identityListeners.delete(applyIdentity);accessListeners.delete(updateAccess);clearTimeout(timer);clearTimeout(expiryTimer);clearTimeout(pendingNotice);};
  }
  window.DXPostShare={mount,getIdentity:()=>selectedIdentity,setIdentity,shortcut(box){const button=el('button','🥒 ふじことして紹介・シェア','post-fujiko-button');button.type='button';button.hidden=true;box.append(button);const label=()=>{button.textContent=identityAction(selectedIdentity);};const update=allowed=>{button.hidden=!allowed;label();};accessListeners.add(update);identityListeners.add(label);button.addEventListener('click',()=>{if(hasAdminAccess())profileReveal?.();});update(hasAdminAccess());if(!verification&&!hasAdminAccess())checkAdminAccess();return()=>{accessListeners.delete(update);identityListeners.delete(label);};},profileText(original,name,url){
   if(!adminSession())return original;
