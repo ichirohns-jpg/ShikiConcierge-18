@@ -101,15 +101,16 @@
   for(const p of rows){
    if(ended(p)||seen.has(p.id))continue;
    seen.add(p.id);
+   const rec=p.shop==='SHOP-0002'?window.DXSNSRecommend?.parse(p.body):null;
    const shop=shopURL(p),card=el('article',null,'post-card'),head=el('div',null,'post-header');
    const avatarImage=avatarImages[p.shop],avatar=el(shop?'a':'span',avatarImage?'':p.name.slice(0,1),'post-avatar'+(avatarImage?' has-image':'')+(p.shop==='SHOP-0001'||p.shop==='SHOP-0003'?' shop-mark':''));
    if(avatarImage){const img=el('img');img.src=base+avatarImage;img.alt=p.shop==='SHOP-0003'?'カッピー（©志木いろは商店会／おぐまこうじ）':p.name+'のマーク';img.loading='lazy';img.decoding='async';avatar.append(img);}
    if(shop){avatar.href=shop;avatar.setAttribute('aria-label',p.name+'のトップページを見る');}else avatar.setAttribute('aria-hidden','true');
-   const identity=el('div',null,'post-identity'),author=el(shop?'a':'span',p.name,'post-author');
+   const identity=el('div',null,'post-identity'),author=el(shop?'a':'span',rec?'ふじこ':p.name,'post-author');
    if(shop){author.href=shop;author.setAttribute('aria-label',p.name+'のトップページを見る');}
    const date=el('a',shortDate(p.date),'post-date');date.href=pageURL(p);date.setAttribute('aria-label',p.date+'の記事を開く');
-   identity.append(author,date);head.append(avatar,identity,el('span',p.kind==='deal'?'お得情報':'お知らせ','post-kind'+(p.kind==='deal'?' deal':'')));
-   card.append(head,el('p',p.body,'post-body'));
+   identity.append(author,date);head.append(avatar,identity,el('span',rec?'推しのお店':p.kind==='deal'?'お得情報':'お知らせ','post-kind'+(p.kind==='deal'?' deal':'')));
+   card.append(head,el('p',rec?rec.comment:p.body,'post-body'));if(rec)window.DXSNSRecommend.mount(card,rec);
    const photos=(p.photos||[]).filter(src=>/^data:image\/jpeg;base64,/.test(src));
    if(photos.length){const media=el(article?'div':'a',null,'post-media');if(!article){media.href=pageURL(p);media.setAttribute('aria-label',p.name+'の投稿記事を開く');}for(const src of photos){const img=el('img');img.src=src;img.alt=p.name+'の投稿写真';img.loading=article||returnState?'eager':'lazy';img.decoding='async';media.append(img);}card.append(media);}
    if(p.video&&/^https:\/\/drive\.google\.com\/file\/d\/[A-Za-z0-9_-]+\/preview$/.test(p.video)){
@@ -176,6 +177,7 @@
  window.addEventListener('focus',pruneEnded);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)pruneEnded();});
 })();
+
 
 
 
