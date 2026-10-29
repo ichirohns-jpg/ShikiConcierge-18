@@ -144,7 +144,7 @@
    if(p.end)card.append(el('p',p.end+'まで','post-end'));
    const links=el('div',null,'post-links');
    if(!article){const detail=el('a',rec?'DXで紹介を読む・シェアする →':'この記事を開く');detail.href=pageURL(p);links.append(detail);}
-   if(shop){const profile=el('a','お店の紹介・場所を見る →');profile.href=shop;profile.setAttribute('aria-label',p.name+'のトップページを見る');links.append(profile);}
+   if(shop){const profile=el('a',p.name+'の紹介を見る →');profile.href=shop;profile.setAttribute('aria-label',p.name+'のトップページを見る');links.append(profile);}
    card.append(links);share(card,p,rec?{heading:'この応援紹介をSNSでシェアする'}:undefined);const footer=el('nav',null,'post-dx-footer');footer.setAttribute('aria-label','この記事を読んだ後のメニュー');footer.append(el('p','志木のお店や地域の活動を、もっと見てみよう。'));const home=el('a','DXトップへ戻る →','post-dx-home');home.href=base+'#top';footer.append(home);card.append(footer);card.dxSupportPost=p;return card;
  }
  function render(rows,append=false){
