@@ -63,7 +63,7 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261029-clear-map',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261029-maps-api',document.currentScript?.src||base+'posts.js').href;
  function share(box,p,options){
   const mount=options?.replaceExisting?box:el('div');if(mount!==box)box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
@@ -103,7 +103,7 @@
 
  // Render user text as DOM nodes; map URLs become a separate action below the article.
  function postText(text,cls){
-  const body=el('p',null,cls),maps=[],raw=String(text||'').replace(/[\u200B\u2060\uFEFF]/g,'').replaceAll('https://maps.app.goo.gl/fL12q1xUJLi7DMM38','https://www.google.com/maps?cid=11115501150198124790');
+  const body=el('p',null,cls),maps=[],raw=String(text||'').replace(/[\u200B\u2060\uFEFF]/g,'').replaceAll('https://maps.app.goo.gl/fL12q1xUJLi7DMM38','https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo').replaceAll('https://www.google.com/maps?cid=11115501150198124790','https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo').replaceAll('https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/','https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo');
   const re=/https?:\/\/[^\s<>"\u200B\u200C\u200D\u2060\uFEFF]+/gi;
   let cursor=0;
   for(const match of raw.matchAll(re)){

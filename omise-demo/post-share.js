@@ -47,7 +47,7 @@
    if(['/share/p/1EDFnZcPqw/','/share/19ESJQ4w6p/','/100063674918001/posts/1753013193497828/','/imoyashiki/posts/1753013193497828/'].includes(u.pathname))return dxURL+'facebook-cards/imoya-20261029.html';
   }catch{}return '';
  }
- const cleanText=value=>String(value||'').replace(/[\u200B\u2060\uFEFF]/g,'').replaceAll('https://maps.app.goo.gl/fL12q1xUJLi7DMM38','https://www.google.com/maps?cid=11115501150198124790');
+ const cleanText=value=>String(value||'').replace(/[\u200B\u2060\uFEFF]/g,'').replaceAll('https://maps.app.goo.gl/fL12q1xUJLi7DMM38','https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/').replaceAll('https://www.google.com/maps?cid=11115501150198124790','https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/').replaceAll('https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo','https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/');
  function mount(box,p,options={}){
   const legacy=options.replaceExisting?Array.from(box.children).map(node=>{const hidden=node.hidden;node.classList.add('dx-legacy-share');return {node,hidden};}):[];
   const dynamic=/^POST-[a-f0-9-]+$/i.test(p.id||'');
