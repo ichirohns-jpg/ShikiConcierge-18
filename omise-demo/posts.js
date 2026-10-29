@@ -5,8 +5,8 @@
  const slug=location.pathname.split('/').pop();
  const ids={'ouchicafe.html':'SHOP-0001','heartnet.html':'SHOP-0002','newtimes.html':'SHOP-0003'};
  const avatarImages={'SHOP-0001':'logos/ouchicafe.jpg','SHOP-0002':'fujiko-avatar.jpeg','SHOP-0003':'logos/kappy.png'};
- const article=slug==='article.html',deals=slug==='deals.html',timeline=slug==='timeline.html';
- if(!article&&!deals&&!timeline&&!ids[slug])return;
+ const article=slug==='article.html',deals=slug==='deals.html',timeline=slug==='timeline.html',supportArchive=slug==='cheer-archive.html',supportTimeline=slug==='fujiko-timeline.html';
+ if(!article&&!deals&&!timeline&&!supportArchive&&!supportTimeline&&!ids[slug])return;
  const id=article?new URLSearchParams(location.search).get('id'):null;
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
  document.body.classList.add('social-view');if(ids[slug]){document.body.classList.add('social-profile');const description=document.querySelector('#intro .profile-description')||document.querySelector('#intro .subtitle')?.nextElementSibling;if(description?.tagName==='P')description.classList.add('profile-description');}
@@ -51,7 +51,7 @@
  const status=el('p','読み込み中…','feed-status'),list=el('div'),paging=el('div',null,'feed-paging');
  status.setAttribute('role','status');status.setAttribute('aria-live','polite');
  section.id='posts-timeline';bar.append(heading,status);section.append(bar,list,paging);
- if(deals)(document.querySelector('#deals-feed')||main).append(section);else if(article||timeline)main.append(section);else document.querySelector('#photos').before(section);
+ if(deals)(document.querySelector('#deals-feed')||main).append(section);else if(article||timeline||supportArchive||supportTimeline)main.append(section);else document.querySelector('#photos').before(section);
  if(slug==='heartnet.html')section.before(cheerSection);
  const shopURL=p=>{const file=Object.keys(ids).find(f=>ids[f]===p.shop);return file?base+file:/^SHOP-[\w-]+$/.test(p.shop||'')?base+'?shop='+encodeURIComponent(p.shop)+'#detail':null;};
  const pageURL=p=>base+'article.html?id='+encodeURIComponent(p.id);
@@ -98,12 +98,7 @@
   share(card,{title:'おうちcafeパン工房',body:'焼きたてパンとコーヒーで、ほっとひと息。\n志木市本町のパン工房です。',shareURL:base+'ouchicafe-ad-share-v2.html'});
   return card;
  }
- function render(rows,append=false){
-  if(!append){list.replaceChildren();cheerList.replaceChildren();shown.clear();seen.clear();}
-  if(!append&&slug==='ouchicafe.html'&&offset===0)list.append(cafeAdCard());
-  for(const p of rows){
-   if(ended(p)||seen.has(p.id))continue;
-   seen.add(p.id);
+ function buildCard(p){
    const rec=p.shop==='SHOP-0002'?window.DXSNSRecommend?.parse(p.body):null;
    const shop=shopURL(p),card=el('article',null,'post-card'),head=el('div',null,'post-header');
    const avatarImage=avatarImages[p.shop],avatar=el(shop?'a':'span',avatarImage?'':p.name.slice(0,1),'post-avatar'+(avatarImage?' has-image':'')+(p.shop==='SHOP-0001'||p.shop==='SHOP-0003'?' shop-mark':''));
@@ -123,12 +118,20 @@
    }
    if(p.end)card.append(el('p',p.end+'まで','post-end'));
    const links=el('div',null,'post-links');
-   if(!article){const detail=el('a','この記事を開く');detail.href=pageURL(p);links.append(detail);}
+   if(!article){const detail=el('a',rec?'DXで紹介を読む・シェアする →':'この記事を開く');detail.href=pageURL(p);links.append(detail);}
    if(shop){const profile=el('a','お店の紹介・場所を見る →');profile.href=shop;profile.setAttribute('aria-label',p.name+'のトップページを見る');links.append(profile);}
-   card.append(links);share(card,p);(rec&&slug==='heartnet.html'?cheerList:list).append(card);shown.set(p.id,{p,card});
+   card.append(links);share(card,p,rec?{heading:'この応援紹介をSNSでシェアする'}:undefined);card.dxSupportPost=p;return card;
+ }
+ function render(rows,append=false){
+  if(!append){list.replaceChildren();shown.clear();seen.clear();}
+  if(!append&&slug==='ouchicafe.html'&&offset===0)list.append(cafeAdCard());
+  for(const p of rows){
+   if(ended(p)||seen.has(p.id))continue;
+   if(slug==='heartnet.html'&&p.shop==='SHOP-0002'&&window.DXSNSRecommend?.parse(p.body))continue;
+   seen.add(p.id);const card=buildCard(p);list.append(card);shown.set(p.id,{p,card});
   }
  }
- function syncCheerEmpty(){if(slug==='heartnet.html')cheerEmpty.hidden=cheerList.children.length>0;}
+ function syncCheerEmpty(){}
  function pruneEnded(){
   let removed=false;
   for(const [key,{p,card}] of shown)if(ended(p)){card.remove();shown.delete(key);removed=true;}
@@ -177,11 +180,13 @@
   timer=setTimeout(()=>fail('読み込みに時間がかかっています。もう一度お試しください。'),20000);
  }
  if(article&&!/^POST-[a-f0-9-]+$/i.test(id||'')){status.textContent='記事が指定されていません。';return;}
- load();
+ if(slug==='heartnet.html'||supportArchive||supportTimeline){const mountList=supportArchive||supportTimeline?list:cheerList,mountStatus=supportArchive||supportTimeline?status:cheerEmpty,mountPaging=supportArchive||supportTimeline?paging:el('div',null,'feed-paging');if(!supportArchive&&!supportTimeline)cheerSection.append(mountPaging);else{section.id='cheer-posts';heading.textContent=supportArchive?'ふじこの応援紹介・アーカイブ':'ふじこの応援紹介';}window.DXSupportFeed.mount({list:mountList,status:mountStatus,paging:mountPaging,renderPost:buildCard,endpoint,archive:supportArchive});}
+ if(!supportArchive&&!supportTimeline)load();
  setInterval(pruneEnded,30000);
  window.addEventListener('focus',pruneEnded);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)pruneEnded();});
 })();
+
 
 
 
