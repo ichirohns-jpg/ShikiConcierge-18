@@ -123,14 +123,14 @@
   const line=el('a','LINEで共有');line.style.background='#087f3e';
   const x=el('a','Xで共有');x.style.background='#111';
   for(const a of [line,x]){a.target='_blank';a.rel='noopener';networks.append(a);}
-  facebook.addEventListener('click',event=>{if(expire())event.preventDefault();else if(!link){event.preventDefault();return shareFromPhone();}});
+  facebook.addEventListener('click',event=>{if(expire())event.preventDefault();});
   for(const a of [line,x])a.addEventListener('click',event=>{if(expire())event.preventDefault();});
   function ready(){
    const expired=ended();
    copy.disabled=expired;
    copy.textContent=link?(hasAdminAccess()?'紹介文とURLをコピー':'文章と短いURLをコピー'):'文章をコピー';
    if(!expired){
-    facebook.href=link?'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(facebookCard(p)||link):'#';
+    facebook.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(facebookCard(p)||link||articleLink);
     line.href='https://line.me/R/share?text='+encodeURIComponent(shareValue());
     x.href='https://x.com/intent/tweet?text='+encodeURIComponent(currentText())+(link?'&url='+encodeURIComponent(link):'');
     for(const a of [facebook,line,x])a.removeAttribute('aria-disabled');
@@ -164,7 +164,7 @@
      if(short.startsWith(shortBase)&&/^[1-9]\d*\/(?:\?v=[1-9]\d*)?$/.test(short.slice(shortBase.length)))link=short;ready();message.textContent=link?'':'文章は共有できます。記事の短いリンクは準備中です。';
     }else{
      ready();
-     if(!link)message.textContent='文章は共有できます。Facebookではスマホの共有画面から写真を送れます。';
+     if(!link)message.textContent='Facebookの共有画面を直接開きます。投稿写真の反映は準備中です。';
     }
    }catch{if(!disposed&&area.isConnected&&!expire()){ready();if(!link)message.textContent='文章は共有できます。記事の短いリンクは通信が戻ると再確認します。';}}
    if(!disposed&&area.isConnected)timer=setTimeout(prepare,30000);
