@@ -5,6 +5,7 @@
  const slug=location.pathname.split('/').pop();
  const ids={'ouchicafe.html':'SHOP-0001','heartnet.html':'SHOP-0002','newtimes.html':'SHOP-0003'};
  const avatarImages={'SHOP-0001':'logos/ouchicafe.jpg','SHOP-0002':'fujiko-avatar.jpeg','SHOP-0003':'logos/kappy.png'};
+ const cheerEnabled=slug==='heartnet.html'&&document.body.dataset.supportFeed!=='off';
  const article=slug==='article.html',deals=slug==='deals.html',timeline=slug==='timeline.html',supportArchive=slug==='cheer-archive.html',supportTimeline=slug==='fujiko-timeline.html';
  if(!article&&!deals&&!timeline&&!supportArchive&&!supportTimeline&&!ids[slug])return;
  const id=article?new URLSearchParams(location.search).get('id'):null;
@@ -47,13 +48,13 @@
  const ended=p=>p.ended===true||(/^\d{4}-\d{2}-\d{2}$/.test(p.end||'')&&p.end<new Date(Date.now()+32400000).toISOString().slice(0,10));
  const section=el('section'),bar=el('div',null,'feed-heading');
  const cheerList=el('div'),cheerEmpty=el('p','応援紹介を準備中です。ふじこが応援したい投稿や記事を、ここで紹介します。','feed-status'),cheerSection=el('section');
- if(slug==='heartnet.html'){cheerSection.id='cheer-posts';cheerSection.className='panel';cheerSection.append(el('h2','ふじこの応援紹介'),el('p','ふじこが応援したい人やお店の投稿をご紹介。気になったら、DXの記事をシェアして応援してね。'),cheerList,cheerEmpty);}
+ if(cheerEnabled){cheerSection.id='cheer-posts';cheerSection.className='panel';cheerSection.append(el('h2','ふじこの応援紹介'),el('p','ふじこが応援したい人やお店の投稿をご紹介。気になったら、DXの記事をシェアして応援してね。'),cheerList,cheerEmpty);}
  const heading=el('h2',article?'投稿記事':deals?'お得情報の投稿':ids[slug]?'投稿':'新着の投稿');
  const status=el('p','読み込み中…','feed-status'),list=el('div'),paging=el('div',null,'feed-paging');
  status.setAttribute('role','status');status.setAttribute('aria-live','polite');
  section.id='posts-timeline';bar.append(heading,status);section.append(bar,list,paging);
  if(deals)(document.querySelector('#deals-feed')||main).append(section);else if(article||timeline||supportArchive||supportTimeline)main.append(section);else document.querySelector('#photos').before(section);
- if(slug==='heartnet.html')section.before(cheerSection);
+ if(cheerEnabled)section.before(cheerSection);
  const shopURL=p=>{const file=Object.keys(ids).find(f=>ids[f]===p.shop);return file?base+file:/^SHOP-[\w-]+$/.test(p.shop||'')?base+'?shop='+encodeURIComponent(p.shop)+'#detail':null;};
  const pageURL=p=>base+'article.html?id='+encodeURIComponent(p.id);
  const shortDate=value=>{const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);return m?Number(m[2])+'月'+Number(m[3])+'日 '+m[4]+':'+m[5]:String(value||'');};
@@ -158,7 +159,7 @@
    const rows=data.posts,total=data.total;loadedThrough=offset+rows.length;render(rows,append);syncCheerEmpty();
    status.textContent=article?(shown.size?'':'掲載が終了しているか、公開前です。'):!shown.size?(deals?'公開中のお得情報はまだありません。':'公開された投稿はまだありません。'):continuous?shown.size+'件表示中':offset?'過去の投稿 '+(offset+1)+'〜'+Math.min(offset+10,total)+'件':'最新'+Math.min(10,total)+'件';
    if(article&&rows[0])document.title=rows[0].body.split('\n')[0].slice(0,60)+'｜お店めぐりDX';
-   if(!append&&location.hash==='#posts-timeline')section.scrollIntoView();if(!append&&slug==='heartnet.html'&&location.hash==='#cheer-posts')cheerSection.scrollIntoView();
+   if(!append&&location.hash==='#posts-timeline')section.scrollIntoView();if(!append&&cheerEnabled&&location.hash==='#cheer-posts')cheerSection.scrollIntoView();
    const finishPaging=()=>{if(!article){
     if(!continuous&&offset){const back=el('button','最新の投稿に戻る','btn secondary');back.onclick=()=>load({nextOffset:0});paging.append(back);}
     if(rows.length&&offset+rows.length<total){
@@ -181,7 +182,7 @@
   timer=setTimeout(()=>fail('読み込みに時間がかかっています。もう一度お試しください。'),20000);
  }
  if(article&&!/^POST-[a-f0-9-]+$/i.test(id||'')){status.textContent='記事が指定されていません。';return;}
- if(slug==='heartnet.html'||supportArchive||supportTimeline){const mountList=supportArchive||supportTimeline?list:cheerList,mountStatus=supportArchive||supportTimeline?status:cheerEmpty,mountPaging=supportArchive||supportTimeline?paging:el('div',null,'feed-paging');if(!supportArchive&&!supportTimeline)cheerSection.append(mountPaging);else{section.id='cheer-posts';heading.textContent=supportArchive?'ふじこの応援紹介・アーカイブ':'ふじこの応援紹介';}window.DXSupportFeed.mount({list:mountList,status:mountStatus,paging:mountPaging,renderPost:buildCard,endpoint,archive:supportArchive});}
+ if(cheerEnabled||supportArchive||supportTimeline){const mountList=supportArchive||supportTimeline?list:cheerList,mountStatus=supportArchive||supportTimeline?status:cheerEmpty,mountPaging=supportArchive||supportTimeline?paging:el('div',null,'feed-paging');if(!supportArchive&&!supportTimeline)cheerSection.append(mountPaging);else{section.id='cheer-posts';heading.textContent=supportArchive?'ふじこの応援紹介・アーカイブ':'ふじこの応援紹介';}window.DXSupportFeed.mount({list:mountList,status:mountStatus,paging:mountPaging,renderPost:buildCard,endpoint,archive:supportArchive});}
  if(!supportArchive&&!supportTimeline)load();
  setInterval(pruneEnded,30000);
  window.addEventListener('focus',pruneEnded);
