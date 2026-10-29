@@ -12,7 +12,7 @@
  function parse(body){const s=String(body||'');if(![heading,legacyHeading].some(h=>s.startsWith(h+'\n')))return null;const lines=s.trim().split('\n');const link=url(lines.pop());if(!link)return null;return {...link,comment:lines.slice(1).join('\n').trim()};}
  function compose(comment,link){const valid=url(link);if(!valid)throw Error('コピーした投稿・記事のリンク（https://から始まるURL）を貼ってください。');const result=heading+'\n\n'+comment.trim()+'\n\n'+valid.href;if(result.length>1500)throw Error('紹介文とリンクを合わせて1,500文字以内にしてください。');return result;}
 
- const facebookKnown={'/share/p/1EDFnZcPqw/':'https://www.facebook.com/100063674918001/posts/1753013193497828/','/share/1YrmeSNpmY/':'https://www.facebook.com/100063767341668/posts/1745730750895820/'};
+ const facebookKnown={'/share/19ESJQ4w6p/':'https://www.facebook.com/100063674918001/posts/1753013193497828/','/share/p/1EDFnZcPqw/':'https://www.facebook.com/100063674918001/posts/1753013193497828/','/share/1YrmeSNpmY/':'https://www.facebook.com/100063767341668/posts/1745730750895820/'};
  function facebookURL(value){
   const u=new URL(value),host=u.hostname.replace(/^(www|m|web)\./,'');
   if(u.protocol!=='https:'||u.username||u.password||u.port||host!=='facebook.com')return null;

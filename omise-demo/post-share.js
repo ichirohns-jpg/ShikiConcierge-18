@@ -39,6 +39,12 @@
   }
   return manifestPromise;
  }
+ function facebookCard(p){
+  const source=String(p.body||'').trim().split('\n').pop();
+  try{const u=new URL(source);if(u.protocol!=='https:'||!['www.facebook.com','m.facebook.com','facebook.com'].includes(u.hostname))return '';
+   if(['/share/p/1EDFnZcPqw/','/share/19ESJQ4w6p/','/100063674918001/posts/1753013193497828/','/imoyashiki/posts/1753013193497828/'].includes(u.pathname))return dxURL+'facebook-cards/imoya-20261029.html';
+  }catch{}return '';
+ }
  function mount(box,p,options={}){
   const legacy=options.replaceExisting?Array.from(box.children).map(node=>{const hidden=node.hidden;node.classList.add('dx-legacy-share');return {node,hidden};}):[];
   const dynamic=/^POST-[a-f0-9-]+$/i.test(p.id||'');
@@ -103,7 +109,7 @@
    copy.disabled=!link||ended();
    const buttons=[facebook,line,x];
    if(link&&!ended()){
-    facebook.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(link);
+    facebook.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(facebookCard(p)||link);
     line.href='https://line.me/R/share?text='+encodeURIComponent((currentText()?currentText()+'\n\n':'')+link);
     x.href='https://x.com/intent/tweet?text='+encodeURIComponent(currentText())+'&url='+encodeURIComponent(link);
     for(const a of buttons)a.removeAttribute('aria-disabled');
