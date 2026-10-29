@@ -9,6 +9,7 @@
  if(!article&&!deals&&!timeline&&!supportArchive&&!supportTimeline&&!ids[slug])return;
  const id=article?new URLSearchParams(location.search).get('id'):null;
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
+ const footerStyle=el('style');footerStyle.textContent='.post-dx-footer{padding:18px;border-top:1px solid #e0d5e4}.post-dx-footer p{margin:0 0 12px!important;font-size:17px!important;line-height:1.7!important;color:#635567}.post-dx-home{display:block;box-sizing:border-box;width:100%;min-height:52px;padding:14px 16px;background:#531a65;color:#fff!important;border-radius:12px;text-align:center;text-decoration:none;font-size:19px;font-weight:800;line-height:1.5}.post-dx-home:focus-visible{outline:3px solid #e6a02f;outline-offset:3px}';document.head.append(footerStyle);
  document.body.classList.add('social-view');if(ids[slug]){document.body.classList.add('social-profile');const description=document.querySelector('#intro .profile-description')||document.querySelector('#intro .subtitle')?.nextElementSibling;if(description?.tagName==='P')description.classList.add('profile-description');}
  const nav=el('nav',null,'social-nav');nav.setAttribute('aria-label','DXのメニュー');
  for(const [text,path,active] of [['お店を探す','./#shops',false],['投稿を見る','timeline.html',timeline],['お得情報','deals.html',deals],['投稿・管理','./#owner',false]]){
@@ -61,7 +62,7 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261028-card14',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261029-article25',document.currentScript?.src||base+'posts.js').href;
  function share(box,p,options){
   const mount=options?.replaceExisting?box:el('div');if(mount!==box)box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
@@ -120,7 +121,7 @@
    const links=el('div',null,'post-links');
    if(!article){const detail=el('a',rec?'DXで紹介を読む・シェアする →':'この記事を開く');detail.href=pageURL(p);links.append(detail);}
    if(shop){const profile=el('a','お店の紹介・場所を見る →');profile.href=shop;profile.setAttribute('aria-label',p.name+'のトップページを見る');links.append(profile);}
-   card.append(links);share(card,p,rec?{heading:'この応援紹介をSNSでシェアする'}:undefined);card.dxSupportPost=p;return card;
+   card.append(links);share(card,p,rec?{heading:'この応援紹介をSNSでシェアする'}:undefined);const footer=el('nav',null,'post-dx-footer');footer.setAttribute('aria-label','この記事を読んだ後のメニュー');footer.append(el('p','志木のお店や地域の活動を、もっと見てみよう。'));const home=el('a','DXトップへ戻る →','post-dx-home');home.href=base+'#top';footer.append(home);card.append(footer);card.dxSupportPost=p;return card;
  }
  function render(rows,append=false){
   if(!append){list.replaceChildren();shown.clear();seen.clear();}
@@ -186,6 +187,7 @@
  window.addEventListener('focus',pruneEnded);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)pruneEnded();});
 })();
+
 
 
 
