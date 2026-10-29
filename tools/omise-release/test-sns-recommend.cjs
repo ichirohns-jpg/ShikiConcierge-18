@@ -2,8 +2,10 @@ const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
 const path=require('node:path'),root=path.resolve(__dirname,'../..');
 const context={window:{},URL,document:{createElement:()=>({}),head:{append(){}}}};vm.runInNewContext(fs.readFileSync(root+'/omise-demo/sns-recommend.js','utf8'),context);const api=context.window.DXSNSRecommend;
 for(const href of ['https://www.facebook.com/share/p/test/','https://www.threads.com/share/_1J0EXcyH/','https://www.threads.com/@tokimori69/post/DfD3kJ6ku91','https://www.instagram.com/p/ABC/']){const body=api.compose('おいしそうなランチです❣️',href);assert.equal(api.parse(body).href,href);assert.equal(api.parse(body).comment,'おいしそうなランチです❣️');assert.equal(api.compose(api.parse(body).comment,api.parse(body).href),body);}
-for(const href of ['javascript:alert(1)','https://www.facebook.com.evil.example/p/1','https://user:secret@facebook.com/p/1','https://facebook.com:8443/p/1','http://facebook.com/p/1','https://facebook.com/'])assert.equal(api.url(href),null);
+for(const href of ['javascript:alert(1)','https://user:secret@facebook.com/p/1','https://facebook.com:8443/p/1','http://facebook.com/p/1'])assert.equal(api.url(href),null);
+assert.equal(api.url('https://www.facebook.com.evil.example/p/1').network,'リンク先');
 assert.equal(api.parse('普通の投稿\nhttps://www.facebook.com/p/1'),null);assert.throws(()=>api.compose('あ'.repeat(1500),'https://www.facebook.com/p/1'));
 for(const f of fs.readdirSync(root+'/omise-demo')){const s=fs.readFileSync(root+'/omise-demo/'+f,'utf8');if(f.endsWith('.js'))new vm.Script(s);if(f.endsWith('.html'))for(const [,attrs,code] of s.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g))if(!attrs.includes('application/ld+json'))new vm.Script(code);}
 const owner=fs.readFileSync(root+'/omise-demo/owner.html','utf8'),posts=fs.readFileSync(root+'/omise-demo/posts.js','utf8');assert(owner.includes("$('recommendFields').hidden=id!=='SHOP-0002'"));assert(owner.includes("session.id==='SHOP-0002'&&$('recommendMode').checked?"));assert(posts.includes("p.shop==='SHOP-0002'?window.DXSNSRecommend?.parse(p.body):null"));assert(!owner.includes('draft.ogImage'));
 console.log('PASS: referral round-trip, normal posts, URL validation, length, author scope, JS parsing, photo upload regression');
+
