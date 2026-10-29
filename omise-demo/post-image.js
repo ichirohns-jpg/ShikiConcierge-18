@@ -36,33 +36,33 @@
  }
  function loadPhoto(src){return new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>reject(Error('記事の写真を読み込めませんでした。'));image.src=src;});}
  function drawContained(ctx,img,x,y,w,h){const scale=Math.min(w/img.naturalWidth,h/img.naturalHeight),dw=img.naturalWidth*scale,dh=img.naturalHeight*scale;ctx.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh);}
- function name(ctx,value){let size=34;ctx.font='700 '+size+'px '+FONT;while(ctx.measureText(value).width>INNER&&size>22){size-=1;ctx.font='700 '+size+'px '+FONT;}ctx.fillStyle='#17513f';ctx.fillText(value,PAD,79,INNER);}
+ function name(ctx,value){let size=34;ctx.font='700 '+size+'px '+FONT;while(ctx.measureText(value).width>INNER&&size>22){size-=1;ctx.font='700 '+size+'px '+FONT;}ctx.fillStyle='#411b4d';ctx.fillText(value,PAD,79,INNER);}
  function render(ctx,page,article,index,total,photo){
   ctx.fillStyle='#fff';ctx.fillRect(0,0,WIDTH,HEIGHT);name(ctx,String(article.name||'お店からの投稿'));
-  ctx.fillStyle='#dbe6df';ctx.fillRect(PAD,108,INNER,2);
+  ctx.fillStyle='#e3dce5';ctx.fillRect(PAD,108,INNER,2);
   if(page.kind==='cover'){
    if(photo){ctx.fillStyle='#f4f2eb';ctx.fillRect(0,132,WIDTH,page.photoBottom-132);drawContained(ctx,photo,PAD,150,INNER,page.photoBottom-168);}
-   ctx.fillStyle='#17513f';ctx.fillRect(PAD,page.photoBottom+12,68,6);ctx.fillStyle='#173d33';ctx.font='700 '+page.titleSize+'px '+FONT;
+   ctx.fillStyle='#411b4d';ctx.fillRect(PAD,page.photoBottom+12,68,6);ctx.fillStyle='#331a3a';ctx.font='700 '+page.titleSize+'px '+FONT;
    page.titleLines.forEach((line,i)=>ctx.fillText(line,PAD,page.titleY+i*(page.titleSize+12)));
   }else if(page.kind==='photo'){
    drawContained(ctx,photo,PAD,150,INNER,1024);
-   ctx.fillStyle='#345b4d';ctx.font='600 32px '+FONT;ctx.fillText(textParts(article).title,PAD,1228,INNER);
-  }else{ctx.fillStyle='#17513f';ctx.font='700 34px '+FONT;ctx.fillText('記事のつづき',PAD,176);}
-  ctx.fillStyle='#294c3e';ctx.font='500 36px '+FONT;
+   ctx.fillStyle='#503758';ctx.font='600 32px '+FONT;ctx.fillText(textParts(article).title,PAD,1228,INNER);
+  }else{ctx.fillStyle='#411b4d';ctx.font='700 34px '+FONT;ctx.fillText('記事のつづき',PAD,176);}
+  ctx.fillStyle='#432b4a';ctx.font='500 36px '+FONT;
   (page.bodyLines||[]).forEach((line,i)=>{if(line)ctx.fillText(line,PAD,page.bodyY+i*48);});
-  ctx.fillStyle='#dbe6df';ctx.fillRect(PAD,1272,INNER,2);ctx.fillStyle='#61776a';ctx.font='600 25px '+FONT;ctx.fillText('志木なるほど お店めぐりDX',PAD,1310);
+  ctx.fillStyle='#e3dce5';ctx.fillRect(PAD,1272,INNER,2);ctx.fillStyle='#716375';ctx.font='600 25px '+FONT;ctx.fillText('志木なるほど お店めぐりDX',PAD,1310);
   if(total>1){ctx.textAlign='right';ctx.fillText((index+1)+' / '+total,WIDTH-PAD,1310);ctx.textAlign='left';}
  }
  function renderBenefit(ctx,article){
   const offer=article.promotion;
   ctx.fillStyle='#fffaf0';ctx.fillRect(0,0,WIDTH,HEIGHT);name(ctx,article.name);
   ctx.fillStyle='#8e430c';ctx.fillRect(PAD,126,INNER,70);ctx.fillStyle='#fff';ctx.font='700 36px '+FONT;ctx.fillText('掲載見本・利用不可',PAD+24,174);
-  ctx.fillStyle='#526f5e';ctx.font='600 32px '+FONT;ctx.fillText('特典の表示例',PAD,276);
-  ctx.fillStyle='#193f33';ctx.font='700 58px '+FONT;let y=380;wrap(ctx,offer.condition).forEach(line=>{ctx.fillText(line,PAD,y);y+=76;});
+  ctx.fillStyle='#67546d';ctx.font='600 32px '+FONT;ctx.fillText('特典の表示例',PAD,276);
+  ctx.fillStyle='#351c3c';ctx.font='700 58px '+FONT;let y=380;wrap(ctx,offer.condition).forEach(line=>{ctx.fillText(line,PAD,y);y+=76;});
   ctx.fillStyle='#c05a0b';ctx.font='800 88px '+FONT;y+=50;wrap(ctx,offer.reward).forEach(line=>{ctx.fillText(line,PAD,y);y+=108;});
-  ctx.fillStyle='#e6eee6';ctx.fillRect(PAD,820,INNER,280);ctx.fillStyle='#193f33';ctx.font='600 36px '+FONT;ctx.fillText('受け取り方の表示例',PAD+30,880);ctx.font='700 50px '+FONT;ctx.fillText('「'+offer.keyword+'」',PAD+30,962,INNER-60);ctx.font='500 32px '+FONT;ctx.fillText('お会計前に画面を見せて伝える',PAD+30,1038,INNER-60);
+  ctx.fillStyle='#ece7ed';ctx.fillRect(PAD,820,INNER,280);ctx.fillStyle='#351c3c';ctx.font='600 36px '+FONT;ctx.fillText('受け取り方の表示例',PAD+30,880);ctx.font='700 50px '+FONT;ctx.fillText('「'+offer.keyword+'」',PAD+30,962,INNER-60);ctx.font='500 32px '+FONT;ctx.fillText('お会計前に画面を見せて伝える',PAD+30,1038,INNER-60);
   ctx.fillStyle='#8e430c';ctx.font='700 34px '+FONT;ctx.fillText('この特典は実際には利用できません',PAD,1170,INNER);
-  ctx.fillStyle='#61776a';ctx.font='500 27px '+FONT;wrap(ctx,offer.address).slice(0,2).forEach((line,i)=>ctx.fillText(line,PAD,1220+i*36));ctx.font='600 25px '+FONT;ctx.fillText('志木なるほど お店めぐりDX',PAD,1310);
+  ctx.fillStyle='#716375';ctx.font='500 27px '+FONT;wrap(ctx,offer.address).slice(0,2).forEach((line,i)=>ctx.fillText(line,PAD,1220+i*36));ctx.font='600 25px '+FONT;ctx.fillText('志木なるほど お店めぐりDX',PAD,1310);
  }
  async function create(article){
   await document.fonts.ready;

@@ -63,7 +63,7 @@ export function compilePosts(posts,knownLinks){
    '<meta property="og:image:alt" content="'+escape(p.name+'の投稿写真')+'">'+
    '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="'+escape(title)+'">'+
    '<meta name="twitter:description" content="'+escape(description)+'"><meta name="twitter:image" content="'+escape(imageURL)+'">'+
-   '<link rel="canonical" href="'+escape(shareURL)+'"><style>body{max-width:720px;margin:32px auto;padding:16px;font:18px/1.7 sans-serif;color:#193f33}img{max-width:100%;height:auto}p{white-space:pre-wrap}a{color:#146b57}</style></head><body><main>'+
+   '<link rel="canonical" href="'+escape(shareURL)+'"><style>body{max-width:720px;margin:32px auto;padding:16px;font:18px/1.7 sans-serif;color:#351c3c}img{max-width:100%;height:auto}p{white-space:pre-wrap}a{color:#531a65}</style></head><body><main>'+
    '<h1>'+escape(p.name)+'</h1><p>'+escape(p.body)+'</p>'+(bytes?'<img src="'+escape(imageURL)+'" alt="'+escape(p.name+'の投稿写真')+'">':'')+
    '<p><a href="'+escape(articleURL)+'">この記事を開く</a></p></main><script>location.replace('+JSON.stringify(articleURL).replace(/</g,'\\u003c')+');</script></body></html>\n';
   files.set(p.id+'/index.html',Buffer.from(html));

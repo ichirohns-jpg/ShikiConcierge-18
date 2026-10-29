@@ -6,9 +6,9 @@
  const shareText='おうちcafeパン工房\n\n【掲載見本・利用不可】パンを500円以上買うとミニパン1個プレゼント\n\n'+shareURL;
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;};
  const section=el('section',null,'simple-sns-share');section.setAttribute('aria-label','友だちに教える');
- section.style.cssText='margin:16px 0;padding:16px;border:1px solid #c5dfcf;border-radius:14px;background:#f4f8f3';
+ section.style.cssText='margin:16px 0;padding:16px;border:1px solid #d8c7dd;border-radius:14px;background:#f7f3f8';
  const title=el('h2','友だちに教える');title.style.cssText='margin:0 0 4px;font-size:20px;line-height:1.4;text-align:center';
- const note=el('p','コピーして、SNSに貼り付けてください。','sns-share-guide');note.style.cssText='margin:0 0 12px;font-size:14px;text-align:center;color:#466555';
+ const note=el('p','コピーして、SNSに貼り付けてください。','sns-share-guide');note.style.cssText='margin:0 0 12px;font-size:14px;text-align:center;color:#5d4863';
  const links=el('nav',null,'sns-links');links.setAttribute('aria-label','友だちに教える方法');
  links.style.cssText='display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px';
  const makeLink=(label,url,name,style)=>{const a=el('a',label,'sns-destination '+name);a.href=url;a.target='_blank';a.rel='noopener';a.style.cssText=style;return a;};
@@ -16,8 +16,8 @@
  const line=makeLink('LINEで送る','https://line.me/R/share?text='+encodeURIComponent(shareText),'line',common+';grid-column:1 / -1;min-height:48px;background:#087f3e;font-size:16px');
  const facebook=makeLink('Facebook','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareURL),'facebook',common+';background:#0866c6');
  const x=makeLink('X','https://twitter.com/intent/tweet?text='+encodeURIComponent(shareText),'x',common+';background:#151515');
- const copy=el('button','コピー','sns-copy');copy.type='button';copy.style.cssText=common+';width:100%;border:0;background:#146b57;cursor:pointer';
- const status=el('p','', 'sns-share-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.style.cssText='min-height:0;margin:8px 0 0;font-size:13px;color:#466555;text-align:center';
+ const copy=el('button','コピー','sns-copy');copy.type='button';copy.style.cssText=common+';width:100%;border:0;background:#531a65;cursor:pointer';
+ const status=el('p','', 'sns-share-status');status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.style.cssText='min-height:0;margin:8px 0 0;font-size:13px;color:#5d4863;text-align:center';
  const fallback=el('textarea');fallback.readOnly=true;fallback.value=shareText;fallback.hidden=true;fallback.rows=6;fallback.setAttribute('aria-label','コピーする文章とリンク');
  fallback.style.cssText='width:100%;box-sizing:border-box;font:inherit;line-height:1.6;padding:12px';
  copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(shareText);status.textContent='コピーしました';}catch(e){fallback.hidden=false;fallback.focus();fallback.select();status.textContent='ここを長押ししてコピーしてください';}});
