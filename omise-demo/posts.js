@@ -45,11 +45,14 @@
  }
  const ended=p=>p.ended===true||(/^\d{4}-\d{2}-\d{2}$/.test(p.end||'')&&p.end<new Date(Date.now()+32400000).toISOString().slice(0,10));
  const section=el('section'),bar=el('div',null,'feed-heading');
+ const cheerList=el('div'),cheerEmpty=el('p','応援紹介を準備中です。ふじこが応援したい投稿や記事を、ここで紹介します。','feed-status'),cheerSection=el('section');
+ if(slug==='heartnet.html'){cheerSection.id='cheer-posts';cheerSection.className='panel';cheerSection.append(el('h2','ふじこの応援紹介'),el('p','ふじこが応援したい人やお店の投稿をご紹介。気になったら、DXの記事をシェアして応援してね。'),cheerList,cheerEmpty);}
  const heading=el('h2',article?'投稿記事':deals?'お得情報の投稿':ids[slug]?'投稿':'新着の投稿');
  const status=el('p','読み込み中…','feed-status'),list=el('div'),paging=el('div',null,'feed-paging');
  status.setAttribute('role','status');status.setAttribute('aria-live','polite');
  section.id='posts-timeline';bar.append(heading,status);section.append(bar,list,paging);
  if(deals)(document.querySelector('#deals-feed')||main).append(section);else if(article||timeline)main.append(section);else document.querySelector('#photos').before(section);
+ if(slug==='heartnet.html')section.before(cheerSection);
  const shopURL=p=>{const file=Object.keys(ids).find(f=>ids[f]===p.shop);return file?base+file:/^SHOP-[\w-]+$/.test(p.shop||'')?base+'?shop='+encodeURIComponent(p.shop)+'#detail':null;};
  const pageURL=p=>base+'article.html?id='+encodeURIComponent(p.id);
  const shortDate=value=>{const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);return m?Number(m[2])+'月'+Number(m[3])+'日 '+m[4]+':'+m[5]:String(value||'');};
@@ -96,7 +99,7 @@
   return card;
  }
  function render(rows,append=false){
-  if(!append){list.replaceChildren();shown.clear();seen.clear();}
+  if(!append){list.replaceChildren();cheerList.replaceChildren();shown.clear();seen.clear();}
   if(!append&&slug==='ouchicafe.html'&&offset===0)list.append(cafeAdCard());
   for(const p of rows){
    if(ended(p)||seen.has(p.id))continue;
@@ -109,7 +112,7 @@
    const identity=el('div',null,'post-identity'),author=el(shop?'a':'span',rec?'ふじこ':p.name,'post-author');
    if(shop){author.href=shop;author.setAttribute('aria-label',p.name+'のトップページを見る');}
    const date=el('a',shortDate(p.date),'post-date');date.href=pageURL(p);date.setAttribute('aria-label',p.date+'の記事を開く');
-   identity.append(author,date);head.append(avatar,identity,el('span',rec?'推しのお店':p.kind==='deal'?'お得情報':'お知らせ','post-kind'+(p.kind==='deal'?' deal':'')));
+   identity.append(author,date);head.append(avatar,identity,el('span',rec?'応援紹介':p.kind==='deal'?'お得情報':'お知らせ','post-kind'+(p.kind==='deal'?' deal':'')));
    card.append(head,el('p',rec?rec.comment:p.body,'post-body'));if(rec)window.DXSNSRecommend.mount(card,rec);
    const photos=(p.photos||[]).filter(src=>/^data:image\/jpeg;base64,/.test(src));
    if(photos.length){const media=el(article?'div':'a',null,'post-media');if(!article){media.href=pageURL(p);media.setAttribute('aria-label',p.name+'の投稿記事を開く');}for(const src of photos){const img=el('img');img.src=src;img.alt=p.name+'の投稿写真';img.loading=article||returnState?'eager':'lazy';img.decoding='async';media.append(img);}card.append(media);}
@@ -122,12 +125,14 @@
    const links=el('div',null,'post-links');
    if(!article){const detail=el('a','この記事を開く');detail.href=pageURL(p);links.append(detail);}
    if(shop){const profile=el('a','お店の紹介・場所を見る →');profile.href=shop;profile.setAttribute('aria-label',p.name+'のトップページを見る');links.append(profile);}
-   card.append(links);share(card,p);list.append(card);shown.set(p.id,{p,card});
+   card.append(links);share(card,p);(rec&&slug==='heartnet.html'?cheerList:list).append(card);shown.set(p.id,{p,card});
   }
  }
+ function syncCheerEmpty(){if(slug==='heartnet.html')cheerEmpty.hidden=cheerList.children.length>0;}
  function pruneEnded(){
   let removed=false;
   for(const [key,{p,card}] of shown)if(ended(p)){card.remove();shown.delete(key);removed=true;}
+  syncCheerEmpty();
   if(removed)status.textContent=article?'掲載が終了しました。':shown.size?shown.size+'件表示中':deals?'公開中のお得情報はまだありません。':'公開された投稿はまだありません。';
  }
  function load({append=false,nextOffset=offset}={}){
@@ -146,10 +151,10 @@
    if(settled)return;
    if(data?.ok!==true||!Array.isArray(data.posts)||!Number.isInteger(data.total)||data.total<0||(!data.posts.length&&nextOffset<data.total)){fail('読み込めませんでした。もう一度お試しください。');return;}
    settled=true;cleanup();loading=false;offset=nextOffset;
-   const rows=data.posts,total=data.total;loadedThrough=offset+rows.length;render(rows,append);
+   const rows=data.posts,total=data.total;loadedThrough=offset+rows.length;render(rows,append);syncCheerEmpty();
    status.textContent=article?(shown.size?'':'掲載が終了しているか、公開前です。'):!shown.size?(deals?'公開中のお得情報はまだありません。':'公開された投稿はまだありません。'):continuous?shown.size+'件表示中':offset?'過去の投稿 '+(offset+1)+'〜'+Math.min(offset+10,total)+'件':'最新'+Math.min(10,total)+'件';
    if(article&&rows[0])document.title=rows[0].body.split('\n')[0].slice(0,60)+'｜お店めぐりDX';
-   if(!append&&location.hash==='#posts-timeline')section.scrollIntoView();
+   if(!append&&location.hash==='#posts-timeline')section.scrollIntoView();if(!append&&slug==='heartnet.html'&&location.hash==='#cheer-posts')cheerSection.scrollIntoView();
    const finishPaging=()=>{if(!article){
     if(!continuous&&offset){const back=el('button','最新の投稿に戻る','btn secondary');back.onclick=()=>load({nextOffset:0});paging.append(back);}
     if(rows.length&&offset+rows.length<total){
@@ -177,6 +182,7 @@
  window.addEventListener('focus',pruneEnded);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)pruneEnded();});
 })();
+
 
 
 
