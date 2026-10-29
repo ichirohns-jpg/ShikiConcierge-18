@@ -107,3 +107,29 @@ body.home-page .editorial-kicker{color:#886624}
 body.home-page .owner-entry{background:#fffdf9;border-color:#d9ccde;border-left-color:#886624}
 .home-page .site-help{border-color:#d9ccde}
 @media(hover:hover){body.home-page .home-menu a:hover{border-color:#886624}body.home-page .home-shop.card:hover,.home-page .cheer-card:hover{border-color:#9b7ba7;box-shadow:0 8px 26px #48225212}}
+
+/* A clearly bounded unit for each shop, including its photograph and action. */
+body.home-page .home-shop.card,.home-page .cheer-card{
+ border:2px solid #94739f;
+ background:#f2e8f5;
+ box-shadow:0 6px 18px #48225212;
+}
+body.home-page .home-shop>a{background:#fffdf9;border-bottom:2px solid #c8afd2}
+body.home-page .home-shop-body,.home-page .cheer-card-body{background:#f2e8f5}
+.home-page .home-shop-body .pill{background:#fffdf9;border:1px solid #d5bedf;color:#60396e}
+body.home-page .home-shop-body h3,body.home-page #cheer .cheer-card h3{color:#482252}
+.home-page .home-shop-body p,body.home-page #cheer .cheer-card p{color:#594660}
+body.home-page .home-shop-body .btn{
+ background:#482252;color:#fffdf9;border:0;border-radius:10px;
+ padding:12px 16px;box-shadow:none;
+}
+.home-page .cheer-visit{background:#482252;color:#fffdf9;border:0;border-radius:8px;padding:10px 12px}
+@media(max-width:560px){
+ body.home-page #shopList{gap:32px}
+ .home-page .cheer-grid{gap:24px}
+ .home-page .cheer-photo{border-right:2px solid #c8afd2;background:#fffdf9}
+}
+@media(hover:hover){
+ body.home-page .home-shop.card:hover,.home-page .cheer-card:hover{border-color:#684174}
+ body.home-page .home-shop-body .btn:hover{background:#63366e;color:#fffdf9}
+}
