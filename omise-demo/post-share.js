@@ -48,6 +48,8 @@
   }catch{}return '';
  }
  const cleanText=value=>String(value||'').replace(/[\u200B\u2060\uFEFF]/g,'').replaceAll('https://maps.app.goo.gl/fL12q1xUJLi7DMM38','https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/').replaceAll('https://www.google.com/maps?cid=11115501150198124790','https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/').replaceAll('https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo','https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/');
+ const fujikoFooter='画像タップで詳しい情報見てくださいね🥒';
+ const withFujikoFooter=value=>cleanText(value).replaceAll(fujikoFooter,'').replace(/(?:画像をタップすると、お店めぐりDXの記事が開きます。|紹介ページをご覧ください。)\s*$/,'').trim()+'\n\n'+fujikoFooter;
  function mount(box,p,options={}){
   const legacy=options.replaceExisting?Array.from(box.children).map(node=>{const hidden=node.hidden;node.classList.add('dx-legacy-share');return {node,hidden};}):[];
   const dynamic=/^POST-[a-f0-9-]+$/i.test(p.id||'');
@@ -60,9 +62,9 @@
   const makeText=name=>{
    if(dynamic){
     const heading=name==='fujiko'?'ふじこからのお知らせ🥒':name==='heartnet'?'ハートネット志木からのお知らせ':'';
-    return [heading,postCopy()].filter(Boolean).join('\n\n');
+    const text=[heading,postCopy()].filter(Boolean).join('\n\n');return name==='fujiko'?withFujikoFooter(text):text;
    }
-   return name==='original'?ownText:(name==='fujiko'?'ふじこからのお店・活動紹介🥒':'ハートネット志木からのお店・活動紹介')+'\n'+(p.name?p.name+'さんをご紹介します。':'志木のお店・活動をご紹介します。')+'\n\n'+ownText+'\n\n紹介ページをご覧ください。';
+   const text=name==='original'?ownText:(name==='fujiko'?'ふじこからのお店・活動紹介🥒':'ハートネット志木からのお店・活動紹介')+'\n'+(p.name?p.name+'さんをご紹介します。':'志木のお店・活動をご紹介します。')+'\n\n'+ownText+'\n\n紹介ページをご覧ください。';return name==='fujiko'?withFujikoFooter(text):text;
   };
   let shareText=ownText,userEdited=false;
   const area=el('section',null,'post-publish post-simple-share');
@@ -81,7 +83,7 @@
   const draft=el('textarea');draft.rows=9;draft.setAttribute('aria-label','SNSに載せる紹介文');textLabel.append(draft);
   const note=el('p','下のボタンでコピー・共有できます。SNSでは投稿するアカウントを選んでください。Facebookは紹介文をコピーして、共有画面に貼り付けてください。Instagramにも紹介文をコピーして使えます。','post-fujiko-note');
   editor.append(identity,preview,textLabel,note);
-  const currentText=()=>{if(!userEdited&&options.readPost){p={...p,...options.readPost()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));if(hasAdminAccess()){shareText=makeText(sender.value||selectedIdentity);draft.value=shareText;}}return cleanText(!hasAdminAccess()?(dynamic?postCopy():ownText):shareText);};
+  const currentText=()=>{if(!userEdited&&options.readPost){p={...p,...options.readPost()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));if(hasAdminAccess()){shareText=makeText(sender.value||selectedIdentity);draft.value=shareText;}}const text=cleanText(!hasAdminAccess()?(dynamic?postCopy():ownText):shareText);return hasAdminAccess()&&sender.value==='fujiko'?withFujikoFooter(text):text;};
   function chooseSender(){shareText=makeText(sender.value);draft.value=shareText;byline.textContent=sender.value==='fujiko'?'ふじこ':sender.value==='heartnet'?'ハートネット志木':p.name||'元の投稿';avatar.hidden=sender.value!=='fujiko';ready();}
   function applyIdentity(value){if(!hasAdminAccess())return;sender.value=value;userEdited=false;chooseSender();fujiko.textContent=(value==='fujiko'?'🥒 ':'')+identityName(value)+'として紹介・シェア';if(options.privateOnly)shareHeading.textContent=identityName(value)+'の文章で共有する';}
  identityListeners.add(applyIdentity);
@@ -186,7 +188,7 @@
   if(!hasAdminAccess())throw Error('ふじこのログインを確認しています。少し待ってから、もう一度押してください。');
   const profile=profileState?.();
   if(profile)return profile.text+'\n\n'+(url||profile.link);
-  return selectedIdentity==='original'?original:(selectedIdentity==='fujiko'?'ふじこからのお店・活動紹介🥒':'ハートネット志木からのお店・活動紹介')+'\n'+name+'さんをご紹介します。\n\n'+original;
+  const text=selectedIdentity==='original'?original:(selectedIdentity==='fujiko'?'ふじこからのお店・活動紹介🥒':'ハートネット志木からのお店・活動紹介')+'\n'+name+'さんをご紹介します。\n\n'+original;return selectedIdentity==='fujiko'?withFujikoFooter(text):text;
  },isFujiko:hasAdminAccess};
 })();
 
