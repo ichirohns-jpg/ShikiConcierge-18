@@ -30,7 +30,7 @@
  window.addEventListener('focus',checkAdminAccess);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkAdminAccess();});
  setInterval(()=>{if(verifiedToken&&adminSession()?.token!==verifiedToken){verifiedToken='';notifyAccess();}},1000);
- const privacyStyle=document.createElement('style');privacyStyle.textContent='.post-iroha-line[hidden],.post-iroha-line [hidden],.post-fujiko-button[hidden],.post-simple-share[hidden],.dx-legacy-share[hidden]{display:none!important}';document.head.append(privacyStyle);
+ const privacyStyle=document.createElement('style');privacyStyle.textContent='.post-identity-actions[hidden],.post-iroha-line[hidden],.post-iroha-line [hidden],.post-fujiko-button[hidden],.post-simple-share[hidden],.dx-legacy-share[hidden]{display:none!important}';document.head.append(privacyStyle);
  let profileState=null,profileReveal=null;
  let manifestPromise=null,manifestTime=0;
  function sharePages(){
@@ -91,8 +91,29 @@
  sender.addEventListener('change',()=>setIdentity(sender.value));
   draft.addEventListener('input',()=>{userEdited=true;shareText=draft.value;ready();});
   fujiko.addEventListener('click',()=>{if(!hasAdminAccess()||expire())return;editor.hidden=!editor.hidden;fujiko.setAttribute('aria-expanded',String(!editor.hidden));if(!editor.hidden){if(!draft.value){if(options.profile&&options.readProfile){const current=options.readProfile();p={...p,...current};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}applyIdentity(selectedIdentity);}draft.focus();}ready();});
-  const login=el('a','ふじこの名義で紹介するには、投稿・編集からログイン →','post-share-login');login.href=dxURL+'owner.html#top';
-  area.append(fujiko,editor,login);
+  const login=el('a','名義を付けて紹介するには、投稿・編集からログイン →','post-share-login');login.href=dxURL+'owner.html#top';
+  const identityActions=el('div',null,'post-identity-actions');
+  identityActions.style.cssText='display:grid;gap:10px;margin:12px 0';
+  const shareAnchor='dx-share-'+String(p.id||p.name||'profile').replace(/[^a-zA-Z0-9_-]/g,'');
+  area.id=shareAnchor;
+  function loginFor(value){
+   const back=new URL(location.href);back.hash=shareAnchor;
+   const target=new URL('owner.html',dxURL);
+   target.searchParams.set('shareReturn',back.href);target.searchParams.set('shareAs',value);target.hash='top';
+   return target.href;
+  }
+  for(const [value,label] of [['heartnet','ハートネット志木として紹介・シェア'],['fujiko','🥒 ふじことして紹介・シェア']]){
+   const action=el('button',label,'post-share-copy');action.type='button';
+   action.addEventListener('click',()=>{
+    if(expire())return;
+    if(!hasAdminAccess()){location.assign(loginFor(value));return;}
+    setIdentity(value);editor.hidden=false;fujiko.setAttribute('aria-expanded','true');
+    area.scrollIntoView({behavior:'smooth',block:'start'});draft.focus({preventScroll:true});
+   });
+   identityActions.append(action);
+  }
+  login.href=loginFor(selectedIdentity);
+  area.append(identityActions,fujiko,editor,login);
   const message=el('p','', 'post-share-message');
   message.setAttribute('role','status');message.setAttribute('aria-live','polite');
   const fallback=el('textarea');fallback.value=(ownText?ownText+'\n\n':'')+link;fallback.readOnly=true;fallback.hidden=true;fallback.rows=7;
@@ -139,7 +160,7 @@
   for(const a of [line,x])a.addEventListener('click',event=>{if(expire())event.preventDefault();});
   function ready(){
    const expired=ended();
-   copy.disabled=expired;
+   copy.disabled=expired;for(const action of identityActions.children)action.disabled=expired;
    if(typeof irohaCopy!=='undefined')irohaCopy.disabled=expired;
    copy.textContent=link?(hasAdminAccess()?'紹介文とURLをコピー':'文章と短いURLをコピー'):'文章をコピー';
    if(!expired){
@@ -181,7 +202,7 @@
    irohaManager.hidden=false;
   });
   box.append(iroha);
-  const updateAccess=allowed=>{login.hidden=allowed||!!options.privateOnly;iroha.hidden=!hasIrohaAccess()||ended()||!!(options.profile&&!options.irohaLine);if(iroha.hidden){irohaManual.hidden=true;irohaManual.value='';irohaManager.hidden=true;irohaStatus.textContent='';}for(const {node,hidden} of legacy)node.hidden=allowed||hidden;if(options.privateOnly)area.hidden=!allowed;fujiko.hidden=!allowed;if(allowed&&!draft.value){if(options.profile&&options.readProfile){p={...p,...options.readProfile()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}editor.hidden=false;fujiko.setAttribute('aria-expanded','true');applyIdentity(selectedIdentity);}if(!allowed){editor.hidden=true;draft.value='';shareText=ownText;fallback.hidden=true;fallback.value='';fujiko.setAttribute('aria-expanded','false');}copy.textContent=allowed?'紹介文とURLをコピー':'文章と短いURLをコピー';ready();};
+  const updateAccess=allowed=>{login.hidden=allowed||!!options.privateOnly;identityActions.hidden=!!options.privateOnly;iroha.hidden=!hasIrohaAccess()||ended()||!!(options.profile&&!options.irohaLine);if(iroha.hidden){irohaManual.hidden=true;irohaManual.value='';irohaManager.hidden=true;irohaStatus.textContent='';}for(const {node,hidden} of legacy)node.hidden=allowed||hidden;if(options.privateOnly)area.hidden=!allowed;fujiko.hidden=!allowed||!options.privateOnly;if(allowed&&!draft.value){if(options.profile&&options.readProfile){p={...p,...options.readProfile()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}editor.hidden=false;fujiko.setAttribute('aria-expanded','true');applyIdentity(selectedIdentity);}if(!allowed){editor.hidden=true;draft.value='';shareText=ownText;fallback.hidden=true;fallback.value='';fujiko.setAttribute('aria-expanded','false');}copy.textContent=allowed?'紹介文とURLをコピー':'文章と短いURLをコピー';ready();};
   accessListeners.add(updateAccess);
   ready();
   area.append(copy,networks);if(navigator.share){const native=el('button','スマホで共有','post-share-native');native.type='button';native.addEventListener('click',shareFromPhone);area.append(native);}area.append(message,fallback);box.append(area);
@@ -216,6 +237,7 @@
   const text=selectedIdentity==='original'?original:(selectedIdentity==='fujiko'?'ふじこからのお店・活動紹介🥒':'ハートネット志木からのお店・活動紹介')+'\n'+name+'さんをご紹介します。\n\n'+original;return selectedIdentity==='fujiko'?withFujikoFooter(text):text;
  },isFujiko:hasAdminAccess};
 })();
+
 
 
 

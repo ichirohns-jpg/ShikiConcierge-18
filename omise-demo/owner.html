@@ -72,6 +72,18 @@ function enterOwnPage(id,credential,r,keep){
  $('fujikoShare').hidden=!(id==='ADMIN'||id==='SHOP-0002');$('thanksManager').hidden=!(id==='ADMIN'||id==='SHOP-0002');
  if(id==='ADMIN'||id==='SHOP-0002'){$('thanksManager').hidden=false;renderThanksCard(r.thanksCard||'');}if(id!=='ADMIN'){own=r.posts;$('shopName').textContent=r.shop['店名'];$('owner').hidden=false;renderOwn();}
  if(keep&&!saved)status('このブラウザではログインを保持できませんでした。この画面では引き続き使えます。');
+ // Return to the same public DX article only after the owner session is saved.
+ const shareParams=new URLSearchParams(location.search),shareAs=shareParams.get('shareAs');
+ if(saved&&['ADMIN','SHOP-0002'].includes(id)&&['heartnet','fujiko','original'].includes(shareAs)){
+  try{
+   const target=new URL(shareParams.get('shareReturn')||'');
+   const root=new URL(base);
+   if(target.origin===root.origin&&target.pathname.startsWith(root.pathname)&&target.hash.startsWith('#dx-share-')){
+    localStorage.setItem(identityKey,shareAs);
+    location.replace(target.href);return;
+   }
+  }catch{}
+ }
  requestAnimationFrame(showManagementTop);
 }
 $('loginForm').onsubmit=async e=>{e.preventDefault();if(busyFlag)return;try{const code=$('code').value.trim(),keep=$('remember').checked,r=await rpc('postLoginByCode',[code,keep]);enterOwnPage(r.loginId,code,r,keep);}catch{}};
@@ -117,6 +129,7 @@ async function deletePost(p){const type=p.kind==='deal'?'お得情報':'お知�
 showManagementTop();
 restoreLogin();
 </script></body></html>
+
 
 
 

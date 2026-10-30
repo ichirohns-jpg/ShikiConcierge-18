@@ -63,7 +63,7 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261030-post-photo-login2',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261030-identity-entry3',document.currentScript?.src||base+'posts.js').href;
  function share(box,p,options){
   const mount=options?.replaceExisting?box:el('div');if(mount!==box)box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
@@ -211,6 +211,7 @@
  window.addEventListener('focus',pruneEnded);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)pruneEnded();});
 })();
+
 
 
 
