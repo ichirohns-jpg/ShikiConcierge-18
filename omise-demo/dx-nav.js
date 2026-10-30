@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
- const fujikoSharing=document.createElement('script');fujikoSharing.src='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/fujiko-share-locations.js?v=20261030-line-web-share';document.head.append(fujikoSharing);
+ const fujikoSharing=document.createElement('script');fujikoSharing.src='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/fujiko-share-locations.js?v=20261030-news-share-fix';document.head.append(fujikoSharing);
  if(document.querySelector('.dx-global-nav'))return;
  // Keep the publisher entrance reachable while reading any public page.
  if(!document.querySelector('.dx-editor-toolbar')){
