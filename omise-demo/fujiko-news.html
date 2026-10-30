@@ -30,13 +30,13 @@
  const fb=el('a','Facebookで共有');fb.className='fb';
  const line=el('a','LINEで共有');line.className='line';
  const x=el('a','Xで共有');x.className='x';
- for(const a of [fb,line,x]){a.target='_blank';a.rel='noopener noreferrer';links.append(a);}
+ for(const a of [fb,line,x]){a.target=a===line?'_self':'_blank';a.rel='noopener noreferrer';links.append(a);}
  const status=el('p');status.className='news-share-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
  const payload=()=>draft.value.trim()+'\n\n'+url;
  async function copy(){try{await navigator.clipboard.writeText(payload());status.textContent='文章と記事URLをコピーしました。SNSに貼り付けてください。';}catch{draft.focus();draft.select();status.textContent='文章欄を長押ししてコピーしてください。記事URL：'+url;}}
  const ig=el('button','Instagram用にコピー');ig.type='button';ig.addEventListener('click',copy);links.append(ig);
  const cp=el('button','文章と記事URLをコピー');cp.className='copy';cp.type='button';cp.addEventListener('click',copy);
- function refresh(){fb.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url);line.href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(draft.value);x.href='https://x.com/intent/tweet?text='+encodeURIComponent(draft.value)+'&url='+encodeURIComponent(url);}
+ function refresh(){fb.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url);line.href='https://line.me/R/share?text='+encodeURIComponent(payload());x.href='https://x.com/intent/tweet?text='+encodeURIComponent(draft.value)+'&url='+encodeURIComponent(url);}
  function choose(){const heading=sender.value==='fujiko'?'ふじこからのお知らせ🥒':sender.value==='heartnet'?'ハートネット志木からのお知らせ':'';draft.value=[heading,p.title,p.body].filter(Boolean).join('\n\n');refresh();}
  sender.addEventListener('change',choose);draft.addEventListener('input',refresh);
  box.append(label,sender,draftLabel,draft,el('p','選んだ名前は紹介文に入ります。投稿するSNSアカウントはSNS側で選んでください。'),cp,links);
