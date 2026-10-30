@@ -63,7 +63,7 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261030-line-web-share',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261030-iroha-line-copy1',document.currentScript?.src||base+'posts.js').href;
  function share(box,p,options){
   const mount=options?.replaceExisting?box:el('div');if(mount!==box)box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
@@ -83,7 +83,7 @@
  if(ids[slug]&&document.querySelector('#share')){
   const readProfile=()=>{const name=document.querySelector('#intro h1')?.textContent||document.querySelector('h1')?.textContent||'';let body=document.querySelector('#shareText')?.value||document.querySelector('#intro .profile-description')?.textContent||'';body=body.split('\n\n【詳しい紹介】')[0];if(body.startsWith(name+'をご紹介！'))body=body.slice((name+'をご紹介！').length).trim();return {name,body};};
   const p={...readProfile(),shareURL:window.DXShortLinks?.[base+slug]||base+slug+'#top'};
-  share(document.querySelector('#share'),p,{privateOnly:true,profile:true,replaceExisting:true,readProfile});
+  share(document.querySelector('#share'),p,{privateOnly:true,profile:true,replaceExisting:true,readProfile,irohaLine:slug==='newtimes.html'});
  }
  function cafeAdCard(){
   const card=el('article',null,'post-card cafe-ad-card'),head=el('div',null,'post-header');
