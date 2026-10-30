@@ -7,7 +7,7 @@
  const sessionKey='shiki-merchant-session-v1',accessListeners=new Set(),identityKey='shiki-share-identity-v1',identityListeners=new Set();
  const identityName=value=>value==='fujiko'?'ふじこ':value==='heartnet'?'ハートネット志木':'元の投稿の文章';
  const identityAction=value=>value==='original'?'元の投稿の文章でシェア':(value==='fujiko'?'🥒 ':'')+identityName(value)+'として紹介・シェア';
- function readIdentity(){try{const value=localStorage.getItem(identityKey);return ['fujiko','heartnet','original'].includes(value)?value:'heartnet';}catch{return 'heartnet';}}
+ function readIdentity(){try{const value=localStorage.getItem(identityKey);return ['fujiko','heartnet','original'].includes(value)?value:'fujiko';}catch{return 'fujiko';}}
  let selectedIdentity=readIdentity();
  function setIdentity(value){if(!['fujiko','heartnet','original'].includes(value))return;selectedIdentity=value;try{localStorage.setItem(identityKey,value);}catch{}for(const callback of identityListeners)callback(value);}
  window.addEventListener('storage',event=>{if(event.key===identityKey||event.key===null){selectedIdentity=readIdentity();for(const callback of identityListeners)callback(selectedIdentity);}});
@@ -91,7 +91,8 @@
  sender.addEventListener('change',()=>setIdentity(sender.value));
   draft.addEventListener('input',()=>{userEdited=true;shareText=draft.value;ready();});
   fujiko.addEventListener('click',()=>{if(!hasAdminAccess()||expire())return;editor.hidden=!editor.hidden;fujiko.setAttribute('aria-expanded',String(!editor.hidden));if(!editor.hidden){if(!draft.value){if(options.profile&&options.readProfile){const current=options.readProfile();p={...p,...current};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}applyIdentity(selectedIdentity);}draft.focus();}ready();});
-  area.append(fujiko,editor);
+  const login=el('a','ふじこの名義で紹介するには、投稿・編集からログイン →','post-share-login');login.href=dxURL+'owner.html#top';
+  area.append(fujiko,editor,login);
   const message=el('p','', 'post-share-message');
   message.setAttribute('role','status');message.setAttribute('aria-live','polite');
   const fallback=el('textarea');fallback.value=(ownText?ownText+'\n\n':'')+link;fallback.readOnly=true;fallback.hidden=true;fallback.rows=7;
@@ -134,7 +135,7 @@
   const line=el('a','LINEで共有');line.style.background='#087f3e';
   const x=el('a','Xで共有');x.style.background='#111';
   for(const a of [line,x]){a.target='_blank';a.rel='noopener';networks.append(a);}
-  facebook.addEventListener('click',event=>{if(expire())event.preventDefault();});
+  facebook.addEventListener('click',event=>{if(expire()||(dynamic&&!link)){event.preventDefault();if(!ended())message.textContent='記事画像の共有リンクを準備中です。少し待ってから、もう一度お試しください。';}});
   for(const a of [line,x])a.addEventListener('click',event=>{if(expire())event.preventDefault();});
   function ready(){
    const expired=ended();
@@ -146,6 +147,7 @@
     line.href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(link||articleLink||dxURL)+'&text='+encodeURIComponent(currentText());
     x.href='https://x.com/intent/tweet?text='+encodeURIComponent(currentText())+(link?'&url='+encodeURIComponent(link):'');
     for(const a of [facebook,line,x])a.removeAttribute('aria-disabled');
+    if(dynamic&&!link){facebook.removeAttribute('href');facebook.setAttribute('aria-disabled','true');}
    }else{
     for(const a of [facebook,line,x]){a.removeAttribute('href');a.setAttribute('aria-disabled','true');}
    }
@@ -179,7 +181,7 @@
    irohaManager.hidden=false;
   });
   box.append(iroha);
-  const updateAccess=allowed=>{iroha.hidden=!hasIrohaAccess()||ended()||!!(options.profile&&!options.irohaLine);if(iroha.hidden){irohaManual.hidden=true;irohaManual.value='';irohaManager.hidden=true;irohaStatus.textContent='';}for(const {node,hidden} of legacy)node.hidden=allowed||hidden;if(options.privateOnly)area.hidden=!allowed;fujiko.hidden=!allowed;if(allowed&&!draft.value){if(options.profile&&options.readProfile){p={...p,...options.readProfile()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}editor.hidden=false;fujiko.setAttribute('aria-expanded','true');applyIdentity(selectedIdentity);}if(!allowed){editor.hidden=true;draft.value='';shareText=ownText;fallback.hidden=true;fallback.value='';fujiko.setAttribute('aria-expanded','false');}copy.textContent=allowed?'紹介文とURLをコピー':'文章と短いURLをコピー';ready();};
+  const updateAccess=allowed=>{login.hidden=allowed||!!options.privateOnly;iroha.hidden=!hasIrohaAccess()||ended()||!!(options.profile&&!options.irohaLine);if(iroha.hidden){irohaManual.hidden=true;irohaManual.value='';irohaManager.hidden=true;irohaStatus.textContent='';}for(const {node,hidden} of legacy)node.hidden=allowed||hidden;if(options.privateOnly)area.hidden=!allowed;fujiko.hidden=!allowed;if(allowed&&!draft.value){if(options.profile&&options.readProfile){p={...p,...options.readProfile()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}editor.hidden=false;fujiko.setAttribute('aria-expanded','true');applyIdentity(selectedIdentity);}if(!allowed){editor.hidden=true;draft.value='';shareText=ownText;fallback.hidden=true;fallback.value='';fujiko.setAttribute('aria-expanded','false');}copy.textContent=allowed?'紹介文とURLをコピー':'文章と短いURLをコピー';ready();};
   accessListeners.add(updateAccess);
   ready();
   area.append(copy,networks);if(navigator.share){const native=el('button','スマホで共有','post-share-native');native.type='button';native.addEventListener('click',shareFromPhone);area.append(native);}area.append(message,fallback);box.append(area);
@@ -193,10 +195,11 @@
     if(disposed||!area.isConnected||expire())return;
     if(entry&&entry.date===p.date&&entry.shareURL.startsWith(dxURL+'post-shares/'+encodeURIComponent(p.id)+'/?v=')){
      const shortBase=dxURL.replace(/omise-demo\/$/,'p/'),short=String(entry.shortURL||'');
+     link=entry.shareURL;
      if(short.startsWith(shortBase)&&/^[1-9]\d*\/(?:\?v=[1-9]\d*)?$/.test(short.slice(shortBase.length)))link=short;ready();message.textContent=link?'':'文章は共有できます。記事の短いリンクは準備中です。';
     }else{
      ready();
-     if(!link)message.textContent='Facebookの共有画面を直接開きます。投稿写真の反映は準備中です。';
+     if(!link)message.textContent='記事画像の共有リンクを準備中です。準備ができるとFacebookで共有できます。';
     }
    }catch{if(!disposed&&area.isConnected&&!expire()){ready();if(!link)message.textContent='文章は共有できます。記事の短いリンクは通信が戻ると再確認します。';}}
    if(!disposed&&area.isConnected)timer=setTimeout(prepare,30000);
