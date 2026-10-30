@@ -1,5 +1,5 @@
 /* Shared navigation and control sizing for the existing public DX. */
-body{-webkit-text-size-adjust:100%;padding-bottom:calc(74px + env(safe-area-inset-bottom,0px))!important}
+body{-webkit-text-size-adjust:100%;padding-bottom:0!important}
 body main{max-width:680px}
 body h1{font-size:29px;line-height:1.45}
 body h2{font-size:24px;line-height:1.5}
@@ -12,7 +12,7 @@ body main>header,body>header{max-width:360px}
 .dx-route{box-sizing:border-box;max-width:680px;margin:4px auto 14px;padding:4px 0;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e0d5e4;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif}
 .dx-route a{flex:none;display:flex;align-items:center;min-height:44px;padding:8px;color:#42184f;text-decoration:none;font-weight:700}
 .dx-route-current{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#453749}
-.dx-global-nav{box-sizing:border-box;position:fixed;z-index:3000;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:680px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding-bottom:env(safe-area-inset-bottom,0px);background:#fff;border:1px solid #e0d5e4;box-shadow:0 -2px 12px #351c3c10;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif}
+.dx-global-nav{box-sizing:border-box;position:static;width:100%;max-width:680px;margin:24px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding-bottom:env(safe-area-inset-bottom,0px);background:#fff;border:1px solid #e0d5e4;box-shadow:0 -2px 12px #351c3c10;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif}
 .dx-global-nav a{box-sizing:border-box;display:flex;min-width:0;min-height:52px;align-items:center;justify-content:center;padding:8px 2px;color:#3e2446!important;text-align:center;text-decoration:none!important;font-size:17px;font-weight:700;line-height:1.3}
 .dx-global-nav a[aria-current="page"]{background:#481956;color:#fff!important}
 .dx-global-nav a:focus-visible,.dx-route a:focus-visible{outline:3px solid #ed9c22;outline-offset:-3px}
@@ -30,7 +30,7 @@ body .simple-sns-share .sns-share-status:empty{display:none}
 body .benefit-preview img,body .gift img{max-height:360px;object-fit:contain}
 @media(max-width:420px){body main{padding:12px}body h1{font-size:28px}body main>header,body>header{max-width:280px}body .card{padding:16px}body .social-view .panel{padding:16px}}
 @media(max-width:360px){.dx-global-nav a{font-size:16px}}
-@media(min-width:760px){.dx-global-nav{bottom:12px;border-radius:12px;overflow:hidden}.dx-route{margin-top:12px}}
+@media(min-width:760px){.dx-global-nav{border-radius:12px;overflow:hidden}.dx-route{margin-top:12px}}
 
 
 /* Presentation finish: quiet frames, consistent rhythm and clear type. */
