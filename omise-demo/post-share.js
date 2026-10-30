@@ -141,7 +141,7 @@
    copy.textContent=link?(hasAdminAccess()?'紹介文とURLをコピー':'文章と短いURLをコピー'):'文章をコピー';
    if(!expired){
     facebook.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(facebookCard(p)||link||articleLink);
-    line.href='https://line.me/R/share?text='+encodeURIComponent(shareValue());
+    line.href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(link||articleLink||dxURL)+'&text='+encodeURIComponent(currentText());
     x.href='https://x.com/intent/tweet?text='+encodeURIComponent(currentText())+(link?'&url='+encodeURIComponent(link):'');
     for(const a of [facebook,line,x])a.removeAttribute('aria-disabled');
    }else{

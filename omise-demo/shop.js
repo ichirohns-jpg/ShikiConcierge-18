@@ -9,7 +9,7 @@ if((!location.hash||location.hash==='#top')&&performance.getEntriesByType('navig
 const shareField=document.getElementById('shareText');
 const shopCanonical=document.querySelector('link[rel="canonical"]').href;
 const shopShareURL=window.DXShortLinks?.[shopCanonical]||shopCanonical.split('#')[0]+'#top';
-if(shareField){shareField.value=shareField.value.split(/\n\n【詳しい紹介】|\n\n【お店の地図】/)[0]+'\n\n【詳しい紹介】\n'+shopShareURL;document.querySelectorAll('#intro a[href*="line.me/R/share"],#share a[href*="line.me/R/share"]').forEach(a=>a.href='https://line.me/R/share?text='+encodeURIComponent(shareField.value));}
+if(shareField){shareField.value=shareField.value.split(/\n\n【詳しい紹介】|\n\n【お店の地図】/)[0]+'\n\n【詳しい紹介】\n'+shopShareURL;document.querySelectorAll('#intro a[href*="line.me/R/share"],#share a[href*="line.me/R/share"],#intro a[href*="social-plugins.line.me/lineit/share"],#share a[href*="social-plugins.line.me/lineit/share"]').forEach(a=>a.href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shopShareURL)+'&text='+encodeURIComponent(shareField.value));}
 function currentShareText(){
  try{const saved=JSON.parse(localStorage.getItem('shiki-merchant-session-v1')||'null');const fujiko=['ADMIN','SHOP-0002'].includes(saved?.id)&&/^DXS1\.[a-f0-9]{64}$/.test(saved?.token)&&saved.expiresAt>Date.now();
  if(!fujiko)return shareField.value;
@@ -26,9 +26,9 @@ document.querySelector('[data-native-share]').addEventListener('click',async()=>
 // Recompute at the click so later public-info synchronization cannot restore the shop's wording.
  document.querySelector('main').addEventListener('click',event=>{
  const a=event.target.closest('a');if(!a||!a.closest('#intro,#share'))return;
- const href=a.getAttribute('href')||'';let destination;try{destination=new URL(href);}catch{return;}if(!((destination.hostname==='line.me'&&destination.pathname.startsWith('/R/share'))||(['x.com','twitter.com'].includes(destination.hostname)&&destination.pathname==='/intent/tweet')))return;
+ const href=a.getAttribute('href')||'';let destination;try{destination=new URL(href);}catch{return;}if(!(((destination.hostname==='line.me'&&destination.pathname.startsWith('/R/share'))||(destination.hostname==='social-plugins.line.me'&&destination.pathname==='/lineit/share'))||(['x.com','twitter.com'].includes(destination.hostname)&&destination.pathname==='/intent/tweet')))return;
  const text=currentShareText();if(text===null){event.preventDefault();return;}
- if(href.includes('line.me/'))a.href='https://line.me/R/share?text='+encodeURIComponent(text);
+ if(href.includes('line.me/'))a.href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shopShareURL)+'&text='+encodeURIComponent(text);
  else a.href='https://x.com/intent/tweet?text='+encodeURIComponent(text);
  },true);
 const form=document.getElementById('giftForm');

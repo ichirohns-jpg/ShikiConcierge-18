@@ -68,7 +68,7 @@ document.getElementById('giftDownload').onclick=async e=>{
  const download=document.createElement('a');download.href=cardObjectURL;download.download='fujiko-thanks-card.jpg';document.body.append(download);download.click();download.remove();saveStatus.textContent='画像を開いた場合は、長押しして保存してください。';
 };
 const shareText='ハートネット志木\n\n合言葉「ふじこ」で、ふじこのありがとうカードを受け取ってね。無料・来店不要です。\n\n'+shareURL;
-document.getElementById('lineShare').href='https://line.me/R/share?text='+encodeURIComponent(shareText);
+document.getElementById('lineShare').href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareURL)+'&text='+encodeURIComponent(shareText.replace('\n\n'+shareURL,''));
 document.getElementById('facebookShare').href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareURL);
 document.getElementById('xShare').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(shareText);
 document.getElementById('copyShare').onclick=async()=>{try{await navigator.clipboard.writeText(shareText);document.getElementById('shareStatus').textContent='コピーしました';}catch{document.getElementById('shareStatus').textContent='コピーできませんでした';}};
