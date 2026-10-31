@@ -29,7 +29,7 @@ function el(tag,text,cls){const n=document.createElement(tag);if(text)n.textCont
 
  // Render user text as DOM nodes; map URLs become a separate action below the article.
  function postText(text,cls){
-  const body=el('p',null,cls),maps=[],raw=String(text||'').replace(/[\u200B\u2060\uFEFF]/g,'').replaceAll('https://maps.app.goo.gl/fL12q1xUJLi7DMM38','https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo').replaceAll('https://www.google.com/maps?cid=11115501150198124790','https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo').replaceAll('https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/','https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo');
+  const body=el('p',null,cls),maps=[],lineFriends=[],raw=String(text||'').replace(/[\u200B\u2060\uFEFF]/g,'').replaceAll('https://maps.app.goo.gl/fL12q1xUJLi7DMM38','https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo').replaceAll('https://www.google.com/maps?cid=11115501150198124790','https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo').replaceAll('https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/','https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo');
   const re=/https?:\/\/[^\s<>"\u200B\u200C\u200D\u2060\uFEFF]+/gi;
   let cursor=0;
   for(const match of raw.matchAll(re)){
@@ -37,7 +37,9 @@ function el(tag,text,cls){const n=document.createElement(tag);if(text)n.textCont
    const urlText=match[0].replace(/[。、，,！!？?）)\]】]+$/u,'');
    let url;try{url=new URL(urlText);}catch{}
    const isMap=url&&(url.hostname==='maps.app.goo.gl'||url.hostname==='maps.google.com'||url.hostname==='goo.gl'&&url.pathname.startsWith('/maps')||/^(www\.)?google\.(com|co\.jp)$/.test(url.hostname)&&/^\/maps(?:\/|$)/.test(url.pathname));
-   if(isMap){if(!maps.includes(url.href))maps.push(url.href);}
+   const isLineFriend=url&&url.protocol==='https:'&&(url.hostname==='lin.ee'&&/^\/[A-Za-z0-9]+\/?$/.test(url.pathname)||url.hostname==='line.me'&&/^\/(?:R\/)?ti\/p\/[^/]+\/?$/.test(url.pathname));
+   if(isLineFriend){if(!lineFriends.includes(url.href))lineFriends.push(url.href);}
+   else if(isMap){if(!maps.includes(url.href))maps.push(url.href);}
    else if(url){const a=el('a',urlText);a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';a.style.overflowWrap='anywhere';body.append(a);}
    else body.append(document.createTextNode(urlText));
    body.append(document.createTextNode(match[0].slice(urlText.length)));
@@ -45,6 +47,7 @@ function el(tag,text,cls){const n=document.createElement(tag);if(text)n.textCont
   }
   body.append(document.createTextNode(raw.slice(cursor).replace(/[\u200B\u2060\uFEFF]/g,'')));
   const actions=maps.map(href=>{const a=el('a','📍 Googleマップで場所・行き方を見る ↗','post-map-action');a.href=href;a.target='_blank';a.rel='noopener noreferrer';a.style.cssText='display:block;margin:16px;padding:16px;border-radius:12px;background:#531a65;color:#fff;text-align:center;text-decoration:none;font-weight:700;line-height:1.6;overflow-wrap:anywhere';return a;});
+  lineFriends.forEach(href=>{const known=href==='https://lin.ee/bFdpxjf'||href.startsWith('https://line.me/R/ti/p/@034ybmjs');const a=el('a',known?'いろは商店会の公式LINEを開く ↗':'LINEを開く・友だち追加する ↗','post-line-friend-action');a.href=href;a.target='_blank';a.rel='noopener noreferrer';a.style.cssText='display:block;box-sizing:border-box;margin:16px;padding:18px 16px;border-radius:12px;background:#067b39;color:#fff;text-align:center;text-decoration:none;font-size:20px;font-weight:800;line-height:1.6;overflow-wrap:anywhere';actions.push(a);});
   return {body,actions};
  }
 
