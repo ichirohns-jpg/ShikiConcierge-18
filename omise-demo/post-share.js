@@ -157,7 +157,33 @@
   const x=el('a','Xで共有');x.style.background='#111';
   for(const a of [line,x]){a.target='_blank';a.rel='noopener';networks.append(a);}
   facebook.addEventListener('click',event=>{if(expire()||(dynamic&&!link)){event.preventDefault();if(!ended())message.textContent='記事画像の共有リンクを準備中です。少し待ってから、もう一度お試しください。';}});
-  for(const a of [line,x])a.addEventListener('click',event=>{if(expire())event.preventDefault();});
+  x.addEventListener('click',event=>{if(expire())event.preventDefault();});
+  const lineValue=()=>[currentText(),link||articleLink||dxURL].filter(Boolean).join('\n\n').replace(/[\u200B\u2060\uFEFF]/g,'');
+  const lineGuide=el('p',typeof navigator.share==='function'?'「LINEで共有」を押したら、共有先で「LINE」を選んでください。':'LINEの共有画面へ進みます。開けないときは下の案内を使ってください。','post-fujiko-note');
+  const lineHelp=el('details',null,'post-line-help');
+  const lineWeb=el('a','LINEのウェブ共有画面を開く ↗');lineWeb.target='_blank';lineWeb.rel='noopener noreferrer';lineWeb.style.cssText='display:block;padding:12px 0;color:#075c2f;font-weight:700';
+  const lineCopy=el('button','LINEに貼り付ける文章とリンクをコピー');lineCopy.type='button';lineCopy.className='post-share-copy';
+  lineHelp.append(el('summary','LINEが開かないとき'),el('p','文章と記事リンクをコピーして、LINEのトークに貼り付けて送れます。','post-fujiko-note'),lineCopy,lineWeb);
+  lineCopy.addEventListener('click',()=>{if(!expire())return copyValue(lineValue());});
+  let lineBusy=false;
+  async function shareToLine(event){
+   if(expire()){event.preventDefault();return;}
+   // Call synchronously from the tap so iOS keeps the required user activation.
+   // Browsers without Web Share continue to the official LINE web endpoint.
+   if(typeof navigator.share!=='function')return;
+   event.preventDefault();
+   if(lineBusy)return;
+   lineBusy=true;
+   const value=lineValue();
+   message.textContent='共有先で「LINE」を選び、送る相手を選んでください。';
+   try{await navigator.share({text:value});}
+   catch(error){
+    if(error.name==='AbortError'){message.textContent='共有をキャンセルしました。もう一度共有するか、下の「LINEが開かないとき」を使えます。';return;}
+    fallback.value=value;fallback.hidden=false;lineHelp.open=true;
+    message.textContent='共有画面を開けませんでした。「LINEに貼り付ける文章とリンクをコピー」を押し、LINEのトークに貼り付けて送ってください。';
+   }finally{lineBusy=false;}
+  }
+  line.addEventListener('click',shareToLine);
   function ready(){
    const expired=ended();
    copy.disabled=expired;for(const action of identityActions.children)action.disabled=expired;
@@ -167,9 +193,11 @@
     facebook.href='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(facebookCard(p)||link||articleLink);
     line.href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(link||articleLink||dxURL)+'&text='+encodeURIComponent(currentText());
     x.href='https://x.com/intent/tweet?text='+encodeURIComponent(currentText())+(link?'&url='+encodeURIComponent(link):'');
+    lineWeb.href=line.href;lineCopy.disabled=false;
     for(const a of [facebook,line,x])a.removeAttribute('aria-disabled');
     if(dynamic&&!link){facebook.removeAttribute('href');facebook.setAttribute('aria-disabled','true');}
    }else{
+    lineCopy.disabled=true;lineWeb.removeAttribute('href');
     for(const a of [facebook,line,x]){a.removeAttribute('href');a.setAttribute('aria-disabled','true');}
    }
   }
@@ -205,7 +233,7 @@
   const updateAccess=allowed=>{login.hidden=allowed||!!options.privateOnly;identityActions.hidden=!!options.privateOnly;iroha.hidden=!hasIrohaAccess()||ended()||!!(options.profile&&!options.irohaLine);if(iroha.hidden){irohaManual.hidden=true;irohaManual.value='';irohaManager.hidden=true;irohaStatus.textContent='';}for(const {node,hidden} of legacy)node.hidden=allowed||hidden;if(options.privateOnly)area.hidden=!allowed;fujiko.hidden=!allowed||!options.privateOnly;if(allowed&&!draft.value){if(options.profile&&options.readProfile){p={...p,...options.readProfile()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}editor.hidden=false;fujiko.setAttribute('aria-expanded','true');applyIdentity(selectedIdentity);}if(!allowed){editor.hidden=true;draft.value='';shareText=ownText;fallback.hidden=true;fallback.value='';fujiko.setAttribute('aria-expanded','false');}copy.textContent=allowed?'紹介文とURLをコピー':'文章と短いURLをコピー';ready();};
   accessListeners.add(updateAccess);
   ready();
-  area.append(copy,networks);if(navigator.share){const native=el('button','スマホで共有','post-share-native');native.type='button';native.addEventListener('click',shareFromPhone);area.append(native);}area.append(message,fallback);box.append(area);
+  area.append(copy,networks,lineGuide,lineHelp);if(navigator.share){const native=el('button','スマホで共有','post-share-native');native.type='button';native.addEventListener('click',shareFromPhone);area.append(native);}area.append(message,fallback);box.append(area);
   if(options.profile){profileState=()=>{if(!userEdited&&hasAdminAccess()&&options.readProfile){p={...p,...options.readProfile()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));shareText=makeText(sender.value);draft.value=shareText;ready();}return {text:currentText(),link};};profileReveal=()=>{if(!hasAdminAccess())return;editor.hidden=false;fujiko.setAttribute('aria-expanded','true');area.scrollIntoView({behavior:'smooth',block:'start'});draft.focus({preventScroll:true});};}
   updateAccess(hasAdminAccess());
   if(!verification&&!hasAdminAccess())checkAdminAccess();
