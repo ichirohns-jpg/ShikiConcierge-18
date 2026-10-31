@@ -140,7 +140,7 @@
    if(photos.length){const media=el(article?'div':'a',null,'post-media');if(!article){media.href=pageURL(p);media.setAttribute('aria-label',p.name+'の投稿記事を開く');}for(const src of photos){const img=el('img');img.src=src;img.alt=p.name+'の投稿写真';img.loading=article||returnState?'eager':'lazy';img.decoding='async';media.append(img);}card.append(media);}
    if(p.video&&p.video.startsWith(base+'post-videos/')&&/^https:\/\/ichirohns-jpg\.github\.io\/ShikiConcierge-18\/omise-demo\/post-videos\/[A-Za-z0-9_-]+\.mp4$/.test(p.video)){
     const media=el('div',null,'post-video'),v=el('video');
-    v.controls=true;v.loop=true;v.playsInline=true;v.preload='metadata';v.src=p.video===base+'post-videos/fujiko-halloween-20261031.mp4'?base+'post-videos/fujiko-halloween-20261031-v2.mp4':p.video;
+    v.controls=true;v.loop=true;v.playsInline=true;v.preload='metadata';v.src=/^fujiko-halloween-20261031(?:-v[23])?\.mp4$/.test(p.video.split('/').pop())?base+'post-videos/fujiko-halloween-20261031-v3.mp4':p.video;
     if(/^data:image\/jpeg;base64,/.test(p.poster||''))v.poster=p.poster;
     v.setAttribute('aria-label',p.body.split('\n')[0]||p.name+'の投稿動画');
     v.style.cssText='display:block;width:100%;height:auto;max-height:80vh;object-fit:contain;background:#17121a';
