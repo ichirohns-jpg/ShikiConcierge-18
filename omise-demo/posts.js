@@ -138,7 +138,16 @@
    const text=postText(rec?rec.comment:p.body,'post-body');card.append(head,text.body);if(rec)window.DXSNSRecommend.mount(card,rec);
    const photos=(p.photos||[]).filter(src=>/^data:image\/jpeg;base64,/.test(src));
    if(photos.length){const media=el(article?'div':'a',null,'post-media');if(!article){media.href=pageURL(p);media.setAttribute('aria-label',p.name+'の投稿記事を開く');}for(const src of photos){const img=el('img');img.src=src;img.alt=p.name+'の投稿写真';img.loading=article||returnState?'eager':'lazy';img.decoding='async';media.append(img);}card.append(media);}
-   if(p.video&&/^https:\/\/drive\.google\.com\/file\/d\/[A-Za-z0-9_-]+\/preview$/.test(p.video)){
+   if(p.video&&p.video.startsWith(base+'post-videos/')&&/^https:\/\/ichirohns-jpg\.github\.io\/ShikiConcierge-18\/omise-demo\/post-videos\/[A-Za-z0-9_-]+\.mp4$/.test(p.video)){
+    const media=el('div',null,'post-video'),v=el('video');
+    v.controls=true;v.loop=true;v.playsInline=true;v.preload='metadata';v.src=p.video;
+    if(/^data:image\/jpeg;base64,/.test(p.poster||''))v.poster=p.poster;
+    v.setAttribute('aria-label',p.body.split('\n')[0]||p.name+'の投稿動画');
+    v.style.cssText='display:block;width:100%;height:auto;max-height:80vh;object-fit:contain;background:#17121a';
+    const fallback=el('a','動画を開く');fallback.href=p.video;v.append(fallback);
+    media.append(v);card.append(media);
+   }
+   else if(p.video&&/^https:\/\/drive\.google\.com\/file\/d\/[A-Za-z0-9_-]+\/preview$/.test(p.video)){
     const video=el('div',null,'post-video');
     if(p.poster&&/^data:image\/jpeg;base64,/.test(p.poster)){const poster=el('img');poster.src=p.poster;poster.alt='動画の表紙';video.append(poster);}
     const play=el('button','▶ 動画を見る');play.type='button';play.onclick=()=>{const frame=el('iframe');frame.src=p.video;frame.title=p.name+'の投稿動画';frame.allowFullscreen=true;video.replaceChildren(frame);};video.append(play);card.append(video);

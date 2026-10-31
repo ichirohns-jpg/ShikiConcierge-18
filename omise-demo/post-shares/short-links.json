@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "next": 9,
+  "next": 10,
   "posts": {
     "POST-56783934-e23c-4233-90fe-ce46e4fedd61": {
       "number": 1,
@@ -41,6 +41,11 @@
       "number": 8,
       "revision": "4ef7916c816de90c",
       "version": 2
+    },
+    "POST-737c1759-66fc-4ab6-8194-f05d06794f51": {
+      "number": 9,
+      "revision": "6504554c18a857ba",
+      "version": 1
     }
   }
 }
