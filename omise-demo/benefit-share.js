@@ -8,12 +8,13 @@
  const section=el('section',null,'simple-sns-share');section.setAttribute('aria-label','友だちに教える');
  section.style.cssText='margin:16px 0;padding:16px;border:1px solid #d8c7dd;border-radius:14px;background:#f7f3f8';
  const title=el('h2','友だちに教える');title.style.cssText='margin:0 0 4px;font-size:20px;line-height:1.4;text-align:center';
- const note=el('p','コピーして、SNSに貼り付けてください。','sns-share-guide');note.style.cssText='margin:0 0 12px;font-size:14px;text-align:center;color:#5d4863';
+ const note=el('p','LINEへは紹介文とリンクを一緒に送れます。','sns-share-guide');note.style.cssText='margin:0 0 12px;font-size:14px;text-align:center;color:#5d4863';
  const links=el('nav',null,'sns-links');links.setAttribute('aria-label','友だちに教える方法');
  links.style.cssText='display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px';
  const makeLink=(label,url,name,style)=>{const a=el('a',label,'sns-destination '+name);a.href=url;a.target='_blank';a.rel='noopener';a.style.cssText=style;return a;};
  const common='display:flex;align-items:center;justify-content:center;min-width:0;min-height:48px;padding:10px 4px;border-radius:10px;color:#fff;text-decoration:none;font-size:15px;font-weight:700;line-height:1.5;white-space:normal';
- const line=makeLink('LINEで送る','https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shareURL)+'&text='+encodeURIComponent(shareText.replace('\n\n'+shareURL,'')),'line',common+';grid-column:1 / -1;min-height:48px;background:#087f3e;font-size:16px');
+ const line=makeLink('LINEで送る','https://line.me/R/share?text='+encodeURIComponent(shareText),'line',common+';grid-column:1 / -1;min-height:48px;background:#087f3e;font-size:16px');
+ line.target='_self';
  const facebook=makeLink('Facebook','https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(shareURL),'facebook',common+';background:#0866c6');
  const x=makeLink('X','https://twitter.com/intent/tweet?text='+encodeURIComponent(shareText),'x',common+';background:#151515');
  const copy=el('button','コピー','sns-copy');copy.type='button';copy.style.cssText=common+';width:100%;border:0;background:#531a65;cursor:pointer';
