@@ -173,7 +173,7 @@
   let removed=false;
   for(const [key,{p,card}] of shown)if(ended(p)){card.remove();shown.delete(key);removed=true;}
   syncCheerEmpty();
-  if(removed)status.textContent=article?'掲載が終了しました。':shown.size?shown.size+'件表示中':deals?'公開中のお得情報はまだありません。':'公開された投稿はまだありません。';
+  if(removed)status.textContent=article?'掲載が終了しました。':shown.size?shown.size+'件表示中':deals?(document.getElementById('cafe-badge-offer')?'お店からの追加投稿はまだありません。':'公開中のお得情報はまだありません。'):'公開された投稿はまだありません。';
  }
  function load({append=false,nextOffset=offset}={}){
   if(loading)return;
