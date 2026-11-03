@@ -13,6 +13,13 @@
 #goods-preview-image{display:block;width:100%;height:auto;max-height:60dvh;object-fit:contain;border-radius:10px}
 #goods-preview-caption,.goods-preview-note{font-size:14px;line-height:1.7;margin:12px 0 0}.goods-preview-note{color:#63576a}
 #goods-image-switch:not([hidden]){display:flex;gap:10px;justify-content:center}#goods-image-switch button[aria-pressed="false"]{background:#eee3f2;color:#531a65}
+</style><style id="goods-mobile-layout-fix">
+#fujiko-goods .goods-hero>div{min-width:0}
+#fujiko-goods .goods-preview-button{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:3px;white-space:normal;min-width:0;max-width:100%}
+#fujiko-goods .goods-preview-button small{display:block!important;margin:0;font-size:12px;line-height:1.5}
+#fujiko-goods .goods-tags{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#fujiko-goods .goods-preview-button{width:100%;padding:12px 8px}
+@media(max-width:520px){#fujiko-goods .goods-hero{grid-template-columns:minmax(0,1fr);gap:4px;text-align:left}#fujiko-goods .goods-avatar{width:150px;max-width:60%;justify-self:center;margin:8px 0 16px}#fujiko-goods h2{font-size:clamp(24px,6.6vw,30px);line-height:1.5}#fujiko-goods .goods-hero p{line-height:1.8}#fujiko-goods .goods-kicker{font-size:12px;line-height:1.6}#fujiko-goods .goods-preview-button{font-size:16px}}
 </style></head><body class="social-view"><main><nav class="panel" aria-label="ハートネットの記事"><a class="btn secondary" href="./heartnet.html">ハートネット志木へ戻る →</a><p>ハートネット志木からのお知らせ</p><h1 style="font-size:clamp(24px,6vw,34px);line-height:1.5">ふじこグッズの販売協力店を募集しています</h1></nav><section class="panel" id="fujiko-goods" aria-labelledby="goods-title">
 <span class="goods-kicker">ハートネット志木の企画｜グッズ案内の試作</span>
 <div class="goods-hero"><div><h2 id="goods-title">志木のおみやげに、<br>ふじこを。</h2><p>お気に入りを見つけて、街のお店へ。<br>ふじこグッズを少しずつ育てています。</p></div><img class="goods-avatar" src="./fujiko-avatar.jpeg" width="1024" height="1280" alt="ふじこ。キャラクター紹介用のイメージです"></div>
