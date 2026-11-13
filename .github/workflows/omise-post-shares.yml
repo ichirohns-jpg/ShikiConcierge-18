@@ -6,6 +6,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'omise-demo/post-share.js'
       - 'tools/omise-release/build-post-shares.mjs'
       - 'tools/omise-release/build-shop-share-pages.mjs'
       - 'tools/omise-release/test-shop-share-pages.mjs'
