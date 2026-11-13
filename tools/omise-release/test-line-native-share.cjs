@@ -12,7 +12,7 @@ async function run(mode){const id='POST-1234-abcd',short='https://ichirohns-jpg.
  if(mode==='web'){assert.equal(prevented,false);assert.equal(calls.length,0);assert.equal(new URL(line.href).searchParams.get('url'),short);}
  else if(mode==='expired'){assert(prevented);assert.equal(calls.length,0);assert(copy.disabled);assert(!line.href);}
  else{assert(prevented);assert.equal(calls.length,1,'native share must start in tap handler');assert.equal(Object.keys(calls[0]).join(','),'text');assert(calls[0].text.startsWith('お知らせ🥒'));assert(calls[0].text.endsWith(mode==='pending'?base+'article.html?id='+id:short));await result;if(mode==='blocked'){assert.equal(help.open,true);assert(all.find(e=>e.tag==='textarea'&&!e.hidden&&e.value===calls[0].text));}if(mode==='abort')assert(!help.open);
- await copy.events.click();assert.equal(copied,calls[0].text);if(mode==='pending')assert(!fb.href);else assert(fb.href.startsWith('https://www.facebook.com/sharer/sharer.php?u='));}
+ await copy.events.click();assert.equal(copied,calls[0].text);assert(fb.href.startsWith('https://www.facebook.com/sharer/sharer.php?u='));}
  console.log('PASS '+mode);
 }
 (async()=>{for(const mode of ['ready','pending','web','abort','blocked','expired'])await run(mode)})().catch(e=>{console.error(e);process.exitCode=1});
