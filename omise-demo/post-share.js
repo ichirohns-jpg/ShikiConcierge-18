@@ -12,9 +12,10 @@
  function setIdentity(value){if(!['fujiko','heartnet','original'].includes(value))return;selectedIdentity=value;try{localStorage.setItem(identityKey,value);}catch{}for(const callback of identityListeners)callback(value);}
  window.addEventListener('storage',event=>{if(event.key===identityKey||event.key===null){selectedIdentity=readIdentity();for(const callback of identityListeners)callback(selectedIdentity);}});
  let verifiedToken='',checkingToken='',verification=null,runtimePromise=null;
- function adminSession(){try{const a=JSON.parse(localStorage.getItem(sessionKey)||'null');return ['ADMIN','SHOP-0002','SHOP-0003'].includes(a?.id)&&/^DXS1\.[a-f0-9]{64}$/.test(a.token)&&Number.isFinite(a.expiresAt)&&a.expiresAt>Date.now()?a:null;}catch{return null;}}
+ function adminSession(){try{const a=JSON.parse(localStorage.getItem(sessionKey)||'null');return ['ADMIN','SHOP-0001','SHOP-0002','SHOP-0003'].includes(a?.id)&&/^DXS1\.[a-f0-9]{64}$/.test(a.token)&&Number.isFinite(a.expiresAt)&&a.expiresAt>Date.now()?a:null;}catch{return null;}}
  function hasAdminAccess(){const a=adminSession();return !!verifiedToken&&a?.token===verifiedToken&&['ADMIN','SHOP-0002'].includes(a.id);}
- function hasIrohaAccess(){const a=adminSession();return !!verifiedToken&&a?.token===verifiedToken&&a.id==='SHOP-0003';}
+ function hasIrohaAccess(){const a=adminSession();return !!verifiedToken&&a?.token===verifiedToken&&['SHOP-0001','SHOP-0003'].includes(a.id);}
+ function officialLineName(){return adminSession()?.id==='SHOP-0001'?'おうちcafeパン工房':'いろは商店会';}
  function notifyAccess(){for(const callback of accessListeners)callback(hasAdminAccess());}
  function ownerRuntime(){if(window.omiseOwnerCall)return Promise.resolve();if(!runtimePromise)runtimePromise=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=dxURL+'owner-runtime.js?v=20261028-firstparty1';script.onload=()=>window.omiseOwnerCall?resolve():reject(Error('Unavailable'));script.onerror=()=>reject(Error('Unavailable'));document.head.append(script);}).catch(e=>{runtimePromise=null;throw e;});return runtimePromise;}
  function checkAdminAccess(){
@@ -155,13 +156,13 @@
   area.append(el('p','コピーして、SNSに貼り付けてください。','post-share-guide'));
   const networks=el('div',null,'post-share post-simple-networks');
   const facebook=el('a','Facebookで共有');facebook.target='_blank';facebook.rel='noopener';facebook.style.background='#0866c6';networks.append(facebook);
-  const line=el('a','LINEで共有');line.style.background='#087f3e';
+  const line=el('a','LINEで友だちに教える');line.style.background='#087f3e';
   const x=el('a','Xで共有');x.style.background='#111';
   for(const a of [line,x]){a.target='_blank';a.rel='noopener';networks.append(a);}
   facebook.addEventListener('click',event=>{if(expire())event.preventDefault();});
   x.addEventListener('click',event=>{if(expire())event.preventDefault();});
   const lineValue=()=>[currentText(),link||articleLink||dxURL].filter(Boolean).join('\n\n').replace(/[\u200B\u2060\uFEFF]/g,'');
-  const lineGuide=el('p',typeof navigator.share==='function'?'「LINEで共有」を押したら、共有先で「LINE」を選んでください。':'LINEの共有画面へ進みます。開けないときは下の案内を使ってください。','post-fujiko-note');
+  const lineGuide=el('p',typeof navigator.share==='function'?'「LINEで友だちに教える」を押したら、共有先で「LINE」を選んでください。':'LINEの共有画面へ進みます。開けないときは下の案内を使ってください。','post-fujiko-note');
   const lineHelp=el('details',null,'post-line-help');
   const lineWeb=el('a','LINEのウェブ共有画面を開く ↗');lineWeb.target='_blank';lineWeb.rel='noopener noreferrer';lineWeb.style.cssText='display:block;padding:12px 0;color:#075c2f;font-weight:700';
   const lineCopy=el('button','LINEに貼り付ける文章とリンクをコピー');lineCopy.type='button';lineCopy.className='post-share-copy';
@@ -215,24 +216,25 @@
   // This control is only revealed after SHOP-0003 passes server authentication.
   const iroha=el('section',null,'post-iroha-line');iroha.hidden=true;
   iroha.style.cssText='box-sizing:border-box;padding:16px;margin:16px 0;border:2px solid #087f3e;border-radius:12px;min-width:0';
-  const irohaCopy=el('button','商店会LINE配信用にコピー');irohaCopy.type='button';
+  const irohaCopy=el('button','お店の公式LINEで配信する（文章をコピー）');irohaCopy.type='button';
   irohaCopy.style.cssText='display:block;box-sizing:border-box;width:100%;min-height:52px;padding:12px;background:#087f3e;color:white;border:0;border-radius:10px;font:700 18px/1.6 sans-serif;cursor:pointer';
   const irohaManager=el('a','LINE公式の管理画面を開く →');irohaManager.href='https://manager.line.biz/';irohaManager.target='_blank';irohaManager.rel='noopener noreferrer';irohaManager.hidden=true;
   irohaManager.style.cssText='display:block;padding:12px 0;color:#075c2f;font-size:18px;font-weight:700';
   const irohaStatus=el('p');irohaStatus.setAttribute('role','status');irohaStatus.setAttribute('aria-live','polite');
   const irohaManual=el('textarea');irohaManual.hidden=true;irohaManual.readOnly=true;irohaManual.rows=9;irohaManual.setAttribute('aria-label','商店会LINE配信用の文章と記事URL');irohaManual.style.cssText='box-sizing:border-box;width:100%;font:inherit;padding:12px';
-  iroha.append(el('h3','いろは商店会の公式LINEで紹介'),el('p','①文章と記事URLをコピー → ②管理画面で「いろは商店会」を選択 → ③メッセージ配信に貼り付け、確認して配信。写真は記事のリンクから見られます。'),irohaCopy,irohaStatus,irohaManual,irohaManager);
+  const officialTitle=el('h3'),officialGuide=el('p');
+  iroha.append(officialTitle,officialGuide,irohaCopy,irohaStatus,irohaManual,irohaManager);
   irohaCopy.addEventListener('click',async()=>{
    if(!hasIrohaAccess()||ended())return;
    if(options.readPost){p={...p,...options.readPost()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}
    if(options.profile&&options.readProfile){p={...p,...options.readProfile()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}
    const value=[ownText,p.end?'掲載期限：'+p.end+'まで':'',link||articleLink].filter(Boolean).join('\n\n');
-   try{await navigator.clipboard.writeText(value);if(!hasIrohaAccess())return;irohaStatus.textContent='コピーしました。管理画面で「いろは商店会」を選び、貼り付けて配信してください。';irohaManual.hidden=true;}
+   try{await navigator.clipboard.writeText(value);if(!hasIrohaAccess())return;irohaStatus.textContent='コピーしました。管理画面で「'+officialLineName()+'」を選び、メッセージ配信に貼り付けて、内容と宛先を確認してください。このボタンだけでは配信されません。';irohaManual.hidden=true;}
    catch{if(!hasIrohaAccess())return;irohaManual.value=value;irohaManual.hidden=false;irohaManual.focus();irohaManual.select();irohaStatus.textContent='下の文章を長押ししてコピーしてください。';}
    irohaManager.hidden=false;
   });
   box.append(iroha);
-  const updateAccess=allowed=>{login.hidden=allowed||introSelected||!!options.privateOnly;identityActions.hidden=!!options.privateOnly;iroha.hidden=!hasIrohaAccess()||ended()||!!(options.profile&&!options.irohaLine);if(iroha.hidden){irohaManual.hidden=true;irohaManual.value='';irohaManager.hidden=true;irohaStatus.textContent='';}for(const {node,hidden} of legacy)node.hidden=allowed||hidden;if(options.privateOnly)area.hidden=!allowed;fujiko.hidden=!allowed||!options.privateOnly;if((allowed||introSelected)&&!draft.value){if(options.profile&&options.readProfile){p={...p,...options.readProfile()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}editor.hidden=false;fujiko.setAttribute('aria-expanded','true');applyIdentity(selectedIdentity);}if(!allowed&&!introSelected){editor.hidden=true;draft.value='';shareText=ownText;fallback.hidden=true;fallback.value='';fujiko.setAttribute('aria-expanded','false');}copy.textContent=allowed?'紹介文とURLをコピー':'文章と記事URLをコピー';ready();};
+  const updateAccess=allowed=>{officialTitle.textContent='店主専用｜'+officialLineName()+'の公式LINE';officialGuide.textContent='①下のボタンで文章と記事URLをコピー → ②LINE公式の管理画面で「'+officialLineName()+'」を選ぶ → ③メッセージ配信に貼り付け、内容と宛先を確認して配信。自動では送信されません。';irohaCopy.textContent=adminSession()?.id==='SHOP-0001'?'お店の公式LINEで配信する（文章をコピー）':'商店会LINE配信用にコピー';login.hidden=allowed||introSelected||!!options.privateOnly;identityActions.hidden=!!options.privateOnly;iroha.hidden=!hasIrohaAccess()||ended()||!!(options.profile&&!options.irohaLine&&adminSession()?.id!=='SHOP-0001');if(iroha.hidden){irohaManual.hidden=true;irohaManual.value='';irohaManager.hidden=true;irohaStatus.textContent='';}for(const {node,hidden} of legacy)node.hidden=allowed||hidden;if(options.privateOnly)area.hidden=!allowed;fujiko.hidden=!allowed||!options.privateOnly;if((allowed||introSelected)&&!draft.value){if(options.profile&&options.readProfile){p={...p,...options.readProfile()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}editor.hidden=false;fujiko.setAttribute('aria-expanded','true');applyIdentity(selectedIdentity);}if(!allowed&&!introSelected){editor.hidden=true;draft.value='';shareText=ownText;fallback.hidden=true;fallback.value='';fujiko.setAttribute('aria-expanded','false');}copy.textContent=allowed?'紹介文とURLをコピー':'文章と記事URLをコピー';ready();};
   accessListeners.add(updateAccess);
   ready();
   area.append(copy,networks,lineGuide,lineHelp);if(navigator.share){const native=el('button','スマホで共有','post-share-native');native.type='button';native.addEventListener('click',shareFromPhone);area.append(native);}area.append(message,fallback);box.append(area);
