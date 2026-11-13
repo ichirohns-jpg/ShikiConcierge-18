@@ -7,7 +7,7 @@ async function run(mode){const id='POST-1234-abcd',short='https://ichirohns-jpg.
  const c={URL,Date,Infinity,encodeURIComponent,location:{href:base+'article.html?id='+id},document:{head:new El('head'),createElement:t=>new El(t),addEventListener(){}},window:{addEventListener(){}},localStorage:{getItem:()=>null},navigator,setInterval:()=>0,setTimeout:()=>0,clearTimeout(){},fetch:async()=>({ok:true,json:async()=>({version:1,posts:mode==='pending'?{}:{[id]:{date:'2026-10-31',shareURL:base+'post-shares/'+id+'/?v=abc',shortURL:short}}})})};
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../../omise-demo/post-share.js'),'utf8'),c);
  const box=new El('div');c.window.DXPostShare.mount(box,{id,name:'お店',shop:'SHOP-0004',date:'2026-10-31',body:'お知らせ🥒',end:mode==='expired'?'2020-01-01':''});await flush();
- const all=flat(box),line=all.find(e=>e.textContent==='LINEで共有'),fb=all.find(e=>e.textContent==='Facebookで共有'),copy=all.find(e=>e.textContent==='LINEに貼り付ける文章とリンクをコピー'),help=all.find(e=>e.tag==='details'&&e.className==='post-line-help');
+ const all=flat(box),line=all.find(e=>e.textContent==='LINEで友だちに教える'),fb=all.find(e=>e.textContent==='Facebookで共有'),copy=all.find(e=>e.textContent==='LINEに貼り付ける文章とリンクをコピー'),help=all.find(e=>e.tag==='details'&&e.className==='post-line-help');
  let prevented=false;const result=line.events.click({preventDefault(){prevented=true}});
  if(mode==='web'){assert.equal(prevented,false);assert.equal(calls.length,0);assert.equal(new URL(line.href).searchParams.get('url'),short);}
  else if(mode==='expired'){assert(prevented);assert.equal(calls.length,0);assert(copy.disabled);assert(!line.href);}
