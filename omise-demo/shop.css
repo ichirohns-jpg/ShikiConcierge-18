@@ -2,3 +2,6 @@
 
 /* Keep readable descriptions at mobile text size, including approved updates. */
 #intro .profile-description,#information>p,#shop-owner-voice p,#shop-video-intro{font-size:18px;line-height:1.85;white-space:pre-wrap}#information dt{font-size:16px}#information dd{font-size:18px}#shop-owner-voice{border-top:1px solid var(--line);padding-top:16px;margin-top:20px}
+
+/* Trial visitors: clearly separated, finger-sized primary actions. */
+@media(max-width:420px){#intro .primary{grid-template-columns:1fr}#intro .primary .btn{font-size:18px;min-height:56px}}#information a[href^="tel:"]{display:inline-flex;align-items:center;min-height:48px;font-size:18px}
