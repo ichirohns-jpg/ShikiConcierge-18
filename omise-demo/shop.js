@@ -11,10 +11,9 @@ const shopCanonical=document.querySelector('link[rel="canonical"]').href;
 const shopShareURL=window.DXShortLinks?.[shopCanonical]||shopCanonical.split('#')[0]+'#top';
 if(shareField){shareField.value=shareField.value.split(/\n\n【詳しい紹介】|\n\n【お店の地図】/)[0]+'\n\n【詳しい紹介】\n'+shopShareURL;document.querySelectorAll('#intro a[href*="line.me/R/share"],#share a[href*="line.me/R/share"],#intro a[href*="social-plugins.line.me/lineit/share"],#share a[href*="social-plugins.line.me/lineit/share"]').forEach(a=>a.href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(shopShareURL)+'&text='+encodeURIComponent(shareField.value));}
 function currentShareText(){
- try{const saved=JSON.parse(localStorage.getItem('shiki-merchant-session-v1')||'null');const fujiko=['ADMIN','SHOP-0002'].includes(saved?.id)&&/^DXS1\.[a-f0-9]{64}$/.test(saved?.token)&&saved.expiresAt>Date.now();
- if(!fujiko)return shareField.value;
- if(!window.DXPostShare?.profileText)throw Error('共有用のログインを確認しています。少し待ってから、もう一度押してください。');
- return window.DXPostShare.profileText(shareField.value,document.querySelector('h1').textContent,shopShareURL);
+ try{if(!shopCanonical.endsWith('/heartnet.html'))return shareField.value;
+ if(!window.DXPostShare?.profileText)throw Error('共有機能を読み込んでいます。少し待ってから、もう一度押してください。');
+ return window.DXPostShare.profileText(shareField.value,document.querySelector('h1').textContent,shopShareURL,'SHOP-0002');
  }catch(e){document.getElementById('copyStatus').textContent=e.message;return null;}
 }
 // Use the fresh shop-specific share card for Facebook as well as text sharing.

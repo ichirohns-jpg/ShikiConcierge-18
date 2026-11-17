@@ -63,7 +63,7 @@
   mark.setAttribute('aria-hidden','true');return mark;
  }
  let postSharePromise=null;
- const postShareURL=new URL('./post-share.js?v=20261117-private-share1',document.currentScript?.src||base+'posts.js').href;
+ const postShareURL=new URL('./post-share.js?v=20261117-owner-content2',document.currentScript?.src||base+'posts.js').href;
  function share(box,p,options){
   const mount=options?.replaceExisting?box:el('div');if(mount!==box)box.append(mount);
   if(!postSharePromise)postSharePromise=new Promise((resolve,reject)=>{
@@ -78,11 +78,11 @@
  }
  // The card invitation has its own share target, separate from the shop profile.
  const cardShare=document.querySelector('#thanks-card-sharing');
- if(cardShare)share(cardShare,{name:cardShare.dataset.cardShareName,body:cardShare.dataset.cardShareText,shareURL:cardShare.dataset.cardShareUrl,kind:'notice'},{heading:'ありがとうカードを友だちに教える'});
- // The extra profile sharing area stays hidden unless ADMIN authentication succeeds.
+ if(cardShare)share(cardShare,{shop:ids[slug],name:cardShare.dataset.cardShareName,body:cardShare.dataset.cardShareText,shareURL:cardShare.dataset.cardShareUrl,kind:'notice'},{heading:'ありがとうカードを友だちに教える'});
+ // Own-page sender branding is visible regardless of the visiting account.
  if(ids[slug]&&document.querySelector('#share')){
   const readProfile=()=>{const name=document.querySelector('#intro h1')?.textContent||document.querySelector('h1')?.textContent||'';let body=document.querySelector('#shareText')?.value||document.querySelector('#intro .profile-description')?.textContent||'';body=body.split('\n\n【詳しい紹介】')[0];if(body.startsWith(name+'をご紹介！'))body=body.slice((name+'をご紹介！').length).trim();return {name,body};};
-  const p={...readProfile(),shareURL:window.DXShortLinks?.[base+slug]||base+slug+'#top'};
+  const p={shop:ids[slug],...readProfile(),shareURL:window.DXShortLinks?.[base+slug]||base+slug+'#top'};
   share(document.querySelector('#share'),p,{privateOnly:true,profile:true,replaceExisting:true,readProfile,irohaLine:slug==='newtimes.html'});
  }
  function cafeAdCard(){
