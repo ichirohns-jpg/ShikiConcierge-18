@@ -52,10 +52,10 @@
  const cleanText=value=>String(value||'').replace(/[\u200B\u2060\uFEFF]/g,'').replaceAll('https://maps.app.goo.gl/fL12q1xUJLi7DMM38','https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/').replaceAll('https://www.google.com/maps?cid=11115501150198124790','https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/').replaceAll('https://www.google.com/maps/search/?api=1&query=ouchicafe&query_place_id=ChIJKTn6NwDDGGAR9lABVmcxQpo','https://ichirohns-jpg.github.io/ShikiConcierge-18/m/1/');
  const fujikoFooter='画像タップで詳しい情報見てくださいね🥒';
  const withFujikoFooter=value=>cleanText(value).replaceAll(fujikoFooter,'').replace(/(?:画像をタップすると、お店めぐりDXの記事が開きます。|紹介ページをご覧ください。)\s*$/,'').trim()+'\n\n'+fujikoFooter;
- function ownContent(p){
-  if(p.shop)return p.shop==='SHOP-0002';
-  try{const u=new URL(p.shareURL);return u.origin==='https://ichirohns-jpg.github.io'&&/^\/ShikiConcierge-18\/omise-demo\/(?:heartnet(?:-fujiko-goods)?|fujiko-news|benefit-shop-0002-001(?:-share)?)\.html$/.test(u.pathname);}catch{return false;}
- }
+ // Sender labels are available on every public shop and article.
+ // These only prepare share text; editing and official LINE tools keep their authentication.
+ function ownContent(p){return true;}
+
  function mount(box,p,options={}){
   const legacy=options.replaceExisting?Array.from(box.children).map(node=>{const hidden=node.hidden;node.classList.add('dx-legacy-share');return {node,hidden};}):[];
   const dynamic=/^POST-[a-f0-9-]+$/i.test(p.id||'');
