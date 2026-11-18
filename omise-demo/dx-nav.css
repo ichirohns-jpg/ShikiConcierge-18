@@ -118,3 +118,17 @@ body.social-profile #intro h1,body.social-view .timeline-hero h1{color:#482252}
 body.social-profile #intro .jump a,body.social-profile #intro .jump a:first-child{background:#eee3f1;border-color:#d5c3dc;color:#52305e}
 body.social-profile .primary .secondary{background:#f6eef8;border-color:#cbb4d4;color:#482252}
 body.social-profile .related>a{background:#fffdf9;border-color:#e2d6e6;color:#52305e}
+
+/* Navigation contract v1: available at every scroll position. */
+body{padding-bottom:calc(86px + env(safe-area-inset-bottom,0px))!important}
+body .dx-global-nav{position:fixed;z-index:60;left:50%;bottom:0;transform:translateX(-50%);margin:0;max-width:760px;border-radius:12px 12px 0 0;box-shadow:0 -3px 14px #35233d18}
+body .dx-global-nav a{min-height:60px;font-size:16px;padding:10px 3px}
+body .dx-editor-toolbar{justify-content:space-between;gap:8px;max-width:760px;padding:6px 12px}
+body .dx-editor-toolbar a{min-height:44px;padding:8px 12px;font-size:17px}
+body .dx-editor-toolbar .dx-directory-link{background:transparent;border-color:transparent;color:#fff!important}
+body .dx-route-current{white-space:normal;overflow:visible;text-overflow:clip}
+body.social-profile #intro>.jump{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0;padding:0;border:0}
+body.social-profile #intro>.jump a{flex:1 1 135px;display:flex;align-items:center;justify-content:center;min-height:48px;font-size:17px;padding:10px;text-align:center}
+body [id]{scroll-margin-top:76px;scroll-margin-bottom:100px}
+body .dx-global-nav a:focus-visible,body .dx-editor-toolbar a:focus-visible{outline:3px solid #ed9c22;outline-offset:-3px}
+@media(max-width:360px){body .dx-global-nav a{font-size:15px}body .dx-editor-toolbar a{font-size:16px}}

@@ -4,7 +4,8 @@
  if(document.querySelector('.dx-global-nav'))return;
  // Keep the publisher entrance reachable while reading any public page.
  if(!document.querySelector('.dx-editor-toolbar')){
-  const toolbar=document.createElement('nav');toolbar.className='dx-editor-toolbar';toolbar.setAttribute('aria-label','投稿・編集への入口');
+  const toolbar=document.createElement('nav');toolbar.className='dx-editor-toolbar';toolbar.setAttribute('aria-label','ページ上部の共通メニュー');
+  const directory=document.createElement('a');directory.href=new URL('./#shops',document.currentScript.src).href;directory.textContent='← お店一覧';directory.className='dx-directory-link';toolbar.append(directory);
   const editor=document.createElement('a');editor.href=new URL('./owner.html#top',document.currentScript.src).href;editor.textContent='投稿・編集';editor.setAttribute('aria-label','お店・活動の投稿と編集を開く');
   toolbar.append(editor);document.body.prepend(toolbar);
  }
@@ -12,6 +13,12 @@
  const routes={
   'ouchicafe.html':{back:'./#shops',backText:'← お店一覧',current:'おうちcafeパン工房',active:'shops'},
   'heartnet.html':{back:'./#shops',backText:'← お店一覧',current:'ハートネット志木',active:'shops'},
+  'ohtaka.html':{back:'./#shops',backText:'← お店一覧',current:'蕎麦処 大鷹',active:'shops'},
+  'fujiko-news.html':{back:'./#fujiko',backText:'← DXトップ',current:'ふじこからのお知らせ',active:'home'},
+  'fujiko.html':{back:'./#shops',backText:'← お店一覧',current:'ふじこの紹介',active:'home'},
+  'heartnet-fujiko-goods.html':{back:'./heartnet.html#fujiko-goods',backText:'← ハートネット志木',current:'ふじこグッズ',active:'shops'},
+  'fujiko-timeline.html':{back:'./heartnet.html',backText:'← ハートネット志木',current:'ふじこの応援紹介',active:'posts'},
+  'cheer-archive.html':{back:'./heartnet.html',backText:'← ハートネット志木',current:'過去の応援紹介',active:'posts'},
   'newtimes.html':{back:'./#shops',backText:'← お店一覧',current:'ニュータイムス社',active:'shops'},
   'timeline.html':{back:'./',backText:'← DXトップ',current:'みんなの投稿',active:'posts'},
   'article.html':{back:'./timeline.html',backText:'← 投稿一覧',current:'投稿記事',active:'posts'},
@@ -23,15 +30,42 @@
   'cafe-benefit.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'},
   'cafe-benefit-link.html':{back:'./ouchicafe.html',backText:'← お店へ戻る',current:'おうちcafeの特典',active:'deals'}
  };
- const route=routes[file]||{active:location.hash==='#shops'?'shops':'home'};
+ const profile=document.body.classList.contains('social-profile');
+ const route={...(routes[file]||(profile?{back:'./#shops',backText:'← お店一覧',current:document.querySelector('#intro h1')?.textContent||'お店の紹介',active:'shops'}:{active:location.hash==='#shops'?'shops':'home'}))};
+ // An article reached from inside the DX returns to its explicit, safe source.
+ if(file==='article.html')try{
+  const ref=new URL(document.referrer),root=new URL('./',location.href);
+  const parent=ref.pathname.split('/').pop();
+  if(ref.origin===root.origin&&ref.pathname.startsWith(root.pathname)){
+   const labels={'timeline.html':'← 投稿一覧','deals.html':'← お得情報','ouchicafe.html':'← お店の紹介','heartnet.html':'← 活動の紹介','newtimes.html':'← お店の紹介','ohtaka.html':'← お店の紹介'};
+   if(labels[parent]){route.back='./'+parent;route.backText=labels[parent];}
+  }
+ }catch{}
+ document.body.dataset.dxNavigation='20261118-navigation1';
  const main=document.querySelector('main')||document.body;
  if(route.back){
+  for(const old of main.querySelectorAll(':scope > nav[aria-label="現在地"]'))old.remove();
   const locationBar=document.createElement('nav');
   locationBar.className='dx-route';
   locationBar.setAttribute('aria-label','現在地と戻り先');
   const back=document.createElement('a');back.href=route.back;back.textContent=route.backText;
   const current=document.createElement('span');current.className='dx-route-current';current.textContent='現在：'+route.current;
   locationBar.append(back,current);main.prepend(locationBar);
+ }
+ // Keep profile actions in one consistent location, before the long imagery.
+ if(profile){
+  const intro=document.querySelector('#intro');
+  if(intro){
+   let jump=intro.querySelector('.jump');
+   if(!jump){jump=document.createElement('nav');jump.className='jump';jump.setAttribute('aria-label','このページの中を見る');intro.append(jump);}
+   const add=(href,label)=>{if(!jump.querySelector('a[href="'+href+'"]')){const a=document.createElement('a');a.href=href;a.textContent=label;jump.append(a);}};
+   if(document.getElementById('photos'))add('#photos','写真・紹介');
+   if(document.getElementById('information'))add('#information','店舗情報・SNS');
+   if(document.getElementById('share'))add('#share','紹介・共有する');
+   intro.querySelector('.subtitle')?.after(jump);
+  }
+  const related=document.querySelector('.related');
+  if(related&&!related.querySelector('a[href="./#shops"]')){const a=document.createElement('a');a.href='./#shops';a.textContent='すべてのお店・活動を見る →';related.append(a);}
  }
  const nav=document.createElement('nav');nav.className='dx-global-nav';nav.setAttribute('aria-label','お店めぐりDX 共通メニュー');
  const items=[
