@@ -53,7 +53,7 @@ body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))!important}
 
 <section id="news" hidden><div id="shopNewsList"></div></section>
 
-<section id="shops"><div class="directory-heading"><h2>志木のお店・活動を探す</h2><p>お店の名前や「詳しく見る」を押してください。</p></div><div class="search-box"><label for="search">店名・パンやカフェなどで探す</label><input id="search" type="search" placeholder="パン、カフェ、出版など"></div><p id="syncStatus" class="muted" role="status">紹介を読み込んでいます。</p><div id="shopList"></div><noscript><section aria-label="店舗紹介へのリンク"><h2>志木のお店・活動の紹介</h2><p>お店の名前を押すと、文章の紹介・所在地・問い合わせ先を読めます。</p><p><a class="btn wide" href="./ouchicafe.html">おうちcafeパン工房｜パン・カフェ</a></p><p><a class="btn wide" href="./ohtaka.html">蕎麦処 大鷹｜手打ち蕎麦・うどん</a></p><p><a class="btn wide" href="./newtimes.html">ニュータイムス社｜出版・広告代理・地域情報誌</a></p><p><a class="btn wide" href="./heartnet.html">ハートネット志木｜地域活動・DX・動画制作</a></p></section></noscript></section>
+<section id="shops"><div class="directory-heading"><h2>志木のお店・活動を探す</h2><p>お店の名前や「詳しく見る」を押してください。</p></div><div class="search-box"><label for="search">店名・パンやカフェなどで探す</label><input id="search" type="search" placeholder="パン、カフェ、出版など"></div><p id="syncStatus" class="muted" role="status">紹介を読み込んでいます。</p><div id="shopList"></div><noscript><section aria-label="店舗紹介へのリンク"><h2>志木のお店・活動の紹介</h2><p>お店の名前を押すと、文章の紹介・所在地・問い合わせ先を読めます。</p><p><a class="btn wide" href="./ouchicafe.html">おうちcafeパン工房｜パン・カフェ</a></p><p><a class="btn wide" href="./ohtaka.html?v=20261118-5">蕎麦処 大鷹｜手打ち蕎麦・うどん</a></p><p><a class="btn wide" href="./newtimes.html">ニュータイムス社｜出版・広告代理・地域情報誌</a></p><p><a class="btn wide" href="./heartnet.html">ハートネット志木｜地域活動・DX・動画制作</a></p></section></noscript></section>
 <section id="detail" class="hidden"><button class="return-nav" data-target="shops">← お店の一覧へ戻る</button><div id="shopDetail"></div></section>
 <section id="articleView" class="hidden" aria-label="お知らせ記事"></section>
 <div class="home-secondary">
@@ -117,7 +117,7 @@ const scenes=[
 let shops=sample.map(s=>({...s}));
 let activeShop="";
 const base=location.origin+location.pathname;
-const shopPages={"ohtaka":"ohtaka.html","SHOP-0001":"ouchicafe.html","SHOP-0002":"heartnet.html","SHOP-0003":"newtimes.html"};
+const shopPages={"ohtaka":"ohtaka.html?v=20261118-5","SHOP-0001":"ouchicafe.html","SHOP-0002":"heartnet.html","SHOP-0003":"newtimes.html"};
 const shopLink=s=>shopPages[s.id]?new URL(shopPages[s.id],location.href).href:base+"?shop="+encodeURIComponent(s.id);
 function image(src,alt,caption=""){return url(src)?`<figure><a href="${esc(url(src))}" target="_blank" rel="noopener" aria-label="${esc(alt)}を大きく見る"><img src="${esc(url(src))}" alt="${esc(alt)}" loading="lazy"></a>${caption?`<figcaption>${esc(caption)}</figcaption>`:""}</figure>`:"";}
 function button(label,href){return url(href)?`<a class="btn secondary" href="${esc(url(href))}" target="_blank" rel="noopener">${esc(label)}</a>`:"";}
