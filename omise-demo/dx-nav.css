@@ -132,3 +132,11 @@ body.social-profile #intro>.jump a{flex:1 1 135px;display:flex;align-items:cente
 body [id]{scroll-margin-top:76px;scroll-margin-bottom:100px}
 body .dx-global-nav a:focus-visible,body .dx-editor-toolbar a:focus-visible{outline:3px solid #ed9c22;outline-offset:-3px}
 @media(max-width:360px){body .dx-global-nav a{font-size:15px}body .dx-editor-toolbar a{font-size:16px}}
+
+/* Mobile correction v1.1: only the bottom menu stays fixed. */
+body .dx-editor-toolbar{position:static;box-shadow:none}
+body .dx-global-nav a{min-height:48px;padding:7px 3px;font-size:16px;line-height:1.4}
+body .dx-global-nav{border-radius:8px 8px 0 0}
+body{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))!important}
+body [id]{scroll-margin-top:16px}
+@media(max-width:360px){body .dx-global-nav a{font-size:15px}}
