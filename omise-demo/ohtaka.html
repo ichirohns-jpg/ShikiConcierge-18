@@ -9,6 +9,23 @@
 <style>body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans",sans-serif}p,dd{overflow-wrap:anywhere}.profile-description{font-size:18px;line-height:1.9}.photo-source{display:block;padding:16px;border:1px solid #d8c7dd;border-radius:12px;margin:14px 0;text-decoration:none}.photo-source strong{font-size:19px;display:block}.photo-source span{display:block;margin-top:6px}.fujiko-guide{display:flex;gap:14px;align-items:center}.fujiko-guide img{width:90px;height:90px;object-fit:contain}.grid .btn{min-height:52px}#information dd{margin-bottom:16px}</style>
 <script src="./shop.js?v=20261117-owner-content2" defer></script><script src="./dx-nav.js?v=20261117-all-shops4" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Restaurant","name":"蕎麦処 大鷹","url":"https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/ohtaka.html","description":"志木市幸町の手打ち蕎麦店。志木で親しまれた「伊勢源」直伝の蕎麦を受け継ぎ、蕎麦・うどんや一品料理を提供しています。","telephone":"080-3127-0141","servesCuisine":["蕎麦","うどん"],"address":{"@type":"PostalAddress","streetAddress":"幸町1-6-59","addressLocality":"志木市","addressRegion":"埼玉県","addressCountry":"JP"},"sameAs":["https://www.instagram.com/sobadokoroohtaka/","https://www.facebook.com/sobadokoroohtaka/","https://x.com/sobaOHTAKA"]}</script>
+<script src="./post-share.js?v=20261117-all-shops4" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const box=document.getElementById('share');
+ const ui=window.DXPostShare;
+ if(!box||!ui)return;
+ const readProfile=()=>{
+  const name=document.querySelector('#intro h1').textContent.trim();
+  let body=document.getElementById('shareText').value.split('\n\n【詳しい紹介】')[0];
+  if(body.startsWith(name+'をご紹介！'))body=body.slice((name+'をご紹介！').length).trim();
+  return {name,body};
+ };
+ const profile={shop:'ohtaka',...readProfile(),shareURL:document.querySelector('link[rel="canonical"]').href+'#top'};
+ ui.mount(box,profile,{privateOnly:true,profile:true,replaceExisting:true,readProfile});
+ ui.shortcut(document.querySelector('#intro .primary'),profile);
+});
+</script>
 </head><body class="social-view social-profile"><a class="skip" href="#intro">紹介へ進む</a><main id="top">
 <header><a href="./" aria-label="DXトップへ"><img src="./IMG_4358.JPG" width="1280" height="720" alt="志木なるほど お店めぐりDX"></a></header>
 <nav class="panel" aria-label="現在地"><a href="./#shops">← お店一覧へ戻る</a></nav>
