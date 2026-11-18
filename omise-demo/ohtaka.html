@@ -7,7 +7,8 @@
 <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./apple-touch-icon.png"><link rel="manifest" href="./manifest.webmanifest">
 <link rel="stylesheet" href="./shop.css?v=20261114-readable1"><link rel="stylesheet" href="./social.css?v=20261029-eggplant21"><link rel="stylesheet" href="./dx-nav.css?v=20261118-mobile2">
 <style>body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans",sans-serif}p,dd{overflow-wrap:anywhere}.profile-description{font-size:18px;line-height:1.9}.photo-source{display:block;padding:16px;border:1px solid #d8c7dd;border-radius:12px;margin:14px 0;text-decoration:none}.photo-source strong{font-size:19px;display:block}.photo-source span{display:block;margin-top:6px}.fujiko-guide{display:flex;gap:14px;align-items:center}.fujiko-guide img{width:90px;height:90px;object-fit:contain}.grid .btn{min-height:52px}#information dd{margin-bottom:16px}</style>
-<script src="./dx-nav.js?v=20261118-navigation1" defer></script>
+<script src="./owner-runtime.js?v=20261028-firstparty1" defer></script>
+<script src="./dx-nav.js?v=20261118-private1" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Restaurant","name":"蕎麦処 大鷹","url":"https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/ohtaka.html","description":"志木市幸町の手打ち蕎麦店。志木で親しまれた「伊勢源」直伝の蕎麦を受け継ぎ、蕎麦・うどんや一品料理を提供しています。","telephone":"080-3127-0141","servesCuisine":["蕎麦","うどん"],"address":{"@type":"PostalAddress","streetAddress":"幸町1-6-59","addressLocality":"志木市","addressRegion":"埼玉県","addressCountry":"JP"},"sameAs":["https://www.instagram.com/sobadokoroohtaka/","https://www.facebook.com/sobadokoroohtaka/","https://x.com/sobaOHTAKA"]}</script>
 
 <style>#share .identity-actions{display:grid;grid-template-columns:1fr;gap:12px;margin:18px 0}#share .identity-actions button{display:block;width:100%;min-height:56px;padding:14px 12px;background:#fff;color:#482252;border:2px solid #482252;font-size:18px}#share .identity-actions button[aria-pressed="true"]{background:#482252;color:#fff}#share .share-byline{font-size:22px;font-weight:700;margin:20px 0 10px}#share textarea{display:block;box-sizing:border-box;width:100%;font:18px/1.8 -apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif;padding:14px;margin:10px 0;border:1px solid #bfaac6;border-radius:12px;background:#fff;color:#35233d}#share button{cursor:pointer}</style>
@@ -25,12 +26,12 @@
 <dl><dt>住所</dt><dd>埼玉県志木市幸町1-6-59</dd><dt>アクセス</dt><dd>東武東上線・志木駅南口から徒歩約6〜7分</dd><dt>電話</dt><dd><a href="tel:08031270141">080-3127-0141</a></dd><dt>営業時間・定休日</dt><dd>変更される場合があるため、お店のSNSや電話でご確認ください。</dd></dl>
 <div class="grid"><a class="btn secondary" href="https://www.instagram.com/sobadokoroohtaka/" target="_blank" rel="noopener">Instagram</a><a class="btn secondary" href="https://www.facebook.com/sobadokoroohtaka/" target="_blank" rel="noopener">Facebook</a><a class="btn secondary" href="https://x.com/sobaOHTAKA" target="_blank" rel="noopener">X</a><a class="btn secondary" href="https://asaka-shiki-niiza-wako.mypl.net/shop/00000362077/news" target="_blank" rel="noopener">お店からのお知らせ</a></div>
 <p class="muted">公開情報をもとにした紹介です。店舗による掲載内容の確認前です。</p></section>
-<section class="panel" id="share"><h2 id="senderShareHeading">ふじこの文章で共有する</h2>
-<div class="identity-actions" aria-label="紹介する名義を選ぶ">
+<section class="panel" id="share"><h2 id="senderShareHeading">友だちに教える</h2>
+<div class="identity-actions" aria-label="紹介する名義を選ぶ" hidden>
 <button type="button" data-share-identity="heartnet">ハートネット志木として紹介・シェア</button>
 <button type="button" data-share-identity="fujiko">🥒 ふじことして紹介・シェア</button>
 </div>
-<div class="sender-editor"><label for="shareSender">紹介する名義</label><select id="shareSender" aria-label="紹介する名義"><option value="fujiko" selected>ふじこ</option><option value="heartnet">ハートネット志木</option><option value="original">元の投稿の文章</option></select>
+<div class="sender-editor" hidden><label for="shareSender">紹介する名義</label><select id="shareSender" aria-label="紹介する名義"><option value="fujiko" selected>ふじこ</option><option value="heartnet">ハートネット志木</option><option value="original">元の投稿の文章</option></select>
 <div class="sender-preview"><img id="shareSenderAvatar" src="./fujiko-avatar.jpeg" alt="" width="48" height="48"><strong id="shareIdentityName" aria-live="polite">ふじこ</strong></div>
 <label for="shareText">SNSに載せる紹介文（変更できます）</label>
 <textarea id="shareText" rows="10">ふじこからのお店・活動紹介🥒
@@ -56,17 +57,19 @@
  const description="志木市幸町の手打ち蕎麦店。志木で親しまれた「伊勢源」直伝の蕎麦を受け継ぎ、蕎麦・うどんや一品料理を提供しています。\n\n住所：埼玉県志木市幸町1-6-59";
  const field=document.getElementById('shareText');
  const status=document.getElementById('copyStatus');
+ let privateAccess=false,accessRun=0,verifiedToken='';
  function value(){return field.value.trim()+'\n\n'+pageURL;}
  function refresh(){
   document.getElementById('shareLine').href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(pageURL)+'&text='+encodeURIComponent(field.value);
   document.getElementById('shareX').href='https://x.com/intent/tweet?text='+encodeURIComponent(field.value)+'&url='+encodeURIComponent(pageURL);
  }
  function choose(identity){
+  if(!privateAccess)identity='original';
   const fujiko=identity==='fujiko';
   field.value=(fujiko?'ふじこからのお店・活動紹介🥒':'ハートネット志木からのお店・活動紹介')+'\n蕎麦処 大鷹さんをご紹介します。\n\n'+description+'\n\n'+(fujiko?'画像タップで詳しい情報見てくださいね🥒':'紹介ページをご覧ください。');
   document.getElementById('shareSender').value=identity;
   document.getElementById('shareIdentityName').textContent=identity==='original'?'蕎麦処 大鷹':(fujiko?'ふじこ':'ハートネット志木');
-  document.getElementById('senderShareHeading').textContent=identity==='original'?'元の投稿の文章で共有する':(fujiko?'ふじこ':'ハートネット志木')+'の文章で共有する';
+  document.getElementById('senderShareHeading').textContent=identity==='original'?'友だちに教える':(fujiko?'ふじこ':'ハートネット志木')+'の文章で共有する';
   document.getElementById('shareSenderAvatar').hidden=!fujiko;
   if(identity==='original')field.value='蕎麦処 大鷹をご紹介！\n\n'+description;
   document.querySelectorAll('[data-share-identity]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.shareIdentity===identity)));
@@ -76,7 +79,7 @@
   try{await navigator.clipboard.writeText(value());status.textContent='紹介文と大鷹のページURLをコピーしました。SNSに貼り付けてください。';}
   catch{field.value=value();field.focus();field.select();status.textContent='紹介文とURLを選択しました。長押ししてコピーしてください。';}
  }
- document.querySelectorAll('[data-share-identity]').forEach(b=>b.addEventListener('click',()=>{choose(b.dataset.shareIdentity);document.querySelector('#share .sender-editor').scrollIntoView({behavior:'smooth',block:'start'});}));
+ document.querySelectorAll('[data-share-identity]').forEach(b=>b.addEventListener('click',()=>{choose(b.dataset.shareIdentity);if(privateAccess)document.querySelector('#share .sender-editor').scrollIntoView({behavior:'smooth',block:'start'});}));
  document.getElementById('shareSender').addEventListener('change',e=>choose(e.target.value));
  field.addEventListener('input',refresh);
  document.getElementById('copyIntroduction').addEventListener('click',copy);
@@ -88,6 +91,29 @@
   if(!navigator.share)return;e.preventDefault();
   try{await navigator.share({text:value()});}catch(error){if(error.name!=='AbortError')await copy();}
  });
+ function showPrivateAccess(allowed){
+  const changed=privateAccess!==allowed;privateAccess=allowed;
+  document.querySelector('#share .identity-actions').hidden=!allowed;
+  document.querySelector('#share .sender-editor').hidden=!allowed;
+  if(changed||!allowed)choose(allowed?'fujiko':'original');
+ }
+ async function verifyPrivateAccess(){
+  const run=++accessRun,session=window.omiseOwnerSession?.read();
+  if(!session||!['ADMIN','SHOP-0002'].includes(session.id)){verifiedToken='';showPrivateAccess(false);return;}
+  if(session.token!==verifiedToken)showPrivateAccess(false);
+  try{
+   const result=await window.omiseOwnerCall('postOwn',[session.id,session.token]);
+   const current=window.omiseOwnerSession?.read();
+   if(run!==accessRun)return;
+   const allowed=Array.isArray(result)&&current?.token===session.token&&['ADMIN','SHOP-0002'].includes(current.id);
+   verifiedToken=allowed?session.token:'';showPrivateAccess(allowed);
+  }catch{if(run===accessRun){verifiedToken='';showPrivateAccess(false);}}
+ }
+ window.addEventListener('focus',verifyPrivateAccess);
+ window.addEventListener('storage',e=>{if(e.key==='shiki-merchant-session-v1'||e.key===null)verifyPrivateAccess();});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)verifyPrivateAccess();});
+ setInterval(()=>{const s=window.omiseOwnerSession?.read();if(privateAccess&&s?.token!==verifiedToken){verifiedToken='';showPrivateAccess(false);}},1000);
+ choose('original');if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',verifyPrivateAccess,{once:true});else verifyPrivateAccess();
  refresh();
 })();
 </script>

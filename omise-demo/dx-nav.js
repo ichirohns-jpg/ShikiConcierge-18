@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
- const fujikoSharing=document.createElement('script');fujikoSharing.src='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/fujiko-share-locations.js?v=20261117-all-shops4';document.head.append(fujikoSharing);
+ const fujikoSharing=document.createElement('script');fujikoSharing.src='https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/fujiko-share-locations.js?v=20261118-private1';document.head.append(fujikoSharing);
  if(document.querySelector('.dx-global-nav'))return;
  // Keep the publisher entrance reachable while reading any public page.
  if(!document.querySelector('.dx-editor-toolbar')){
