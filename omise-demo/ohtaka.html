@@ -76,7 +76,7 @@
   try{await navigator.clipboard.writeText(value());status.textContent='紹介文と大鷹のページURLをコピーしました。SNSに貼り付けてください。';}
   catch{field.value=value();field.focus();field.select();status.textContent='紹介文とURLを選択しました。長押ししてコピーしてください。';}
  }
- document.querySelectorAll('[data-share-identity]').forEach(b=>b.addEventListener('click',()=>choose(b.dataset.shareIdentity)));
+ document.querySelectorAll('[data-share-identity]').forEach(b=>b.addEventListener('click',()=>{choose(b.dataset.shareIdentity);document.querySelector('#share .sender-editor').scrollIntoView({behavior:'smooth',block:'start'});}));
  document.getElementById('shareSender').addEventListener('change',e=>choose(e.target.value));
  field.addEventListener('input',refresh);
  document.getElementById('copyIntroduction').addEventListener('click',copy);
