@@ -7,25 +7,10 @@
 <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./apple-touch-icon.png"><link rel="manifest" href="./manifest.webmanifest">
 <link rel="stylesheet" href="./shop.css?v=20261114-readable1"><link rel="stylesheet" href="./social.css?v=20261029-eggplant21"><link rel="stylesheet" href="./dx-nav.css?v=20261030-static-menu">
 <style>body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans",sans-serif}p,dd{overflow-wrap:anywhere}.profile-description{font-size:18px;line-height:1.9}.photo-source{display:block;padding:16px;border:1px solid #d8c7dd;border-radius:12px;margin:14px 0;text-decoration:none}.photo-source strong{font-size:19px;display:block}.photo-source span{display:block;margin-top:6px}.fujiko-guide{display:flex;gap:14px;align-items:center}.fujiko-guide img{width:90px;height:90px;object-fit:contain}.grid .btn{min-height:52px}#information dd{margin-bottom:16px}</style>
-<script src="./shop.js?v=20261117-owner-content2" defer></script><script src="./dx-nav.js?v=20261117-all-shops4" defer></script>
+<script src="./dx-nav.js?v=20261117-all-shops4" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Restaurant","name":"蕎麦処 大鷹","url":"https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/ohtaka.html","description":"志木市幸町の手打ち蕎麦店。志木で親しまれた「伊勢源」直伝の蕎麦を受け継ぎ、蕎麦・うどんや一品料理を提供しています。","telephone":"080-3127-0141","servesCuisine":["蕎麦","うどん"],"address":{"@type":"PostalAddress","streetAddress":"幸町1-6-59","addressLocality":"志木市","addressRegion":"埼玉県","addressCountry":"JP"},"sameAs":["https://www.instagram.com/sobadokoroohtaka/","https://www.facebook.com/sobadokoroohtaka/","https://x.com/sobaOHTAKA"]}</script>
-<script src="./post-share.js?v=20261117-all-shops4" defer></script>
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
- const box=document.getElementById('share');
- const ui=window.DXPostShare;
- if(!box||!ui)return;
- const readProfile=()=>{
-  const name=document.querySelector('#intro h1').textContent.trim();
-  let body=document.getElementById('shareText').value.split('\n\n【詳しい紹介】')[0];
-  if(body.startsWith(name+'をご紹介！'))body=body.slice((name+'をご紹介！').length).trim();
-  return {name,body};
- };
- const profile={shop:'ohtaka',...readProfile(),shareURL:document.querySelector('link[rel="canonical"]').href+'#top'};
- ui.mount(box,profile,{privateOnly:true,profile:true,replaceExisting:true,readProfile});
- ui.shortcut(document.querySelector('#intro .primary'),profile);
-});
-</script>
+
+<style>#share .identity-actions{display:grid;grid-template-columns:1fr;gap:12px;margin:18px 0}#share .identity-actions button{display:block;width:100%;min-height:56px;padding:14px 12px;background:#fff;color:#482252;border:2px solid #482252;font-size:18px}#share .identity-actions button[aria-pressed="true"]{background:#482252;color:#fff}#share .share-byline{font-size:22px;font-weight:700;margin:20px 0 10px}#share textarea{display:block;box-sizing:border-box;width:100%;font:18px/1.8 -apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif;padding:14px;margin:10px 0;border:1px solid #bfaac6;border-radius:12px;background:#fff;color:#35233d}#share button{cursor:pointer}</style>
 </head><body class="social-view social-profile"><a class="skip" href="#intro">紹介へ進む</a><main id="top">
 <header><a href="./" aria-label="DXトップへ"><img src="./IMG_4358.JPG" width="1280" height="720" alt="志木なるほど お店めぐりDX"></a></header>
 <nav class="panel" aria-label="現在地"><a href="./#shops">← お店一覧へ戻る</a></nav>
@@ -40,13 +25,64 @@ document.addEventListener('DOMContentLoaded',()=>{
 <dl><dt>住所</dt><dd>埼玉県志木市幸町1-6-59</dd><dt>アクセス</dt><dd>東武東上線・志木駅南口から徒歩約6〜7分</dd><dt>電話</dt><dd><a href="tel:08031270141">080-3127-0141</a></dd><dt>営業時間・定休日</dt><dd>変更される場合があるため、お店のSNSや電話でご確認ください。</dd></dl>
 <div class="grid"><a class="btn secondary" href="https://www.instagram.com/sobadokoroohtaka/" target="_blank" rel="noopener">Instagram</a><a class="btn secondary" href="https://www.facebook.com/sobadokoroohtaka/" target="_blank" rel="noopener">Facebook</a><a class="btn secondary" href="https://x.com/sobaOHTAKA" target="_blank" rel="noopener">X</a><a class="btn secondary" href="https://asaka-shiki-niiza-wako.mypl.net/shop/00000362077/news" target="_blank" rel="noopener">お店からのお知らせ</a></div>
 <p class="muted">公開情報をもとにした紹介です。店舗による掲載内容の確認前です。</p></section>
-<section class="panel" id="share"><h2>友だちに教える</h2><div class="grid shop-share-actions"><button data-copy-text>紹介文をコピー</button><a class="btn secondary" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fichirohns-jpg.github.io%2FShikiConcierge-18%2Fomise-demo%2Fohtaka.html" target="_blank" rel="noopener">LINEで教える</a><a class="btn secondary" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fichirohns-jpg.github.io%2FShikiConcierge-18%2Fomise-demo%2Fohtaka.html" target="_blank" rel="noopener">Facebookで共有</a><a class="btn secondary" href="https://x.com/intent/tweet?url=https%3A%2F%2Fichirohns-jpg.github.io%2FShikiConcierge-18%2Fomise-demo%2Fohtaka.html" target="_blank" rel="noopener">Xで共有</a><button data-native-share class="secondary">スマホで共有</button></div><details><summary>紹介文・リンクを確認</summary><textarea id="shareText" rows="8" readonly>蕎麦処 大鷹をご紹介！
+<section class="panel" id="share"><h2>ふじこ・ハートネット志木で紹介</h2>
+<div class="identity-actions" aria-label="紹介する名義を選ぶ">
+<button type="button" data-share-identity="fujiko" aria-pressed="true">🥒 ふじことして紹介・シェア</button>
+<button type="button" data-share-identity="heartnet" aria-pressed="false">ハートネット志木として紹介・シェア</button>
+</div>
+<p id="shareIdentityName" class="share-byline" aria-live="polite">ふじこの紹介文</p>
+<label for="shareText">SNSに載せる紹介文（変更できます）</label>
+<textarea id="shareText" rows="10">ふじこからのお店・活動紹介🥒
+蕎麦処 大鷹さんをご紹介します。
 
 志木市幸町の手打ち蕎麦店。志木で親しまれた「伊勢源」直伝の蕎麦を受け継ぎ、蕎麦・うどんや一品料理を提供しています。
 
 住所：埼玉県志木市幸町1-6-59
 
-【詳しい紹介】
-https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/ohtaka.html</textarea><button data-copy-url class="secondary">URLをコピー</button></details><p id="copyStatus" class="muted" role="status" aria-live="polite"></p></section>
+画像タップで詳しい情報見てくださいね🥒</textarea>
+<p class="muted">名義を選び、紹介文をコピーしてSNSに貼り付けてください。投稿するアカウントはSNS側で選びます。</p>
+<button type="button" id="copyIntroduction" class="wide">紹介文とURLをコピー</button>
+<div class="grid shop-share-actions" style="margin-top:12px">
+<a class="btn" id="shareFacebook" style="background:#0866c6;color:#fff" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fichirohns-jpg.github.io%2FShikiConcierge-18%2Fomise-demo%2Fohtaka.html%23top" target="_blank" rel="noopener">Facebookで共有</a>
+<a class="btn" id="shareLine" style="background:#087f3e;color:#fff" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fichirohns-jpg.github.io%2FShikiConcierge-18%2Fomise-demo%2Fohtaka.html%23top" target="_blank" rel="noopener">LINEで友だちに教える</a>
+<a class="btn" id="shareX" style="background:#111;color:#fff" href="https://x.com/intent/tweet?url=https%3A%2F%2Fichirohns-jpg.github.io%2FShikiConcierge-18%2Fomise-demo%2Fohtaka.html%23top" target="_blank" rel="noopener">Xで共有</a>
+<button type="button" id="nativeIntroduction" class="secondary">スマホで共有</button></div>
+<p id="copyStatus" class="muted" role="status" aria-live="polite"></p></section>
 <section class="panel"><h2>紹介の参考にした情報</h2><p><a href="https://iroha-kappy.com/shop.html" target="_blank" rel="noopener">いろは商店会・公式店舗一覧</a></p><p><a href="https://asaka-shiki-niiza-wako.mypl.net/shop/00000362077/" target="_blank" rel="noopener">まいぷれ・大鷹の店舗案内</a></p><p class="muted">紹介内容の確認日：2026年11月18日</p></section>
-<section class="panel related"><h2>ほかのお店・活動も見てみよう</h2><a href="./ouchicafe.html">おうちcafeパン工房 →</a><a href="./newtimes.html">ニュータイムス社 →</a><a href="./heartnet.html">ハートネット志木 →</a><a href="./#shops">すべてのお店・活動 →</a></section><footer>志木なるほど お店めぐりDX</footer></main></body></html>
+<section class="panel related"><h2>ほかのお店・活動も見てみよう</h2><a href="./ouchicafe.html">おうちcafeパン工房 →</a><a href="./newtimes.html">ニュータイムス社 →</a><a href="./heartnet.html">ハートネット志木 →</a><a href="./#shops">すべてのお店・活動 →</a></section><footer>志木なるほど お店めぐりDX</footer></main><script>
+(()=>{
+ const pageURL="https://ichirohns-jpg.github.io/ShikiConcierge-18/omise-demo/ohtaka.html#top";
+ const description="志木市幸町の手打ち蕎麦店。志木で親しまれた「伊勢源」直伝の蕎麦を受け継ぎ、蕎麦・うどんや一品料理を提供しています。\n\n住所：埼玉県志木市幸町1-6-59";
+ const field=document.getElementById('shareText');
+ const status=document.getElementById('copyStatus');
+ function value(){return field.value.trim()+'\n\n'+pageURL;}
+ function refresh(){
+  document.getElementById('shareLine').href='https://social-plugins.line.me/lineit/share?url='+encodeURIComponent(pageURL)+'&text='+encodeURIComponent(field.value);
+  document.getElementById('shareX').href='https://x.com/intent/tweet?text='+encodeURIComponent(field.value)+'&url='+encodeURIComponent(pageURL);
+ }
+ function choose(identity){
+  const fujiko=identity==='fujiko';
+  field.value=(fujiko?'ふじこからのお店・活動紹介🥒':'ハートネット志木からのお店・活動紹介')+'\n蕎麦処 大鷹さんをご紹介します。\n\n'+description+'\n\n'+(fujiko?'画像タップで詳しい情報見てくださいね🥒':'紹介ページをご覧ください。');
+  document.getElementById('shareIdentityName').textContent=(fujiko?'ふじこ':'ハートネット志木')+'の紹介文';
+  document.querySelectorAll('[data-share-identity]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.shareIdentity===identity)));
+  status.textContent='';refresh();
+ }
+ async function copy(){
+  try{await navigator.clipboard.writeText(value());status.textContent='紹介文と大鷹のページURLをコピーしました。SNSに貼り付けてください。';}
+  catch{field.value=value();field.focus();field.select();status.textContent='紹介文とURLを選択しました。長押ししてコピーしてください。';}
+ }
+ document.querySelectorAll('[data-share-identity]').forEach(b=>b.addEventListener('click',()=>choose(b.dataset.shareIdentity)));
+ field.addEventListener('input',refresh);
+ document.getElementById('copyIntroduction').addEventListener('click',copy);
+ document.getElementById('nativeIntroduction').addEventListener('click',async()=>{
+  if(!navigator.share){await copy();return;}
+  try{await navigator.share({title:'蕎麦処 大鷹',text:field.value,url:pageURL});}catch(e){if(e.name!=='AbortError')await copy();}
+ });
+ document.getElementById('shareLine').addEventListener('click',async e=>{
+  if(!navigator.share)return;e.preventDefault();
+  try{await navigator.share({text:value()});}catch(error){if(error.name!=='AbortError')await copy();}
+ });
+ refresh();
+})();
+</script>
+</body></html>
