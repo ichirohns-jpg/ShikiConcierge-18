@@ -145,12 +145,12 @@
     v.setAttribute('aria-label',p.body.split('\n')[0]||p.name+'の投稿動画');
     v.style.cssText='display:block;width:100%;height:auto;max-height:80vh;object-fit:contain;background:#17121a';
     const fallback=el('a','動画を開く');fallback.href=v.src;v.append(fallback);
-    media.append(v);card.append(media);
+    media.append(v);card.insertBefore(media,text.body);
    }
    else if(p.video&&/^https:\/\/drive\.google\.com\/file\/d\/[A-Za-z0-9_-]+\/preview$/.test(p.video)){
     const video=el('div',null,'post-video');
     if(p.poster&&/^data:image\/jpeg;base64,/.test(p.poster)){const poster=el('img');poster.src=p.poster;poster.alt='動画の表紙';video.append(poster);}
-    const play=el('button','▶ 動画を見る');play.type='button';play.onclick=()=>{const frame=el('iframe');frame.src=p.video;frame.title=p.name+'の投稿動画';frame.allowFullscreen=true;video.replaceChildren(frame);};video.append(play);card.append(video);
+    const play=el('button','▶ 動画を見る');play.type='button';play.onclick=()=>{const frame=el('iframe');frame.src=p.video;frame.title=p.name+'の投稿動画';frame.allowFullscreen=true;video.replaceChildren(frame);};video.append(play);card.insertBefore(video,text.body);
    }
    card.append(...text.actions);
    if(p.end)card.append(el('p',p.end+'まで','post-end'));
