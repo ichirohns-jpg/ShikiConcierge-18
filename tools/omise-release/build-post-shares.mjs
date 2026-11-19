@@ -37,9 +37,20 @@ function shortLinksState(input){
 }
 
 export function compilePosts(posts,knownLinks){
- const files=new Map(),shortFiles=new Map(),links=shortLinksState(knownLinks),manifest={version:1,posts:{}};
+ const files=new Map(),shortFiles=new Map(),links=shortLinksState(knownLinks),manifest={version:1,posts:{}},feed={version:1,posts:[],hashes:{}};
  for(const p of posts){
   if(!/^POST-[a-f0-9-]+$/i.test(p.id||'')||p.status!=='公開'||p.ended)throw Error('Only public active posts can be published');
+  const media=value=>{
+   if(!value)return '';
+   if(!/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(value))throw Error('Invalid public JPEG');
+   const bytes=Buffer.from(value.split(',')[1],'base64');
+   if(bytes.length>5000000||bytes[0]!==255||bytes[1]!==216||bytes[2]!==255)throw Error('Invalid public JPEG bytes');
+   const relative=p.id+'/media-'+createHash('sha256').update(bytes).digest('hex').slice(0,16)+'.jpg';
+   files.set(relative,bytes);return BASE+'post-shares/'+relative;
+  };
+  const fields=[p.id,p.shop||'',p.name||'',p.date||'',p.kind||'notice',p.body||'',p.end||'',!!p.ended,p.video||'',p.photos||[],p.poster||''];
+  feed.hashes[p.id]=createHash('sha256').update(JSON.stringify(fields)).digest('hex').slice(0,16);
+  feed.posts.push({id:p.id,shop:p.shop||'',name:p.name||'',date:p.date||'',kind:p.kind||'notice',body:p.body||'',end:p.end||'',ended:!!p.ended,video:p.video||'',photos:(p.photos||[]).map(media),poster:media(p.poster||'')});
   const video=typeof p.video==='string'&&/^https:\/\/ichirohns-jpg\.github\.io\/ShikiConcierge-18\/omise-demo\/post-videos\/[A-Za-z0-9_-]+\.mp4$/.test(p.video)?p.video:'';
   const photo=video?(p.poster||(p.photos||[])[0]||''):((p.photos||[])[0]||p.poster||'');
   if(photo&&!/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(photo))throw Error('Invalid public JPEG');
@@ -75,6 +86,7 @@ export function compilePosts(posts,knownLinks){
   shortFiles.set(short.number+'/index.html',Buffer.from(shortHtml.replace('<p><a href="'+escape(landingURL)+'">','<p><a href="'+escape(freshArticleURL)+'">').replace('location.replace('+JSON.stringify(landingURL),'location.replace('+JSON.stringify(freshArticleURL))));
   manifest.posts[p.id]={date:p.date,shareURL,shortURL,imageURL};
  }
+ files.set('feed.json',Buffer.from(JSON.stringify(feed)+'\n'));
  files.set('manifest.json',Buffer.from(JSON.stringify(manifest,null,2)+'\n'));
  files.set('short-links.json',Buffer.from(JSON.stringify(links,null,2)+'\n'));
  return {files,shortFiles,manifest,links};
@@ -100,3 +112,4 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  const result=await writePosts(posts,destination);
  console.log('Published share pages: '+Object.keys(result.posts).length);
 }
+

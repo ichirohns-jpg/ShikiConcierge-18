@@ -19,7 +19,7 @@
  const main=document.querySelector('main'),header=main.querySelector(':scope > header');
  if(header)header.after(nav);else main.prepend(nav);
  const continuous=deals||timeline;
- let offset=0,loading=false,moreObserver=null;
+ let offset=0,loading=false,moreObserver=null,liveReceived=false,preview=null;
  const shown=new Map(),seen=new Set();
  let returnState=null,returnKey='',loadedThrough=0;
  if(continuous)try{
@@ -125,6 +125,7 @@
   return {body,actions};
  }
 
+ const validPhoto=(src,p)=>/^data:image\/jpeg;base64,/.test(src||'')||typeof src==='string'&&src.startsWith(base+'post-shares/'+p.id+'/media-')&&/\/media-[a-f0-9]{16}\.jpg$/.test(src);
  function buildCard(p){
    const rec=p.shop==='SHOP-0002'?window.DXSNSRecommend?.parse(p.body):null;
    const shop=shopURL(p),card=el('article',null,'post-card'),head=el('div',null,'post-header');
@@ -136,12 +137,12 @@
    const date=el('a',shortDate(p.date),'post-date');date.href=pageURL(p);date.setAttribute('aria-label',p.date+'の記事を開く');
    identity.append(author,date);head.append(avatar,identity,el('span',rec?'応援紹介':p.kind==='deal'?'お得情報':'お知らせ','post-kind'+(p.kind==='deal'?' deal':'')));
    const text=postText(rec?rec.comment:p.body,'post-body');card.append(head,text.body);if(rec)window.DXSNSRecommend.mount(card,rec);
-   const photos=(p.photos||[]).filter(src=>/^data:image\/jpeg;base64,/.test(src));
+   const photos=(p.photos||[]).filter(src=>validPhoto(src,p));
    if(photos.length){const media=el(article?'div':'a',null,'post-media');if(!article){media.href=pageURL(p);media.setAttribute('aria-label',p.name+'の投稿記事を開く');}for(const src of photos){const img=el('img');img.src=src;img.alt=p.name+'の投稿写真';img.loading=article||returnState?'eager':'lazy';img.decoding='async';media.append(img);}card.append(media);}
    if(p.video&&p.video.startsWith(base+'post-videos/')&&/^https:\/\/ichirohns-jpg\.github\.io\/ShikiConcierge-18\/omise-demo\/post-videos\/[A-Za-z0-9_-]+\.mp4$/.test(p.video)){
     const media=el('div',null,'post-video'),v=el('video');
-    v.controls=true;v.loop=true;v.playsInline=true;v.preload='metadata';v.src=/^fujiko-halloween-20261031(?:-v[23])?\.mp4$/.test(p.video.split('/').pop())?base+'post-videos/fujiko-halloween-20261031-v3.mp4':p.video;
-    if(/^data:image\/jpeg;base64,/.test(p.poster||''))v.poster=p.poster;
+    v.controls=true;v.loop=true;v.playsInline=true;v.preload=article?'metadata':'none';v.src=/^fujiko-halloween-20261031(?:-v[23])?\.mp4$/.test(p.video.split('/').pop())?base+'post-videos/fujiko-halloween-20261031-v3.mp4':p.video;
+    if(validPhoto(p.poster,p))v.poster=p.poster;
     v.setAttribute('aria-label',p.body.split('\n')[0]||p.name+'の投稿動画');
     v.style.cssText='display:block;width:100%;height:auto;max-height:80vh;object-fit:contain;background:#17121a';
     const fallback=el('a','動画を開く');fallback.href=v.src;v.append(fallback);
@@ -149,7 +150,7 @@
    }
    else if(p.video&&/^https:\/\/drive\.google\.com\/file\/d\/[A-Za-z0-9_-]+\/preview$/.test(p.video)){
     const video=el('div',null,'post-video');
-    if(p.poster&&/^data:image\/jpeg;base64,/.test(p.poster)){const poster=el('img');poster.src=p.poster;poster.alt='動画の表紙';video.append(poster);}
+    if(p.poster&&validPhoto(p.poster,p)){const poster=el('img');poster.src=p.poster;poster.alt='動画の表紙';video.append(poster);}
     const play=el('button','▶ 動画を見る');play.type='button';play.onclick=()=>{const frame=el('iframe');frame.src=p.video;frame.title=p.name+'の投稿動画';frame.allowFullscreen=true;video.replaceChildren(frame);};video.append(play);card.insertBefore(video,text.body);
    }
    if(p.id==='POST-56783934-e23c-4233-90fe-ce46e4fedd61'){
@@ -184,6 +185,28 @@
   syncCheerEmpty();
   if(removed)status.textContent=article?'掲載が終了しました。':shown.size?shown.size+'件表示中':deals?(document.getElementById('cafe-badge-offer')?'お店からの追加投稿はまだありません。':'公開中のお得情報はまだありません。'):'公開された投稿はまだありません。';
  }
+ function positionArticle(rows){
+  if(article&&rows[0])document.title=rows[0].body.split('\n')[0].slice(0,60)+'｜お店めぐりDX';
+   if(article&&rows[0]?.video){const video=list.querySelector('.post-video');if(video){video.id='post-video';video.style.scrollMarginTop='12px';requestAnimationFrame(()=>requestAnimationFrame(()=>{if(video.isConnected)video.scrollIntoView({block:'start',behavior:'auto'});}));}}
+ }
+ async function fingerprint(p){
+  const fields=[p.id,p.shop||'',p.name||'',p.date||'',p.kind||'notice',p.body||'',p.end||'',!!p.ended,p.video||'',p.photos||[],p.poster||''];
+  const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(fields)));
+  return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,16);
+ }
+ async function fastPreview(){
+  try{
+   const response=await fetch(base+'post-shares/feed.json',{cache:'no-cache'});
+   if(!response.ok)return;
+   const data=await response.json();
+   if(liveReceived||returnState||data.version!==1||!Array.isArray(data.posts)||!data.hashes)return;
+   const filtered=data.posts.filter(p=>/^POST-[a-f0-9-]+$/i.test(p.id||'')&&(!id||p.id===id)&&(!ids[slug]||p.shop===ids[slug])&&(!deals||p.kind==='deal')&&!ended(p));
+   const rows=filtered.slice(0,article?1:10);
+   if(!rows.length)return;
+   preview={ids:rows.map(p=>p.id),hashes:data.hashes};render(rows);positionArticle(rows);
+   status.textContent='最新情報を確認中…';
+  }catch{} // The existing live request remains the fallback.
+ }
  function load({append=false,nextOffset=offset}={}){
   if(loading)return;
   loading=true;
@@ -196,14 +219,18 @@
    if(settled)return;settled=true;cleanup();loading=false;status.textContent=message;
    const retry=el('button','もう一度読み込む','btn secondary');retry.type='button';retry.onclick=()=>load({append,nextOffset});paging.append(retry);
   };
-  window[callback]=data=>{
+  window[callback]=async data=>{
    if(settled)return;
    if(data?.ok!==true||!Array.isArray(data.posts)||!Number.isInteger(data.total)||data.total<0||(!data.posts.length&&nextOffset<data.total)){fail('読み込めませんでした。もう一度お試しください。');return;}
-   settled=true;cleanup();loading=false;offset=nextOffset;
-   const rows=data.posts,total=data.total;loadedThrough=offset+rows.length;render(rows,append);syncCheerEmpty();
+   settled=true;cleanup();liveReceived=true;offset=nextOffset;
+   const rows=data.posts,total=data.total;
+   let samePreview=false;
+   if(preview&&!append&&nextOffset===0&&JSON.stringify(preview.ids)===JSON.stringify(rows.map(p=>p.id))){
+    try{const hashes=await Promise.all(rows.map(fingerprint));samePreview=rows.every((p,i)=>hashes[i]===preview.hashes[p.id]);}catch{}
+   }
+   preview=null;loading=false;loadedThrough=offset+rows.length;if(!samePreview)render(rows,append);syncCheerEmpty();
    status.textContent=article?(shown.size?'':'掲載が終了しているか、公開前です。'):!shown.size?(deals?'公開中のお得情報はまだありません。':'公開された投稿はまだありません。'):continuous?shown.size+'件表示中':offset?'過去の投稿 '+(offset+1)+'〜'+Math.min(offset+10,total)+'件':'最新'+Math.min(10,total)+'件';
-   if(article&&rows[0])document.title=rows[0].body.split('\n')[0].slice(0,60)+'｜お店めぐりDX';
-   if(article&&rows[0]?.video){const video=list.querySelector('.post-video');if(video){video.id='post-video';video.style.scrollMarginTop='12px';requestAnimationFrame(()=>requestAnimationFrame(()=>{if(video.isConnected)video.scrollIntoView({block:'start',behavior:'auto'});}));}}
+   if(!samePreview)positionArticle(rows);
    if(!append&&location.hash==='#posts-timeline')section.scrollIntoView();if(!append&&cheerEnabled&&location.hash==='#cheer-posts')cheerSection.scrollIntoView();
    const finishPaging=()=>{if(!article){
     if(!continuous&&offset){const back=el('button','最新の投稿に戻る','btn secondary');back.onclick=()=>load({nextOffset:0});paging.append(back);}
@@ -228,11 +255,12 @@
  }
  if(article&&!/^POST-[a-f0-9-]+$/i.test(id||'')){status.textContent='記事が指定されていません。';return;}
  if(cheerEnabled||supportArchive||supportTimeline){const mountList=supportArchive||supportTimeline?list:cheerList,mountStatus=supportArchive||supportTimeline?status:cheerEmpty,mountPaging=supportArchive||supportTimeline?paging:el('div',null,'feed-paging');if(!supportArchive&&!supportTimeline)cheerSection.append(mountPaging);else{section.id='cheer-posts';heading.textContent=supportArchive?'ふじこの応援紹介・アーカイブ':'ふじこの応援紹介';}window.DXSupportFeed.mount({list:mountList,status:mountStatus,paging:mountPaging,renderPost:buildCard,endpoint,archive:supportArchive});}
- if(!supportArchive&&!supportTimeline)load();
+ if(!supportArchive&&!supportTimeline){load();void fastPreview();}
  setInterval(pruneEnded,30000);
  window.addEventListener('focus',pruneEnded);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)pruneEnded();});
 })();
+
 
 
 

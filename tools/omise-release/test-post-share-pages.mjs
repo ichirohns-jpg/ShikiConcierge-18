@@ -96,3 +96,17 @@ test('Video links open the exact video anchor and identify the video in the shar
  assert.notEqual(result.manifest.posts[id].shortURL,first.manifest.posts[id].shortURL);
  assert.ok(!compilePosts([{...fixture,video:'https://example.com/evil.mp4'}]).files.get(id+'/index.html').toString().includes('<video '));
 });
+
+
+test('Fast feed keeps every public photo separately and excludes private fields',()=>{
+ const second='data:image/jpeg;base64,'+Buffer.from([255,216,255,224,0,4,255,217]).toString('base64');
+ const input={...fixture,shop:'SHOP-0002',photos:[photo,second],poster:photo,secret:'not-public'};
+ const result=compilePosts([input]),raw=result.files.get('feed.json').toString(),feed=JSON.parse(raw);
+ assert.equal(feed.posts[0].photos.length,2);
+ assert.ok(!raw.includes('base64'));assert.ok(!raw.includes('secret'));assert.ok(!raw.includes('not-public'));
+ for(const [i,url] of feed.posts[0].photos.entries())assert.deepEqual(result.files.get(url.slice((BASE+'post-shares/').length)),Buffer.from([photo,second][i].split(',')[1],'base64'));
+ assert.equal(feed.posts[0].poster,feed.posts[0].photos[0]);
+ assert.equal(compilePosts([input]).files.get('feed.json').toString(),raw);
+ assert.notEqual(JSON.parse(compilePosts([{...input,body:'変更'}]).files.get('feed.json')).hashes[id],feed.hashes[id]);
+ assert.throws(()=>compilePosts([{...fixture,photos:[photo,'https://example.com/private.jpg']}]));
+});
