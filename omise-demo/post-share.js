@@ -99,7 +99,7 @@
   fujiko.addEventListener('click',()=>{if(!canIntroduce()||expire())return;editor.hidden=!editor.hidden;fujiko.setAttribute('aria-expanded',String(!editor.hidden));if(!editor.hidden){if(!draft.value){if(options.profile&&options.readProfile){const current=options.readProfile();p={...p,...current};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}applyIdentity(selectedIdentity);}draft.focus();}ready();});
   const login=el('div',null,'post-share-login-gate');login.hidden=true;
   for(const [value,label] of [['heartnet','ハートネット志木として紹介・シェア'],['fujiko','🥒 ふじことして紹介・シェア']]){
-   const entry=el('a',label,'post-share-login');entry.href=dxURL+'owner.html#top';
+   const entry=el('a',label,'post-share-login');const back=new URL(location.href);back.hash='dx-share-'+String(p.id||p.name||'profile').replace(/[^a-zA-Z0-9_-]/g,'');entry.href=dxURL+'owner.html?'+new URLSearchParams({shareAs:value,shareReturn:back.href})+'#top';
    entry.addEventListener('click',()=>setIdentity(value));login.append(entry);
   }
   const identityActions=el('div',null,'post-identity-actions');
@@ -113,6 +113,7 @@
     login.hidden=true;
     setIdentity(value);editor.hidden=false;fujiko.setAttribute('aria-expanded','true');
     area.scrollIntoView({behavior:'smooth',block:'start'});draft.focus({preventScroll:true});
+    void copyValue(shareValue());
    });
    identityActions.append(action);
   }
@@ -127,7 +128,7 @@
    if(expire())return;
    try{
     await navigator.clipboard.writeText(value);
-    if(!disposed)message.textContent='コピーしました。';
+    if(!disposed)message.textContent='紹介文をコピーしました。Facebookでは「何か書く…」欄を長押ししてペーストしてください。';
    }catch{
     if(disposed)return;
     fallback.value=value;fallback.hidden=false;fallback.focus();fallback.select();
@@ -156,11 +157,16 @@
   }
   area.append(el('p','コピーして、SNSに貼り付けてください。','post-share-guide'));
   const networks=el('div',null,'post-share post-simple-networks');
-  const facebook=el('a','Facebookで共有');facebook.target='_blank';facebook.rel='noopener';facebook.style.background='#0866c6';networks.append(facebook);
+  const facebook=el('a','紹介文をコピーしてFacebookで共有');facebook.target='_blank';facebook.rel='noopener';facebook.style.background='#0866c6';networks.append(facebook);const facebookGuide=el('p','Facebookでは、共有画面の「何か書く…」欄を長押しして「ペースト」してください。選んだ名義の紹介文が入ります。','post-fujiko-note');
   const line=el('a','LINEで友だちに教える');line.style.background='#087f3e';
   const x=el('a','Xで共有');x.style.background='#111';
   for(const a of [line,x]){a.target='_blank';a.rel='noopener';networks.append(a);}
-  facebook.addEventListener('click',event=>{if(expire())event.preventDefault();});
+  facebook.addEventListener('click',event=>{
+   if(expire()){event.preventDefault();return;}
+   const value=shareValue();
+   if(navigator.clipboard?.writeText)navigator.clipboard.writeText(value).then(()=>{message.textContent='紹介文をコピーしました。Facebookの「何か書く…」欄を長押しして、ペーストしてください。';}).catch(()=>{fallback.value=value;fallback.hidden=false;message.textContent='紹介文をコピーできませんでした。下の文章を長押ししてコピーしてください。';});
+   else{fallback.value=value;fallback.hidden=false;message.textContent='下の紹介文を長押ししてコピーし、Facebookへ貼り付けてください。';}
+  });
   x.addEventListener('click',event=>{if(expire())event.preventDefault();});
   const lineValue=()=>[currentText(),link||articleLink||dxURL].filter(Boolean).join('\n\n').replace(/[\u200B\u2060\uFEFF]/g,'');
   const lineGuide=el('p',typeof navigator.share==='function'?'「LINEで友だちに教える」を押したら、共有先で「LINE」を選んでください。':'LINEの共有画面へ進みます。開けないときは下の案内を使ってください。','post-fujiko-note');
@@ -238,7 +244,7 @@
   const updateAccess=()=>{const allowed=canIntroduce();officialTitle.textContent='店主専用｜'+officialLineName()+'の公式LINE';officialGuide.textContent='①下のボタンで文章と記事URLをコピー → ②LINE公式の管理画面で「'+officialLineName()+'」を選ぶ → ③メッセージ配信に貼り付け、内容と宛先を確認して配信。自動では送信されません。';irohaCopy.textContent=adminSession()?.id==='SHOP-0001'?'お店の公式LINEで配信する（文章をコピー）':'商店会LINE配信用にコピー';login.hidden=allowed;identityActions.hidden=!allowed;iroha.hidden=!hasIrohaAccess()||ended()||!!(options.profile&&!options.irohaLine&&adminSession()?.id!=='SHOP-0001');if(iroha.hidden){irohaManual.hidden=true;irohaManual.value='';irohaManager.hidden=true;irohaStatus.textContent='';}for(const {node,hidden} of legacy)node.hidden=allowed||hidden;if(options.privateOnly)area.hidden=!allowed;fujiko.hidden=true;if(allowed&&!draft.value){if(options.profile&&options.readProfile){p={...p,...options.readProfile()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));}editor.hidden=false;fujiko.setAttribute('aria-expanded','true');applyIdentity(selectedIdentity);}if(!allowed){editor.hidden=true;draft.value='';shareText=ownText;fallback.hidden=true;fallback.value='';fujiko.setAttribute('aria-expanded','false');}copy.textContent=allowed?'紹介文とURLをコピー':'文章と記事URLをコピー';ready();};
   accessListeners.add(updateAccess);
   ready();
-  area.append(copy,networks,lineGuide,lineHelp);if(navigator.share){const native=el('button','スマホで共有','post-share-native');native.type='button';native.addEventListener('click',shareFromPhone);area.append(native);}area.append(message,fallback);box.append(area);
+  area.append(copy,networks,facebookGuide,lineGuide,lineHelp);if(navigator.share){const native=el('button','スマホで共有','post-share-native');native.type='button';native.addEventListener('click',shareFromPhone);area.append(native);}area.append(message,fallback);box.append(area);
   if(options.profile&&canIntroduce()){profileState=()=>{if(!userEdited&&canIntroduce()&&options.readProfile){p={...p,...options.readProfile()};ownText=cleanText([p.title,p.body].filter(Boolean).join('\n\n'));shareText=makeText(sender.value);draft.value=shareText;ready();}return {text:currentText(),link};};profileReveal=()=>{if(!canIntroduce())return;editor.hidden=false;fujiko.setAttribute('aria-expanded','true');area.scrollIntoView({behavior:'smooth',block:'start'});draft.focus({preventScroll:true});};}
   updateAccess(hasAdminAccess());
   if(!verification&&!hasAdminAccess())checkAdminAccess();
