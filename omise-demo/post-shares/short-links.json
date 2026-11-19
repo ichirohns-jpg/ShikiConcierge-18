@@ -4,8 +4,8 @@
   "posts": {
     "POST-56783934-e23c-4233-90fe-ce46e4fedd61": {
       "number": 1,
-      "revision": "b07028cabeae3852",
-      "version": 6
+      "revision": "98962d811a3b3f12",
+      "version": 7
     },
     "POST-74674a1b-ecd0-4956-94a0-7528a739a12c": {
       "number": 2,
@@ -44,8 +44,8 @@
     },
     "POST-737c1759-66fc-4ab6-8194-f05d06794f51": {
       "number": 9,
-      "revision": "6504554c18a857ba",
-      "version": 1
+      "revision": "e776f23d1891ac1f",
+      "version": 2
     }
   }
 }
