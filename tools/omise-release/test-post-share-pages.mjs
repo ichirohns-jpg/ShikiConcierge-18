@@ -82,3 +82,17 @@ test('Writer preserves the registry across refreshes and removes expired public 
   assert.ok(await fs.readFile(path.join(shortRoot,'2/index.html'),'utf8'));
  }finally{await fs.rm(root,{recursive:true,force:true});}
 });
+
+test('Video links open the exact video anchor and identify the video in the share title',()=>{
+ const video=BASE+'post-videos/heartnet-iroha-fujiko-badge-20261119-v2.mp4';
+ const first=compilePosts([fixture]);
+ const result=compilePosts([{...fixture,photos:[],poster:photo,video}],first.links);
+ const page=result.files.get(id+'/index.html').toString(),short=result.shortFiles.get('1/index.html').toString();
+ assert.ok(page.includes('▶ 動画を見る｜'));
+ assert.ok(page.includes('article.html?id='+id+'#post-video'));
+ assert.ok(short.includes('article.html?id='+id+'&via=short#post-video'));
+ assert.ok(page.indexOf('<video ')<page.indexOf('<p>'));
+ assert.ok(page.includes('controls playsinline loop'));
+ assert.notEqual(result.manifest.posts[id].shortURL,first.manifest.posts[id].shortURL);
+ assert.ok(!compilePosts([{...fixture,video:'https://example.com/evil.mp4'}]).files.get(id+'/index.html').toString().includes('<video '));
+});

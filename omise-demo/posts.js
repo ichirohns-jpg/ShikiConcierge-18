@@ -194,6 +194,7 @@
    const rows=data.posts,total=data.total;loadedThrough=offset+rows.length;render(rows,append);syncCheerEmpty();
    status.textContent=article?(shown.size?'':'掲載が終了しているか、公開前です。'):!shown.size?(deals?'公開中のお得情報はまだありません。':'公開された投稿はまだありません。'):continuous?shown.size+'件表示中':offset?'過去の投稿 '+(offset+1)+'〜'+Math.min(offset+10,total)+'件':'最新'+Math.min(10,total)+'件';
    if(article&&rows[0])document.title=rows[0].body.split('\n')[0].slice(0,60)+'｜お店めぐりDX';
+   if(article&&rows[0]?.video){const video=list.querySelector('.post-video');if(video){video.id='post-video';video.style.scrollMarginTop='12px';requestAnimationFrame(()=>requestAnimationFrame(()=>{if(video.isConnected)video.scrollIntoView({block:'start',behavior:'auto'});}));}}
    if(!append&&location.hash==='#posts-timeline')section.scrollIntoView();if(!append&&cheerEnabled&&location.hash==='#cheer-posts')cheerSection.scrollIntoView();
    const finishPaging=()=>{if(!article){
     if(!continuous&&offset){const back=el('button','最新の投稿に戻る','btn secondary');back.onclick=()=>load({nextOffset:0});paging.append(back);}
