@@ -152,6 +152,15 @@
     if(p.poster&&/^data:image\/jpeg;base64,/.test(p.poster)){const poster=el('img');poster.src=p.poster;poster.alt='動画の表紙';video.append(poster);}
     const play=el('button','▶ 動画を見る');play.type='button';play.onclick=()=>{const frame=el('iframe');frame.src=p.video;frame.title=p.name+'の投稿動画';frame.allowFullscreen=true;video.replaceChildren(frame);};video.append(play);card.insertBefore(video,text.body);
    }
+   if(p.id==='POST-56783934-e23c-4233-90fe-ce46e4fedd61'){
+    const video=card.querySelector('.post-video');
+    if(video){
+     const visit=el('a','おうちcafeパン工房の紹介・場所を見る →','post-featured-shop-link');
+     visit.href=base+'ouchicafe.html';
+     visit.style.cssText='display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:56px;margin:16px;padding:16px;border-radius:12px;background:#531a65;color:#fff;font-size:20px;font-weight:800;line-height:1.6;text-align:center;text-decoration:none';
+     video.after(visit);
+    }
+   }
    card.append(...text.actions);
    if(p.end)card.append(el('p',p.end+'まで','post-end'));
    const links=el('div',null,'post-links');
