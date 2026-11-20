@@ -157,10 +157,15 @@
    if(p.id==='POST-56783934-e23c-4233-90fe-ce46e4fedd61'){
     const video=card.querySelector('.post-video');
     if(video){
-     const visit=el('a','おうちcafeパン工房の紹介・場所を見る →','post-featured-shop-link');
-     visit.href=base+'ouchicafe.html';
-     visit.style.cssText='display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:56px;margin:16px;padding:16px;border-radius:12px;background:#531a65;color:#fff;font-size:20px;font-weight:800;line-height:1.6;text-align:center;text-decoration:none';
-     video.after(visit);
+     const buttons=el('nav',null,'post-featured-shops');
+     buttons.setAttribute('aria-label','プレゼントのお渡し店舗');
+     for(const [name,file] of [['おうちcafeパン工房','ouchicafe.html'],['蕎麦処 大鷹','ohtaka.html']]){
+      const visit=el('a',name+'の紹介・場所を見る','post-featured-shop-link');
+      visit.href=base+file;
+      visit.style.cssText='display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:56px;margin:16px;padding:16px;border:2px solid #d6ad55;border-radius:12px;background:#531a65;color:#fff;font-size:20px;font-weight:800;line-height:1.6;text-align:center;text-decoration:none';
+      buttons.append(visit);
+     }
+     video.after(buttons);
     }
    }
    card.append(...text.actions);
