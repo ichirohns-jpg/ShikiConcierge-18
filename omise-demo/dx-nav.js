@@ -11,6 +11,7 @@
  }
  const file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
  const routes={
+  'ohtaka.html':{back:'./#shops',backText:'← お店一覧',current:'蕎麦処 大鷹',active:'shops'},
   'ouchicafe.html':{back:'./#shops',backText:'← お店一覧',current:'おうちcafeパン工房',active:'shops'},
   'heartnet.html':{back:'./#shops',backText:'← お店一覧',current:'ハートネット志木',active:'shops'},
   'fujiko-news.html':{back:'./#fujiko',backText:'← DXトップ',current:'ふじこからのお知らせ',active:'home'},
@@ -36,7 +37,7 @@
   const ref=new URL(document.referrer),root=new URL('./',location.href);
   const parent=ref.pathname.split('/').pop();
   if(ref.origin===root.origin&&ref.pathname.startsWith(root.pathname)){
-   const labels={'timeline.html':'← 投稿一覧','deals.html':'← お得情報','ouchicafe.html':'← お店の紹介','heartnet.html':'← 活動の紹介','newtimes.html':'← お店の紹介'};
+   const labels={'ohtaka.html':'← お店の紹介','timeline.html':'← 投稿一覧','deals.html':'← お得情報','ouchicafe.html':'← お店の紹介','heartnet.html':'← 活動の紹介','newtimes.html':'← お店の紹介'};
    if(labels[parent]){route.back='./'+parent;route.backText=labels[parent];}
   }
  }catch{}
