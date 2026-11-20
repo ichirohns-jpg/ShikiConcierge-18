@@ -126,6 +126,31 @@
  }
 
  const validPhoto=(src,p)=>/^data:image\/jpeg;base64,/.test(src||'')||typeof src==='string'&&src.startsWith(base+'post-shares/'+p.id+'/media-')&&/\/media-[a-f0-9]{16}\.jpg$/.test(src);
+ function revealFeaturedShopsAfterVideo(player,buttons){
+  if(!player)return;
+  // This campaign ends on the two shop links instead of looping.
+  player.loop=false;
+  let waitingForFullscreen=false;
+  const reveal=()=>requestAnimationFrame(()=>{
+   if(!buttons.isConnected)return;
+   buttons.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+  });
+  player.addEventListener('webkitendfullscreen',()=>{
+   if(waitingForFullscreen){waitingForFullscreen=false;reveal();}
+  });
+  player.addEventListener('ended',async()=>{
+   if(!buttons.isConnected)return;
+   if(player.webkitDisplayingFullscreen){
+    waitingForFullscreen=true;
+    try{player.webkitExitFullscreen?.();}catch{}
+    return;
+   }
+   if(document.fullscreenElement===player||document.fullscreenElement?.contains(player)){
+    try{await document.exitFullscreen();}catch{return;}
+   }
+   reveal();
+  });
+ }
  function buildCard(p){
    const rec=p.shop==='SHOP-0002'?window.DXSNSRecommend?.parse(p.body):null;
    const shop=shopURL(p),card=el('article',null,'post-card'),head=el('div',null,'post-header');
@@ -166,6 +191,7 @@
       buttons.append(visit);
      }
      video.after(buttons);
+     revealFeaturedShopsAfterVideo(video.querySelector('video'),buttons);
     }
    }
    card.append(...text.actions);
