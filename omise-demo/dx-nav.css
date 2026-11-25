@@ -140,3 +140,9 @@ body .dx-global-nav{border-radius:8px 8px 0 0}
 body{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))!important}
 body [id]{scroll-margin-top:16px}
 @media(max-width:360px){body .dx-global-nav a{font-size:15px}}
+
+
+/* Keep the longer posts label and posting action readable on small screens. */
+body .dx-posts-label{word-break:keep-all;overflow-wrap:normal;white-space:normal}
+body .timeline-write>.btn{flex-shrink:0;white-space:nowrap;text-align:center}
+@media(max-width:560px){body .timeline-write{flex-direction:column;align-items:stretch}}

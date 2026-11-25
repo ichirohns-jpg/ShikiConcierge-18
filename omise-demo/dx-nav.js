@@ -92,16 +92,18 @@
  const items=[
   ['home','⌂ トップ','./'],
   ['shops','お店を探す','./#shops'],
-  ['posts','投稿を見る','./timeline.html'],
+  ['posts','みんなの投稿','./timeline.html'],
   ['deals','お得情報','./deals.html']
  ];
  for(const [key,label,href] of items){
   const link=document.createElement('a');link.href=href;link.textContent=label;
+  if(key==='posts'){const text=document.createElement('span');text.className='dx-posts-label';text.append('みんなの',document.createElement('wbr'),'投稿');link.replaceChildren(text);}
   if(route.active===key)link.setAttribute('aria-current','page');
   nav.append(link);
  }
  document.body.append(nav);
  if(file==='index.html')window.addEventListener('hashchange',()=>{const active=location.hash==='#shops'?'shops':'home';for(const [i,a] of Array.from(nav.children).entries()){if(items[i][0]===active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');}});
 })();
+
 
 
