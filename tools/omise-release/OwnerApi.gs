@@ -1,9 +1,12 @@
 /** Authenticated management calls. The same per-store checks as google.script.run apply. */
-function ownerVersion_(){return {ok:true,version:'firstparty-owner-v1'};}
+// 25 MiB video as base64, four photos, poster and OGP image plus JSON overhead.
+const OM_OWNER_REQUEST_MAX_CHARS_=37000000;
+function ownerVersion_(){return {ok:true,version:'firstparty-owner-v1',maxRequestChars:OM_OWNER_REQUEST_MAX_CHARS_};}
 function doPost(e){
  try{
   const raw=e&&e.postData&&e.postData.contents;
-  if(!raw||raw.length>24000000)throw Error('送信内容を確認してください。');
+  if(!raw)throw Error('送信内容を確認してください。');
+  if(raw.length>OM_OWNER_REQUEST_MAX_CHARS_)throw Error('添付ファイルの合計が大きすぎます。動画を短くするか、写真を減らしてください。');
   const request=JSON.parse(raw);
   if(request.api!=='owner-v1'||!Array.isArray(request.args)||request.args.length>8)throw Error('送信形式を確認してください。');
   // Never dispatch arbitrary global functions, setup routines or private helpers.
