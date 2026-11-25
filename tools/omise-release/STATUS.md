@@ -1,10 +1,10 @@
-# 2026-11-25：動画投稿の送信容量を整合（GAS公開反映は未完了）
+# 2026-11-25：動画投稿の送信容量を整合（GAS第30版で公開済み）
 
 - 投稿画面の25MiB動画はbase64化すると約3,495万文字になるため、従来のAPI入口24,000,000文字制限で送信できませんでした。
 - OwnerApi.gsと配布用LiveCode.gs／LiveCode.txtの入口上限を37,000,000文字に統一しました。動画・写真4枚・表紙・OGP画像・本文を既存上限まで含めたローカル試験は36,804,281文字で通ります。
 - 超過時は添付を減らす案内を返します。ownerVersionのmaxRequestCharsで公開後の反映を確認できます。認証・店舗別の所有者権限は変更していません。
-- ローカル14件成功。公開GASのownerVersionはfirstparty-owner-v1のみでmaxRequestCharsがなく、今回の修正はまだ本番へ反映していません。既存GASの編集URL／scriptIdが今回の接続先から特定できていないため、公開待ちです。
-- 本番反映には、対象を確認した既存GASプロジェクトへLiveCode.gsの全文を保存し、既存のWebアプリデプロイを新バージョンへ更新してください。公開URLは変えません。更新後にownerVersionのmaxRequestCharsが37000000になることを確認します。
+- ローカル14件成功。既存のApps Script管理画面で対象の公開デプロイを照合し、2026年11月25日19:37 JSTに第29版から第30版へ更新しました。公開ownerVersionのGETでHTTP200・ok=true・maxRequestChars=37000000を確認済みです。
+- 既存GASの編集画面：https://script.google.com/home/projects/1oAikC3YWOCRsK0OsFcBoQlNn3_6yu3eFvMQ7nipZtcO9zrSewjt0mA14/edit 。既存コードを読み戻し、容量判定とownerVersionの2箇所だけを置換して保存・公開しました。公開URL・実行ユーザー・アクセス範囲は維持しています。
 - 本番への架空投稿・動画アップロードによる試験は実施していません。
 
 ```bash
